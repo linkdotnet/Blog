@@ -1,0 +1,38 @@
+.nav {
+    background: #111;
+    position: sticky;
+    top: 0;
+}
+
+.logo {
+    float: left;
+}
+
+.logo a {
+    text-decoration: none;
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 700;
+}
+
+.navlinks {
+    float: right;
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.navlinks li {
+    padding-left: 1.25rem;
+}
+
+.navlinks li a {
+    text-decoration: none;
+    font-size: 1.75rem;
+    color: white;
+}
+
+.navlinks li a:hover {
+    color: #00E676;
+}
