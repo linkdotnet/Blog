@@ -1,8 +1,10 @@
+
 .nav {
-    background-color: rgba(0,0,0, 0.8);
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.8);
     position: sticky;
     top: 0;
-    backdrop-filter: blur(9px);
+    backdrop-filter: blur(6px);
 }
 
 .logo {
@@ -10,10 +12,11 @@
 }
 
 .logo a {
+    font-family: 'Libre Barcode 128 Text', cursive;
     text-decoration: none;
-    font-size: 2.5rem;
+    font-size: 3rem;
     color: white;
-    font-weight: 700;
+    font-weight: 300;
 }
 
 .navlinks {
@@ -22,7 +25,7 @@
     list-style: none;
     justify-content: center;
     align-items: center;
-    padding-top: 10px;
+    padding-top: 23px;
 }
 
 .navlinks li {
@@ -31,10 +34,10 @@
 
 .navlinks li a {
     text-decoration: none;
-    font-size: 1.75rem;
+    font-size: 1.1rem;
     color: white;
 }
 
 .navlinks li a:hover {
-    color: #C287FF;
+    color: #66C3CC;
 }

@@ -1,12 +1,36 @@
 ﻿@using LinkDotNet.Domain
 @inherits MarkdownComponentBase
-<div>
-    <h3>@BlogPost.Title</h3>
-    <div>
-        @RenderMarkupString(BlogPost.ShortDescription)
+<div class="blog-card @AltCssClass">
+    <div class="meta">
+      <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
+      <ul class="details">
+        <li class="date">@BlogPost.UpdatedDate</li>
+        <li class="tags">
+          <ul>
+          @foreach (var tag in BlogPost.Tags)
+          {
+            <li><a href="#">@tag</a></li>
+          }
+          </ul>
+        </li>
+      </ul>
     </div>
-</div>
+    <div class="description">
+      <h1>@BlogPost.Title</h1>
+      <h2></h2>
+      <p>@RenderMarkupString(BlogPost.ShortDescription)</p>
+      <p class="read-more">
+        <a href="#">Read More</a>
+      </p>
+    </div>
+  </div>
+
 @code {
     [Parameter]
     public BlogPost BlogPost { get; set; }
+  
+    [Parameter]
+    public bool SetAlt { get; set; }
+
+  public string AltCssClass => SetAlt ? "alt" : string.Empty;
 }

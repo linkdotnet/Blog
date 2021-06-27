@@ -1,9 +1,14 @@
 ﻿@page "/"
 @using LinkDotNet.Domain
+@inject AppConfiguration _appConfiguration
 
-<IntroductionCard Introduction="i"></IntroductionCard>
+<IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 
 <div class="content px-4">
+    <ShortBlogPost BlogPost="bp"></ShortBlogPost>
+    <ShortBlogPost BlogPost="bp" SetAlt="true"></ShortBlogPost>
+    <ShortBlogPost BlogPost="bp" ></ShortBlogPost>
+    <ShortBlogPost BlogPost="bp" SetAlt="true"></ShortBlogPost>
     <ShortBlogPost BlogPost="bp"></ShortBlogPost>
 </div>
 
@@ -13,19 +18,13 @@
     {
         Title = "My first entry",
         ShortDescription = @"
-This is my very first entry. *Hurray*!
+**Welcome** to my first post. This whole blog was written with Blazor and some nice css.   In this post I will explain how the Blazor application works, what my motivation was and how to setup on your own.
+
+> Steven Giesel
+
 ",
-        UpdatedDate = DateTime.Now
+        UpdatedDate = DateTime.Now,
+        Tags = new [] {"First Post", "C#", "Blazor"}
 
     };
-
-    Introduction i = new Introduction
-    {
-        Description = @"Hey, my name is **Steven**. I am a **.NET Developer** based in Zurich, Switzerland. This is my small blog, which I wrote completely in Blazor. If you want to know more about me just check out my LinkedIn or Github.
-
-Also this blogsoftware is open source on [Github](https://github.com/linkdotnet)",
-        BackgroundUrl = "https://i.imgur.com/t66tpls.png",
-        ProfilePictureUrl = "https://media-exp1.licdn.com/dms/image/C4D03AQGCECg3FlEwGg/profile-displayphoto-shrink_400_400/0/1575236200054?e=1630540800&v=beta&t=qsuy--UoUtRdEis021i5hAFw-i8PUWBHMSrGGnQkaqk",
-    };
-
 }

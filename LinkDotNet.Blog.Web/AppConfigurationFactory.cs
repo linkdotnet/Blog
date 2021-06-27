@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using LinkDotNet.Domain;
+using Microsoft.Extensions.Configuration;
 
 namespace LinkDotNet.Blog.Web
 {
@@ -9,7 +10,8 @@ namespace LinkDotNet.Blog.Web
             var configuration = new AppConfiguration
             {
                 GithubAccountUrl = config["GithubAccountUrl"],
-                LinkedinAccountUrl = config["LinkedInAccountUrl"]
+                LinkedinAccountUrl = config["LinkedInAccountUrl"],
+                Introduction = config.GetSection("Introduction").Get<Introduction>(),
             };
             return configuration;
         }

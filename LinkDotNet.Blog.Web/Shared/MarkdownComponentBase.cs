@@ -7,7 +7,7 @@ namespace LinkDotNet.Blog.Web.Shared
     {
         protected MarkupString RenderMarkupString(string content)
         {
-            var p = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+            var p = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().Build();
 
             return (MarkupString) Markdown.ToHtml(content, p);
         }
