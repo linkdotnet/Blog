@@ -1,7 +1,8 @@
 .nav {
-    background: #111;
+    background-color: rgba(0,0,0, 0.8);
     position: sticky;
     top: 0;
+    backdrop-filter: blur(9px);
 }
 
 .logo {
@@ -21,6 +22,7 @@
     list-style: none;
     justify-content: center;
     align-items: center;
+    padding-top: 10px;
 }
 
 .navlinks li {
@@ -34,5 +36,5 @@
 }
 
 .navlinks li a:hover {
-    color: #00E676;
+    color: #C287FF;
 }

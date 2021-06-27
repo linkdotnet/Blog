@@ -1,8 +1,9 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 @import url('https://fonts.googleapis.com/css?family=Quicksand:400,500,700');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 
 html, body {
-    font-family: "Quicksand", sans-serif;
+    font-family: "Roboto", "Quicksand", sans-serif;
 }
 
 a, .btn-link {

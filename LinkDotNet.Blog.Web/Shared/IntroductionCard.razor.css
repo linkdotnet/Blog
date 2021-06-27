@@ -1,0 +1,30 @@
+﻿.introduction-container {
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 350px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas: ". . . . . ." ". profile-picture profile-text profile-text profile-text ." ". . . . . .";
+}
+
+.profile-picture {
+    grid-area: profile-picture;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: white;
+    margin: 4px 0 0 4px;
+    box-shadow: 0 0 0 4px white;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.profile-text {
+    grid-area: profile-text;
+    font-size: 125%;
+    color: white;
+    line-height: 24px;
+}

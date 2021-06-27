@@ -1,0 +1,12 @@
+﻿@using LinkDotNet.Domain
+@inherits MarkdownComponentBase
+<div>
+    <h3>@BlogPost.Title</h3>
+    <div>
+        @RenderMarkupString(BlogPost.ShortDescription)
+    </div>
+</div>
+@code {
+    [Parameter]
+    public BlogPost BlogPost { get; set; }
+}
