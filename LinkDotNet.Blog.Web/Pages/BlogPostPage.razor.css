@@ -1,0 +1,25 @@
+.blog-outer-box {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+.blog-container {
+    background: white;
+    width: 60%;    
+    box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    font-size: 125%;
+    padding: 20px;
+}
+
+.blogpost-date {
+    color: lightgrey;
+}
+
+.blog-content header {
+    text-align: center;
+}
+
+.blogpost-content {
+    padding-top: 20px;
+}

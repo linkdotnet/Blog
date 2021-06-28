@@ -2,8 +2,23 @@
 @using LinkDotNet.Infrastructure
 @using LinkDotNet.Domain
 @inject IRepository _repository
+@inherits MarkdownComponentBase
 
-<h1 style="color: white">@BlogPost.Title</h1>
+<div class="blog-outer-box">
+    <div class="content blog-container">
+        <div class="blog-content">
+            <header>
+                <h1>@BlogPost.Title</h1></header>
+            <div class="blogpost-date">
+                @BlogPost.UpdatedDate
+            </div>
+
+            <div class="blogpost-content">
+                @(RenderMarkupString(BlogPost.Content))
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter]
