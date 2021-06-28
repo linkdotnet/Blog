@@ -31,9 +31,9 @@
     public BlogPost BlogPost { get; set; }
   
     [Parameter]
-    public bool SetAlt { get; set; }
+    public bool UseAlternativeStyle { get; set; }
 
-    private string AltCssClass => SetAlt ? "alt" : string.Empty;
+    private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
 
     private void OpenBlogPost()
     {
