@@ -7,7 +7,7 @@ namespace LinkDotNet.Infrastructure
     public interface IRepository
     {
         Task<BlogPost> GetByIdAsync(string blogPostId);
-        
         Task<IEnumerable<BlogPost>> GetAllAsync();
+        Task StoreAsync(BlogPost blogPost);
     }
 }

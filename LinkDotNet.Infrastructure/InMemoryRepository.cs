@@ -30,7 +30,7 @@ Markdown gives all the flexibility to write well formatted posts including image
 public void ThisIsMyNiceFunction() { }
 ```
 # What comes next?
-Right now everything is kind of simple. I have  a lot of ideas what to implement ", new[] {"First Post", "C#", "Blazor"});
+Right now everything is kind of simple. I have  a lot of ideas what to implement ", "https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg", new[] {"First Post", "C#", "Blazor"});
             postOne.Id = "1";
             _blogPosts.Add(postOne);
 
@@ -45,6 +45,17 @@ Right now everything is kind of simple. I have  a lot of ideas what to implement
         public Task<IEnumerable<BlogPost>> GetAllAsync()
         {
             return Task.FromResult(_blogPosts.AsEnumerable());
+        }
+
+        public Task StoreAsync(BlogPost blogPost)
+        {
+            if (string.IsNullOrEmpty(blogPost.Id))
+            {
+                blogPost.Id = _blogPosts.Max(b => b.Id) + 1;
+            }
+            
+            _blogPosts.Add(blogPost);
+            return Task.CompletedTask;
         }
     }
 }

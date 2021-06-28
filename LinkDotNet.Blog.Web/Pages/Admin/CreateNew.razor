@@ -1,0 +1,28 @@
+﻿@page "/CreateNew"
+@using LinkDotNet.Infrastructure
+@inherits MarkdownComponentBase
+@inject IRepository _repository
+<h3>Create new Blog Post</h3>
+
+<EditForm Model="@_model" OnValidSubmit="SaveBlogPostAsync">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    
+    <InputText @bind-Value="_model.Title" />
+    <InputTextArea @bind-Value="_model.ShortDescription" />
+    <InputTextArea @bind-Value="_model.Content" />
+    <InputText @bind-Value="_model.PreviewImageUrl" />
+    <InputText @bind-Value="_model.Tags" />
+    
+    <button type="submit">Submit</button>
+    
+</EditForm>
+
+@code {
+    private readonly CreateNewModel _model = new();
+
+    private async Task SaveBlogPostAsync()
+    {
+        await _repository.StoreAsync(_model.ToBlogPost());
+    }
+}

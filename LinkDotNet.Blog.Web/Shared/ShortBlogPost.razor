@@ -3,7 +3,7 @@
 @inherits MarkdownComponentBase
 <div class="blog-card @AltCssClass">
     <div class="meta">
-      <div class="photo" style="background-image: url(https://storage.googleapis.com/chydlx/codepen/blog-cards/image-2.jpg)"></div>
+      <div class="photo" style="background-image: url(@BlogPost.PreviewImageUrl)"></div>
       <ul class="details">
         <li class="date">@BlogPost.UpdatedDate</li>
         <li class="tags">

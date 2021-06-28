@@ -25,5 +25,11 @@ namespace LinkDotNet.Infrastructure
             using var session = _documentStore.OpenAsyncSession();
             return await session.Query<BlogPost>().ToListAsync();
         }
+
+        public async Task StoreAsync(BlogPost blogPost)
+        {
+            using var session = _documentStore.OpenAsyncSession();
+            await session.StoreAsync(blogPost);
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace LinkDotNet.Domain
 
         public string Content { get; private set; }
 
+        public string PreviewImageUrl { get; private set; }
+
         public DateTime UpdatedDate { get; private set; }
 
         public IEnumerable<string> Tags { get; private set; }
@@ -30,7 +32,7 @@ namespace LinkDotNet.Domain
             Tags = from.Tags;
         }
 
-        public static BlogPost Create(string title, string shortDescription, string content, IEnumerable<string> tags)
+        public static BlogPost Create(string title, string shortDescription, string content, string previewImageUrl, IEnumerable<string> tags = null)
         {
             var blogPost = new BlogPost
             {
@@ -38,6 +40,7 @@ namespace LinkDotNet.Domain
                 ShortDescription = shortDescription,
                 Content = content,
                 UpdatedDate = DateTime.Now,
+                PreviewImageUrl = previewImageUrl,
                 Tags = tags
             };
 
