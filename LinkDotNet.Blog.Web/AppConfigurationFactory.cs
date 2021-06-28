@@ -9,6 +9,7 @@ namespace LinkDotNet.Blog.Web
         {
             var configuration = new AppConfiguration
             {
+                BlogName = config["BlogName"],
                 GithubAccountUrl = config["GithubAccountUrl"],
                 LinkedinAccountUrl = config["LinkedInAccountUrl"],
                 Introduction = config.GetSection("Introduction").Get<Introduction>(),
