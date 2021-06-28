@@ -1,0 +1,15 @@
+.content-area {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: flex;
+}
+
+.new-content {
+    flex: 1;
+    padding-right: 5px;
+}
+
+.preview {
+    flex: 1;
+    padding-left: 5px;
+}

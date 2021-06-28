@@ -7,6 +7,11 @@ namespace LinkDotNet.Blog.Web.Shared
     {
         protected static MarkupString RenderMarkupString(string content)
         {
+            if (string.IsNullOrEmpty(content))
+            {
+                return new MarkupString();
+            }
+            
             var markdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().Build();
 
             return (MarkupString) Markdown.ToHtml(content, markdownPipeline);
