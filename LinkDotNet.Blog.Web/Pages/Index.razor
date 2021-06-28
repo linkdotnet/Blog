@@ -1,25 +1,23 @@
 ﻿@page "/"
 @using LinkDotNet.Domain
+@using LinkDotNet.Infrastructure
+@inject IRepository _repository
 @inject AppConfiguration _appConfiguration
 
 <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 
 <div class="content px-4">
-    <ShortBlogPost BlogPost="_bp"></ShortBlogPost>
-    <ShortBlogPost BlogPost="_bp" SetAlt="true"></ShortBlogPost>
-    <ShortBlogPost BlogPost="_bp" ></ShortBlogPost>
-    <ShortBlogPost BlogPost="_bp" SetAlt="true"></ShortBlogPost>
-    <ShortBlogPost BlogPost="_bp"></ShortBlogPost>
+    @for (var i = 0; i < _blogPosts.Count; i++)
+    {
+        <ShortBlogPost BlogPost="_blogPosts[i]" SetAlt="@(i % 2 != 0)"></ShortBlogPost>
+    }
 </div>
 
 @code {
+    IList<BlogPost> _blogPosts;
+    protected override async Task OnInitializedAsync()
+    {
+        _blogPosts = (await _repository.GetAllAsync()).OrderByDescending(o => o.UpdatedDate).ToList();
+    }
 
-    readonly BlogPost _bp = BlogPost.Create("My first entry", @"
-**Welcome** to my first post. This whole blog was written with Blazor and some nice css.   In this post I will explain how the Blazor application works, what my motivation was and how to setup on your own.
-
-> Steven Giesel
-
-", null, new[] {"First Post", "C#", "Blazor"});
-
-};
 }

@@ -5,7 +5,7 @@ namespace LinkDotNet.Domain
 {
     public class BlogPost
     {
-        public string Id { get; private set; }
+        public string Id { get; set; }
         
         public string Title { get; private set; }
 
@@ -19,7 +19,6 @@ namespace LinkDotNet.Domain
 
         private BlogPost()
         {
-            
         }
 
         public void Update(BlogPost from)

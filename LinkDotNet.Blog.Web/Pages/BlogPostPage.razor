@@ -1,0 +1,18 @@
+@page "/BlogPost/{blogPostId}"
+@using LinkDotNet.Infrastructure
+@using LinkDotNet.Domain
+@inject IRepository _repository
+
+<h1 style="color: white">@BlogPost.Title</h1>
+
+@code {
+    [Parameter]
+    public string BlogPostId { get; set; }
+
+    private BlogPost BlogPost { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        BlogPost = await _repository.GetByIdAsync(BlogPostId);
+    }
+}
