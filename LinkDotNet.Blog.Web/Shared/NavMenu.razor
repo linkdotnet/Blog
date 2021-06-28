@@ -10,11 +10,11 @@
                 <li><a href="#">Home</a></li>
                 @if (_configuration.HasLinkedinAccount)
                 {
-                    <li><a href="@_configuration.LinkedinAccountUrl"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    <li><a target="_blank" href="@_configuration.LinkedinAccountUrl"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
                 }
                 @if (_configuration.HasGithubAccount)
                 {
-                    <li><a href="@_configuration.GithubAccountUrl"><i class="fab fa-github"></i> Github</a></li>
+                    <li><a target="_blank" href="@_configuration.GithubAccountUrl"><i class="fab fa-github"></i> Github</a></li>
                 }
                 <li><a href="#">Impressum</a></li>
             </ul>

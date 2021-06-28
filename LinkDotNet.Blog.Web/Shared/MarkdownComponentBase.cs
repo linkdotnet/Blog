@@ -5,11 +5,11 @@ namespace LinkDotNet.Blog.Web.Shared
 {
     public class MarkdownComponentBase : ComponentBase
     {
-        protected MarkupString RenderMarkupString(string content)
+        protected static MarkupString RenderMarkupString(string content)
         {
-            var p = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().Build();
+            var markdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().Build();
 
-            return (MarkupString) Markdown.ToHtml(content, p);
+            return (MarkupString) Markdown.ToHtml(content, markdownPipeline);
         }
     }
 }
