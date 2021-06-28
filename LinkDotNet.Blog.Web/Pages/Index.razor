@@ -5,26 +5,21 @@
 <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 
 <div class="content px-4">
-    <ShortBlogPost BlogPost="bp"></ShortBlogPost>
-    <ShortBlogPost BlogPost="bp" SetAlt="true"></ShortBlogPost>
-    <ShortBlogPost BlogPost="bp" ></ShortBlogPost>
-    <ShortBlogPost BlogPost="bp" SetAlt="true"></ShortBlogPost>
-    <ShortBlogPost BlogPost="bp"></ShortBlogPost>
+    <ShortBlogPost BlogPost="_bp"></ShortBlogPost>
+    <ShortBlogPost BlogPost="_bp" SetAlt="true"></ShortBlogPost>
+    <ShortBlogPost BlogPost="_bp" ></ShortBlogPost>
+    <ShortBlogPost BlogPost="_bp" SetAlt="true"></ShortBlogPost>
+    <ShortBlogPost BlogPost="_bp"></ShortBlogPost>
 </div>
 
 @code {
 
-    BlogPost bp = new BlogPost
-    {
-        Title = "My first entry",
-        ShortDescription = @"
+    readonly BlogPost _bp = BlogPost.Create("My first entry", @"
 **Welcome** to my first post. This whole blog was written with Blazor and some nice css.   In this post I will explain how the Blazor application works, what my motivation was and how to setup on your own.
 
 > Steven Giesel
 
-",
-        UpdatedDate = DateTime.Now,
-        Tags = new [] {"First Post", "C#", "Blazor"}
+", null, new[] {"First Post", "C#", "Blazor"});
 
-    };
+};
 }

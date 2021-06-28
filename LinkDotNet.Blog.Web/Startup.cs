@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using LinkDotNet.Blog.Web.Areas.Identity;
 using LinkDotNet.Blog.Web.Data;
+using LinkDotNet.Infrastructure;
 
 namespace LinkDotNet.Blog.Web
 {
@@ -27,8 +28,6 @@ namespace LinkDotNet.Blog.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -43,11 +42,13 @@ namespace LinkDotNet.Blog.Web
                     RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddSingleton<AppConfiguration>(service =>
+            services.AddSingleton(service =>
                 AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
+            
+            // This can be extended to use 
+            services.UseRavenDbAsStorageProvider();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -58,7 +59,6 @@ namespace LinkDotNet.Blog.Web
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

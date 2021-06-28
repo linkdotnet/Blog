@@ -10,6 +10,10 @@ namespace LinkDotNet.Blog.Web
         public string GithubAccountUrl { get; init; }
         public bool HasGithubAccount => !string.IsNullOrEmpty(LinkedinAccountUrl);
 
-        public Introduction Introduction { get; set; }
+        public Introduction Introduction { get; init; }
+        
+        public string ConnectionString { get; init; }
+        
+        public string DatabaseName { get; init; }
     }
 }

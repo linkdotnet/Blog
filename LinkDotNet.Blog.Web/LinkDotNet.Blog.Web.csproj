@@ -20,6 +20,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LinkDotNet.Domain\LinkDotNet.Domain.csproj" />
+      <ProjectReference Include="..\LinkDotNet.Infrastructure\LinkDotNet.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

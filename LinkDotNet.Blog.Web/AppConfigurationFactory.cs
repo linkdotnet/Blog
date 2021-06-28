@@ -12,6 +12,8 @@ namespace LinkDotNet.Blog.Web
                 GithubAccountUrl = config["GithubAccountUrl"],
                 LinkedinAccountUrl = config["LinkedInAccountUrl"],
                 Introduction = config.GetSection("Introduction").Get<Introduction>(),
+                ConnectionString = config["ConnectionString"],
+                DatabaseName = config["DatabaseName"],
             };
             return configuration;
         }
