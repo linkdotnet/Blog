@@ -10,7 +10,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
     {
         public static void UseRavenDbAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered(typeof(IRepository));
+            services.AssertNotAlreadyRegistered<IRepository>();
             
             services.AddSingleton(ctx =>
             {

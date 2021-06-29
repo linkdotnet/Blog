@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkDotNet.Infrastructure.Persistence.Sql
 {
-    public class BlogPostContext : DbContext
+    public sealed class BlogPostContext : DbContext
     {
         public BlogPostContext(DbContextOptions options) : base(options)
         {

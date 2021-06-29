@@ -10,7 +10,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
     {
         public static void UseSqlAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered(typeof(IRepository));
+            services.AssertNotAlreadyRegistered<IRepository>();
 
             services.AddScoped(s =>
             {
@@ -27,14 +27,14 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
 
         public static void UseSqliteAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered(typeof(IRepository));
+            services.AssertNotAlreadyRegistered<IRepository>();
 
             services.AddScoped(s =>
             {
                 var configuration = s.GetService<AppConfiguration>() ?? throw new ArgumentNullException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
                 var dbOptions = new DbContextOptionsBuilder()
-                    .UseSqlServer(connectionString)
+                    .UseSqlite(connectionString)
                     .Options;
 
                 return new BlogPostContext(dbOptions);
