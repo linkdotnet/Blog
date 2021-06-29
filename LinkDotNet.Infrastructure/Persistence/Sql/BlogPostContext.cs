@@ -7,6 +7,7 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
     {
         public BlogPostContext(DbContextOptions options) : base(options)
         {
+            Database.EnsureCreated();
         }
 
         public DbSet<BlogPost> BlogPosts { get; set; }
@@ -15,6 +16,13 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
         {
             modelBuilder.Entity<BlogPost>()
                 .HasKey(c => c.Id);
+            modelBuilder.Entity<BlogPost>()
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Tag>()
+                .Property(c => c.Id)
+                .ValueGeneratedOnAdd();
         }
     }
 }

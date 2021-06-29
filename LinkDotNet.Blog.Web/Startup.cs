@@ -28,9 +28,9 @@ namespace LinkDotNet.Blog.Web
                 AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
             
             // This can be extended to use other repositories
-            // services.UseSqlAsStorageProvider();
+            services.UseSqlAsStorageProvider();
             // services.UseRavenDbAsStorageProvider();
-            services.UseInMemoryAsStorageProvider();
+            // services.UseInMemoryAsStorageProvider();
 
             // Here you can setup up your identity provider
             services.UseAuth0Authentication(Configuration);

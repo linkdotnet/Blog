@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LinkDotNet.Domain
 {
@@ -17,7 +18,7 @@ namespace LinkDotNet.Domain
 
         public DateTime UpdatedDate { get; private set; }
 
-        public IEnumerable<string> Tags { get; private set; }
+        public virtual ICollection<Tag> Tags { get; private set; }
 
         private BlogPost()
         {
@@ -41,7 +42,7 @@ namespace LinkDotNet.Domain
                 Content = content,
                 UpdatedDate = DateTime.Now,
                 PreviewImageUrl = previewImageUrl,
-                Tags = tags
+                Tags = tags?.Select(t => new Tag() { Content =  t}).ToList()
             };
 
             return blogPost;
