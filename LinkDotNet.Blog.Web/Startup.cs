@@ -1,4 +1,5 @@
 using LinkDotNet.Blog.Web.Authentication.Auth0;
+using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,8 +28,9 @@ namespace LinkDotNet.Blog.Web
                 AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
             
             // This can be extended to use other repositories
-            services.UseRavenDbAsStorageProvider();
-            // services.UseInMemoryAsStorageProvider();
+            // services.UseSqlAsStorageProvider();
+            // services.UseRavenDbAsStorageProvider();
+            services.UseInMemoryAsStorageProvider();
 
             // Here you can setup up your identity provider
             services.UseAuth0Authentication(Configuration);

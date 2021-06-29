@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
 
-namespace LinkDotNet.Infrastructure
+namespace LinkDotNet.Infrastructure.Persistence
 {
     public interface IRepository
     {

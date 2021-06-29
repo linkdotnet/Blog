@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
 
-namespace LinkDotNet.Infrastructure
+namespace LinkDotNet.Infrastructure.Persistence.InMemory
 {
     public class InMemoryRepository : IRepository
     {

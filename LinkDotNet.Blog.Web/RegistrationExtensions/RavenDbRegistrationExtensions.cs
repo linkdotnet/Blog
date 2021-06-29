@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Linq;
-using LinkDotNet.Infrastructure;
+using LinkDotNet.Infrastructure.Persistence;
+using LinkDotNet.Infrastructure.Persistence.RavenDb;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.Web
+namespace LinkDotNet.Blog.Web.RegistrationExtensions
 {
     public static class RavenDbRegistrationExtensions
     {
         public static void UseRavenDbAsStorageProvider(this IServiceCollection services)
         {
-            var repoExists = services.Any(s => s.ServiceType == typeof(IRepository));
-            if (repoExists)
-            {
-                throw new NotSupportedException(
-                    $"Can't have multiple implementations registered of type {nameof(IRepository)}");
-            }
+            services.AssertNotAlreadyRegistered(typeof(IRepository));
             
             services.AddSingleton(ctx =>
             {
@@ -23,7 +19,7 @@ namespace LinkDotNet.Blog.Web
                 var databaseName = configuration.DatabaseName;
                 return RavenDbConnectionProvider.Create(connectionString, databaseName);
             });
-            services.AddScoped<IRepository, RavenDbRepository>();
+            services.AddScoped<IRepository, BlogPostRepository>();
         }
     }
 }

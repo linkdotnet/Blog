@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using LinkDotNet.Domain;
 using Raven.Client.Documents;
 
-namespace LinkDotNet.Infrastructure
+namespace LinkDotNet.Infrastructure.Persistence.RavenDb
 {
-    public class RavenDbRepository : IRepository
+    public class BlogPostRepository : IRepository
     {
         private readonly IDocumentStore _documentStore;
 
-        public RavenDbRepository(IDocumentStore documentStore)
+        public BlogPostRepository(IDocumentStore documentStore)
         {
             _documentStore = documentStore;
         }
