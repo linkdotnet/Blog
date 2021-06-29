@@ -48,3 +48,23 @@ The appsettings.json file has a lot of options to customize the content of the b
 |Domain|string|See more details here: https://manage.auth0.com/dashboard/|
 |ClientId|string|See more details here: https://manage.auth0.com/dashboard/|
 |ClientSecret|string|See more details here: https://manage.auth0.com/dashboard/|
+
+The usage might shift directly into the extension methods, where they are used.
+
+## Storage Provider
+Currently there are 4 Storage-Provider:
+ * InMemory - Basically a list holding your data (per request)
+ * RavenDb - As the name suggests for RavenDb
+ * Sqlite - Based on EF Core, so it can be easily adapted for other Sql Dialects
+ * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects
+
+### Using
+To use one of those just use the extension method in the Startup.cs in `ConfigureServices`:
+```csharp
+services.UseSqlAsStorageProvider();
+```
+
+It is only one storage provider at a time allowed. Registering multiple will result in an exception.
+
+## Authorization
+There is only one mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
