@@ -4,6 +4,12 @@
 @inject IRepository _repository
 @inherits MarkdownComponentBase
 
+@if (BlogPost == null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
 <div class="blog-outer-box">
     <div class="content blog-container">
         <div class="blog-content">
@@ -19,6 +25,7 @@
         </div>
     </div>
 </div>
+}
 
 @code {
     [Parameter]
