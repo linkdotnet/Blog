@@ -17,8 +17,24 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
                 var configuration = s.GetService<AppConfiguration>() ?? throw new ArgumentNullException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
                 var dbOptions = new DbContextOptionsBuilder()
-                    .UseSqlite(connectionString)
-                    // .UseSqlServer(connectionString)
+                    .UseSqlServer(connectionString)
+                    .Options;
+
+                return new BlogPostContext(dbOptions);
+            });
+            services.AddScoped<IRepository, BlogPostRepository>();
+        }
+
+        public static void UseSqliteAsStorageProvider(this IServiceCollection services)
+        {
+            services.AssertNotAlreadyRegistered(typeof(IRepository));
+
+            services.AddScoped(s =>
+            {
+                var configuration = s.GetService<AppConfiguration>() ?? throw new ArgumentNullException(nameof(AppConfiguration));
+                var connectionString = configuration.ConnectionString;
+                var dbOptions = new DbContextOptionsBuilder()
+                    .UseSqlServer(connectionString)
                     .Options;
 
                 return new BlogPostContext(dbOptions);
