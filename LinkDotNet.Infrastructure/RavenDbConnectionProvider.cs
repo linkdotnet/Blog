@@ -6,7 +6,10 @@ namespace LinkDotNet.Infrastructure
     {
         public static IDocumentStore Create(string url, string databaseName)
         {
-            var documentStore = new DocumentStore {Urls = new[] {url}, Database = databaseName};
+            var documentStore = new DocumentStore
+            {
+                Urls = new[] {url}, Database = databaseName, Conventions = {IdentityPartsSeparator = '-'}
+            };
             documentStore.Initialize();
             return documentStore;
         }
