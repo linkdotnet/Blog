@@ -19,7 +19,7 @@
     font-weight: 300;
 }
 
-.navlinks {
+::deep .navlinks {
     float: right;
     display: flex;
     list-style: none;
@@ -28,16 +28,16 @@
     padding-top: 23px;
 }
 
-.navlinks li {
+::deep .navlinks li {
     padding-left: 1.25rem;
 }
 
-.navlinks li a {
+::deep .navlinks li a {
     text-decoration: none;
     font-size: 1.1rem;
     color: white;
 }
 
-.navlinks li a:hover {
+::deep .navlinks li a:hover {
     color: #66C3CC;
 }

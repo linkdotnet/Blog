@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.Web.Pages.Admin
@@ -21,7 +22,7 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
 
         public BlogPost ToBlogPost()
         {
-            var tags = string.IsNullOrWhiteSpace(Tags) ? null : Tags.Split(",");
+            var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
 
             return BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
         }

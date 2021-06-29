@@ -14,7 +14,7 @@
 </div>
 
 @code {
-    IList<BlogPost> _blogPosts;
+    IList<BlogPost> _blogPosts = new List<BlogPost>();
     protected override async Task OnInitializedAsync()
     {
         _blogPosts = (await _repository.GetAllAsync()).OrderByDescending(o => o.UpdatedDate).ToList();

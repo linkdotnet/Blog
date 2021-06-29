@@ -53,7 +53,7 @@ Right now everything is kind of simple. I have  a lot of ideas what to implement
             {
                 blogPost.Id = _blogPosts.Max(b => b.Id) + 1;
             }
-            
+
             _blogPosts.Add(blogPost);
             return Task.CompletedTask;
         }

@@ -30,6 +30,7 @@ namespace LinkDotNet.Infrastructure
         {
             using var session = _documentStore.OpenAsyncSession();
             await session.StoreAsync(blogPost);
+            await session.SaveChangesAsync();
         }
     }
 }

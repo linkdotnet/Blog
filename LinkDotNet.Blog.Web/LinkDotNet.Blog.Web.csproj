@@ -11,16 +11,17 @@
 
     <ItemGroup>
         <PackageReference Include="Markdig" Version="0.25.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.7" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\LinkDotNet.Domain\LinkDotNet.Domain.csproj" />
       <ProjectReference Include="..\LinkDotNet.Infrastructure\LinkDotNet.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Account\LogOut.cshtml" />
+      <_ContentIncludedByDefault Remove="Areas\Identity\Pages\Shared\_LoginPartial.cshtml" />
     </ItemGroup>
 
 </Project>
