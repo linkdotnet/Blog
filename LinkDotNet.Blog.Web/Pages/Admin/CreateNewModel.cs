@@ -1,11 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.Web.Pages.Admin
 {
     public class CreateNewModel
     {
+        public string Id { get; set; }
+        
         [Required]
         public string Title { get; set; }
 
@@ -24,7 +27,22 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
         {
             var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
 
-            return BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
+            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
+            blogPost.Id = Id;
+            return blogPost;
+        }
+
+        public static CreateNewModel FromBlogPost(BlogPost blogPost)
+        {
+            return new CreateNewModel
+            {
+                Id = blogPost.Id,
+                Content = blogPost.Content,
+                Tags = blogPost.Tags != null ? string.Join(",", blogPost.Tags.Select(t => t.Content)) : null,
+                Title = blogPost.Title,
+                ShortDescription = blogPost.ShortDescription,
+                PreviewImageUrl = blogPost.PreviewImageUrl
+            };
         }
     }
 }

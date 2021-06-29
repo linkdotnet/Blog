@@ -1,6 +1,8 @@
 ﻿@page "/CreateNew"
+@page "/CreateNew/{blogPostId}"
 @attribute [Authorize]
 @using LinkDotNet.Infrastructure.Persistence
+@using LinkDotNet.Domain
 @inherits MarkdownComponentBase
 @inject IRepository _repository
 @inject IToastService _toastService
@@ -51,13 +53,35 @@
     </div>
 </div>
 @code {
+    [Parameter]
+    public string BlogPostId { get; set; }
+    
     private CreateNewModel _model = new();
+    private BlogPost _blogPost;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (string.IsNullOrEmpty(BlogPostId))
+        {
+            return;
+        }
+
+        _blogPost = await _repository.GetByIdAsync(BlogPostId);
+        _model = CreateNewModel.FromBlogPost(_blogPost);
+    }
 
     private async Task SaveBlogPostAsync()
     {
+        //// Does not work when updating
         await _repository.StoreAsync(_model.ToBlogPost());
-        _toastService.ShowSuccess($"Created BlogPost {_model.Title}");
+        DisplayMessage();
         ClearModel();
+    }
+
+    private void DisplayMessage()
+    {
+        var operationInformation = BlogPostId == null ? "Created" : "Updated";
+        _toastService.ShowSuccess($"{operationInformation} BlogPost {_model.Title}");
     }
 
     private void ClearModel()
