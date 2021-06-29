@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using LinkDotNet.Blog.Web.Authentication.Auth0;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
@@ -34,6 +35,8 @@ namespace LinkDotNet.Blog.Web
 
             // Here you can setup up your identity provider
             services.UseAuth0Authentication(Configuration);
+
+            services.AddBlazoredToast();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

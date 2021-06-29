@@ -3,6 +3,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @inherits MarkdownComponentBase
 @inject IRepository _repository
+@inject IToastService _toastService
 <h3>Create new Blog Post</h3>
 
 <div class="content-area">
@@ -50,10 +51,18 @@
     </div>
 </div>
 @code {
-    private readonly CreateNewModel _model = new();
+    private CreateNewModel _model = new();
 
     private async Task SaveBlogPostAsync()
     {
         await _repository.StoreAsync(_model.ToBlogPost());
+        _toastService.ShowSuccess($"Created BlogPost {_model.Title}");
+        ClearModel();
     }
+
+    private void ClearModel()
+    {
+        _model = new CreateNewModel();
+    }
+
 }
