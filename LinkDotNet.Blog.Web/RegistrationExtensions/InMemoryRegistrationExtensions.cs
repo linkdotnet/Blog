@@ -11,7 +11,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
         public static void UseInMemoryAsStorageProvider(this IServiceCollection services)
         {
             services.AssertNotAlreadyRegistered<IRepository>();
-            
+
             services.AddScoped<IRepository, InMemoryRepository>();
         }
     }

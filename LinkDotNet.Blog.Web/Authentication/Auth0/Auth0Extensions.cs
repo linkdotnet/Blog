@@ -49,7 +49,7 @@ namespace LinkDotNet.Blog.Web.Authentication.Auth0
           options.Events = new OpenIdConnectEvents
           {
             // handle the logout redirection
-            OnRedirectToIdentityProviderForSignOut = (context) =>
+            OnRedirectToIdentityProviderForSignOut = context =>
             {
               var logoutUri = $"https://{auth0.Domain}/v2/logout?client_id={auth0.ClientId}";
 
@@ -70,10 +70,10 @@ namespace LinkDotNet.Blog.Web.Authentication.Auth0
               context.HandleResponse();
 
               return Task.CompletedTask;
-            }
+            },
           };
         });
-      
+
       services.AddHttpContextAccessor();
       services.AddScoped<ILoginManager, Auth0LoginManager>();
     }

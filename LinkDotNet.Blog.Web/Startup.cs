@@ -25,7 +25,7 @@ namespace LinkDotNet.Blog.Web
 
             services.AddSingleton(service =>
                 AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
-            
+
             // This can be extended to use other repositories
             services.UseSqliteAsStorageProvider();
             // services.UseRavenDbAsStorageProvider();

@@ -7,27 +7,27 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
 {
     public class InMemoryRepository : IRepository
     {
-        private readonly List<BlogPost> _blogPosts = new();
+        private readonly List<BlogPost> blogPosts = new ();
 
         public Task<BlogPost> GetByIdAsync(string blogPostId)
         {
-            var blogPost = _blogPosts.SingleOrDefault(b => b.Id == blogPostId);
+            var blogPost = blogPosts.SingleOrDefault(b => b.Id == blogPostId);
             return Task.FromResult(blogPost);
         }
 
         public Task<IEnumerable<BlogPost>> GetAllAsync()
         {
-            return Task.FromResult(_blogPosts.AsEnumerable());
+            return Task.FromResult(blogPosts.AsEnumerable());
         }
 
         public Task StoreAsync(BlogPost blogPost)
         {
             if (string.IsNullOrEmpty(blogPost.Id))
             {
-                blogPost.Id = _blogPosts.Max(b => b.Id) + 1;
+                blogPost.Id = blogPosts.Max(b => b.Id) + 1;
             }
 
-            _blogPosts.Add(blogPost);
+            blogPosts.Add(blogPost);
             return Task.CompletedTask;
         }
     }

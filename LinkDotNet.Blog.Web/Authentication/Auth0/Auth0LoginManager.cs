@@ -8,25 +8,25 @@ namespace LinkDotNet.Blog.Web.Authentication.Auth0
 {
     public class Auth0LoginManager : ILoginManager
     {
-        private readonly HttpContext _httpContext;
+        private readonly HttpContext httpContext;
 
         public Auth0LoginManager(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
-        
+
         public async Task SignInAsync(string redirectUri)
         {
-            await _httpContext.ChallengeAsync("Auth0", new AuthenticationProperties
+            await httpContext.ChallengeAsync("Auth0", new AuthenticationProperties
             {
-                RedirectUri = redirectUri
+                RedirectUri = redirectUri,
             });
         }
 
         public async Task SignOutAsync(string redirectUri = "/")
         {
-            await _httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = "/" });
-            await _httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = "/" });
+            await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

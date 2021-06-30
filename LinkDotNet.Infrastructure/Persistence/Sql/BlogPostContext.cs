@@ -5,13 +5,14 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
 {
     public sealed class BlogPostContext : DbContext
     {
-        public BlogPostContext(DbContextOptions options) : base(options)
+        public BlogPostContext(DbContextOptions options)
+            : base(options)
         {
             Database.EnsureCreated();
         }
 
         public DbSet<BlogPost> BlogPosts { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BlogPost>()

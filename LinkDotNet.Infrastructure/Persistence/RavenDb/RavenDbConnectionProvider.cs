@@ -8,7 +8,7 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
         {
             var documentStore = new DocumentStore
             {
-                Urls = new[] {url}, Database = databaseName, Conventions = {IdentityPartsSeparator = '-'}
+                Urls = new[] { url }, Database = databaseName, Conventions = { IdentityPartsSeparator = '-' },
             };
             documentStore.Initialize();
             return documentStore;

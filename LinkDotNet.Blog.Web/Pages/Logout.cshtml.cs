@@ -6,16 +6,16 @@ namespace LinkDotNet.Blog.Web.Pages
 {
     public class LogoutModel : PageModel
     {
-        private readonly ILoginManager _loginManager;
+        private readonly ILoginManager loginManager;
 
         public LogoutModel(ILoginManager loginManager)
         {
-            _loginManager = loginManager;
+            this.loginManager = loginManager;
         }
-        
+
         public async Task OnGet()
         {
-            await _loginManager.SignOutAsync();
+            await loginManager.SignOutAsync();
         }
     }
 }

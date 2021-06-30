@@ -11,10 +11,10 @@ namespace LinkDotNet.Blog.Web.Shared
             {
                 return default;
             }
-            
+
             var markdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().Build();
 
-            return (MarkupString) Markdown.ToHtml(content, markdownPipeline);
+            return (MarkupString)Markdown.ToHtml(content, markdownPipeline);
         }
     }
 }

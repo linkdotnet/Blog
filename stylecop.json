@@ -7,11 +7,16 @@
       "xmlHeader": false,
       "fileNamingConvention": "metadata"
     },
-    "layoutRules": {
-      "newlineAtEndOfFile": "require"
-    },
     "namingRules": {
       "tupleElementNameCasing": "camelCase"
+    },
+    "orderingRules": {
+      "usingDirectivesPlacement": "outsideNamespace"
+    },
+    "indentation": {
+      "indentationSize": 4,
+      "tabSize": 4,
+      "useTabs": false
     }
   }
 }

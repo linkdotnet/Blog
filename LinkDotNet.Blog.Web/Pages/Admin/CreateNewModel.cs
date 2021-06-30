@@ -8,7 +8,7 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
     public class CreateNewModel
     {
         public string Id { get; set; }
-        
+
         [Required]
         public string Title { get; set; }
 
@@ -23,15 +23,6 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
 
         public string Tags { get; set; }
 
-        public BlogPost ToBlogPost()
-        {
-            var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
-
-            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
-            blogPost.Id = Id;
-            return blogPost;
-        }
-
         public static CreateNewModel FromBlogPost(BlogPost blogPost)
         {
             return new CreateNewModel
@@ -41,8 +32,17 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
                 Tags = blogPost.Tags != null ? string.Join(",", blogPost.Tags.Select(t => t.Content)) : null,
                 Title = blogPost.Title,
                 ShortDescription = blogPost.ShortDescription,
-                PreviewImageUrl = blogPost.PreviewImageUrl
+                PreviewImageUrl = blogPost.PreviewImageUrl,
             };
+        }
+
+        public BlogPost ToBlogPost()
+        {
+            var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
+
+            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
+            blogPost.Id = Id;
+            return blogPost;
         }
     }
 }
