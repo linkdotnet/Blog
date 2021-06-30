@@ -1,6 +1,7 @@
 @page "/BlogPost/{blogPostId}"
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
+@using Microsoft.AspNetCore.Components.Web.Extensions.Head
 @inject IRepository _repository
 @inherits MarkdownComponentBase
 
@@ -10,7 +11,9 @@
 }
 else
 {
-<div class="blog-outer-box">
+    <Meta property="og:title" content="@BlogPost.Title" />
+    <Meta property="og:image" content="@BlogPost.PreviewImageUrl" />
+    <div class="blog-outer-box">
     <div class="content blog-container">
         <div class="blog-content">
             <header>
