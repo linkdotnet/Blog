@@ -12,7 +12,7 @@ namespace LinkDotNet.Blog.Web.Pages
         {
             _loginManager = loginManager;
         }
-        
+
         public async Task OnGet(string redirectUri)
         {
             await _loginManager.SignInAsync(redirectUri);

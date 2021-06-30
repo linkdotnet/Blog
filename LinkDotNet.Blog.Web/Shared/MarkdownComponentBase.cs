@@ -9,7 +9,7 @@ namespace LinkDotNet.Blog.Web.Shared
         {
             if (string.IsNullOrEmpty(content))
             {
-                return new MarkupString();
+                return default;
             }
             
             var markdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().Build();

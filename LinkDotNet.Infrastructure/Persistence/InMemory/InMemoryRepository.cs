@@ -8,7 +8,7 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
     public class InMemoryRepository : IRepository
     {
         private readonly List<BlogPost> _blogPosts = new();
-        
+
         public Task<BlogPost> GetByIdAsync(string blogPostId)
         {
             var blogPost = _blogPosts.SingleOrDefault(b => b.Id == blogPostId);
