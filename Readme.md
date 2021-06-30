@@ -6,7 +6,8 @@ The basic idea is that the content creator writes his posts in markdown language
 The markdown will then by translated to HTML and displayed to the client. This gives an easy entry to writing posts with all the flexibility markdown has.
 
 ## Setup
-Just clone this repository and you are good to go. There are some settings you can tweak.
+Just clone this repository and you are good to go. There are some settings you can tweak. The following chapter will guide you 
+through the possibilities.
 
 ### appsettings.json
 The appsettings.json file has a lot of options to customize the content of the blog. The following table shows which values are used when.
@@ -18,7 +19,7 @@ The appsettings.json file has a lot of options to customize the content of the b
   "GithubAccountUrl": "",
   "LinkedInAccountUrl": "",
   "Introduction": {
-    "Description": "Hey, my name is **Steven**. I am a **.NET Developer** based in Zurich, Switzerland. This is my small blog, which I wrote completely in Blazor. If you want to know more about me just check out my LinkedIn or Github.\nAlso this blogsoftware is open source on [Github](https://github.com/linkdotnet/blog)",
+    "Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
     "BackgroundUrl": "assets/profile-background.png",
     "ProfilePictureUrl": "assets/profile-picture.jfif"
   },
@@ -35,11 +36,11 @@ The appsettings.json file has a lot of options to customize the content of the b
 
 | Property | Type | Description |
 |----------|------|-------|
-|BlogName|string|Name of your blog. Is used in the navbar|
+|BlogName|string|Name of your blog. Is used in the navbar and is used as the title of the page.|
 |GithubAccountUrl|string|Url to your github account. If not set the navigation link is not shown|
 |LinkedInAccountUrl|string|Url to your LinkedIn account. If not set the navigation link is not shown|
 |Introduction| |Is used for the introduction part of the blog|
-|Description|MarkdownString|Small introduction text for yourself.|
+|Description|MarkdownString|Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text.|
 |BackgroundUrl|string|Url or path to the background image|
 |ProfilePictureUrl|string|Url or path to your profile picture|
 |ConnectionString|string|Is used for connection to a database. Not used when `InMemoryStorageProvider` is used|
@@ -68,3 +69,5 @@ It is only one storage provider at a time allowed. Registering multiple will res
 
 ## Authorization
 There is only one mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
+
+The main advantage of Auth0 is the easy configurable dashboard on their website. 
