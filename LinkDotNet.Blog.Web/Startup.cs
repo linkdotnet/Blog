@@ -28,8 +28,12 @@ namespace LinkDotNet.Blog.Web
 
             // This can be extended to use other repositories
             services.UseSqliteAsStorageProvider();
-            // services.UseRavenDbAsStorageProvider();
-            // services.UseInMemoryAsStorageProvider();
+            /****************
+             * Possible Storage Providers:
+             * services.UseSqlAsStorageProvider();
+             * services.UseRavenDbAsStorageProvider();
+             * services.UseInMemoryAsStorageProvider();
+             */
 
             // Here you can setup up your identity provider
             services.UseAuth0Authentication(Configuration);

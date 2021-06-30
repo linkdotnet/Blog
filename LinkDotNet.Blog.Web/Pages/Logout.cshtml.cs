@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace LinkDotNet.Blog.Web.Pages
 {
-    public class LogoutModel : PageModel
+    public partial class LogoutModel : PageModel
     {
         private readonly ILoginManager loginManager;
 

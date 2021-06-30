@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using LinkDotNet.Infrastructure.Persistence;
+﻿using LinkDotNet.Infrastructure.Persistence;
 using LinkDotNet.Infrastructure.Persistence.RavenDb;
 using Microsoft.Extensions.DependencyInjection;
 
