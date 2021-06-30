@@ -7,7 +7,7 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
 {
     public class InMemoryRepository : IRepository
     {
-        private readonly List<BlogPost> blogPosts = new ();
+        private readonly List<BlogPost> blogPosts = new();
 
         public Task<BlogPost> GetByIdAsync(string blogPostId)
         {
