@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.UnitTests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkDotNet.Blog.IntegrationTests", "LinkDotNet.Blog.IntegrationTests\LinkDotNet.Blog.IntegrationTests.csproj", "{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkDotNet.Blog.TestUtilities", "LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj", "{310ABEE1-C131-43E6-A759-F2DB75A483DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310ABEE1-C131-43E6-A759-F2DB75A483DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310ABEE1-C131-43E6-A759-F2DB75A483DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310ABEE1-C131-43E6-A759-F2DB75A483DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310ABEE1-C131-43E6-A759-F2DB75A483DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

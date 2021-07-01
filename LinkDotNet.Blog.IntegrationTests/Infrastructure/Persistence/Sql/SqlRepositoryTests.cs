@@ -2,34 +2,21 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
 {
-    public sealed class SqlRepositoryTests : IAsyncLifetime
+    public sealed class SqlRepositoryTests : SqlDatabaseTestBase
     {
-        private readonly BlogPostRepository sut;
-        private readonly BlogPostContext dbContext;
-
-        public SqlRepositoryTests()
-        {
-            var options = new DbContextOptionsBuilder()
-                .UseSqlite("Data Source=IntegrationTest.db")
-                .Options;
-            dbContext = new BlogPostContext(options);
-            sut = new BlogPostRepository(new BlogPostContext(options));
-        }
-
         [Fact]
         public async Task ShouldLoadBlogPost()
         {
             var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", new[] { "Tag 1", "Tag 2" });
-            await dbContext.BlogPosts.AddAsync(blogPost);
-            await dbContext.SaveChangesAsync();
+            await DbContext.BlogPosts.AddAsync(blogPost);
+            await DbContext.SaveChangesAsync();
 
-            var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
+            var blogPostFromRepo = await BlogPostRepository.GetByIdAsync(blogPost.Id);
 
             blogPostFromRepo.Should().NotBeNull();
             blogPostFromRepo.Title.Should().Be("Title");
@@ -46,9 +33,9 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         {
             var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", new[] { "Tag 1", "Tag 2" });
 
-            await sut.StoreAsync(blogPost);
+            await BlogPostRepository.StoreAsync(blogPost);
 
-            var blogPostFromContext = await dbContext.BlogPosts.Include(b => b.Tags).AsNoTracking().SingleOrDefaultAsync(s => s.Id == blogPost.Id);
+            var blogPostFromContext = await DbContext.BlogPosts.Include(b => b.Tags).AsNoTracking().SingleOrDefaultAsync(s => s.Id == blogPost.Id);
             blogPostFromContext.Should().NotBeNull();
             blogPostFromContext.Title.Should().Be("Title");
             blogPostFromContext.ShortDescription.Should().Be("Subtitle");
@@ -63,10 +50,10 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         public async Task ShouldGetAllBlogPosts()
         {
             var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", new[] { "Tag 1", "Tag 2" });
-            await dbContext.BlogPosts.AddAsync(blogPost);
-            await dbContext.SaveChangesAsync();
+            await DbContext.BlogPosts.AddAsync(blogPost);
+            await DbContext.SaveChangesAsync();
 
-            var blogPostsFromRepo = (await sut.GetAllAsync()).ToList();
+            var blogPostsFromRepo = (await BlogPostRepository.GetAllAsync()).ToList();
 
             blogPostsFromRepo.Should().NotBeNull();
             blogPostsFromRepo.Should().HaveCount(1);
@@ -78,17 +65,6 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             blogPostFromRepo.Tags.Should().HaveCount(2);
             var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
             tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
-        }
-
-        public Task InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
-
-        async Task IAsyncLifetime.DisposeAsync()
-        {
-            await dbContext.Database.EnsureDeletedAsync();
-            await dbContext.DisposeAsync();
         }
     }
 }
