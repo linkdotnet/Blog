@@ -1,8 +1,11 @@
 ﻿@page "/"
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
+@using Markdig
 @inject IRepository _repository
 @inject AppConfiguration _appConfiguration
+
+<OgData Title="@(Markdown.ToPlainText(_appConfiguration.Introduction.Description))" PreviewImageUrl="@_appConfiguration.Introduction.BackgroundUrl"></OgData>
 
 <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 

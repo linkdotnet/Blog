@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
+@inject NavigationManager _navigationManager
+
+<Meta property="og:title" content="@Title" />
+<Meta name="image" property="og:image" content="@PreviewImageUrl" />
+<Meta property="og:type" content="article" />
+<Meta property="og:url" content="@_navigationManager.Uri" />
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string PreviewImageUrl { get; set; }
+
+}
