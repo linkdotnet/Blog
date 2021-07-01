@@ -6,7 +6,7 @@ using LinkDotNet.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence
+namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
 {
     public sealed class SqlRepositoryTests : IAsyncLifetime
     {
