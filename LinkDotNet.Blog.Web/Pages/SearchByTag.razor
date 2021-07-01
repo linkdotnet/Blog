@@ -17,6 +17,7 @@
     IList<BlogPost> _blogPosts = new List<BlogPost>();
     protected override async Task OnInitializedAsync()
     {
+        Tag = Uri.UnescapeDataString(Tag);
         _blogPosts = (await _repository.GetAllAsync(b => b.Tags.Any(t => t.Content == Tag), b => b.UpdatedDate)).ToList();
     }
 }

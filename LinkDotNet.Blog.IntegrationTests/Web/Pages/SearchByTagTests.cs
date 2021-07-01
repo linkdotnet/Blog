@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -24,6 +25,19 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             var tags = cut.FindAll(".blog-card");
 
             tags.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task ShouldHandleSpecialCharacters()
+        {
+            using var ctx = new TestContext();
+            await AddBlogPostWithTagAsync("C#");
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
+
+            var tags = cut.FindAll(".blog-card");
+
+            tags.Should().HaveCount(1);
         }
 
         private async Task AddBlogPostWithTagAsync(string tag)

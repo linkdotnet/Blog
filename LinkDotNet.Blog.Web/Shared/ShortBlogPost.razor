@@ -1,4 +1,6 @@
 ﻿@using LinkDotNet.Domain
+@using System.Net
+@using System.Web
 @inject NavigationManager _navigationManager
 @inherits MarkdownComponentBase
 <div class="blog-card @AltCssClass">
@@ -12,7 +14,7 @@
           <ul>
             @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
             {
-              <li><a href="/searchByTag/@tag">@tag</a></li>
+              <li><a href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
             }
           </ul>
         </li>
