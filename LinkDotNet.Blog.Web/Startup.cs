@@ -27,10 +27,10 @@ namespace LinkDotNet.Blog.Web
                 AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
 
             // This can be extended to use other repositories
-            services.UseSqliteAsStorageProvider();
+            services.UseSqlAsStorageProvider();
             /****************
              * Possible Storage Providers:
-             * services.UseSqlAsStorageProvider();
+             * services.UseSqliteAsStorageProvider();
              * services.UseRavenDbAsStorageProvider();
              * services.UseInMemoryAsStorageProvider();
              */

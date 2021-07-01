@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Infrastructure",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.UnitTests", "LinkDotNet.Blog.UnitTests\LinkDotNet.Blog.UnitTests.csproj", "{5B868911-7C93-4190-AEE4-3A6694F2FFCE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkDotNet.Blog.IntegrationTests", "LinkDotNet.Blog.IntegrationTests\LinkDotNet.Blog.IntegrationTests.csproj", "{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{5B868911-7C93-4190-AEE4-3A6694F2FFCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B868911-7C93-4190-AEE4-3A6694F2FFCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B868911-7C93-4190-AEE4-3A6694F2FFCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

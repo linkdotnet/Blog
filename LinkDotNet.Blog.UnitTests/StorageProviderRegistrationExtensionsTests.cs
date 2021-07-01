@@ -1,4 +1,5 @@
 using System;
+using FluentAssertions;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -11,10 +12,11 @@ namespace LinkDotNet.Blog.UnitTests
         public void GivenAlreadyRegisteredRepository_WhenTryingToAddAnotherOne_ThenException()
         {
             var services = new ServiceCollection();
+            services.UseRavenDbAsStorageProvider();
 
-            services.UseSqliteAsStorageProvider();
+            Action act = () => services.UseSqliteAsStorageProvider();
 
-            Assert.Throws<NotSupportedException>(() => services.UseRavenDbAsStorageProvider());
+            act.Should().Throw<NotSupportedException>();
         }
     }
 }
