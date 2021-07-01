@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
 using Raven.Client.Documents;
+using Raven.Client.Documents.Linq;
 
 namespace LinkDotNet.Infrastructure.Persistence.RavenDb
 {
@@ -20,10 +23,27 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             return await session.LoadAsync<BlogPost>(blogPostId);
         }
 
-        public async Task<IEnumerable<BlogPost>> GetAllAsync()
+        public async Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true)
         {
             using var session = documentStore.OpenAsyncSession();
-            return await session.Query<BlogPost>().ToListAsync();
+
+            var query = session.Query<BlogPost>();
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (orderBy != null)
+            {
+                if (descending)
+                {
+                    return await query.OrderByDescending(orderBy).ToListAsync();
+                }
+
+                return await query.OrderBy(orderBy).ToListAsync();
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task StoreAsync(BlogPost blogPost)

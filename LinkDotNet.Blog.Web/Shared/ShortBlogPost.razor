@@ -12,7 +12,7 @@
           <ul>
             @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
             {
-              <li><a href="#">@tag</a></li>
+              <li><a href="/searchByTag/@tag">@tag</a></li>
             }
           </ul>
         </li>

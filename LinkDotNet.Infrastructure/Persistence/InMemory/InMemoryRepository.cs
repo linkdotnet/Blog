@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
 
@@ -15,8 +17,24 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
             return Task.FromResult(blogPost);
         }
 
-        public Task<IEnumerable<BlogPost>> GetAllAsync()
+        public Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true)
         {
+            var result = blogPosts.AsEnumerable();
+            if (filter != null)
+            {
+                result = result.Where(filter.Compile());
+            }
+
+            if (orderBy != null)
+            {
+                if (descending)
+                {
+                    return Task.FromResult(result.OrderByDescending(orderBy.Compile()).AsEnumerable());
+                }
+
+                return Task.FromResult(result.OrderBy(orderBy.Compile()).AsEnumerable());
+            }
+
             return Task.FromResult(blogPosts.AsEnumerable());
         }
 
