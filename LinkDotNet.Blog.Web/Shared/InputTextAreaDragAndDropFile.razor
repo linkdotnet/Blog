@@ -1,0 +1,69 @@
+﻿<style>
+    .can-drop {
+            border: 2px dashed green;
+        }
+</style>
+<div>
+    <InputTextArea
+        @attributes="AdditionalAttributes"
+        class="@_cssClass"
+        @bind-Value="@BindingValue"
+        ondragover="event.stopPropagation(); event.preventDefault();"
+        ondragstart="event.stopPropagation(); event.preventDefault();"
+        ondragexit="event.stopPropagation(); event.preventDefault();"
+        ondragend="event.stopPropagation(); event.preventDefault();"
+        @ondrop="HandleDrop"
+        @ondragenter="HandleDragEnter"
+        @ondragleave="HandleDragLeave"/>
+</div>
+
+@code {
+    private string _dropClass = string.Empty;
+    private string _otherClasses = string.Empty;
+    private string _cssClass => _dropClass + " " + _otherClasses;
+    
+    private string _value;
+
+    [Parameter]
+    public string BindingValue
+    {
+        get => _value;
+        set
+        {
+            if (_value == value ) return;
+            _value = value;
+            BindingValueChanged.InvokeAsync(value);
+        }
+    }
+
+    [Parameter]
+    public EventCallback<string> BindingValueChanged { get; set; }  
+    
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object> AdditionalAttributes { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (AdditionalAttributes != null && AdditionalAttributes.ContainsKey("class"))
+        {
+            _otherClasses = AdditionalAttributes["class"].ToString();
+        }
+    }
+
+    private void HandleDrop(DragEventArgs args)
+    {
+        _dropClass = string.Empty;
+        //// This will only work with .NET 6
+        // var files = args.DataTransfer.Files;
+    }
+
+    private void HandleDragEnter()
+    {
+        _dropClass = "can-drop";
+    }
+
+    private void HandleDragLeave()
+    {
+        _dropClass = string.Empty;
+    }
+}
