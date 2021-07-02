@@ -57,7 +57,10 @@
     
     [Parameter]
     public EventCallback<BlogPost> OnBlogPostCreated { get; set; }
-    
+
+    [Parameter]
+    public bool ClearAfterCreated { get; set; } = true;
+
     private CreateNewModel _model = new();
 
     protected override void OnParametersSet()
@@ -78,6 +81,9 @@
     
     private void ClearModel()
     {
-        _model = new CreateNewModel();
+        if (ClearAfterCreated)
+        {
+            _model = new CreateNewModel();
+        }
     }
 }
