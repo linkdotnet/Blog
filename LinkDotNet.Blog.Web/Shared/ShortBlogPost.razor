@@ -3,34 +3,35 @@
 @using System.Web
 @inject NavigationManager _navigationManager
 @inherits MarkdownComponentBase
-<div class="blog-card @AltCssClass">
-  <div class="meta">
-    <div class="photo" style="background-image: url(@BlogPost.PreviewImageUrl)"></div>
-    <ul class="details">
-      <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
-      @if (BlogPost.Tags != null)
-      {
-        <li class="tags">
-          <ul>
-            @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
-            {
-              <li><a href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
-            }
-          </ul>
-        </li>
-      }
-    </ul>
+<article>
+  <div class="blog-card @AltCssClass">
+    <div class="meta">
+      <div class="photo" style="background-image: url(@BlogPost.PreviewImageUrl)"></div>
+      <ul class="details">
+        <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
+        @if (BlogPost.Tags != null)
+        {
+          <li class="tags">
+            <ul>
+              @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
+              {
+                <li><a href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
+              }
+            </ul>
+          </li>
+        }
+      </ul>
+    </div>
+    <div class="description">
+      <h1>@BlogPost.Title</h1>
+      <h2></h2>
+      <p>@RenderMarkupString(BlogPost.ShortDescription)</p>
+      <p class="read-more">
+        <a href="#" @onclick="@OpenBlogPost">Read More</a>
+      </p>
+    </div>
   </div>
-  <div class="description">
-    <h1>@BlogPost.Title</h1>
-    <h2></h2>
-    <p>@RenderMarkupString(BlogPost.ShortDescription)</p>
-    <p class="read-more">
-      <a href="#" @onclick="@OpenBlogPost">Read More</a>
-    </p>
-  </div>
-</div>
-
+</article>
 @code {
     [Parameter]
     public BlogPost BlogPost { get; set; }

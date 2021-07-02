@@ -1,28 +1,30 @@
 ﻿@inject AppConfiguration _configuration
 
-<nav class="nav">
-    <div class="container">
-        <div class="logo">
-            <a href="#">@_configuration.BlogName</a>
+<header>
+    <nav class="nav">
+        <div class="container">
+            <div class="logo">
+                <a href="#">@_configuration.BlogName</a>
+            </div>
+            <div id="mainListDiv" class="main_list">
+                <ul class="navlinks">
+                    <li><a href="#">Home</a></li>
+                    @if (_configuration.HasLinkedinAccount)
+                    {
+                        <li><a target="_blank" href="@_configuration.LinkedinAccountUrl"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                    }
+                    @if (_configuration.HasGithubAccount)
+                    {
+                        <li><a target="_blank" href="@_configuration.GithubAccountUrl"><i class="fab fa-github"></i> Github</a></li>
+                    }
+                    <li><AccessControl></AccessControl></li>
+                </ul>
+            </div>
+            <span class="navTrigger">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
         </div>
-        <div id="mainListDiv" class="main_list">
-            <ul class="navlinks">
-                <li><a href="#">Home</a></li>
-                @if (_configuration.HasLinkedinAccount)
-                {
-                    <li><a target="_blank" href="@_configuration.LinkedinAccountUrl"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
-                }
-                @if (_configuration.HasGithubAccount)
-                {
-                    <li><a target="_blank" href="@_configuration.GithubAccountUrl"><i class="fab fa-github"></i> Github</a></li>
-                }
-                <li><AccessControl></AccessControl></li>
-            </ul>
-        </div>
-        <span class="navTrigger">
-            <i></i>
-            <i></i>
-            <i></i>
-        </span>
-    </div>
-</nav>
+    </nav>
+</header>

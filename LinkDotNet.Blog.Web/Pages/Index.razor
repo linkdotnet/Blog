@@ -6,16 +6,16 @@
 @inject AppConfiguration _appConfiguration
 
 <OgData Title="@(Markdown.ToPlainText(_appConfiguration.Introduction.Description))" PreviewImageUrl="@_appConfiguration.Introduction.BackgroundUrl"></OgData>
+<section>
+    <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 
-<IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
-
-<div class="content px-4">
-    @for (var i = 0; i < _blogPosts.Count; i++)
-    {
-        <ShortBlogPost BlogPost="_blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-    }
-</div>
-
+    <div class="content px-4">
+        @for (var i = 0; i < _blogPosts.Count; i++)
+        {
+            <ShortBlogPost BlogPost="_blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+        }
+    </div>
+</section>§
 @code {
     IList<BlogPost> _blogPosts = new List<BlogPost>();
     protected override async Task OnInitializedAsync()
