@@ -45,6 +45,7 @@ namespace LinkDotNet.Domain
             ShortDescription = from.ShortDescription;
             Content = from.Content;
             UpdatedDate = from.UpdatedDate;
+            PreviewImageUrl = from.PreviewImageUrl;
             Tags = from.Tags;
         }
     }
