@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Domain;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
@@ -65,6 +66,22 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             blogPostFromRepo.Tags.Should().HaveCount(2);
             var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
             tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
+        }
+
+        [Fact]
+        public async Task ShouldBeUpdateable()
+        {
+            var blogPost = new BlogPostBuilder().Build();
+            await DbContext.BlogPosts.AddAsync(blogPost);
+            await DbContext.SaveChangesAsync();
+            var blogPostFromDb = await BlogPostRepository.GetByIdAsync(blogPost.Id);
+            var updater = new BlogPostBuilder().WithTitle("New Title").Build();
+            blogPostFromDb.Update(updater);
+
+            await BlogPostRepository.StoreAsync(blogPostFromDb);
+
+            var blogPostAfterSave = await DbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == blogPostFromDb.Id);
+            blogPostAfterSave.Title.Should().Be("New Title");
         }
     }
 }

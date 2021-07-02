@@ -46,7 +46,15 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
 
         public async Task StoreAsync(BlogPost blogPost)
         {
-            await blogPostContext.BlogPosts.AddAsync(blogPost);
+            if (string.IsNullOrEmpty(blogPost.Id))
+            {
+                await blogPostContext.BlogPosts.AddAsync(blogPost);
+            }
+            else
+            {
+                blogPostContext.Entry(blogPost).State = EntityState.Modified;
+            }
+
             await blogPostContext.SaveChangesAsync();
         }
     }
