@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using LinkDotNet.Domain;
 
-namespace LinkDotNet.Blog.Web.Pages.Admin
+namespace LinkDotNet.Blog.Web.Shared.Admin
 {
     public class CreateNewModel
     {

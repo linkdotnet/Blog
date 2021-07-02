@@ -1,93 +1,18 @@
 ﻿@page "/CreateNew"
-@page "/CreateNew/{blogPostId}"
 @attribute [Authorize]
 @using LinkDotNet.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Shared.Admin
 @using LinkDotNet.Domain
 @inherits MarkdownComponentBase
 @inject IRepository _repository
 @inject IToastService _toastService
-<h3>Create new Blog Post</h3>
 
-<div class="content-area">
-    <div class="new-content">
-        <EditForm Model="@_model" OnValidSubmit="SaveBlogPostAsync">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="form-group">
-                <label for="title">Title</label>
-                <InputText class="form-control" id="title" @bind-Value="_model.Title" />
-            </div>
-            <div class="form-group">
-                <label for="short">Short Description</label>
-                <InputTextArea class="form-control" id="short" @bind-Value="_model.ShortDescription" rows="4"/>
-            </div>
-            <div class="form-group">
-                <label for="content">Content</label>
-                <InputTextArea class="form-control" id="content" @bind-Value="_model.Content" rows="10" />
-                @* <small id="content" class="form-text text-muted">Drag and drop images to upload and insert picture.</small> *@
-            </div>
-            <div class="form-group">
-                <label for="preview">Preview-Url</label>
-                <InputText class="form-control" id="preview" @bind-Value="_model.PreviewImageUrl"/>
-            </div>
-            <div class="form-group">
-                <label for="tags">Tags</label>
-                <InputText class="form-control" id="tags" @bind-Value="_model.Tags"/>
-            </div>
-            
-            <button class="btn btn-primary" type="submit">Submit</button>
-    
-        </EditForm>
-    </div>
-    <div class="preview">
-        <div>
-            <header>
-                <h1>@_model.Title</h1>
-            </header>
-            <div>
-                @(RenderMarkupString(_model.ShortDescription))
-            </div>
-            <div>
-                @(RenderMarkupString(_model.Content))
-            </div>
-        </div>
-    </div>
-</div>
+<CreateNewBlogPost Title="Create new BlogPost" OnBlogPostCreated="@(blogPost => StoreBlogPostAsync(blogPost))" ></CreateNewBlogPost>
+
 @code {
-    [Parameter]
-    public string BlogPostId { get; set; }
-    
-    private CreateNewModel _model = new();
-    private BlogPost _blogPost;
-
-    protected override async Task OnParametersSetAsync()
+    private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
-        if (string.IsNullOrEmpty(BlogPostId))
-        {
-            return;
-        }
-
-        _blogPost = await _repository.GetByIdAsync(BlogPostId);
-        _model = CreateNewModel.FromBlogPost(_blogPost);
+        await _repository.StoreAsync(blogPost);
+        _toastService.ShowInfo($"Created BlogPost {blogPost.Title}");
     }
-
-    private async Task SaveBlogPostAsync()
-    {
-        //// Does not work when updating
-        await _repository.StoreAsync(_model.ToBlogPost());
-        DisplayMessage();
-        ClearModel();
-    }
-
-    private void DisplayMessage()
-    {
-        var operationInformation = BlogPostId == null ? "Created" : "Updated";
-        _toastService.ShowSuccess($"{operationInformation} BlogPost {_model.Title}");
-    }
-
-    private void ClearModel()
-    {
-        _model = new CreateNewModel();
-    }
-
 }

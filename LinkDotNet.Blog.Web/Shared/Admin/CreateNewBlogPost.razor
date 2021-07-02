@@ -1,0 +1,83 @@
+﻿@using LinkDotNet.Domain
+@inherits MarkdownComponentBase
+
+<h3>@Title</h3>
+
+<div class="content-area">
+    <div class="new-content">
+        <EditForm Model="@_model" OnValidSubmit="OnValidBlogPostCreatedAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="form-group">
+                <label for="title">Title</label>
+                <InputText class="form-control" id="title" @bind-Value="_model.Title" />
+            </div>
+            <div class="form-group">
+                <label for="short">Short Description</label>
+                <InputTextArea class="form-control" id="short" @bind-Value="_model.ShortDescription" rows="4"/>
+            </div>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <InputTextArea class="form-control" id="content" @bind-Value="_model.Content" rows="10" />
+                @* <small id="content" class="form-text text-muted">Drag and drop images to upload and insert picture.</small> *@
+            </div>
+            <div class="form-group">
+                <label for="preview">Preview-Url</label>
+                <InputText class="form-control" id="preview" @bind-Value="_model.PreviewImageUrl"/>
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                <InputText class="form-control" id="tags" @bind-Value="_model.Tags"/>
+            </div>
+            
+            <button class="btn btn-primary" type="submit">Submit</button>
+    
+        </EditForm>
+    </div>
+    <div class="preview">
+        <div>
+            <header>
+                <h1>@_model.Title</h1>
+            </header>
+            <div>
+                @(RenderMarkupString(_model.ShortDescription))
+            </div>
+            <div>
+                @(RenderMarkupString(_model.Content))
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public BlogPost BlogPost { get; set; }
+    
+    [Parameter]
+    public string Title { get; set; }
+    
+    [Parameter]
+    public EventCallback<BlogPost> OnBlogPostCreated { get; set; }
+    
+    private CreateNewModel _model = new();
+
+    protected override void OnParametersSet()
+    {
+        if (BlogPost == null)
+        {
+            return;
+        }
+
+        _model = CreateNewModel.FromBlogPost(BlogPost);
+    }
+
+    private async Task OnValidBlogPostCreatedAsync()
+    {
+        await OnBlogPostCreated.InvokeAsync(_model.ToBlogPost());
+        ClearModel();
+    }
+    
+    private void ClearModel()
+    {
+        _model = new CreateNewModel();
+    }
+}

@@ -8,10 +8,6 @@ namespace LinkDotNet.Blog.IntegrationTests
 {
     public abstract class SqlDatabaseTestBase : IAsyncLifetime, IAsyncDisposable
     {
-        protected BlogPostRepository BlogPostRepository { get; private set; }
-
-        protected BlogPostContext DbContext { get; private set; }
-
         protected SqlDatabaseTestBase()
         {
             var options = new DbContextOptionsBuilder()
@@ -20,6 +16,10 @@ namespace LinkDotNet.Blog.IntegrationTests
             DbContext = new BlogPostContext(options);
             BlogPostRepository = new BlogPostRepository(new BlogPostContext(options));
         }
+
+        protected BlogPostRepository BlogPostRepository { get; private set; }
+
+        protected BlogPostContext DbContext { get; private set; }
 
         public Task InitializeAsync()
         {
