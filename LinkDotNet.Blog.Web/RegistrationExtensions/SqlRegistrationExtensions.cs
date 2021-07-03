@@ -14,10 +14,10 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
 
             services.AddScoped(s =>
             {
-                var configuration = s.GetService<AppConfiguration>() ?? throw new ArgumentNullException(nameof(AppConfiguration));
+                var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
                 var dbOptions = new DbContextOptionsBuilder()
-                    .UseSqlServer(connectionString)
+                    .UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null))
                     .Options;
 
                 return new BlogPostContext(dbOptions);
@@ -31,7 +31,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
 
             services.AddScoped(s =>
             {
-                var configuration = s.GetService<AppConfiguration>() ?? throw new ArgumentNullException(nameof(AppConfiguration));
+                var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
                 var dbOptions = new DbContextOptionsBuilder()
                     .UseSqlite(connectionString)
