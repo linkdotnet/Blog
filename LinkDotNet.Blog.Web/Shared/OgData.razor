@@ -5,6 +5,10 @@
 <Meta name="image" property="og:image" content="@PreviewImageUrl" />
 <Meta property="og:type" content="article" />
 <Meta property="og:url" content="@_navigationManager.Uri" />
+@if (Description != null)
+{
+    <Meta propertty="og:description" content="@Description" />
+}
 
 @code {
 
@@ -13,5 +17,7 @@
 
     [Parameter]
     public string PreviewImageUrl { get; set; }
-
+    
+    [Parameter]
+    public string Description { get; set; }
 }

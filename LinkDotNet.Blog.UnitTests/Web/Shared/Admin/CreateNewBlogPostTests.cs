@@ -55,5 +55,26 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
             blogPostFromComponent.ShortDescription.Should().Be("Desc");
             blogPostFromComponent.Content.Should().Be("Content");
         }
+
+        [Fact]
+        public void ShouldNotDeleteModelWhenNotSet()
+        {
+            using var ctx = new TestContext();
+            BlogPost blogPost = null;
+            var cut = ctx.RenderComponent<CreateNewBlogPost>(
+                p => p.Add(c => c.ClearAfterCreated, false)
+                    .Add(c => c.OnBlogPostCreated, post => blogPost = post));
+            cut.Find("#title").Change("My Title");
+            cut.Find("#short").Change("My short Description");
+            cut.Find("#content").Change("My content");
+            cut.Find("#preview").Change("My preview url");
+            cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+
+            cut.Find("form").Submit();
+
+            cut.
+            cut.WaitForState(() => blogPost != null);
+            cut.Find("#title").TextContent.Should().Be("My Title");
+        }
     }
 }
