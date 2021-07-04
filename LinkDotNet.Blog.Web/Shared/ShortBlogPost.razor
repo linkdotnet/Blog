@@ -1,7 +1,6 @@
 ﻿@using LinkDotNet.Domain
 @using System.Net
 @using System.Web
-@inject NavigationManager _navigationManager
 @inherits MarkdownComponentBase
 <article>
   <div class="blog-card @AltCssClass">
@@ -15,7 +14,7 @@
             <ul>
               @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
               {
-                <li><a href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
+                <li><a class="goto-tag" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
               }
             </ul>
           </li>
@@ -27,7 +26,7 @@
       <h2></h2>
       <p>@RenderMarkupString(BlogPost.ShortDescription)</p>
       <p class="read-more">
-        <a href="#" @onclick="@OpenBlogPost">Read More</a>
+        <a href="/blogPost/@BlogPost.Id">Read More</a>
       </p>
     </div>
   </div>
@@ -40,10 +39,4 @@
     public bool UseAlternativeStyle { get; set; }
 
     private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
-
-    private void OpenBlogPost()
-    {
-      _navigationManager.NavigateTo($"/blogPost/{BlogPost.Id}");
-    }
-
 }

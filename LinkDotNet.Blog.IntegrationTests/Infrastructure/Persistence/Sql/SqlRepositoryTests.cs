@@ -83,5 +83,26 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             var blogPostAfterSave = await DbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == blogPostFromDb.Id);
             blogPostAfterSave.Title.Should().Be("New Title");
         }
+
+        [Fact]
+        public async Task ShouldFilterAndOrder()
+        {
+            var olderPost = new BlogPostBuilder().Build();
+            var newerPost = new BlogPostBuilder().Build();
+            var filteredOutPost = new BlogPostBuilder().WithTitle("FilterOut").Build();
+            await BlogPostRepository.StoreAsync(olderPost);
+            await BlogPostRepository.StoreAsync(newerPost);
+            await BlogPostRepository.StoreAsync(filteredOutPost);
+
+            var blogPosts = await BlogPostRepository.GetAllAsync(
+                bp => bp.Title != "FilterOut",
+                bp => bp.UpdatedDate,
+                false);
+
+            var retrievedPosts = blogPosts.ToList();
+            retrievedPosts.Any(b => b.Id == filteredOutPost.Id).Should().BeFalse();
+            retrievedPosts[0].Id.Should().Be(olderPost.Id);
+            retrievedPosts[1].Id.Should().Be(newerPost.Id);
+        }
     }
 }
