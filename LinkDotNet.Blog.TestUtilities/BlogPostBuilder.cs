@@ -1,5 +1,4 @@
-﻿using System;
-using LinkDotNet.Domain;
+﻿using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.TestUtilities
 {
@@ -10,7 +9,6 @@ namespace LinkDotNet.Blog.TestUtilities
         private string content = "Some Content";
         private string url = "localhost";
         private string[] tags;
-        private DateTime updatedDate;
 
         public BlogPostBuilder WithTitle(string title)
         {
