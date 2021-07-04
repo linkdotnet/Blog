@@ -2,6 +2,7 @@
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
 @inject IRepository _repository
+@inject IJSRuntime _jsRuntime
 @inherits MarkdownComponentBase
 
 @if (BlogPost == null)
@@ -37,5 +38,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         BlogPost = await _repository.GetByIdAsync(BlogPostId);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _jsRuntime.InvokeVoidAsync("hljs.highlightAll");
+            StateHasChanged();
+        }
     }
 }
