@@ -45,6 +45,12 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
                 blogPost.Id = blogPosts.Max(b => b.Id) + 1;
             }
 
+            var entry = blogPosts.SingleOrDefault(b => b.Id == blogPost.Id);
+            if (entry != null)
+            {
+                blogPosts.Remove(entry);
+            }
+
             blogPosts.Add(blogPost);
             return Task.CompletedTask;
         }

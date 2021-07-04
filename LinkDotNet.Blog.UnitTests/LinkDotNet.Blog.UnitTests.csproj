@@ -39,6 +39,10 @@
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infrastructure\Persistence" />
+    </ItemGroup>
     <PropertyGroup>
         <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
