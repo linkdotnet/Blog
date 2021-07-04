@@ -33,7 +33,7 @@ namespace LinkDotNet.Domain
                 Content = content,
                 UpdatedDate = DateTime.Now,
                 PreviewImageUrl = previewImageUrl,
-                Tags = tags?.Select(t => new Tag() { Content = t }).ToList(),
+                Tags = tags?.Select(t => new Tag { Content = t.Trim() }).ToList(),
             };
 
             return blogPost;
