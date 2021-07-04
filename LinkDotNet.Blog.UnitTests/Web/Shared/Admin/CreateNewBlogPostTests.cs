@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using AngleSharp.Dom;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -57,6 +58,27 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
         }
 
         [Fact]
+        public void ShouldNotDeleteModelWhenSet()
+        {
+            using var ctx = new TestContext();
+            BlogPost blogPost = null;
+            var cut = ctx.RenderComponent<CreateNewBlogPost>(
+                p => p.Add(c => c.ClearAfterCreated, true)
+                    .Add(c => c.OnBlogPostCreated, post => blogPost = post));
+            cut.Find("#title").Change("My Title");
+            cut.Find("#short").Change("My short Description");
+            cut.Find("#content").Change("My content");
+            cut.Find("#preview").Change("My preview url");
+            cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+            cut.Find("form").Submit();
+            blogPost = null;
+
+            cut.Find("form").Submit();
+
+            blogPost.Should().BeNull();
+        }
+
+        [Fact]
         public void ShouldNotDeleteModelWhenNotSet()
         {
             using var ctx = new TestContext();
@@ -69,12 +91,12 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
             cut.Find("#content").Change("My content");
             cut.Find("#preview").Change("My preview url");
             cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+            cut.Find("form").Submit();
+            blogPost = null;
 
             cut.Find("form").Submit();
 
-            cut.
-            cut.WaitForState(() => blogPost != null);
-            cut.Find("#title").TextContent.Should().Be("My Title");
+            blogPost.Should().NotBeNull();
         }
     }
 }
