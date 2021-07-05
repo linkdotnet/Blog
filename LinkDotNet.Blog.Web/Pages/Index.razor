@@ -4,8 +4,11 @@
 @using Markdig
 @inject IRepository _repository
 @inject AppConfiguration _appConfiguration
+@inject NavigationManager _navigationManager
 
-<OgData Title="@(Markdown.ToPlainText(_appConfiguration.Introduction.Description))" PreviewImageUrl="@_appConfiguration.Introduction.BackgroundUrl"></OgData>
+<OgData Title="@(Markdown.ToPlainText(_appConfiguration.BlogName))" 
+        AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
+        Description="@(Markdown.ToPlainText(_appConfiguration.Introduction.Description))"></OgData>
 <section>
     <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 
@@ -23,4 +26,20 @@
         _blogPosts = (await _repository.GetAllAsync(orderBy: b => b.UpdatedDate)).ToList();
     }
 
+    private string GetAbsolutePreviewImageUrl()
+    {
+        var backgroundUrl = _appConfiguration.Introduction.BackgroundUrl;
+        if (IsAbsoluteUrl(backgroundUrl))
+        {
+            return backgroundUrl;
+        }
+
+        var successful = Uri.TryCreate(new Uri(_navigationManager.BaseUri, UriKind.Absolute), new Uri(backgroundUrl, UriKind.RelativeOrAbsolute), out var uri);
+        return successful ? uri.ToString() : backgroundUrl;
+    }
+    
+    private bool IsAbsoluteUrl(string url)
+    {
+        return Uri.TryCreate(url, UriKind.Absolute, out _);
+    }
 }

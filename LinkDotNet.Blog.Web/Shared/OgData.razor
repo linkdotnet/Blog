@@ -1,13 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
 @inject NavigationManager _navigationManager
 
-<Meta property="og:title" content="@Title" />
-<Meta name="image" property="og:image" content="@PreviewImageUrl" />
+<Meta name="title" property="og:title" content="@Title" />
+<Meta name="image" property="og:image" content="@AbsolutePreviewImageUrl" />
 <Meta property="og:type" content="article" />
 <Meta property="og:url" content="@_navigationManager.Uri" />
 @if (Description != null)
 {
-    <Meta propertty="og:description" content="@Description" />
+    <Meta name="description" property="og:description" content="@Description" />
 }
 
 @code {
@@ -16,7 +16,7 @@
     public string Title { get; set; }
 
     [Parameter]
-    public string PreviewImageUrl { get; set; }
+    public string AbsolutePreviewImageUrl { get; set; }
     
     [Parameter]
     public string Description { get; set; }

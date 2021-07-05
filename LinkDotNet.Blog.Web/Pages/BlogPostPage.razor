@@ -3,6 +3,7 @@
 @page "/{blogPostId}"
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
+@using Markdig
 @using Microsoft.AspNetCore.Components.Web.Extensions.Head
 @inject IRepository _repository
 @inject IJSRuntime _jsRuntime
@@ -15,7 +16,7 @@
 else
 {
     <Title Value="@BlogPost.Title"></Title>
-    <OgData Title="@BlogPost.Title" PreviewImageUrl="@BlogPost.PreviewImageUrl"></OgData>
+    <OgData Title="@BlogPost.Title" AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl" Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"></OgData>
     <div class="blog-outer-box">
     <div class="content blog-container">
         <div class="blog-content">
