@@ -38,6 +38,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         {
             return new()
             {
+                BlogName = string.Empty,
                 Introduction = new Introduction
                 {
                     Description = string.Empty,
