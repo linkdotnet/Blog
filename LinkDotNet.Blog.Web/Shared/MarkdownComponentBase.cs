@@ -5,7 +5,12 @@ namespace LinkDotNet.Blog.Web.Shared
 {
     public class MarkdownComponentBase : ComponentBase
     {
-        private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().UseEmojiAndSmiley().UseCitations().Build();
+        private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+            .UseAdvancedExtensions()
+            .UseEmojiAndSmiley()
+            .UseCitations()
+            .UseBootstrap()
+            .Build();
 
         protected static MarkupString RenderMarkupString(string content)
         {
