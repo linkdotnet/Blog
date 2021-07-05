@@ -71,3 +71,23 @@ It is only one storage provider at a time allowed. Registering multiple will res
 There is only one mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
 
 The main advantage of Auth0 is the easy configurable dashboard on their website. 
+
+## Search Engine Optimization (SEO)
+The blog includes some of the most important tags to get indexed by a crawler. Furthermore some aspects of the Open Graph specification are implemented.
+
+### Robots.txt
+In the wwwroot/ you can find a default robots.txt. It allows that the site gets completely indexed. If you want to tweak that behavior feel free.
+Also you can provide a sitemap.xml to get a better ranking. 
+
+### Open Graph Tags
+To get better results when for example shared via LinkedIn some of the `<meta property="og:tag">` tags are implemented.
+
+The following tags are set depending on the page:
+
+| Open Graph Tag | Index                                                     | Display Blog Post                            |
+|----------------|-----------------------------------------------------------|----------------------------------------------|
+| og:title       | Title of the blog (defined in Introduction)               | Title of the blogpost                        |
+| og:url         | Url to the index page                                     | Url of the page                              |
+| og:image       | Background image (defined in Introduction)                | Yes                                          |
+| og:type        | article                                                   | article                                      |
+| og:description | Short description in plain text (defined in Introduction) | Short Description of Blog Post in plain text |

@@ -12,3 +12,5 @@ appsettings.Development.json
 *.pubxml.user
 *.publishproj
 *.suo
+sitemap.xml
+robots.txt
