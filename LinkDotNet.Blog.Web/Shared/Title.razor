@@ -1,0 +1,11 @@
+﻿@inject IJSRuntime _jsRuntime
+
+@code {
+    [Parameter]
+    public string Value { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await _jsRuntime.InvokeVoidAsync("setDocumentTitle", Value);
+    }
+}
