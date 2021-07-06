@@ -4,8 +4,11 @@
     [Parameter]
     public string Value { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await _jsRuntime.InvokeVoidAsync("setDocumentTitle", Value);
+        if (firstRender)
+        {
+            await _jsRuntime.InvokeVoidAsync("setDocumentTitle", Value);
+        }
     }
 }
