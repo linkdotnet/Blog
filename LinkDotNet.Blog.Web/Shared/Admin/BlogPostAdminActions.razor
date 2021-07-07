@@ -5,9 +5,11 @@
 
 <AuthorizeView>
     <div class="blogpost-admin">
-        <button type="button" class="btn btn-primary" @onclick="EditBlogPost" aria-label="edit"><i class="fas fa-pen-square"></i> Edit 
+        <button id="edit-blogpost" type="button" class="btn btn-primary" @onclick="EditBlogPost" aria-label="edit"><i 
+        class="fas 
+        fa-pen-square"></i> Edit 
             Blogpost</button>
-        <button type="button" class="btn btn-danger" @onclick="ShowConfirmDialog" aria-label="delete"><i class="fas fa-trash"></i> Delete 
+        <button id="delete-blogpost" type="button" class="btn btn-danger" @onclick="ShowConfirmDialog" aria-label="delete"><i class="fas fa-trash"></i> Delete 
             Blogpost</button>
     </div>
     <ConfirmDialog @ref="ConfirmDialog" Title="Delete Blog Post" Content="Do you want to delete the Blog Post?" OnYesPressed="@DeleteBlogPostAsync">
