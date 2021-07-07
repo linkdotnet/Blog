@@ -52,5 +52,12 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             await session.StoreAsync(blogPost);
             await session.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(string blogPostId)
+        {
+            using var session = documentStore.OpenAsyncSession();
+            session.Delete(blogPostId);
+            await session.SaveChangesAsync();
+        }
     }
 }

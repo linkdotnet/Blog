@@ -54,5 +54,16 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
             blogPosts.Add(blogPost);
             return Task.CompletedTask;
         }
+
+        public Task DeleteAsync(string blogPostId)
+        {
+            var blogPostToDelete = blogPosts.SingleOrDefault(b => b.Id == blogPostId);
+            if (blogPostToDelete != null)
+            {
+                blogPosts.Remove(blogPostToDelete);
+            }
+
+            return Task.CompletedTask;
+        }
     }
 }

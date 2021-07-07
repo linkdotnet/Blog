@@ -57,5 +57,12 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
 
             await blogPostContext.SaveChangesAsync();
         }
+
+        public async Task DeleteAsync(string blogPostId)
+        {
+            var blogPostToDelete = await GetByIdAsync(blogPostId);
+            blogPostContext.Remove(blogPostToDelete);
+            await blogPostContext.SaveChangesAsync();
+        }
     }
 }

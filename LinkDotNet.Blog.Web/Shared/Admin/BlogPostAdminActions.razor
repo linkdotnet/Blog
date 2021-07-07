@@ -1,5 +1,7 @@
-﻿@inject NavigationManager _navigationManager
+﻿@using LinkDotNet.Infrastructure.Persistence
+@inject NavigationManager _navigationManager
 @inject IToastService _toastService
+@inject IRepository _repository
 
 <AuthorizeView>
     <div class="blogpost-admin">
@@ -8,7 +10,7 @@
         <button type="button" class="btn btn-danger" @onclick="ShowConfirmDialog" aria-label="delete"><i class="fas fa-trash"></i> Delete 
             Blogpost</button>
     </div>
-    <ConfirmDialog @ref="ConfirmDialog" Title="Delete Blog Post" Content="Do you want to delete the Blog Post?" OnYesPressed="@ShowMessage">
+    <ConfirmDialog @ref="ConfirmDialog" Title="Delete Blog Post" Content="Do you want to delete the Blog Post?" OnYesPressed="@DeleteBlogPostAsync">
     </ConfirmDialog>
 </AuthorizeView>
 
@@ -18,9 +20,11 @@
     
     private ConfirmDialog ConfirmDialog { get; set; }
 
-    private void ShowMessage()
+    private async Task DeleteBlogPostAsync()
     {
-        _toastService.ShowInfo("Hey");
+        await _repository.DeleteAsync(BlogPostId);
+        _toastService.ShowSuccess("The Blog Post was successfully deleted");
+        _navigationManager.NavigateTo("/");
     }
     
     private void ShowConfirmDialog()

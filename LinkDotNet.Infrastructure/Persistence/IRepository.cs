@@ -13,5 +13,7 @@ namespace LinkDotNet.Infrastructure.Persistence
         Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true);
 
         Task StoreAsync(BlogPost blogPost);
+
+        Task DeleteAsync(string blogPostId);
     }
 }
