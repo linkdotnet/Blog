@@ -20,7 +20,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
 
             var readMore = cut.Find(".read-more a");
 
-            readMore.Attributes.Single(a => a.Name == "href").Value.Should().Be("/SomeId");
+            readMore.Attributes.Single(a => a.Name == "href").Value.Should().Be("/blogPost/SomeId");
         }
 
         [Fact]
