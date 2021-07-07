@@ -8,6 +8,7 @@ namespace LinkDotNet.Blog.TestUtilities
         private string shortDescription = "Some Text";
         private string content = "Some Content";
         private string url = "localhost";
+        private bool isPublished = true;
         private string[] tags;
 
         public BlogPostBuilder WithTitle(string title)
@@ -40,9 +41,15 @@ namespace LinkDotNet.Blog.TestUtilities
             return this;
         }
 
+        public BlogPostBuilder IsPublished(bool isPublished = true)
+        {
+            this.isPublished = isPublished;
+            return this;
+        }
+
         public BlogPost Build()
         {
-            return BlogPost.Create(title, shortDescription, content, url, tags);
+            return BlogPost.Create(title, shortDescription, content, url, isPublished, tags);
         }
     }
 }

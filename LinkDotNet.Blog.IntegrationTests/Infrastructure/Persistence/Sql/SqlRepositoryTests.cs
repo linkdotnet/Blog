@@ -13,7 +13,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldLoadBlogPost()
         {
-            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", new[] { "Tag 1", "Tag 2" });
+            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url",  true, new[] { "Tag 1", "Tag 2" });
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
@@ -24,6 +24,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             blogPostFromRepo.ShortDescription.Should().Be("Subtitle");
             blogPostFromRepo.Content.Should().Be("Content");
             blogPostFromRepo.PreviewImageUrl.Should().Be("url");
+            blogPostFromRepo.IsPublished.Should().BeTrue();
             blogPostFromRepo.Tags.Should().HaveCount(2);
             var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
             tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
@@ -32,7 +33,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldSaveBlogPost()
         {
-            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", new[] { "Tag 1", "Tag 2" });
+            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, new[] { "Tag 1", "Tag 2" });
 
             await BlogPostRepository.StoreAsync(blogPost);
 
@@ -41,6 +42,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             blogPostFromContext.Title.Should().Be("Title");
             blogPostFromContext.ShortDescription.Should().Be("Subtitle");
             blogPostFromContext.Content.Should().Be("Content");
+            blogPostFromContext.IsPublished.Should().BeTrue();
             blogPostFromContext.PreviewImageUrl.Should().Be("url");
             blogPostFromContext.Tags.Should().HaveCount(2);
             var tagContent = blogPostFromContext.Tags.Select(t => t.Content).ToList();
@@ -50,7 +52,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldGetAllBlogPosts()
         {
-            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", new[] { "Tag 1", "Tag 2" });
+            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, new[] { "Tag 1", "Tag 2" });
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
@@ -63,6 +65,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             blogPostFromRepo.ShortDescription.Should().Be("Subtitle");
             blogPostFromRepo.Content.Should().Be("Content");
             blogPostFromRepo.PreviewImageUrl.Should().Be("url");
+            blogPostFromRepo.IsPublished.Should().BeTrue();
             blogPostFromRepo.Tags.Should().HaveCount(2);
             var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
             tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });

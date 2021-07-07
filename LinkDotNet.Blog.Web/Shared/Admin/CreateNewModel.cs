@@ -40,7 +40,7 @@ namespace LinkDotNet.Blog.Web.Shared.Admin
         {
             var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
 
-            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
+            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, true, tags);
             blogPost.Id = Id;
             return blogPost;
         }

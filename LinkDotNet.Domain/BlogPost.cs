@@ -24,7 +24,10 @@ namespace LinkDotNet.Domain
 
         public virtual ICollection<Tag> Tags { get; private set; }
 
-        public static BlogPost Create(string title, string shortDescription, string content, string previewImageUrl, IEnumerable<string> tags = null)
+        public bool IsPublished { get; set; }
+
+        public static BlogPost Create(string title, string shortDescription, string content, string previewImageUrl,
+            bool isPublished, IEnumerable<string> tags = null)
         {
             var blogPost = new BlogPost
             {
@@ -33,6 +36,7 @@ namespace LinkDotNet.Domain
                 Content = content,
                 UpdatedDate = DateTime.Now,
                 PreviewImageUrl = previewImageUrl,
+                IsPublished = isPublished,
                 Tags = tags?.Select(t => new Tag { Content = t.Trim() }).ToList(),
             };
 
@@ -46,6 +50,7 @@ namespace LinkDotNet.Domain
             Content = from.Content;
             UpdatedDate = from.UpdatedDate;
             PreviewImageUrl = from.PreviewImageUrl;
+            IsPublished = from.IsPublished;
             Tags = from.Tags;
         }
     }
