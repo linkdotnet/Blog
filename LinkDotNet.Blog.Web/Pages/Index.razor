@@ -23,7 +23,7 @@
     IList<BlogPost> _blogPosts = new List<BlogPost>();
     protected override async Task OnInitializedAsync()
     {
-        _blogPosts = (await _repository.GetAllAsync(orderBy: b => b.UpdatedDate)).ToList();
+        _blogPosts = (await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate)).ToList();
     }
 
     private string GetAbsolutePreviewImageUrl()
