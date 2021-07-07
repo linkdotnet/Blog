@@ -14,3 +14,6 @@ appsettings.Development.json
 *.suo
 sitemap.xml
 robots.txt
+.vs/
+.idea/
+*.csproj.user
