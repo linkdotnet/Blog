@@ -1,0 +1,39 @@
+﻿<ModalDialog @ref="ModalDialog" Title="@Title">
+    <h3>@Content</h3>
+    <div class="actions">
+        <button @onclick="OnYesButtonPressed" type="button" class="btn btn-primary">Ok</button> 
+        <button @onclick="OnNoButtonPressed" type="button" class="btn btn">Cancel</button> 
+    </div>
+</ModalDialog>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    
+    [Parameter]
+    public string Content { get; set; }
+    
+    [Parameter]
+    public EventCallback OnYesPressed { get; set; }
+    
+    [Parameter]
+    public EventCallback OnNoPressed { get; set; }
+    
+    private ModalDialog ModalDialog { get; set; }
+
+    private async Task OnYesButtonPressed()
+    {
+        ModalDialog.Close();
+        await OnYesPressed.InvokeAsync();
+    }
+
+    private void OnNoButtonPressed()
+    {
+        ModalDialog.Close();
+    }
+
+    public void Open()
+    {
+        ModalDialog.Open();
+    }
+}

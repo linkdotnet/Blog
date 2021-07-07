@@ -127,7 +127,7 @@
     border-radius: 3px;
 }
 .blog-card:hover .details {
-    left: 0%;
+    left: 0;
 }
 @media (min-width: 640px) {
     .blog-card {
@@ -163,4 +163,8 @@
     .blog-card.alt .details {
         padding-left: 25px;
     }
+}
+
+.admin-action {
+    padding-top: 10px;
 }

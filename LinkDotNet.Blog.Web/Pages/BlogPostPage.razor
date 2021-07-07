@@ -1,6 +1,7 @@
 @page "/blogPost/{blogPostId}"
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Shared.Admin
 @using Markdig
 @inject IRepository _repository
 @inject IJSRuntime _jsRuntime
@@ -15,20 +16,24 @@ else
     <Title Value="@BlogPost.Title"></Title>
     <OgData Title="@BlogPost.Title" AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl" Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"></OgData>
     <div class="blog-outer-box">
-    <div class="content blog-container">
-        <div class="blog-content">
-            <header>
-                <h1>@BlogPost.Title</h1></header>
-            <div class="blogpost-date">
-                @BlogPost.UpdatedDate
-            </div>
+        <div class="content blog-container">
+            <div class="blog-content">
+                <header>
+                    <h1>@BlogPost.Title</h1></header>
+                <div class="blogpost-date">
+                    @BlogPost.UpdatedDate
+                </div>
 
-            <div class="blogpost-content">
-                @(RenderMarkupString(BlogPost.Content))
+                <div class="admin-action">
+                    <BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
+                </div>
+
+                <div class="blogpost-content">
+                    @(RenderMarkupString(BlogPost.Content))
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @code {

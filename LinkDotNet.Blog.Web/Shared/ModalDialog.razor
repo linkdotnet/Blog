@@ -1,0 +1,47 @@
+﻿@using System.ComponentModel.DataAnnotations
+<div class="modal @_modalClass" tabindex="-1" role="dialog" style="display:@_modalDisplay; overflow-y: auto;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                    <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (_showBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private string _modalDisplay = "none;";
+    private string _modalClass = "";
+    private bool _showBackdrop = false;
+
+    public void Open()
+    {
+        _modalDisplay = "block;";
+        _modalClass = "show";
+        _showBackdrop = true;
+    }
+
+    public void Close()
+    {
+        _modalDisplay = "none";
+        _modalClass = "";
+        _showBackdrop = false;
+    }
+}

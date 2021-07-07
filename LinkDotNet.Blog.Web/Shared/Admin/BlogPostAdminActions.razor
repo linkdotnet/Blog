@@ -1,0 +1,36 @@
+﻿@inject NavigationManager _navigationManager
+@inject IToastService _toastService
+
+<AuthorizeView>
+    <div class="blogpost-admin">
+        <button type="button" class="btn btn-primary" @onclick="EditBlogPost" aria-label="edit"><i class="fas fa-pen-square"></i> Edit 
+            Blogpost</button>
+        <button type="button" class="btn btn-danger" @onclick="ShowConfirmDialog" aria-label="delete"><i class="fas fa-trash"></i> Delete 
+            Blogpost</button>
+    </div>
+    <ConfirmDialog @ref="ConfirmDialog" Title="Delete Blog Post" Content="Do you want to delete the Blog Post?" OnYesPressed="@ShowMessage">
+    </ConfirmDialog>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public string BlogPostId { get; set; }
+    
+    private ConfirmDialog ConfirmDialog { get; set; }
+
+    private void ShowMessage()
+    {
+        _toastService.ShowInfo("Hey");
+    }
+    
+    private void ShowConfirmDialog()
+    {
+        ConfirmDialog.Open();
+    }
+
+    private void EditBlogPost()
+    {
+        _navigationManager.NavigateTo($"update/{BlogPostId}");
+    }
+
+}
