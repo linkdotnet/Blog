@@ -104,5 +104,17 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             retrievedPosts[0].Id.Should().Be(olderPost.Id);
             retrievedPosts[1].Id.Should().Be(newerPost.Id);
         }
+
+        [Fact]
+        public async Task ShouldDelete()
+        {
+            var blogPost = new BlogPostBuilder().Build();
+            await BlogPostRepository.StoreAsync(blogPost);
+
+            await BlogPostRepository.DeleteAsync(blogPost.Id);
+
+            (await DbContext.BlogPosts.AsNoTracking().AnyAsync(b => b.Id == blogPost.Id)).Should().BeFalse();
+            (await DbContext.Tags.AsNoTracking().AnyAsync(t => t.Id == blogPost.Id)).Should().BeFalse();
+        }
     }
 }

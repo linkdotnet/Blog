@@ -61,5 +61,16 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
             retrievedPosts[0].Id.Should().Be(olderPost.Id);
             retrievedPosts[1].Id.Should().Be(newerPost.Id);
         }
+
+        [Fact]
+        public async Task ShouldDelete()
+        {
+            var blogPost = new BlogPostBuilder().Build();
+            await sut.StoreAsync(blogPost);
+
+            await sut.DeleteAsync(blogPost.Id);
+
+            (await sut.GetByIdAsync(blogPost.Id)).Should().BeNull();
+        }
     }
 }
