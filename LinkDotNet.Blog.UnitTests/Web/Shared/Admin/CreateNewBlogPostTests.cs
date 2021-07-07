@@ -22,6 +22,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
             cut.Find("#short").Change("My short Description");
             cut.Find("#content").Change("My content");
             cut.Find("#preview").Change("My preview url");
+            cut.Find("#published").Change(false);
             cut.Find("#tags").Change("Tag1,Tag2,Tag3");
 
             cut.Find("form").Submit();
@@ -32,6 +33,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
             blogPost.ShortDescription.Should().Be("My short Description");
             blogPost.Content.Should().Be("My content");
             blogPost.PreviewImageUrl.Should().Be("My preview url");
+            blogPost.IsPublished.Should().BeFalse();
             blogPost.Tags.Should().HaveCount(3);
             blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
         }
