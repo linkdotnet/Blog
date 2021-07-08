@@ -2,7 +2,7 @@
 @using Blazored.LocalStorage
 @using LinkDotNet.Infrastructure.Persistence
 @inject ILocalStorageService _localStorage
-<div style="float: right">
+<div class="like-container">
     <small>@BlogPost.Likes @LikeText</small>
     <button class="btn @BtnClass" @onclick="LikeBlogPost"><i class="far fa-thumbs-up"></i> @LikeTextButton</button>
 </div>
