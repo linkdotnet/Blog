@@ -34,6 +34,25 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             blogPosts[1].Find(".description h1").InnerHtml.Should().Be("Old");
         }
 
+        [Fact]
+        public async Task ShouldOnlyShowPublishedPosts()
+        {
+            var publishedPost = new BlogPostBuilder().WithTitle("Published").IsPublished().Build();
+            var unpublishedPost = new BlogPostBuilder().WithTitle("Not published").IsPublished(false).Build();
+            await BlogPostRepository.StoreAsync(publishedPost);
+            await BlogPostRepository.StoreAsync(unpublishedPost);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+
+            blogPosts.Should().HaveCount(1);
+            blogPosts[0].Find(".description h1").InnerHtml.Should().Be("Published");
+        }
+
         private static AppConfiguration CreateSampleAppConfiguration()
         {
             return new()

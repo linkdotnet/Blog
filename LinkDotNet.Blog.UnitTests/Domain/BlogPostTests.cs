@@ -13,7 +13,7 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         {
             var blogPostToUpdate = new BlogPostBuilder().Build();
             blogPostToUpdate.Id = "random-id";
-            var blogPost = BlogPost.Create("Title", "Desc", "Content", "Url");
+            var blogPost = BlogPost.Create("Title", "Desc", "Content", "Url", true);
             blogPost.Id = "something else";
 
             blogPostToUpdate.Update(blogPost);
@@ -22,13 +22,14 @@ namespace LinkDotNet.Blog.UnitTests.Domain
             blogPostToUpdate.ShortDescription.Should().Be("Desc");
             blogPostToUpdate.Content.Should().Be("Content");
             blogPostToUpdate.PreviewImageUrl.Should().Be("Url");
+            blogPostToUpdate.IsPublished.Should().BeTrue();
             blogPostToUpdate.Tags.Should().BeNullOrEmpty();
         }
 
         [Fact]
         public void ShouldTrimWhitespacesFromTags()
         {
-            var blogPost = BlogPost.Create("Title", "Sub", "Content", "Ppeview", new[] { " Tag 1", " Tag 2 " });
+            var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, new[] { " Tag 1", " Tag 2 " });
 
             blogPost.Tags.Select(t => t.Content).Should().Contain("Tag 1");
             blogPost.Tags.Select(t => t.Content).Should().Contain("Tag 2");

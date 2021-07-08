@@ -21,6 +21,9 @@ namespace LinkDotNet.Blog.Web.Shared.Admin
         [Required]
         public string PreviewImageUrl { get; set; }
 
+        [Required]
+        public bool IsPublished { get; set; } = true;
+
         public string Tags { get; set; }
 
         public static CreateNewModel FromBlogPost(BlogPost blogPost)
@@ -32,6 +35,7 @@ namespace LinkDotNet.Blog.Web.Shared.Admin
                 Tags = blogPost.Tags != null ? string.Join(",", blogPost.Tags.Select(t => t.Content)) : null,
                 Title = blogPost.Title,
                 ShortDescription = blogPost.ShortDescription,
+                IsPublished = blogPost.IsPublished,
                 PreviewImageUrl = blogPost.PreviewImageUrl,
             };
         }
@@ -40,7 +44,7 @@ namespace LinkDotNet.Blog.Web.Shared.Admin
         {
             var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
 
-            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, tags);
+            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, tags);
             blogPost.Id = Id;
             return blogPost;
         }
