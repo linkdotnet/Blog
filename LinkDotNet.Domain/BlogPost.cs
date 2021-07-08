@@ -26,6 +26,8 @@ namespace LinkDotNet.Domain
 
         public bool IsPublished { get; set; }
 
+        public int Likes { get; set; }
+
         public static BlogPost Create(
             string title,
             string shortDescription,

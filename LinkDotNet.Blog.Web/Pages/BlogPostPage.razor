@@ -32,6 +32,7 @@ else
                     @(RenderMarkupString(BlogPost.Content))
                 </div>
             </div>
+            <Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
         </div>
     </div>
 }
@@ -54,5 +55,12 @@ else
             await _jsRuntime.InvokeVoidAsync("hljs.highlightAll");
             StateHasChanged();
         }
+    }
+
+    private async Task UpdateLikes(bool hasLiked)
+    {
+        BlogPost = await _repository.GetByIdAsync(BlogPostId);
+        BlogPost.Likes = hasLiked ? BlogPost.Likes + 1 : BlogPost.Likes - 1;
+        await _repository.StoreAsync(BlogPost);
     }
 }
