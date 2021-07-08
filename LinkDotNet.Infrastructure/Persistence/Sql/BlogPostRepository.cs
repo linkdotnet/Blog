@@ -24,7 +24,7 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
 
         public async Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true)
         {
-            var blogPosts = blogPostContext.BlogPosts.Include(b => b.Tags).AsQueryable();
+            var blogPosts = blogPostContext.BlogPosts.AsNoTracking().Include(b => b.Tags).AsQueryable();
 
             if (filter != null)
             {
