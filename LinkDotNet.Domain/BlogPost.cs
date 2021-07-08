@@ -26,8 +26,13 @@ namespace LinkDotNet.Domain
 
         public bool IsPublished { get; set; }
 
-        public static BlogPost Create(string title, string shortDescription, string content, string previewImageUrl,
-            bool isPublished, IEnumerable<string> tags = null)
+        public static BlogPost Create(
+            string title,
+            string shortDescription,
+            string content,
+            string previewImageUrl,
+            bool isPublished,
+            IEnumerable<string> tags = null)
         {
             var blogPost = new BlogPost
             {
