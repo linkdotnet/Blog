@@ -1,0 +1,57 @@
+﻿@using LinkDotNet.Domain
+@using Blazored.LocalStorage
+@using LinkDotNet.Infrastructure.Persistence
+@inject ILocalStorageService _localStorage
+<div class="like-container">
+    <small>@BlogPost.Likes @LikeText</small>
+    <button class="btn @BtnClass" @onclick="LikeBlogPost"><i class="far fa-thumbs-up"></i> @LikeTextButton</button>
+</div>
+
+@code {
+    [Parameter]
+    public BlogPost BlogPost { get; set; }
+
+    [Parameter] 
+    public EventCallback<bool> OnBlogPostLiked { get; set; }
+    
+    private bool HasLiked { get; set; }
+
+    private string BtnClass => HasLiked ? "btn-secondary" : "btn-primary";
+
+    private string LikeTextButton => HasLiked ? "Unlike" : "Like";
+    
+    private string LikeText => BlogPost.Likes == 1 ? "Like" : "Likes";
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            HasLiked = await GetHasLiked();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LikeBlogPost()
+    {
+        // Prevent multiple open sites to like / unlike multiple times
+        var hasLikedFromLocalStorage = await GetHasLiked();
+        if (HasLiked != hasLikedFromLocalStorage)
+        {
+            return;
+        }
+        
+        HasLiked = !HasLiked;
+        await OnBlogPostLiked.InvokeAsync(HasLiked);
+        await _localStorage.SetItemAsync("hasLiked", HasLiked);
+    }
+
+    private async Task<bool> GetHasLiked()
+    {
+        if (await _localStorage.ContainKeyAsync("hasLiked"))
+        {
+            return await _localStorage.GetItemAsync<bool>("hasLiked");
+        }
+
+        return false;
+    }
+}

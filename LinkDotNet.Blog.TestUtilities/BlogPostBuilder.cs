@@ -10,6 +10,7 @@ namespace LinkDotNet.Blog.TestUtilities
         private string url = "localhost";
         private bool isPublished = true;
         private string[] tags;
+        private int likes;
 
         public BlogPostBuilder WithTitle(string title)
         {
@@ -47,9 +48,17 @@ namespace LinkDotNet.Blog.TestUtilities
             return this;
         }
 
+        public BlogPostBuilder WithLikes(int likes)
+        {
+            this.likes = likes;
+            return this;
+        }
+
         public BlogPost Build()
         {
-            return BlogPost.Create(title, shortDescription, content, url, isPublished, tags);
+            var blogPost = BlogPost.Create(title, shortDescription, content, url, isPublished, tags);
+            blogPost.Likes = likes;
+            return blogPost;
         }
     }
 }

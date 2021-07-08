@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Blazored.Toast;
 using LinkDotNet.Blog.Web.Authentication.Auth0;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
@@ -39,6 +40,7 @@ namespace LinkDotNet.Blog.Web
             services.UseAuth0Authentication(Configuration);
 
             services.AddBlazoredToast();
+            services.AddBlazoredLocalStorage();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
