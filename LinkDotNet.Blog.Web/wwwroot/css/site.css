@@ -8,6 +8,10 @@ html, body {
     background: #F7F7F7;
 }
 
+body::-webkit-scrollbar {
+    display: none;
+}
+
 a, .btn-link {
     color: #0366d6;
 }
