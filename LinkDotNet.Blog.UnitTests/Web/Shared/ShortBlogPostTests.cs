@@ -7,15 +7,14 @@ using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared
 {
-    public class ShortBlogPostTests
+    public class ShortBlogPostTests : TestContext
     {
         [Fact]
         public void ShouldOpenBlogPost()
         {
-            using var ctx = new TestContext();
             var blogPost = new BlogPostBuilder().Build();
             blogPost.Id = "SomeId";
-            var cut = ctx.RenderComponent<ShortBlogPost>(
+            var cut = RenderComponent<ShortBlogPost>(
                 p => p.Add(c => c.BlogPost, blogPost));
 
             var readMore = cut.Find(".read-more a");
@@ -26,9 +25,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         [Fact]
         public void ShouldNavigateToEscapedTagSiteWhenClickingOnTag()
         {
-            using var ctx = new TestContext();
             var blogPost = new BlogPostBuilder().WithTags("Tag 1").Build();
-            var cut = ctx.RenderComponent<ShortBlogPost>(
+            var cut = RenderComponent<ShortBlogPost>(
                 p => p.Add(c => c.BlogPost, blogPost));
 
             var searchByTagLink = cut.Find(".goto-tag");

@@ -5,17 +5,16 @@ using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared
 {
-    public class TitleTests
+    public class TitleTests : TestContext
     {
         [Fact]
         public void ShouldSetTitle()
         {
-            using var ctx = new TestContext();
-            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            JSInterop.Mode = JSRuntimeMode.Loose;
 
-            ctx.RenderComponent<Title>(c => c.Add(p => p.Value, "New Title"));
+            RenderComponent<Title>(c => c.Add(p => p.Value, "New Title"));
 
-            ctx.JSInterop.VerifyInvoke("setDocumentTitle").Arguments[0].Should().Be("New Title");
+            JSInterop.VerifyInvoke("setDocumentTitle").Arguments[0].Should().Be("New Title");
         }
     }
 }

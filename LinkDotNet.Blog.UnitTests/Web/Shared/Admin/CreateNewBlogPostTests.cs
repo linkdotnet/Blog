@@ -9,14 +9,13 @@ using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
 {
-    public class CreateNewBlogPostTests
+    public class CreateNewBlogPostTests : TestContext
     {
         [Fact]
         public void ShouldCreateNewBlogPostWhenValidDataGiven()
         {
-            using var ctx = new TestContext();
             BlogPost blogPost = null;
-            var cut = ctx.RenderComponent<CreateNewBlogPost>(
+            var cut = RenderComponent<CreateNewBlogPost>(
                 p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
             cut.Find("#title").Change("My Title");
             cut.Find("#short").Change("My short Description");
@@ -41,10 +40,9 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
         [Fact]
         public void ShouldFillGivenBlogPost()
         {
-            using var ctx = new TestContext();
             var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Desc").WithContent("Content").Build();
             BlogPost blogPostFromComponent = null;
-            var cut = ctx.RenderComponent<CreateNewBlogPost>(
+            var cut = RenderComponent<CreateNewBlogPost>(
                 p =>
                     p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
                      .Add(c => c.BlogPost, blogPost));
@@ -62,9 +60,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
         [Fact]
         public void ShouldNotDeleteModelWhenSet()
         {
-            using var ctx = new TestContext();
             BlogPost blogPost = null;
-            var cut = ctx.RenderComponent<CreateNewBlogPost>(
+            var cut = RenderComponent<CreateNewBlogPost>(
                 p => p.Add(c => c.ClearAfterCreated, true)
                     .Add(c => c.OnBlogPostCreated, post => blogPost = post));
             cut.Find("#title").Change("My Title");
@@ -83,9 +80,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
         [Fact]
         public void ShouldNotDeleteModelWhenNotSet()
         {
-            using var ctx = new TestContext();
             BlogPost blogPost = null;
-            var cut = ctx.RenderComponent<CreateNewBlogPost>(
+            var cut = RenderComponent<CreateNewBlogPost>(
                 p => p.Add(c => c.ClearAfterCreated, false)
                     .Add(c => c.OnBlogPostCreated, post => blogPost = post));
             cut.Find("#title").Change("My Title");
