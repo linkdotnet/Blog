@@ -5,6 +5,10 @@
 <Meta name="image" property="og:image" content="@AbsolutePreviewImageUrl" />
 <Meta property="og:type" content="article" />
 <Meta property="og:url" content="@_navigationManager.Uri" />
+@if (Keywords != null)
+{
+    <Meta name="keywords" content="@Keywords"/>
+}
 @if (Description != null)
 {
     <Meta name="description" property="og:description" content="@Description" />
@@ -20,4 +24,7 @@
     
     [Parameter]
     public string Description { get; set; }
+    
+    [Parameter]
+    public string Keywords { get; set; }
 }

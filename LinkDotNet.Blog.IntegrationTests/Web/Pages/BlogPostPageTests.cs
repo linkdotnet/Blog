@@ -63,5 +63,24 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
             fromDb.Likes.Should().Be(1);
         }
+
+        [Fact]
+        public async Task ShouldSetTagsWhenAvailable()
+        {
+            var publishedPost = new BlogPostBuilder().IsPublished().WithTags("Tag1,Tag2").Build();
+            await BlogPostRepository.StoreAsync(publishedPost);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.AddTestAuthorization();
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => new Mock<ILocalStorageService>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+            var cut = ctx.RenderComponent<BlogPostPage>(
+                p => p.Add(b => b.BlogPostId, publishedPost.Id));
+
+            var ogData = cut.FindComponent<OgData>();
+
+            ogData.Instance.Keywords.Should().Be("Tag1,Tag2");
+        }
     }
 }

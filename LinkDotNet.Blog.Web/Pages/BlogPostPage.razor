@@ -14,7 +14,10 @@
 else
 {
     <Title Value="@BlogPost.Title"></Title>
-    <OgData Title="@BlogPost.Title" AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl" Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"></OgData>
+    <OgData Title="@BlogPost.Title" 
+            AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl" 
+            Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
+            Keywords="@Tags"></OgData>
     <div class="blog-outer-box">
         <div class="content blog-container">
             <div class="blog-content">
@@ -41,6 +44,10 @@ else
     [Parameter]
     public string BlogPostId { get; set; }
 
+    private string Tags => BlogPost?.Tags != null
+        ? string.Join(",", BlogPost.Tags.Select(b => b.Content))
+        : null;
+    
     private BlogPost BlogPost { get; set; }
 
     protected override async Task OnInitializedAsync()
