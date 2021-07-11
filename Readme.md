@@ -34,21 +34,21 @@ The appsettings.json file has a lot of options to customize the content of the b
 
 ```
 
-| Property | Type | Description |
-|----------|------|-------|
-|BlogName|string|Name of your blog. Is used in the navbar and is used as the title of the page.|
-|GithubAccountUrl|string|Url to your github account. If not set the navigation link is not shown|
-|LinkedInAccountUrl|string|Url to your LinkedIn account. If not set the navigation link is not shown|
-|Introduction| |Is used for the introduction part of the blog|
-|Description|MarkdownString|Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text.|
-|BackgroundUrl|string|Url or path to the background image|
-|ProfilePictureUrl|string|Url or path to your profile picture|
-|ConnectionString|string|Is used for connection to a database. Not used when `InMemoryStorageProvider` is used|
-|DatabaseName|string|Name of the database. Only used with `RavenDbStorageProvider`|
-|Auth0| |Configuration for setting up Auth0|
-|Domain|string|See more details here: https://manage.auth0.com/dashboard/|
-|ClientId|string|See more details here: https://manage.auth0.com/dashboard/|
-|ClientSecret|string|See more details here: https://manage.auth0.com/dashboard/|
+| Property           | Type           | Description                                                                                                                                       |
+| ------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BlogName           | string         | Name of your blog. Is used in the navbar and is used as the title of the page.                                                                    |
+| GithubAccountUrl   | string         | Url to your github account. If not set the navigation link is not shown                                                                           |
+| LinkedInAccountUrl | string         | Url to your LinkedIn account. If not set the navigation link is not shown                                                                         |
+| Introduction       |                | Is used for the introduction part of the blog                                                                                                     |
+| Description        | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text. |
+| BackgroundUrl      | string         | Url or path to the background image                                                                                                               |
+| ProfilePictureUrl  | string         | Url or path to your profile picture                                                                                                               |
+| ConnectionString   | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                             |
+| DatabaseName       | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                     |
+| Auth0              |                | Configuration for setting up Auth0                                                                                                                |
+| Domain             | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
+| ClientId           | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
+| ClientSecret       | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
 
 The usage might shift directly into the extension methods, where they are used.
 
@@ -85,9 +85,16 @@ To get better results when for example shared via LinkedIn some of the `<meta pr
 The following tags are set depending on the page:
 
 | Open Graph Tag | Index                                                     | Display Blog Post                            |
-|----------------|-----------------------------------------------------------|----------------------------------------------|
-| og:title       | Title of the blog (defined in Introduction)               | Title of the blogpost                        |
+| -------------- | --------------------------------------------------------- | -------------------------------------------- |
+| og:title       | Title of the blog (defined in Introduction)               | Title of the Blog Post                       |
 | og:url         | Url to the index page                                     | Url of the page                              |
 | og:image       | Background image (defined in Introduction)                | Yes                                          |
 | og:type        | article                                                   | article                                      |
 | og:description | Short description in plain text (defined in Introduction) | Short Description of Blog Post in plain text |
+
+Furthermore the following tags are set:
+
+| Tag                                      | Index                                | Display Blog Post             |
+| ---------------------------------------- | ------------------------------------ | ----------------------------- |
+| Title of the web page                    | Defined in AppConfiguration.BlogName | Title of the blogpost         |
+| &lt;meta name="keyword" content="" /&gt; | not set                              | Tags defined in the Blog Post |
