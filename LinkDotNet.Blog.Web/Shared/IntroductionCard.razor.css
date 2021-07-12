@@ -5,7 +5,7 @@
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
-    gap: 0px 0px;
+    gap: 10px;
     grid-template-areas: ". . . . . ." ". profile-picture profile-text profile-text profile-text ." ". . . . . .";
 }
 
@@ -27,4 +27,24 @@
     font-size: 125%;
     color: white;
     line-height: 24px;
+}
+
+@media only screen and (max-width: 700px) {
+    .introduction-container {
+        grid-template-areas:
+      ". . profile-picture profile-picture . ."
+      ". profile-text profile-text profile-text profile-text ."
+      ". profile-text profile-text profile-text profile-text .";
+    }
+
+    .introduction-container .profile-text {
+        font-size: 100%;
+        color: white;
+        line-height: 20px;
+        text-overflow: ellipsis;
+    }
+
+    .introduction-container .profile-picture {
+        margin-top: 10px;
+    }
 }
