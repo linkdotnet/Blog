@@ -8,20 +8,20 @@
         <EditForm Model="@_model" OnValidSubmit="OnValidBlogPostCreatedAsync">
             <DataAnnotationsValidator />
             <ValidationSummary />
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="title">Title</label>
                 <InputText class="form-control" id="title" @bind-Value="_model.Title" />
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="short">Short Description</label>
                 <InputTextArea class="form-control" id="short" @bind-Value="_model.ShortDescription" rows="4"/>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="content">Content</label>
                 <InputTextArea class="form-control" id="content" @bind-Value="_model.Content" rows="10" />
                 @* <small id="content" class="form-text text-muted">Drag and drop images to upload and insert picture.</small> *@
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="preview">Preview-Url</label>
                 <InputText class="form-control" id="preview" @bind-Value="_model.PreviewImageUrl"/>
             </div>
@@ -30,13 +30,11 @@
                 <label class="form-check-label" for="published">Publish</label><br/>
                 <small id="published" class="form-text text-muted">If this blog post is only draft uncheck the box</small>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="tags">Tags</label>
                 <InputText class="form-control" id="tags" @bind-Value="_model.Tags"/>
             </div>
-            
             <button class="btn btn-primary" type="submit">Submit</button>
-    
         </EditForm>
     </div>
     <div class="preview">
