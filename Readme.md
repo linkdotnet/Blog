@@ -20,8 +20,8 @@ The appsettings.json file has a lot of options to customize the content of the b
   "LinkedInAccountUrl": "",
   "Introduction": {
     "Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
-    "BackgroundUrl": "assets/profile-background.png",
-    "ProfilePictureUrl": "assets/profile-picture.jfif"
+    "BackgroundUrl": "assets/profile-background.webp",
+    "ProfilePictureUrl": "assets/profile-picture.webp"
   },
   "ConnectionString": "",
   "DatabaseName": "",
