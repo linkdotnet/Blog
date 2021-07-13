@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
+using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence
 {
@@ -10,7 +10,13 @@ namespace LinkDotNet.Infrastructure.Persistence
     {
         Task<BlogPost> GetByIdAsync(string blogPostId);
 
-        Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true);
+        Task<IPagedList<BlogPost>> GetAllAsync(
+            Expression<Func<BlogPost, bool>> filter = null,
+            Expression<Func<BlogPost,
+            object>> orderBy = null,
+            bool descending = true,
+            int page = 1,
+            int pageSize = 5);
 
         Task StoreAsync(BlogPost blogPost);
 

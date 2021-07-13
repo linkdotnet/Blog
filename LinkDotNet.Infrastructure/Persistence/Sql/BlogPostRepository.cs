@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.Sql
 {
@@ -22,7 +22,12 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
             return await blogPostContext.BlogPosts.Include(b => b.Tags).SingleAsync(b => b.Id == blogPostId);
         }
 
-        public async Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true)
+        public async Task<IPagedList<BlogPost>> GetAllAsync(
+            Expression<Func<BlogPost, bool>> filter = null,
+            Expression<Func<BlogPost, object>> orderBy = null,
+            bool descending = true,
+            int page = 1,
+            int pageSize = 5)
         {
             var blogPosts = blogPostContext.BlogPosts.AsNoTracking().Include(b => b.Tags).AsQueryable();
 
@@ -35,13 +40,13 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
             {
                 if (descending)
                 {
-                    return await blogPosts.OrderByDescending(orderBy).ToListAsync();
+                    return await blogPosts.OrderByDescending(orderBy).ToPagedListAsync(page, pageSize);
                 }
 
-                return await blogPosts.OrderBy(orderBy).ToListAsync();
+                return await blogPosts.OrderBy(orderBy).ToPagedListAsync(page, pageSize);
             }
 
-            return await blogPosts.ToListAsync();
+            return await blogPosts.ToPagedListAsync(page, pageSize);
         }
 
         public async Task StoreAsync(BlogPost blogPost)

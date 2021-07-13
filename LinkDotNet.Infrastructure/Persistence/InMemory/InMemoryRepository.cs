@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
+using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.InMemory
 {
@@ -17,7 +18,12 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
             return Task.FromResult(blogPost);
         }
 
-        public Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true)
+        public Task<IPagedList<BlogPost>> GetAllAsync(
+            Expression<Func<BlogPost, bool>> filter = null,
+            Expression<Func<BlogPost, object>> orderBy = null,
+            bool descending = true,
+            int page = 1,
+            int pageSize = 5)
         {
             var result = blogPosts.AsEnumerable();
             if (filter != null)
@@ -29,13 +35,13 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
             {
                 if (descending)
                 {
-                    return Task.FromResult(result.OrderByDescending(orderBy.Compile()).AsEnumerable());
+                    return Task.FromResult(result.OrderByDescending(orderBy.Compile()).ToPagedList(page, pageSize));
                 }
 
-                return Task.FromResult(result.OrderBy(orderBy.Compile()).AsEnumerable());
+                return Task.FromResult(result.OrderBy(orderBy.Compile()).ToPagedList(page, pageSize));
             }
 
-            return Task.FromResult(blogPosts.AsEnumerable());
+            return Task.FromResult(blogPosts.ToPagedList(page, pageSize));
         }
 
         public Task StoreAsync(BlogPost blogPost)

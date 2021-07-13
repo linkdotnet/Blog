@@ -2,6 +2,7 @@
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
 @using Markdig
+@using X.PagedList
 @inject IRepository _repository
 @inject AppConfiguration _appConfiguration
 @inject NavigationManager _navigationManager
@@ -13,17 +14,19 @@
     <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
 
     <div class="content px-4">
-        @for (var i = 0; i < _blogPosts.Count; i++)
+        @for (var i = 0; i < _currentPage.Count; i++)
         {
-            <ShortBlogPost BlogPost="_blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+            <ShortBlogPost BlogPost="_currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
         }
     </div>
+    <BlogPostNavigation CurrentPage="@_currentPage" OnPageChanged="GetPage"></BlogPostNavigation>
 </section>
 @code {
-    IList<BlogPost> _blogPosts = new List<BlogPost>();
+    IPagedList<BlogPost> _currentPage = new PagedList<BlogPost>(Array.Empty<BlogPost>(), 1, 1);
+
     protected override async Task OnInitializedAsync()
     {
-        _blogPosts = (await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate)).ToList();
+        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: 1);
     }
 
     private string GetAbsolutePreviewImageUrl()
@@ -41,5 +44,11 @@
     private bool IsAbsoluteUrl(string url)
     {
         return Uri.TryCreate(url, UriKind.Absolute, out _);
+    }
+
+    private async Task GetPage(int newPage)
+    {
+        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: 1, page: 
+        newPage);
     }
 }
