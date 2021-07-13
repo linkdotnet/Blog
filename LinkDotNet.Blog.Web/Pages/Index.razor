@@ -19,14 +19,14 @@
             <ShortBlogPost BlogPost="_currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
         }
     </div>
-    <BlogPostNavigation CurrentPage="@_currentPage" OnPageChanged="GetPage"></BlogPostNavigation>
+    <BlogPostNavigation CurrentPage="@_currentPage" OnPageChanged="@GetPage"></BlogPostNavigation>
 </section>
 @code {
     IPagedList<BlogPost> _currentPage = new PagedList<BlogPost>(Array.Empty<BlogPost>(), 1, 1);
 
     protected override async Task OnInitializedAsync()
     {
-        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: 1);
+        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: 3);
     }
 
     private string GetAbsolutePreviewImageUrl()
@@ -48,7 +48,7 @@
 
     private async Task GetPage(int newPage)
     {
-        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: 1, page: 
+        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: 3, page: 
         newPage);
     }
 }
