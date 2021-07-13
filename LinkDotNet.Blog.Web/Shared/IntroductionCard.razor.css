@@ -46,5 +46,6 @@
 
     .introduction-container .profile-picture {
         margin-top: 10px;
+        margin-left: 0;
     }
 }
