@@ -19,9 +19,9 @@ namespace LinkDotNet.Blog.IntegrationTests
             BlogPostRepository = new BlogPostRepository(new BlogPostContext(options));
         }
 
-        protected BlogPostRepository BlogPostRepository { get; private set; }
+        protected BlogPostRepository BlogPostRepository { get; }
 
-        protected BlogPostContext DbContext { get; private set; }
+        protected BlogPostContext DbContext { get; }
 
         public Task InitializeAsync()
         {

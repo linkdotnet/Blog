@@ -53,6 +53,54 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             blogPosts[0].Find(".description h1").InnerHtml.Should().Be("Published");
         }
 
+        [Fact]
+        public async Task ShouldOnlyLoadTenEntities()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+
+            blogPosts.Count.Should().Be(10);
+        }
+
+        [Fact]
+        public async Task ShouldLoadNextBatchOnClick()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+
+            cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
+
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+            blogPosts.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ShouldLoadPreviousBatchOnClick()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+            cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
+
+            cut.FindComponent<BlogPostNavigation>().Find("li:first-child a").Click();
+
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+            blogPosts.Count.Should().Be(1);
+        }
+
         private static AppConfiguration CreateSampleAppConfiguration()
         {
             return new()
@@ -65,6 +113,15 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
                     ProfilePictureUrl = string.Empty,
                 },
             };
+        }
+
+        private async Task CreatePublishedBlogPosts(int amount)
+        {
+            for (var i = 0; i < amount; i++)
+            {
+                var blogPost = new BlogPostBuilder().IsPublished().Build();
+                await BlogPostRepository.StoreAsync(blogPost);
+            }
         }
     }
 }
