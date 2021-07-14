@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -26,6 +27,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -46,6 +48,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -62,6 +65,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -80,6 +84,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 
             cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
 
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 1);
             var blogPosts = cut.FindComponents<ShortBlogPost>();
             blogPosts.Count.Should().Be(1);
         }
@@ -93,6 +98,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
             cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
 
             cut.FindComponent<BlogPostNavigation>().Find("li:first-child a").Click();
