@@ -100,11 +100,13 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             var cut = ctx.RenderComponent<Index>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
             cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 1);
 
             cut.FindComponent<BlogPostNavigation>().Find("li:first-child a").Click();
 
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count > 1);
             var blogPosts = cut.FindComponents<ShortBlogPost>();
-            blogPosts.Count.Should().Be(1);
+            blogPosts.Count.Should().Be(10);
         }
 
         private static AppConfiguration CreateSampleAppConfiguration()

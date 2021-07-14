@@ -26,7 +26,6 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
             var cut = ctx.RenderComponent<DraftBlogPosts>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
-
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
             blogPosts.Should().HaveCount(1);
