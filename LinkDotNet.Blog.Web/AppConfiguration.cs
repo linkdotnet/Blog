@@ -19,5 +19,7 @@ namespace LinkDotNet.Blog.Web
         public string ConnectionString { get; init; }
 
         public string DatabaseName { get; init; }
+
+        public int BlogPostsPerPage { get; init; }
     }
 }

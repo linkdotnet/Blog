@@ -21,6 +21,7 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "Introduction:BackgroundUrl", "someurl" },
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
+                { "BlogPostsPerPage", "5" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
@@ -38,6 +39,7 @@ namespace LinkDotNet.Blog.UnitTests.Web
             appConfiguration.Introduction.BackgroundUrl.Should().Be("someurl");
             appConfiguration.Introduction.ProfilePictureUrl.Should().Be("anotherurl");
             appConfiguration.Introduction.Description.Should().Be("desc");
+            appConfiguration.BlogPostsPerPage.Should().Be(5);
         }
 
         [Fact]
@@ -48,6 +50,7 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "Introduction:BackgroundUrl", "someurl" },
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
+                { "BlogPostsPerPage", "2" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)

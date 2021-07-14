@@ -120,6 +120,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
                     BackgroundUrl = string.Empty,
                     ProfilePictureUrl = string.Empty,
                 },
+                BlogPostsPerPage = 10,
             };
         }
 

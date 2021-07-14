@@ -29,7 +29,8 @@ The appsettings.json file has a lot of options to customize the content of the b
     "Domain": "",
     "ClientId": "",
     "ClientSecret": ""
-  }
+  },
+  "BlogPostsPerPage": 10,
 }
 
 ```
@@ -49,6 +50,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Domain             | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
 | ClientId           | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
 | ClientSecret       | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
+| BlogPostsPerPage   | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                           |
 
 The usage might shift directly into the extension methods, where they are used.
 

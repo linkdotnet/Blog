@@ -15,6 +15,7 @@ namespace LinkDotNet.Blog.Web
                 Introduction = config.GetSection("Introduction").Get<Introduction>(),
                 ConnectionString = config["ConnectionString"],
                 DatabaseName = config["DatabaseName"],
+                BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
             };
             return configuration;
         }
