@@ -1,0 +1,37 @@
+﻿@using LinkDotNet.Domain
+@using X.PagedList
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(!CurrentPage.IsFirstPage ? string.Empty : "disabled")">
+                <a class="page-link" href="#" tabindex="-1" @onclick="PreviousPage">Previous</a>
+            </li>
+            <li class="page-item @(!CurrentPage.IsLastPage ? string.Empty : "disabled")">
+                <a class="page-link"
+                   @onclick="NextPage"
+                   href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+    @code {
+        [Parameter]
+        public IPagedList<BlogPost> CurrentPage { get; set; }
+        
+        [Parameter]
+        public EventCallback<int> OnPageChanged { get; set; }
+
+        private async Task PageHasChanged(int newPage)
+        {
+            await OnPageChanged.InvokeAsync(newPage);
+        }
+
+        private async Task PreviousPage()
+        {
+            await PageHasChanged(CurrentPage.PageNumber - 1);
+        }
+        
+        private async Task NextPage()
+        {
+            await PageHasChanged(CurrentPage.PageNumber + 1);
+        }
+    }

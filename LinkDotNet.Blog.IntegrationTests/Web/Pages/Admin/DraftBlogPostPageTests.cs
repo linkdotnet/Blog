@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -23,6 +24,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             var cut = ctx.RenderComponent<DraftBlogPosts>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 

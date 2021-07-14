@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Domain;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
+using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.RavenDb
 {
@@ -23,7 +23,12 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             return await session.LoadAsync<BlogPost>(blogPostId);
         }
 
-        public async Task<IEnumerable<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null, Expression<Func<BlogPost, object>> orderBy = null, bool descending = true)
+        public async Task<IPagedList<BlogPost>> GetAllAsync(
+            Expression<Func<BlogPost, bool>> filter = null,
+            Expression<Func<BlogPost, object>> orderBy = null,
+            bool descending = true,
+            int page = 1,
+            int pageSize = 5)
         {
             using var session = documentStore.OpenAsyncSession();
 
@@ -37,13 +42,13 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             {
                 if (descending)
                 {
-                    return await query.OrderByDescending(orderBy).ToListAsync();
+                    return await query.OrderByDescending(orderBy).ToPagedListAsync(page, pageSize);
                 }
 
-                return await query.OrderBy(orderBy).ToListAsync();
+                return await query.OrderBy(orderBy).ToPagedListAsync(page, pageSize);
             }
 
-            return await query.ToListAsync();
+            return await query.ToPagedListAsync(page, pageSize);
         }
 
         public async Task StoreAsync(BlogPost blogPost)

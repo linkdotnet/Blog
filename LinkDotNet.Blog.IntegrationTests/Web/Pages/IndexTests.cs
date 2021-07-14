@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -26,6 +27,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -46,11 +48,65 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
             blogPosts.Should().HaveCount(1);
             blogPosts[0].Find(".description h1").InnerHtml.Should().Be("Published");
+        }
+
+        [Fact]
+        public async Task ShouldOnlyLoadTenEntities()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+
+            blogPosts.Count.Should().Be(10);
+        }
+
+        [Fact]
+        public async Task ShouldLoadNextBatchOnClick()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+
+            cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
+
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 1);
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+            blogPosts.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public async Task ShouldLoadPreviousBatchOnClick()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+            cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 1);
+
+            cut.FindComponent<BlogPostNavigation>().Find("li:first-child a").Click();
+
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count > 1);
+            var blogPosts = cut.FindComponents<ShortBlogPost>();
+            blogPosts.Count.Should().Be(10);
         }
 
         private static AppConfiguration CreateSampleAppConfiguration()
@@ -65,6 +121,15 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
                     ProfilePictureUrl = string.Empty,
                 },
             };
+        }
+
+        private async Task CreatePublishedBlogPosts(int amount)
+        {
+            for (var i = 0; i < amount; i++)
+            {
+                var blogPost = new BlogPostBuilder().IsPublished().Build();
+                await BlogPostRepository.StoreAsync(blogPost);
+            }
         }
     }
 }

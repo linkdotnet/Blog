@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using FluentAssertions;
@@ -21,6 +22,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await AddBlogPostWithTagAsync("Tag 2");
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, "Tag 1"));
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var tags = cut.FindAll(".blog-card");
 
@@ -34,6 +36,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await AddBlogPostWithTagAsync("C#");
             ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
             var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
             var tags = cut.FindAll(".blog-card");
 
