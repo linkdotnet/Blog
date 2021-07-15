@@ -11,8 +11,8 @@
 
 .profile-picture {
     grid-area: profile-picture;
-    width: 150px;
-    height: 150px;
+    width: 175px;
+    height: 175px;
     border-radius: 50%;
     border: white;
     margin: 4px 0 0 4px;
@@ -31,6 +31,8 @@
 
 @media only screen and (max-width: 700px) {
     .introduction-container {
+        grid-template-columns: .5fr 1fr 1fr 1fr 1fr .5fr;
+        grid-template-rows: 1fr 1fr 1fr;
         grid-template-areas:
       ". . profile-picture profile-picture . ."
       ". profile-text profile-text profile-text profile-text ."
