@@ -13,7 +13,7 @@
 }
 
 .blog-card:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
     transition: 1s ease;
 }
 
@@ -39,7 +39,7 @@
     left: 0;
     background-size: cover;
     background-position: center;
-    transition: transform 0.2s;
+    transition: transform 0.5s;
 }
 .blog-card .details,
 .blog-card .details ul {
@@ -53,7 +53,7 @@
     bottom: 0;
     left: -100%;
     margin: auto;
-    transition: left 0.2s;
+    transition: left 0.5s;
     background: rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 10px;
