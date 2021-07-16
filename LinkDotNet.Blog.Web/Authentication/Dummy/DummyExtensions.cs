@@ -9,7 +9,8 @@ namespace LinkDotNet.Blog.Web.Authentication.Dummy
         public static void UseDummyAuthentication(this IServiceCollection services)
         {
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+                .AddCookie(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
                     options =>
                     {
                         options.LoginPath = new PathString("/login");
