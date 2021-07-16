@@ -7,7 +7,7 @@ The markdown will then by translated to HTML and displayed to the client. This g
 This also includes source code snippets. Right now only C# is highlighted properly but other languages can be extended easily as the highlighting is done via highlight.js.
 
 ## In Action
-[!overview](overview.gif)
+![overview](assets/overview.gif)
 
 ## Setup
 Just clone this repository and you are good to go. There are some settings you can tweak. The following chapter will guide you 
