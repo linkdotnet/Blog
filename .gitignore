@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 
 appsettings.Development.json
+appsettings.Production.json
 
 *.[Pp]ublish.xml
 *.azurePubxml

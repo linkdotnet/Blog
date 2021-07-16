@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using Blazored.Toast;
 using LinkDotNet.Blog.Web.Authentication.Auth0;
+using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,8 +13,11 @@ namespace LinkDotNet.Blog.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment environment;
+
+        public Startup(IWebHostEnvironment env, IConfiguration configuration)
         {
+            environment = env;
             Configuration = configuration;
         }
 
@@ -37,10 +41,19 @@ namespace LinkDotNet.Blog.Web
              */
 
             // Here you can setup up your identity provider
-            services.UseAuth0Authentication(Configuration);
+            if (environment.IsDevelopment())
+            {
+                services.UseDummyAuthentication();
+            }
+            else
+            {
+                services.UseAuth0Authentication(Configuration);
+            }
+
             /****************
              * Possible authentication mechanism:
              * services.UseDummyAuthentication();
+             * services.UseAuth0Authentication();
              */
 
             services.AddBlazoredToast();
