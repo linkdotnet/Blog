@@ -24,9 +24,9 @@
 
 .profile-text {
     grid-area: profile-text;
-    font-size: 125%;
+    font-size: clamp(1rem, 0.6479rem + 1.1268vw, 1.5rem);
     color: white;
-    line-height: 24px;
+    line-height: clamp(1.5rem, 0.6479rem + 1.1268vw, 2.25rem);
 }
 
 @media only screen and (max-width: 700px) {
@@ -37,13 +37,6 @@
       ". . profile-picture profile-picture . ."
       ". profile-text profile-text profile-text profile-text ."
       ". profile-text profile-text profile-text profile-text .";
-    }
-
-    .introduction-container .profile-text {
-        font-size: 100%;
-        color: white;
-        line-height: 20px;
-        text-overflow: ellipsis;
     }
 
     .introduction-container .profile-picture {
