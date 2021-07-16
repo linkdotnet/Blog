@@ -38,6 +38,10 @@ namespace LinkDotNet.Blog.Web
 
             // Here you can setup up your identity provider
             services.UseAuth0Authentication(Configuration);
+            /****************
+             * Possible authentication mechanism:
+             * services.UseDummyAuthentication();
+             */
 
             services.AddBlazoredToast();
             services.AddBlazoredLocalStorage();

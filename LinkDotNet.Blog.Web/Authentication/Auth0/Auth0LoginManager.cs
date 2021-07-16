@@ -25,7 +25,7 @@ namespace LinkDotNet.Blog.Web.Authentication.Auth0
 
         public async Task SignOutAsync(string redirectUri = "/")
         {
-            await httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = "/" });
+            await httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = redirectUri });
             await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }

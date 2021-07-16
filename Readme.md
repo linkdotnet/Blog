@@ -74,9 +74,11 @@ services.UseSqlAsStorageProvider();
 It is only one storage provider at a time allowed. Registering multiple will result in an exception.
 
 ## Authorization
-There is only one mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
+There is only one real mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
 
-The main advantage of Auth0 is the easy configurable dashboard on their website. 
+The main advantage of Auth0 is the easy configurable dashboard on their website.
+
+For testing purposes you can use `services.UseDummyAuthentication();`. This allows every user, who presses Login, to be logged in.
 
 ## Search Engine Optimization (SEO)
 The blog includes some of the most important tags to get indexed by a crawler. Furthermore some aspects of the Open Graph specification are implemented.
