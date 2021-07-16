@@ -10,6 +10,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    container: 
+      image: ravendb/ravendb
 
     steps:
     - uses: actions/checkout@v2
@@ -21,5 +23,10 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Create RavenDb Database
+      env: 
+        RAVEN_ARGS: '--Setup.Mode=None'
+      run: |
+        - "/opt/RavenDB/Server/rvn -n"
     - name: Test
       run: dotnet test --no-build --verbosity normal
