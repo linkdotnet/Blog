@@ -18,3 +18,4 @@ robots.txt
 .vs/
 .idea/
 *.csproj.user
+*.dotsettings.user
