@@ -1,5 +1,6 @@
 ﻿<div class="search-bar">
-    <input type="text" class="search-bar-input" placeholder="search" aria-label="search" @bind-value="searchTerm"/>
+    <input type="text" class="search-bar-input" placeholder="search" aria-label="search" @bind-value="searchTerm" 
+    @onkeyup="@CheckForEnter"/>
     <button class="search-bar-button" aria-label="search submit" @onclick="CallSearchEntered"><i class="fas fa-search"></i></button>
 </div>
 
@@ -23,6 +24,14 @@
         }
 
         await SearchEntered.InvokeAsync(trimmed);
+    }
+
+    private async Task CheckForEnter(KeyboardEventArgs e)
+    {
+        if (e.Code is "Enter" or "NumpadEnter")
+        {
+            await SearchEntered.InvokeAsync(searchTerm);
+        }
     }
 
 }

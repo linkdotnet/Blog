@@ -45,5 +45,20 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
 
             enteredString.Should().Be("Test 1");
         }
+
+        [Theory]
+        [InlineData("Enter", true)]
+        [InlineData("Escape", false)]
+        [InlineData("Backspace", false)]
+        public void ShouldReturnValueWhenEnterWasPressed(string key, bool expectedInvoke)
+        {
+            var wasInvoked = false;
+            var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => wasInvoked = true));
+            cut.Find("input").Change("Text");
+
+            cut.Find("input").KeyUp(Key.Get(key));
+
+            wasInvoked.Should().Be(expectedInvoke);
+        }
     }
 }
