@@ -1,9 +1,17 @@
 ﻿<div class="search-bar">
-    <input type="text" class="search-bar-input" placeholder="search" aria-label="search"/>
-    <button class="search-bar-button" aria-label="search submit"><i class="fas fa-search"></i></button>
+    <input type="text" class="search-bar-input" placeholder="search" aria-label="search" @bind-value="searchTerm"/>
+    <button class="search-bar-button" aria-label="search submit" @onclick="CallSearchEntered"><i class="fas fa-search"></i></button>
 </div>
 
 @code {
+    private string searchTerm = string.Empty;
+    
     [Parameter]
-    public string Value { get; set; }
+    public EventCallback<string> SearchEntered { get; set; }
+
+    private async Task CallSearchEntered()
+    {
+        await SearchEntered.InvokeAsync(searchTerm);
+    }
+
 }

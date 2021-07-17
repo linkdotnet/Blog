@@ -1,28 +1,41 @@
-﻿@inject AppConfiguration _configuration
+﻿@inject AppConfiguration configuration
+@inject NavigationManager navigationManager
 
 <header class="nav-header">
     <nav class="nav">
         <div class="container">
             <div class="logo">
-                <a href="#">@_configuration.BlogName</a>
+                <a href="#">@configuration.BlogName</a>
             </div>
             <div id="mainListDiv" class="main_list">
                 <ul class="navlinks">
                     <li><a href="#">Home</a></li>
-                    @if (_configuration.HasLinkedinAccount)
+                    @if (configuration.HasLinkedinAccount)
                     {
-                        <li><a target="_blank" href="@_configuration.LinkedinAccountUrl"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                        <li><a target="_blank" href="@configuration.LinkedinAccountUrl"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
                     }
-                    @if (_configuration.HasGithubAccount)
+                    @if (configuration.HasGithubAccount)
                     {
-                        <li><a target="_blank" href="@_configuration.GithubAccountUrl"><i class="fab fa-github"></i> Github</a></li>
+                        <li><a target="_blank" href="@configuration.GithubAccountUrl"><i class="fab fa-github"></i> Github</a></li>
                     }
                     <AccessControl></AccessControl>
                     <li>
-                        <SearchInput></SearchInput>
+                        <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
+
+@code {
+    private void NavigateToSearchPage(string searchTerm)
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return;
+        }
+
+        navigationManager.NavigateTo($"search/{Uri.EscapeDataString(searchTerm.Trim())}");
+    }
+}
