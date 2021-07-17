@@ -11,7 +11,18 @@
 
     private async Task CallSearchEntered()
     {
-        await SearchEntered.InvokeAsync(searchTerm);
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return;
+        }
+
+        var trimmed = searchTerm.Trim();
+        if (trimmed == string.Empty)
+        {
+            return;
+        }
+
+        await SearchEntered.InvokeAsync(trimmed);
     }
 
 }

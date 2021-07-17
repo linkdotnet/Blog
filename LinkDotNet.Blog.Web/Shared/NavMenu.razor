@@ -31,11 +31,6 @@
 @code {
     private void NavigateToSearchPage(string searchTerm)
     {
-        if (string.IsNullOrWhiteSpace(searchTerm))
-        {
-            return;
-        }
-
-        navigationManager.NavigateTo($"search/{Uri.EscapeDataString(searchTerm.Trim())}");
+        navigationManager.NavigateTo($"search/{searchTerm}");
     }
 }
