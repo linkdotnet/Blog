@@ -19,8 +19,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        blogPosts = (await repository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(SearchTerm)
-            || t.Tags.Any(tag => tag.Content == SearchTerm)),
+        var term = Uri.UnescapeDataString(SearchTerm);
+        blogPosts = (await repository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
+            || t.Tags.Any(tag => tag.Content == term)),
             b => b.UpdatedDate)).ToList();
     }
 }
