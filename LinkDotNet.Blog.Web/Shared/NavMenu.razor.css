@@ -1,6 +1,7 @@
-nav .navbar-background {    
-    background-color: rgba(0, 0, 0, 0.8);    
-    backdrop-filter: blur(6px);
+/* TODO: There has to be a better way */
+.navbar-background {    
+    background-color: rgba(0, 0, 0, 0.8) !important;    
+    backdrop-filter: blur(6px) !important;
 }
 
 .barcode {
