@@ -1,50 +1,26 @@
-.nav-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
-
-.nav {    
+nav .navbar-background {    
     background-color: rgba(0, 0, 0, 0.8);    
     backdrop-filter: blur(6px);
-    flex-wrap: nowrap;
-    justify-content: space-between;
 }
 
-.logo {
-    padding-left: clamp(10px, 15%, 35%)
-}
-
-.logo a {
+.barcode {
     font-family: 'Libre Barcode 128 Text', cursive;
     text-decoration: none;
     font-size: 3rem;
     color: white;
     font-weight: 300;
 }
-
-::deep .navlinks {
-    display: flex;
-    list-style: none;
-    justify-content: center;
-    align-items: center;
-    padding-top: 23px;
-    padding-right: clamp(10px, 10%, 35%);
-}
-
-::deep .navlinks li {
+::deep .navbar-nav li {
     padding-left: 1.25rem;
-    overflow: auto;
     white-space: nowrap;
 }
 
-::deep .navlinks li a {
+::deep .nav-link {
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     color: white;
-    display: inline-block;
 }
 
-::deep .navlinks li a:hover {
+::deep .nav-item .nav-link:hover {
     color: #66C3CC;
 }

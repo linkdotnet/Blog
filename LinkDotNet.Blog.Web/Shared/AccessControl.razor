@@ -1,20 +1,21 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <li>
-            <div class="dropdown">
-                <a data-toggle="dropdown" class="active" href="#" aria-haspopup="true">Admin <i class="fas fa-caret-down"></i></a>
-                <div class="dropdown-content">
-                    <div class="nav-header">Blog posts</div>
-                    <a class="dropdown-item item" href="create">Create new</a>
-                    <a class="dropdown-item item" href="draft">Show drafts</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item disabled item" href="#">Version 1.4</a>
-                </div>
-            </div>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" 
+            aria-expanded="false">
+                Admin
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><h6 class="dropdown-header">Blog posts</h6></li>
+                <li><a class="dropdown-item" href="create">Create new</a></li>
+                <li><a class="dropdown-item" href="draft">Show drafts</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item disabled" href="#">Version 1.4</a></li>
+            </ul>
         </li>
-        <li><a href="logout">Log out</a></li>
+        <li class="nav-item"><a class="nav-link" href="logout">Log out</a></li>
     </Authorized>
     <NotAuthorized>
-        <li><a href="login?redirectUri=/">Log in</a></li>
+        <li class="nav-item"><a class="nav-link" href="login?redirectUri=/">Log in</a></li>
     </NotAuthorized>
 </AuthorizeView>
