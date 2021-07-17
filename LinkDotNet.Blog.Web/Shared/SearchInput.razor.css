@@ -3,9 +3,9 @@
     display: flex;
     border-radius: 100vh;
     overflow: hidden;
-    height: 45px;
+    height: 40px;
     padding: 3px;
-    width: 45px;
+    width: 40px;
     position: relative;
     transition: width 300ms ease-in-out;
 }
@@ -34,8 +34,8 @@
     border: 0;
     border-radius: 100vh;
     margin-left: auto;
-    width: calc(45px - 10px);
-    height: calc(45px - 10px);
+    width: calc(40px - 10px);
+    height: calc(40px - 10px);
     cursor: pointer;
     background: transparent;
 }

@@ -7,10 +7,12 @@
 .nav {    
     background-color: rgba(0, 0, 0, 0.8);    
     backdrop-filter: blur(6px);
+    flex-wrap: nowrap;
+    justify-content: space-between;
 }
 
 .logo {
-    float: left;
+    padding-left: clamp(10px, 15%, 35%)
 }
 
 .logo a {
@@ -22,22 +24,25 @@
 }
 
 ::deep .navlinks {
-    float: right;
     display: flex;
     list-style: none;
     justify-content: center;
     align-items: center;
     padding-top: 23px;
+    padding-right: clamp(10px, 10%, 35%);
 }
 
 ::deep .navlinks li {
     padding-left: 1.25rem;
+    overflow: auto;
+    white-space: nowrap;
 }
 
 ::deep .navlinks li a {
     text-decoration: none;
     font-size: 1.1rem;
     color: white;
+    display: inline-block;
 }
 
 ::deep .navlinks li a:hover {
