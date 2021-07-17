@@ -1,9 +1,8 @@
-﻿@page "/draft"
+﻿@page "/search/{searchTerm}"
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Domain
-@attribute [Authorize]
 @inject IRepository repository
-<h3>Draft Blog Posts</h3>
+<h3>Results for @SearchTerm</h3>
 
 <div class="content px-4">
     @for (var i = 0; i < blogPosts.Count; i++)
@@ -13,11 +12,15 @@
 </div>
 
 @code {
+    [Parameter]
+    public string SearchTerm { get; set; }
+
     private IList<BlogPost> blogPosts = new List<BlogPost>();
 
     protected override async Task OnInitializedAsync()
     {
-        blogPosts = (await repository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate)).ToList();
+        blogPosts = (await repository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(SearchTerm)
+            || t.Tags.Any(tag => tag.Content == SearchTerm)),
+            b => b.UpdatedDate)).ToList();
     }
-
 }
