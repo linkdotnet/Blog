@@ -1,0 +1,28 @@
+﻿<div class="search-bar">
+    <input type="text" class="search-bar-input" placeholder="search" aria-label="search" @bind-value="searchTerm"/>
+    <button class="search-bar-button" aria-label="search submit" @onclick="CallSearchEntered"><i class="fas fa-search"></i></button>
+</div>
+
+@code {
+    private string searchTerm = string.Empty;
+    
+    [Parameter]
+    public EventCallback<string> SearchEntered { get; set; }
+
+    private async Task CallSearchEntered()
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            return;
+        }
+
+        var trimmed = searchTerm.Trim();
+        if (trimmed == string.Empty)
+        {
+            return;
+        }
+
+        await SearchEntered.InvokeAsync(trimmed);
+    }
+
+}
