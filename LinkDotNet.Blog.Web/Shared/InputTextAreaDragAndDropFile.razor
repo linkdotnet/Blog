@@ -6,7 +6,7 @@
 <div>
     <InputTextArea
         @attributes="AdditionalAttributes"
-        class="@_cssClass"
+        class="@CssClass"
         @bind-Value="@BindingValue"
         ondragover="event.stopPropagation(); event.preventDefault();"
         ondragstart="event.stopPropagation(); event.preventDefault();"
@@ -18,20 +18,20 @@
 </div>
 
 @code {
-    private string _dropClass = string.Empty;
-    private string _otherClasses = string.Empty;
-    private string _cssClass => _dropClass + " " + _otherClasses;
+    private string dropClass = string.Empty;
+    private string otherClasses = string.Empty;
+    private string CssClass => dropClass + " " + otherClasses;
     
-    private string _value;
+    private string value;
 
     [Parameter]
     public string BindingValue
     {
-        get => _value;
+        get => value;
         set
         {
-            if (_value == value ) return;
-            _value = value;
+            if (this.value == value ) return;
+            this.value = value;
             BindingValueChanged.InvokeAsync(value);
         }
     }
@@ -46,24 +46,24 @@
     {
         if (AdditionalAttributes != null && AdditionalAttributes.ContainsKey("class"))
         {
-            _otherClasses = AdditionalAttributes["class"].ToString();
+            otherClasses = AdditionalAttributes["class"].ToString();
         }
     }
 
     private void HandleDrop(DragEventArgs args)
     {
-        _dropClass = string.Empty;
+        dropClass = string.Empty;
         //// This will only work with .NET 6
         // var files = args.DataTransfer.Files;
     }
 
     private void HandleDragEnter()
     {
-        _dropClass = "can-drop";
+        dropClass = "can-drop";
     }
 
     private void HandleDragLeave()
     {
-        _dropClass = string.Empty;
+        dropClass = string.Empty;
     }
 }

@@ -5,34 +5,34 @@
 
 <div class="content-area">
     <div class="new-content">
-        <EditForm Model="@_model" OnValidSubmit="OnValidBlogPostCreatedAsync">
+        <EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="mb-3">
                 <label for="title">Title</label>
-                <InputText class="form-control" id="title" @bind-Value="_model.Title" />
+                <InputText class="form-control" id="title" @bind-Value="model.Title" />
             </div>
             <div class="mb-3">
                 <label for="short">Short Description</label>
-                <InputTextArea class="form-control" id="short" @bind-Value="_model.ShortDescription" rows="4"/>
+                <InputTextArea class="form-control" id="short" @bind-Value="model.ShortDescription" rows="4"/>
             </div>
             <div class="mb-3">
                 <label for="content">Content</label>
-                <InputTextArea class="form-control" id="content" @bind-Value="_model.Content" rows="10" />
+                <InputTextArea class="form-control" id="content" @bind-Value="model.Content" rows="10" />
                 @* <small id="content" class="form-text text-muted">Drag and drop images to upload and insert picture.</small> *@
             </div>
             <div class="mb-3">
                 <label for="preview">Preview-Url</label>
-                <InputText class="form-control" id="preview" @bind-Value="_model.PreviewImageUrl"/>
+                <InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
             </div>
             <div class="form-check">
-                <InputCheckbox class="form-check-input" id="published" @bind-Value="_model.IsPublished" />
+                <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />
                 <label class="form-check-label" for="published">Publish</label><br/>
                 <small id="published" class="form-text text-muted">If this blog post is only draft uncheck the box</small>
             </div>
             <div class="mb-3">
                 <label for="tags">Tags</label>
-                <InputText class="form-control" id="tags" @bind-Value="_model.Tags"/>
+                <InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
             </div>
             <button class="btn btn-primary" type="submit">Submit</button>
         </EditForm>
@@ -40,13 +40,13 @@
     <div class="preview">
         <div>
             <header>
-                <h1>@_model.Title</h1>
+                <h1>@model.Title</h1>
             </header>
             <div>
-                @(RenderMarkupString(_model.ShortDescription))
+                @(RenderMarkupString(model.ShortDescription))
             </div>
             <div>
-                @(RenderMarkupString(_model.Content))
+                @(RenderMarkupString(model.Content))
             </div>
         </div>
     </div>
@@ -64,7 +64,7 @@
     [Parameter]
     public bool ClearAfterCreated { get; set; } = true;
 
-    private CreateNewModel _model = new();
+    private CreateNewModel model = new();
 
     protected override void OnParametersSet()
     {
@@ -73,12 +73,12 @@
             return;
         }
 
-        _model = CreateNewModel.FromBlogPost(BlogPost);
+        model = CreateNewModel.FromBlogPost(BlogPost);
     }
 
     private async Task OnValidBlogPostCreatedAsync()
     {
-        await OnBlogPostCreated.InvokeAsync(_model.ToBlogPost());
+        await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
         ClearModel();
     }
     
@@ -86,7 +86,7 @@
     {
         if (ClearAfterCreated)
         {
-            _model = new CreateNewModel();
+            model = new CreateNewModel();
         }
     }
 }

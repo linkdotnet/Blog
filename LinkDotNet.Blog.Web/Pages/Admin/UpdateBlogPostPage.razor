@@ -4,8 +4,8 @@
 @using LinkDotNet.Blog.Web.Shared.Admin
 @using LinkDotNet.Domain
 @inherits MarkdownComponentBase
-@inject IRepository _repository
-@inject IToastService _toastService
+@inject IRepository repository
+@inject IToastService toastService
 
 @if (blogPostFromDb != null)
 {
@@ -33,13 +33,13 @@ else
             throw new ArgumentNullException(nameof(BlogPostId), "You have to provide an id");
         }
 
-        blogPostFromDb = await _repository.GetByIdAsync(BlogPostId);
+        blogPostFromDb = await repository.GetByIdAsync(BlogPostId);
     }
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
         blogPostFromDb.Update(blogPost);
-        await _repository.StoreAsync(blogPostFromDb);
-        _toastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
+        await repository.StoreAsync(blogPostFromDb);
+        toastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
     }
 }

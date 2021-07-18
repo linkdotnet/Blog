@@ -1,24 +1,24 @@
 ﻿@page "/searchByTag/{tag}"
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
-@inject IRepository _repository
+@inject IRepository repository
 
 <h3>All posts with Tag <em>@Tag</em></h3>
 
-@for (var i = 0; i < _blogPosts.Count; i++)
+@for (var i = 0; i < blogPosts.Count; i++)
     {
-        <ShortBlogPost BlogPost="_blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+        <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
     }
 
 @code {
     [Parameter]
     public string Tag { get; set; }
     
-    IList<BlogPost> _blogPosts = new List<BlogPost>();
+    IList<BlogPost> blogPosts = new List<BlogPost>();
     protected override async Task OnInitializedAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);
-        _blogPosts = (await _repository.GetAllAsync(
+        blogPosts = (await repository.GetAllAsync(
             b => b.Tags.Any(t => t.Content == Tag), 
             b => b.UpdatedDate))
             .ToList();

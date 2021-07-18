@@ -1,4 +1,4 @@
-﻿@inject IJSRuntime _jsRuntime
+﻿@inject IJSRuntime jsRuntime
 
 @code {
     [Parameter]
@@ -8,7 +8,7 @@
     {
         if (firstRender)
         {
-            await _jsRuntime.InvokeVoidAsync("setDocumentTitle", Value);
+            await jsRuntime.InvokeVoidAsync("setDocumentTitle", Value);
         }
     }
 }

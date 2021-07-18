@@ -1,10 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
-@inject NavigationManager _navigationManager
+@inject NavigationManager navigationManager
 
 <Meta name="title" property="og:title" content="@Title" />
 <Meta name="image" property="og:image" content="@AbsolutePreviewImageUrl" />
 <Meta property="og:type" content="article" />
-<Meta property="og:url" content="@_navigationManager.Uri" />
+<Meta property="og:url" content="@navigationManager.Uri" />
 @if (Keywords != null)
 {
     <Meta name="keywords" content="@Keywords"/>

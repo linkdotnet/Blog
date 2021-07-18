@@ -1,7 +1,7 @@
 ﻿@using LinkDotNet.Domain
 @using Blazored.LocalStorage
 @using LinkDotNet.Infrastructure.Persistence
-@inject ILocalStorageService _localStorage
+@inject ILocalStorageService localStorage
 <div class="like-container">
     <small>@BlogPost.Likes @LikeText</small>
     <button class="btn @BtnClass" @onclick="LikeBlogPost"><i class="far fa-thumbs-up"></i> @LikeTextButton</button>
@@ -42,14 +42,14 @@
         
         HasLiked = !HasLiked;
         await OnBlogPostLiked.InvokeAsync(HasLiked);
-        await _localStorage.SetItemAsync("hasLiked", HasLiked);
+        await localStorage.SetItemAsync("hasLiked", HasLiked);
     }
 
     private async Task<bool> GetHasLiked()
     {
-        if (await _localStorage.ContainKeyAsync("hasLiked"))
+        if (await localStorage.ContainKeyAsync("hasLiked"))
         {
-            return await _localStorage.GetItemAsync<bool>("hasLiked");
+            return await localStorage.GetItemAsync<bool>("hasLiked");
         }
 
         return false;

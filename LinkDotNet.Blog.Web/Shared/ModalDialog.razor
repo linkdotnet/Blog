@@ -1,5 +1,5 @@
 ﻿@using System.ComponentModel.DataAnnotations
-<div class="modal @_modalClass" tabindex="-1" role="dialog" style="display:@_modalDisplay; overflow-y: auto;">
+<div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +15,7 @@
     </div>
 </div>
 
-@if (_showBackdrop)
+@if (showBackdrop)
 {
     <div class="modal-backdrop fade show"></div>
 }
@@ -27,21 +27,21 @@
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
-    private string _modalDisplay = "none;";
-    private string _modalClass = "";
-    private bool _showBackdrop = false;
+    private string modalDisplay = "none;";
+    private string modalClass = "";
+    private bool showBackdrop = false;
 
     public void Open()
     {
-        _modalDisplay = "block;";
-        _modalClass = "show";
-        _showBackdrop = true;
+        modalDisplay = "block;";
+        modalClass = "show";
+        showBackdrop = true;
     }
 
     public void Close()
     {
-        _modalDisplay = "none";
-        _modalClass = "";
-        _showBackdrop = false;
+        modalDisplay = "none";
+        modalClass = "";
+        showBackdrop = false;
     }
 }

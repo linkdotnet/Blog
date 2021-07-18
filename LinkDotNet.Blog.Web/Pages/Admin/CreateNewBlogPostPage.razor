@@ -4,15 +4,15 @@
 @using LinkDotNet.Blog.Web.Shared.Admin
 @using LinkDotNet.Domain
 @inherits MarkdownComponentBase
-@inject IRepository _repository
-@inject IToastService _toastService
+@inject IRepository repository
+@inject IToastService toastService
 
 <CreateNewBlogPost Title="Create new BlogPost" OnBlogPostCreated="@(StoreBlogPostAsync)" ></CreateNewBlogPost>
 
 @code {
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
-        await _repository.StoreAsync(blogPost);
-        _toastService.ShowInfo($"Created BlogPost {blogPost.Title}");
+        await repository.StoreAsync(blogPost);
+        toastService.ShowInfo($"Created BlogPost {blogPost.Title}");
     }
 }

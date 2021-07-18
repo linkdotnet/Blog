@@ -3,41 +3,41 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using Markdig
 @using X.PagedList
-@inject IRepository _repository
-@inject AppConfiguration _appConfiguration
-@inject NavigationManager _navigationManager
+@inject IRepository repository
+@inject AppConfiguration appConfiguration
+@inject NavigationManager navigationManager
 
-<OgData Title="@(Markdown.ToPlainText(_appConfiguration.BlogName))" 
+<OgData Title="@(Markdown.ToPlainText(appConfiguration.BlogName))" 
         AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
-        Description="@(Markdown.ToPlainText(_appConfiguration.Introduction.Description))"></OgData>
+        Description="@(Markdown.ToPlainText(appConfiguration.Introduction.Description))"></OgData>
 <section>
-    <IntroductionCard Introduction="_appConfiguration.Introduction"></IntroductionCard>
+    <IntroductionCard Introduction="appConfiguration.Introduction"></IntroductionCard>
 
     <div class="content px-4">
-        @for (var i = 0; i < _currentPage.Count; i++)
+        @for (var i = 0; i < currentPage.Count; i++)
         {
-            <ShortBlogPost BlogPost="_currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+            <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
         }
     </div>
-    <BlogPostNavigation CurrentPage="@_currentPage" OnPageChanged="@GetPage"></BlogPostNavigation>
+    <BlogPostNavigation CurrentPage="@currentPage" OnPageChanged="@GetPage"></BlogPostNavigation>
 </section>
 @code {
-    IPagedList<BlogPost> _currentPage = new PagedList<BlogPost>(Array.Empty<BlogPost>(), 1, 1);
+    IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(Array.Empty<BlogPost>(), 1, 1);
 
     protected override async Task OnInitializedAsync()
     {
-        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: _appConfiguration.BlogPostsPerPage);
+        currentPage = await repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage);
     }
 
     private string GetAbsolutePreviewImageUrl()
     {
-        var backgroundUrl = _appConfiguration.Introduction.BackgroundUrl;
+        var backgroundUrl = appConfiguration.Introduction.BackgroundUrl;
         if (IsAbsoluteUrl(backgroundUrl))
         {
             return backgroundUrl;
         }
 
-        var successful = Uri.TryCreate(new Uri(_navigationManager.BaseUri, UriKind.Absolute), new Uri(backgroundUrl, UriKind.RelativeOrAbsolute), out var uri);
+        var successful = Uri.TryCreate(new Uri(navigationManager.BaseUri, UriKind.Absolute), new Uri(backgroundUrl, UriKind.RelativeOrAbsolute), out var uri);
         return successful ? uri.ToString() : backgroundUrl;
     }
     
@@ -48,7 +48,7 @@
 
     private async Task GetPage(int newPage)
     {
-        _currentPage = await _repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: _appConfiguration.BlogPostsPerPage, page: 
+        currentPage = await repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage, page: 
         newPage);
     }
 }
