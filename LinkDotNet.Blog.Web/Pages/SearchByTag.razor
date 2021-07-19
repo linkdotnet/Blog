@@ -1,8 +1,10 @@
 ﻿@page "/searchByTag/{tag}"
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
+@using Toolbelt.Blazor.HeadElement
 @inject IRepository repository
 
+<Title>Search for tag: @Tag</Title>
 <h3>All posts with Tag <em>@Tag</em></h3>
 
 @for (var i = 0; i < blogPosts.Count; i++)
