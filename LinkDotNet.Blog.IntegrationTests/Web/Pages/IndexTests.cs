@@ -9,6 +9,8 @@ using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
+using Toolbelt.Blazor.HeadElement;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
@@ -24,8 +26,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await BlogPostRepository.StoreAsync(newestBlogPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            RegisterComponents(ctx);
             var cut = ctx.RenderComponent<Index>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
@@ -45,8 +46,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await BlogPostRepository.StoreAsync(unpublishedPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            RegisterComponents(ctx);
             var cut = ctx.RenderComponent<Index>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
@@ -62,8 +62,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await CreatePublishedBlogPosts(11);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            RegisterComponents(ctx);
             var cut = ctx.RenderComponent<Index>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
@@ -78,8 +77,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await CreatePublishedBlogPosts(11);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            RegisterComponents(ctx);
             var cut = ctx.RenderComponent<Index>();
 
             cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
@@ -95,8 +93,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await CreatePublishedBlogPosts(11);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            RegisterComponents(ctx);
             var cut = ctx.RenderComponent<Index>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
             cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
@@ -131,6 +128,13 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
                 var blogPost = new BlogPostBuilder().IsPublished().Build();
                 await BlogPostRepository.StoreAsync(blogPost);
             }
+        }
+
+        private void RegisterComponents(TestContextBase ctx)
+        {
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+            ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         }
     }
 }

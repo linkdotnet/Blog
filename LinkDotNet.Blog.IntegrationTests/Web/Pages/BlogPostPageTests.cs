@@ -11,6 +11,7 @@ using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using Toolbelt.Blazor.HeadElement;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
@@ -24,9 +25,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await BlogPostRepository.StoreAsync(publishedPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => new Mock<ILocalStorageService>().Object);
-            ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+            RegisterComponents(ctx);
             ctx.AddTestAuthorization().SetAuthorized("s");
             var cut = ctx.RenderComponent<BlogPostPage>(
                 p => p.Add(b => b.BlogPostId, publishedPost.Id));
@@ -49,9 +48,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             localStorage.Setup(l => l.ContainKeyAsync("hasLiked", default)).ReturnsAsync(true);
             localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked", default)).ReturnsAsync(true);
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => localStorage.Object);
-            ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+            RegisterComponents(ctx, localStorage.Object);
             ctx.AddTestAuthorization().SetAuthorized("s");
             var cut = ctx.RenderComponent<BlogPostPage>(
                 p => p.Add(b => b.BlogPostId, publishedPost.Id));
@@ -72,15 +69,21 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             ctx.AddTestAuthorization();
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
-            ctx.Services.AddScoped(_ => new Mock<ILocalStorageService>().Object);
-            ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+            RegisterComponents(ctx);
             var cut = ctx.RenderComponent<BlogPostPage>(
                 p => p.Add(b => b.BlogPostId, publishedPost.Id));
 
             var ogData = cut.FindComponent<OgData>();
 
             ogData.Instance.Keywords.Should().Be("Tag1,Tag2");
+        }
+
+        private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
+        {
+            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped(_ => localStorageService ?? new Mock<ILocalStorageService>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         }
     }
 }
