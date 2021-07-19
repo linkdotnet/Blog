@@ -3,6 +3,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Shared.Admin
 @using Markdig
+@using Toolbelt.Blazor.HeadElement
 @inject IRepository repository
 @inject IJSRuntime jsRuntime
 @inherits MarkdownComponentBase
@@ -13,7 +14,7 @@
 }
 else
 {
-    <Title Value="@BlogPost.Title"></Title>
+    <Title>@BlogPost.Title</Title>
     <OgData Title="@BlogPost.Title" 
             AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl" 
             Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"

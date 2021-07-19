@@ -21,6 +21,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Toolbelt.Blazor.HeadElement" Version="5.4.2" />
+        <PackageReference Include="Toolbelt.Blazor.HeadElement.ServerPrerendering" Version="1.5.2" />
     </ItemGroup>
 
     <ItemGroup>

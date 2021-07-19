@@ -1,10 +1,10 @@
-﻿@using Microsoft.AspNetCore.Components.Web.Extensions.Head
-@inject NavigationManager navigationManager
+﻿@inject NavigationManager navigationManager
+@using Toolbelt.Blazor.HeadElement
 
-<Meta name="title" property="og:title" content="@Title" />
-<Meta name="image" property="og:image" content="@AbsolutePreviewImageUrl" />
-<Meta property="og:type" content="article" />
-<Meta property="og:url" content="@navigationManager.Uri" />
+<Meta Name="title" Property="og:title" Content="@Title" />
+<Meta Name="image" Property="og:image" Content="@AbsolutePreviewImageUrl" />
+<Meta Property="og:type" Content="article" />
+<Meta Property="og:url" Content="@navigationManager.Uri" />
 @if (Keywords != null)
 {
     <Meta name="keywords" content="@Keywords"/>
