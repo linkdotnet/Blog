@@ -13,6 +13,16 @@
     font-weight: 400;
     font-size: 3rem;
 }
+
+.navbar a {
+    font-weight: 500;
+    color: var(--active-link-inverted) !important;
+}
+
+.navbar a:hover {
+    color: var(--link-hover-inverted) !important;
+}
+
 ::deep .navbar-nav li {
     padding-left: 1.25rem;
     white-space: nowrap;

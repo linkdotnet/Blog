@@ -10,9 +10,7 @@
 <OgData Title="@(Markdown.ToPlainText(appConfiguration.BlogName))" 
         AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
         Description="@(Markdown.ToPlainText(appConfiguration.Introduction.Description))"></OgData>
-<section>
-    <div class="background-image" style="background-image: url(@appConfiguration.Introduction.BackgroundUrl);">
-    </div>
+<section class="background-image" style="background-image: url(@appConfiguration.Introduction.BackgroundUrl);">
 </section>
 
 <section class="introduction">
@@ -20,16 +18,24 @@
 </section>
 
 <section>
-    <div class="content px-4">
-        @for (var i = 0; i < currentPage.Count; i++)
-        {
-            <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-        }
+    <div class="blogpost-cards">
+        <header>
+            <div class="recent-posts">
+                <h1>Recent Posts</h1>
+            </div>
+        </header>
+        <div>
+            @for (var i = 0; i < currentPage.Count; i++)
+            {
+                <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+            }
+        </div>
     </div>
     <BlogPostNavigation CurrentPage="@currentPage" OnPageChanged="@GetPage"></BlogPostNavigation>
 </section>
+
 @code {
-    IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(Array.Empty<BlogPost>(), 1, 1);
+    IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
 
     protected override async Task OnInitializedAsync()
     {

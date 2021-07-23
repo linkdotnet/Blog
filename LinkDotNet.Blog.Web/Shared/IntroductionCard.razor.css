@@ -1,21 +1,9 @@
-﻿.introduction-container {
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 350px;
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    gap: 10px;
-    grid-template-areas: ". . . . . ." ". profile-picture profile-text profile-text profile-text ." ". . . . . .";
-}
-
-.profile-picture {
-    grid-area: profile-picture;
+﻿.profile-picture {
     width: 175px;
     height: 175px;
     border-radius: 50%;
     border: white;
-    margin: 4px 0 0 4px;
+    margin: auto;
     box-shadow: 0 0 0 4px white;
     background-repeat: no-repeat;
     background-position: center center;
@@ -23,24 +11,9 @@
 }
 
 .profile-text {
-    grid-area: profile-text;
-    font-size: clamp(1rem, 0.6479rem + 1.1268vw, 1.5rem);
-    color: white;
-    line-height: clamp(1.5rem, 0.6479rem + 1.1268vw, 2.25rem);
-}
-
-@media only screen and (max-width: 700px) {
-    .introduction-container {
-        grid-template-columns: .5fr 1fr 1fr 1fr 1fr .5fr;
-        grid-template-rows: 1fr 1fr 1fr;
-        grid-template-areas:
-      ". . profile-picture profile-picture . ."
-      ". profile-text profile-text profile-text profile-text ."
-      ". profile-text profile-text profile-text profile-text .";
-    }
-
-    .introduction-container .profile-picture {
-        margin-top: 10px;
-        margin-left: 0;
-    }
+    padding-top: 15px;
+    width: 60%;
+    margin: auto;
+    font-size: 1.5em;
+    line-height: 1.5em;
 }

@@ -1,4 +1,7 @@
-﻿:root {
+﻿@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap');
+
+:root {
     /* Color definitions */
     --ceramic: #FCFFF5;
     --tana: #D1DBBD;
@@ -10,20 +13,21 @@
     --wild-sand: #f4f4f4;    
 
     /* Usages */
-    --active-link: var(--ceramic);
+    --active-link: var(--big-stone);
     --disabled-link: var(--pewter);
     --link-hover: var(--tana);
-    --active-link-inverse: var(--pewter);
-    --disabled-link-inverse: var(--tana);
-    --link-hover-inverse: var(--ceramic);
+    --active-link-inverted: var(--ceramic);
+    --link-hover-inverted: var(--tana);
 
-    --header1: var(--pewter);
+    --header1: var(--william);
+    --header1-inverted: var(--ceramic);
     --header2: var(--pewter);
+    --text-color: var(--big-stone);
 
     --navbar-background: #f4f4f4d0;
 
     --blockquote-background: var(--wild-sand);
-    --blockquote-border: var(--pewter);
+    --blockquote-border: var(--william);
     
     --button-text-color: var(--wild-sand);
     --button-primary-color: var(--william);
@@ -42,6 +46,7 @@ body {
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    font-family: "Roboto", monospace;
 }
 
 a {
@@ -49,22 +54,22 @@ a {
     color: var(--active-link) !important;
 }
 
+a:hover {
+    color: var(--link-hover) !important;
+}
+
 .disabled a {
     font-weight: 400;
     color: var(--disabled-link) !important;
 }
 
-a:hover {
-    color: var(--link-hover) !important;
-}
-
 a.inverse {
     font-weight: 400;
-    color: var(--active-link-inverse) !important;
+    color: var(--active-link-inverted) !important;
 }
 
 a.inverse:hover   {
-    color: var(--link-hover-inverse) !important;
+    color: var(--link-hover-inverted) !important;
 }
 
 h1 {
@@ -101,10 +106,8 @@ blockquote p {
     display: inline;
 }
 
-.background-image {
-    background-repeat: no-repeat;
-    background-size: cover;
-    min-height:55vh;
+p {
+    color: var(--text-color);
 }
 
 section {
@@ -113,4 +116,8 @@ section {
 
 .page {
     padding-top: 100px;
+}
+
+body::-webkit-scrollbar {
+    display: none;
 }

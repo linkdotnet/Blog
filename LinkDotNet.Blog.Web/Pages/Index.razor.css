@@ -1,0 +1,26 @@
+﻿.blogpost-cards {
+    background-color: var(--big-stone);
+    margin: 1rem auto 1.6%;
+}
+
+.recent-posts {
+    text-align:center;
+    padding-top: 10px;
+}
+
+.recent-posts h1 {
+    color: var(--header1-inverted);
+    font-size: 1.75em;
+    vertical-align:middle;
+    margin: auto;
+}
+
+.background-image {
+    background-repeat: no-repeat;
+    background-size: cover;
+    min-height:55vh;
+}
+
+.introduction {
+    padding-top: 35px;
+}

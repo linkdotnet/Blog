@@ -2,9 +2,9 @@
 @inherits MarkdownComponentBase
 
 <div>
-    <h1 style="text-align: center">About me</h1>
-    <br/>
-    <div style="text-align: center">
+    <div class="profile-picture" style="background-image: url(@Introduction.ProfilePictureUrl)">
+    </div>
+    <div class="profile-text">
         @RenderMarkupString(Introduction.Description)
     </div>
 </div>
