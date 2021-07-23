@@ -9,7 +9,7 @@
     --white: #ffffff;
     --wild-sand: #f4f4f4;    
 
-    /* Usage */
+    /* Usages */
     --active-link: var(--ceramic);
     --disabled-link: var(--pewter);
     --link-hover: var(--tana);
@@ -26,7 +26,7 @@
     --blockquote-border: var(--pewter);
     
     --button-text-color: var(--wild-sand);
-    --button-primary-color: var(--william:);
+    --button-primary-color: var(--william);
     --button-primary-border-color: var(--big-stone);
     --button-primary-hover-color: var(--big-stone);
     --button-secondary-color: var(--big-stone);
@@ -45,7 +45,7 @@ body {
 }
 
 a {
-    font-weight: semi-bold;
+    font-weight: 500;
     color: var(--active-link) !important;
 }
 
@@ -104,5 +104,13 @@ blockquote p {
 .background-image {
     background-repeat: no-repeat;
     background-size: cover;
-    height:75vh;
+    min-height:55vh;
+}
+
+section {
+    padding-bottom: 10px;
+}
+
+.page {
+    padding-top: 100px;
 }

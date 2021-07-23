@@ -3,13 +3,16 @@
 @using LinkDotNet.Domain
 @attribute [Authorize]
 @inject IRepository repository
-<h3>Draft Blog Posts</h3>
 
-<div class="content px-4">
-    @for (var i = 0; i < blogPosts.Count; i++)
-    {
-        <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-    }
+<div class="page">
+    <h3>Draft Blog Posts</h3>
+
+    <div class="content px-4">
+        @for (var i = 0; i < blogPosts.Count; i++)
+        {
+            <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+        }
+    </div>
 </div>
 
 @code {

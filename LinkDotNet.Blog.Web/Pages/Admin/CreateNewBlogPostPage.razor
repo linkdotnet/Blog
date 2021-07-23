@@ -7,7 +7,9 @@
 @inject IRepository repository
 @inject IToastService toastService
 
-<CreateNewBlogPost Title="Create new BlogPost" OnBlogPostCreated="@(StoreBlogPostAsync)" ></CreateNewBlogPost>
+<div class="page">
+    <CreateNewBlogPost Title="Create new BlogPost" OnBlogPostCreated="@(StoreBlogPostAsync)" ></CreateNewBlogPost>
+</div>
 
 @code {
     private async Task StoreBlogPostAsync(BlogPost blogPost)

@@ -5,13 +5,15 @@
 @inject IRepository repository
 
 <Title>Search for tag: @Tag</Title>
-<h3>All posts with Tag <em>@Tag</em></h3>
 
-@for (var i = 0; i < blogPosts.Count; i++)
+<div class="page">
+    <h3>All posts with Tag <em>@Tag</em></h3>
+
+    @for (var i = 0; i < blogPosts.Count; i++)
     {
         <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
     }
-
+</div>
 @code {
     [Parameter]
     public string Tag { get; set; }
