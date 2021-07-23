@@ -1,0 +1,108 @@
+﻿:root {
+    /* Color definitions */
+    --ceramic: #FCFFF5;
+    --tana: #D1DBBD;
+    --pewter: #91AA9D;
+    --william: #3E606F;
+    --big-stone: #193441;  
+
+    --white: #ffffff;
+    --wild-sand: #f4f4f4;    
+
+    /* Usage */
+    --active-link: var(--ceramic);
+    --disabled-link: var(--pewter);
+    --link-hover: var(--tana);
+    --active-link-inverse: var(--pewter);
+    --disabled-link-inverse: var(--tana);
+    --link-hover-inverse: var(--ceramic);
+
+    --header1: var(--pewter);
+    --header2: var(--pewter);
+
+    --navbar-background: #f4f4f4d0;
+
+    --blockquote-background: var(--wild-sand);
+    --blockquote-border: var(--pewter);
+    
+    --button-text-color: var(--wild-sand);
+    --button-primary-color: var(--william:);
+    --button-primary-border-color: var(--big-stone);
+    --button-primary-hover-color: var(--big-stone);
+    --button-secondary-color: var(--big-stone);
+    --button-secondary-border-color: var(--big-stone);
+}
+
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+a {
+    font-weight: semi-bold;
+    color: var(--active-link) !important;
+}
+
+.disabled a {
+    font-weight: 400;
+    color: var(--disabled-link) !important;
+}
+
+a:hover {
+    color: var(--link-hover) !important;
+}
+
+a.inverse {
+    font-weight: 400;
+    color: var(--active-link-inverse) !important;
+}
+
+a.inverse:hover   {
+    color: var(--link-hover-inverse) !important;
+}
+
+h1 {
+    color: var(--header1);
+}
+
+h2 {
+    color: var(--header2);
+}
+
+blockquote {
+    border-left: 2px solid var(--header2);
+    background: var(--blockquote-background);
+    padding-left: 0.5em;
+}
+
+blockquote::before {
+    content: open-quote;
+    color: var(--blockquote-border);
+    vertical-align: -0.4em;
+    line-height: 0.1em;
+    font-size: 2.5em;
+}
+
+blockquote::after {
+    content: close-quote;
+    color: var(--blockquote-border);
+    vertical-align: -0.4em;
+    line-height: 0.1em;
+    font-size: 2.5em;
+}
+
+blockquote p {
+    display: inline;
+}
+
+.background-image {
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:75vh;
+}

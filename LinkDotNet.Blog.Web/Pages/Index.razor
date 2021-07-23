@@ -11,8 +11,15 @@
         AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
         Description="@(Markdown.ToPlainText(appConfiguration.Introduction.Description))"></OgData>
 <section>
-    <IntroductionCard Introduction="appConfiguration.Introduction"></IntroductionCard>
+    <div class="background-image" style="background-image: url(@appConfiguration.Introduction.BackgroundUrl);">
+    </div>
+</section>
 
+<section>
+    <IntroductionCard Introduction="appConfiguration.Introduction"></IntroductionCard>
+</section>
+
+<section>
     <div class="content px-4">
         @for (var i = 0; i < currentPage.Count; i++)
         {

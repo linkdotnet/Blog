@@ -1,27 +1,19 @@
 /* TODO: There has to be a better way */
-.navbar-background {    
-    background-color: rgba(0, 0, 0, 0.8) !important;    
+.navbar-background {
+    background: linear-gradient(
+            rgba(0, 0, 0, 0.44),
+            rgba(0, 0, 0, 0.44)
+    ) !important;
     backdrop-filter: blur(6px) !important;
 }
 
 .barcode {
     font-family: 'Libre Barcode 128 Text', cursive;
     text-decoration: none;
+    font-weight: 400;
     font-size: 3rem;
-    color: white;
-    font-weight: 300;
 }
 ::deep .navbar-nav li {
     padding-left: 1.25rem;
     white-space: nowrap;
-}
-
-::deep .nav-link {
-    text-decoration: none;
-    font-size: 1.25rem;
-    color: white;
-}
-
-::deep .nav-item .nav-link:hover {
-    color: #66C3CC;
 }
