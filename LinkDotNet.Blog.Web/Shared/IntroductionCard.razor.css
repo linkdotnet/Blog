@@ -1,7 +1,10 @@
-﻿.introduction-container {
-    padding-top: 78px;
+﻿.introduction-background {
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.introduction-container {
+    padding-top: 78px;
     height: 438px;
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
