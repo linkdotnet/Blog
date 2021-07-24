@@ -20,7 +20,7 @@
             <h1>Recent Posts</h1>
         </div>
     </header>
-    <div class="content px-4">
+    <div class="content px-4 my-2">
         @for (var i = 0; i < currentPage.Count; i++)
         {
             <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
