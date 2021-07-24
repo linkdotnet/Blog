@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
+﻿@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap');
 
 :root {
@@ -36,6 +36,7 @@
     --button-primary-hover-color: var(--big-stone);
     --button-secondary-color: var(--big-stone);
     --button-secondary-border-color: var(--big-stone);
+
 }
 
 
@@ -47,7 +48,7 @@ body {
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: "Roboto", monospace;
+    font-family: 'Quicksand', sans-serif;
 }
 
 a {
