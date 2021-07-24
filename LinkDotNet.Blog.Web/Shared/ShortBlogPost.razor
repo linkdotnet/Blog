@@ -5,6 +5,7 @@
 <article>
   <div class="blog-card @AltCssClass">
     <div class="meta">
+      <div class="photo" style="background-image: url(@BlogPost.PreviewImageUrl)"></div>
       <ul class="details">
         <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
         @if (BlogPost.Tags != null)
@@ -13,7 +14,7 @@
             <ul>
               @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
               {
-                <li><a class="goto-tag inverse" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
+                <li><a class="goto-tag" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
               }
             </ul>
           </li>

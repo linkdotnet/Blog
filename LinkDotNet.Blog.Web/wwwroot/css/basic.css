@@ -23,6 +23,7 @@
     --header1-inverted: var(--ceramic);
     --header2: var(--pewter);
     --text-color: var(--big-stone);
+    --text-color-inverted: var(--ceramic);
 
     --navbar-background: #f4f4f4d0;
 
@@ -50,6 +51,7 @@ body {
 }
 
 a {
+    transition: 0.3s ease-in-out !important;
     font-weight: 500;
     color: var(--active-link) !important;
 }
@@ -63,13 +65,17 @@ a:hover {
     color: var(--disabled-link) !important;
 }
 
-a.inverse {
+.inverted-colors a {
     font-weight: 400;
     color: var(--active-link-inverted) !important;
 }
 
-a.inverse:hover   {
+.inverted-colors a:hover {
     color: var(--link-hover-inverted) !important;
+}
+
+.inverted-colors p {
+    color: var(--text-color-inverted) !important;
 }
 
 h1 {
