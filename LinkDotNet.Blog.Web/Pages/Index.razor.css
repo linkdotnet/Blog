@@ -1,6 +1,5 @@
 ﻿.blogpost-cards {
-    /* TODO: Do not use the color directly, this will interfere with dark mode */
-    background-color: var(--big-stone);
+    background-color: var(--blog-post-background-color);
     margin: 1rem auto 1.6%;
 }
 

@@ -12,7 +12,7 @@
     --white: #ffffff;
     --wild-sand: #f4f4f4;    
 
-    /* Usages */
+    /* Usages - this colors have to be defined in every theme */
     --active-link: var(--big-stone);
     --disabled-link: var(--pewter);
     --link-hover: var(--tana);
@@ -36,6 +36,8 @@
     --button-primary-hover-color: var(--big-stone);
     --button-secondary-color: var(--big-stone);
     --button-secondary-border-color: var(--big-stone);
+
+    --blog-post-background-color: var(--big-stone);
 
 }
 
