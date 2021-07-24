@@ -21,6 +21,11 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<BlogPost>()
+                .HasMany(t => t.Tags)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Tag>()
                 .Property(c => c.Id)
                 .ValueGeneratedOnAdd();
