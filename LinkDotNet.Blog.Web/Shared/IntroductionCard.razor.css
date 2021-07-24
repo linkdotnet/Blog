@@ -1,7 +1,11 @@
-﻿.introduction-container {
+﻿.introduction-background {
     background-repeat: no-repeat;
     background-size: cover;
-    height: 350px;
+}
+
+.introduction-container {
+    padding-top: 78px;
+    height: 438px;
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -25,15 +29,16 @@
 .profile-text {
     grid-area: profile-text;
     font-size: clamp(1rem, 0.6479rem + 1.1268vw, 1.5rem);
-    color: white;
-    line-height: clamp(1.5rem, 0.6479rem + 1.1268vw, 2.25rem);
+    color: var(--text-color-inverted);
+    line-height: clamp(1.5em, 0.6479rem + 1.1268vw, 2.25em);
 }
 
 @media only screen and (max-width: 700px) {
     .introduction-container {
         grid-template-columns: .5fr 1fr 1fr 1fr 1fr .5fr;
-        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
         grid-template-areas:
+      ". . . . ." 
       ". . profile-picture profile-picture . ."
       ". profile-text profile-text profile-text profile-text ."
       ". profile-text profile-text profile-text profile-text .";

@@ -10,7 +10,7 @@
         <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
         @if (BlogPost.Tags != null)
         {
-          <li class="tags">
+          <li class="tags inverted-colors">
             <ul>
               @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
               {

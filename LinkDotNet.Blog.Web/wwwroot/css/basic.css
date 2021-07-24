@@ -1,0 +1,132 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap');
+
+:root {
+    /* Color definitions */
+    --ceramic: #FCFFF5;
+    --tana: #D1DBBD;
+    --pewter: #91AA9D;
+    --william: #3E606F;
+    --big-stone: #193441;  
+
+    --white: #ffffff;
+    --wild-sand: #f4f4f4;    
+
+    /* Usages - this colors have to be defined in every theme */
+    --active-link: var(--big-stone);
+    --disabled-link: var(--pewter);
+    --link-hover: var(--tana);
+    --active-link-inverted: var(--ceramic);
+    --link-hover-inverted: var(--tana);
+
+    --header1: var(--william);
+    --header1-inverted: var(--ceramic);
+    --header2: var(--pewter);
+    --text-color: var(--big-stone);
+    --text-color-inverted: var(--ceramic);
+
+    --navbar-background: #f4f4f4d0;
+
+    --blockquote-background: var(--wild-sand);
+    --blockquote-border: var(--william);
+    
+    --button-text-color: var(--wild-sand);
+    --button-primary-color: var(--william);
+    --button-primary-border-color: var(--big-stone);
+    --button-primary-hover-color: var(--big-stone);
+    --button-secondary-color: var(--big-stone);
+    --button-secondary-border-color: var(--big-stone);
+
+    --blog-post-background-color: var(--big-stone);
+
+}
+
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-family: 'Quicksand', sans-serif;
+}
+
+a {
+    transition: 0.3s ease-in-out !important;
+    font-weight: 500;
+    color: var(--active-link) !important;
+}
+
+a:hover {
+    color: var(--link-hover) !important;
+}
+
+.disabled a {
+    font-weight: 400;
+    color: var(--disabled-link) !important;
+}
+
+.inverted-colors a {
+    font-weight: 400;
+    color: var(--active-link-inverted) !important;
+}
+
+.inverted-colors a:hover {
+    color: var(--link-hover-inverted) !important;
+}
+
+.inverted-colors p {
+    color: var(--text-color-inverted) !important;
+}
+
+h1 {
+    color: var(--header1);
+}
+
+h2 {
+    color: var(--header2);
+}
+
+blockquote {
+    border-left: 2px solid var(--header2);
+    background: var(--blockquote-background);
+    padding-left: 0.5em;
+}
+
+blockquote::before {
+    content: open-quote;
+    color: var(--blockquote-border);
+    vertical-align: -0.4em;
+    line-height: 0.1em;
+    font-size: 2.5em;
+}
+
+blockquote::after {
+    content: close-quote;
+    color: var(--blockquote-border);
+    vertical-align: -0.4em;
+    line-height: 0.1em;
+    font-size: 2.5em;
+}
+
+blockquote p {
+    display: inline;
+}
+
+p {
+    color: var(--text-color);
+}
+
+section {
+    padding-bottom: 10px;
+}
+
+.page {
+    padding-top: 100px;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
