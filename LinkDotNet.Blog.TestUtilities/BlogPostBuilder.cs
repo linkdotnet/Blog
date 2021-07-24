@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Domain;
+﻿using System;
+using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.TestUtilities
 {
@@ -11,6 +12,7 @@ namespace LinkDotNet.Blog.TestUtilities
         private bool isPublished = true;
         private string[] tags;
         private int likes;
+        private DateTime? updateDate;
 
         public BlogPostBuilder WithTitle(string title)
         {
@@ -54,9 +56,15 @@ namespace LinkDotNet.Blog.TestUtilities
             return this;
         }
 
+        public BlogPostBuilder WithUpdatedDate(DateTime updateDate)
+        {
+            this.updateDate = updateDate;
+            return this;
+        }
+
         public BlogPost Build()
         {
-            var blogPost = BlogPost.Create(title, shortDescription, content, url, isPublished, tags);
+            var blogPost = BlogPost.Create(title, shortDescription, content, url, isPublished, updateDate, tags);
             blogPost.Likes = likes;
             return blogPost;
         }

@@ -24,7 +24,12 @@ namespace LinkDotNet.Blog.Web.Shared.Admin
         [Required]
         public bool IsPublished { get; set; } = true;
 
+        [Required]
+        public bool ShouldUpdateDate { get; set; } = true;
+
         public string Tags { get; set; }
+
+        public DateTime OriginalUpdatedDate { get; set; }
 
         public static CreateNewModel FromBlogPost(BlogPost blogPost)
         {
@@ -37,14 +42,16 @@ namespace LinkDotNet.Blog.Web.Shared.Admin
                 ShortDescription = blogPost.ShortDescription,
                 IsPublished = blogPost.IsPublished,
                 PreviewImageUrl = blogPost.PreviewImageUrl,
+                OriginalUpdatedDate = blogPost.UpdatedDate,
             };
         }
 
         public BlogPost ToBlogPost()
         {
             var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
+            DateTime? updatedDate = ShouldUpdateDate ? null : OriginalUpdatedDate;
 
-            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, tags);
+            var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tags);
             blogPost.Id = Id;
             return blogPost;
         }

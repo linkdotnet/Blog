@@ -13,7 +13,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldLoadBlogPost()
         {
-            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url",  true, new[] { "Tag 1", "Tag 2" });
+            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url",  true, tags: new[] { "Tag 1", "Tag 2" });
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
@@ -33,7 +33,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldSaveBlogPost()
         {
-            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, new[] { "Tag 1", "Tag 2" });
+            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
 
             await BlogPostRepository.StoreAsync(blogPost);
 
@@ -52,7 +52,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldGetAllBlogPosts()
         {
-            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, new[] { "Tag 1", "Tag 2" });
+            var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 

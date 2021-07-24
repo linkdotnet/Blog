@@ -34,6 +34,14 @@
                 <label for="tags">Tags</label>
                 <InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
             </div>
+            @if (BlogPost != null)
+            {
+                <div class="form-check">
+                    <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
+                    <label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
+                    <small id="updatedate" class="form-text text-muted">If set the publish date is set to now, otherwise its original date</small>
+                </div>
+            }
             <button class="btn btn-primary" type="submit">Submit</button>
         </EditForm>
     </div>

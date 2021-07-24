@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Domain;
@@ -29,10 +30,20 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         [Fact]
         public void ShouldTrimWhitespacesFromTags()
         {
-            var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, new[] { " Tag 1", " Tag 2 " });
+            var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, tags: new[] { " Tag 1", " Tag 2 ", });
 
             blogPost.Tags.Select(t => t.Content).Should().Contain("Tag 1");
             blogPost.Tags.Select(t => t.Content).Should().Contain("Tag 2");
+        }
+
+        [Fact]
+        public void ShouldSetDateWhenGiven()
+        {
+            var somewhen = new DateTime(1991, 5, 17);
+
+            var blog = BlogPost.Create("1", "2", "3", "4", false, somewhen);
+
+            blog.UpdatedDate.Should().Be(somewhen);
         }
     }
 }

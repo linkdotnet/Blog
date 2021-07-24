@@ -34,6 +34,7 @@ namespace LinkDotNet.Domain
             string content,
             string previewImageUrl,
             bool isPublished,
+            DateTime? updatedDate = null,
             IEnumerable<string> tags = null)
         {
             var blogPost = new BlogPost
@@ -41,7 +42,7 @@ namespace LinkDotNet.Domain
                 Title = title,
                 ShortDescription = shortDescription,
                 Content = content,
-                UpdatedDate = DateTime.Now,
+                UpdatedDate = updatedDate ?? DateTime.Now,
                 PreviewImageUrl = previewImageUrl,
                 IsPublished = isPublished,
                 Tags = tags?.Select(t => new Tag { Content = t.Trim() }).ToList(),

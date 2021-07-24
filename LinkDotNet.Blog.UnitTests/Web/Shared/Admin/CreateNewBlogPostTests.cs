@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -94,6 +95,38 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
             cut.Find("form").Submit();
 
             blogPost.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ShouldNotUpdateUpdatedDateWhenCheckboxSet()
+        {
+            var somewhen = new DateTime(1991, 5, 17);
+            var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(somewhen).Build();
+            BlogPost blogPostFromComponent = null;
+            var cut = RenderComponent<CreateNewBlogPost>(
+                p =>
+                    p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
+                        .Add(c => c.BlogPost, originalBlogPost));
+
+            cut.Find("#title").Change("My Title");
+            cut.Find("#short").Change("My short Description");
+            cut.Find("#content").Change("My content");
+            cut.Find("#preview").Change("My preview url");
+            cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+            cut.Find("#updatedate").Change(false);
+            cut.Find("form").Submit();
+
+            blogPostFromComponent.UpdatedDate.Should().Be(somewhen);
+        }
+
+        [Fact]
+        public void ShouldNotSetOptionToNotUpdateUpdatedDateOnInitialCreate()
+        {
+            var cut = RenderComponent<CreateNewBlogPost>();
+
+            var found = cut.FindAll("#updatedate");
+
+            found.Should().HaveCount(0);
         }
     }
 }
