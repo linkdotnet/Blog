@@ -50,7 +50,7 @@ html {
 
 body {
     margin: 0;
-    background-image: linear-gradient(to bottom, var(--background-gradient-start) 60%, var(--background-gradient-end));
+    background-image: linear-gradient(to bottom, var(--background-gradient-start) 40%, var(--background-gradient-end));
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: 'Quicksand', sans-serif;

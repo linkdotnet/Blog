@@ -16,6 +16,7 @@ namespace LinkDotNet.Blog.Web
                 ConnectionString = config["ConnectionString"],
                 DatabaseName = config["DatabaseName"],
                 BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
+                IsAboutMeEnabled = bool.Parse(config["IsAboutMeEnabled"]),
             };
             return configuration;
         }

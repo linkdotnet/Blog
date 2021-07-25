@@ -1,0 +1,30 @@
+﻿@inherits MarkdownComponentBase
+<div class="profile">
+    <div class="profile-name">
+        <span>Steven Giesel</span>
+        <br/>
+        <span>Software Engineer</span>
+    </div>
+    <div class="profile-image">
+        <img src="@ProfileImageUrl" alt="Profile Picture" /> 
+    </div>
+    <ul class="profile-keypoints">
+        @foreach (var (key, value) in cv)
+        {
+            <li><bold> @RenderMarkupString(key)</bold>: @RenderMarkupString(value)</li>
+        }
+    </ul>
+</div>
+@code {
+    [Parameter]
+    public string ProfileImageUrl { get; set; }
+
+    private readonly Dictionary<string, string> cv = new()
+    {
+        {"<i class=\"fas fa-birthday-cake\"></i> Birthday", "17.05.1991"},
+        {"E-Mail", "[something@host.com](mailto:something@host.com)"},
+        {"Telephone", "+1234567890"},
+        {"LinkedIn", "[Steven Giesel](https://www.linkedin.com/in/steven.giesel)"},
+        {"Github", "<i class=\"fab fa-github \"></i>[linkdotnet](https://github.com/linkdotnet)"},
+    };
+}

@@ -1,0 +1,75 @@
+﻿.profile {
+    display: inline-block;
+    box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    /* TODO: BETTER COLOR */
+    background: var(--background-gradient-start);
+}
+
+.profile-name {
+    padding: 20px;
+    font-size: 1.25em;
+}
+
+.profile-name:first-child {
+    color: var(--header1);
+}
+
+.profile-name:last-child {
+    color: var(--header2);
+}
+
+.profile-image {
+    clip-path: polygon(0 9%, 100% 0, 100% 94%, 0% 100%);
+}
+
+.profile-image img {
+    width: 100%;
+}
+
+.profile-keypoints {
+    padding-top: 10px;
+    list-style: none;
+}
+
+.profile-keypoints li {
+    position: relative;
+    padding-bottom: 0.6em;
+    
+}
+
+.profile-keypoints li:before {
+    border-color: var(--header1);
+    content: "";
+    border-left: solid 2px;
+    height: 100%;
+    width: 1px;
+    left: -16px;
+    position: absolute;
+    display: block;
+}
+
+.profile-keypoints li:after {
+    content: "";
+    position: absolute;
+    left: -19.5px;
+    top: 8px;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: var(--header2);
+}
+
+.profile-keypoints li:first-child:before {
+    top: 8px;
+}
+
+.profile-keypoints li:last-child:before {
+    height: 8px;
+}
+
+/* As the Markupcomponent is a base class we have to use deep */
+::deep .profile-keypoints li p {
+    display: inline;
+}

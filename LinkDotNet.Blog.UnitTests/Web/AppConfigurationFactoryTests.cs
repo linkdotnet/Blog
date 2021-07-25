@@ -22,6 +22,7 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
                 { "BlogPostsPerPage", "5" },
+                { "IsAboutMeEnabled", "true" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
@@ -40,6 +41,7 @@ namespace LinkDotNet.Blog.UnitTests.Web
             appConfiguration.Introduction.ProfilePictureUrl.Should().Be("anotherurl");
             appConfiguration.Introduction.Description.Should().Be("desc");
             appConfiguration.BlogPostsPerPage.Should().Be(5);
+            appConfiguration.IsAboutMeEnabled.Should().BeTrue();
         }
 
         [Fact]
