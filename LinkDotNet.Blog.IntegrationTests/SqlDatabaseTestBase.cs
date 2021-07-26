@@ -17,9 +17,12 @@ namespace LinkDotNet.Blog.IntegrationTests
                 .Options;
             DbContext = new BlogDbContext(options);
             BlogPostRepository = new BlogPostRepository(new BlogDbContext(options));
+            ProfileRepository = new ProfileRepository(new BlogDbContext(options));
         }
 
         protected BlogPostRepository BlogPostRepository { get; }
+
+        protected ProfileRepository ProfileRepository { get; }
 
         protected BlogDbContext DbContext { get; }
 

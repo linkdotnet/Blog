@@ -8,7 +8,7 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
 {
-    public sealed class SqlRepositoryTests : SqlDatabaseTestBase
+    public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase
     {
         [Fact]
         public async Task ShouldLoadBlogPost()

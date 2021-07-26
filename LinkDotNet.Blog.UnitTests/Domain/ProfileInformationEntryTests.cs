@@ -29,5 +29,14 @@ namespace LinkDotNet.Blog.UnitTests.Domain
 
             act.Should().Throw<ArgumentOutOfRangeException>();
         }
+
+        [Fact]
+        public void ShouldTrim()
+        {
+            var result = ProfileInformationEntry.Create("   key ", "   value ");
+
+            result.Key.Should().Be("key");
+            result.Value.Should().Be("value");
+        }
     }
 }
