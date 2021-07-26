@@ -2,10 +2,10 @@
 @using X.PagedList
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-            <li class="page-item @(!CurrentPage.IsFirstPage ? string.Empty : "disabled")">
+            <li class="page-item @(!CurrentPage.IsFirstPage && CurrentPage.Count > 0 ? string.Empty : "disabled")">
                 <a class="page-link" href="#" tabindex="-1" @onclick="PreviousPage">Previous</a>
             </li>
-            <li class="page-item @(!CurrentPage.IsLastPage ? string.Empty : "disabled")">
+            <li class="page-item @(!CurrentPage.IsLastPage && CurrentPage.Count > 0 ? string.Empty : "disabled")">
                 <a class="page-link"
                    @onclick="NextPage"
                    href="#">Next</a>
