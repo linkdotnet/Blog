@@ -45,5 +45,16 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
             items.Should().HaveCount(1);
             items[0].Id.Should().Be(item2.Id);
         }
+
+        [Fact]
+        public async Task NoopOnDeleteWhenEntryNotFound()
+        {
+            var item = new ProfileInformationEntryBuilder().WithKey("key1").WithValue("value1").Build();
+            await profileRepository.AddAsync(item);
+
+            await profileRepository.DeleteAsync("SomeIdWhichHopefullyDoesNotExist");
+
+            (await profileRepository.GetAllAsync()).Should().HaveCount(1);
+        }
     }
 }
