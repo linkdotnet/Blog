@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace LinkDotNet.Blog.Web.Shared
 {
-    public class MarkdownComponentBase : ComponentBase
+    public abstract class MarkdownComponentBase : ComponentBase
     {
         private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()

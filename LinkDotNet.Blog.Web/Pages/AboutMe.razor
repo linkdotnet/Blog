@@ -1,12 +1,15 @@
 ﻿@page "/AboutMe"
+@using Microsoft.AspNetCore.Http
 @inject AppConfiguration appConfiguration
+@inject IHttpContextAccessor httpContextAccessor
 /* TODO: Meta Tags About Me - [Name here] */
 
 <div class="page">
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-4">
-                <Profile ProfileImageUrl="@appConfiguration.Introduction.ProfilePictureUrl"/>
+                <Profile ProfileImageUrl="@appConfiguration.Introduction.ProfilePictureUrl" 
+                IsAuthenticated="@httpContextAccessor.HttpContext.User.Identity.IsAuthenticated"/>
             </div>
             <div class="col-lg-9 col-md-8 tab-container">
                 <div class="row">

@@ -11,13 +11,35 @@
     <ul class="profile-keypoints">
         @foreach (var (key, value) in cv)
         {
-            <li><bold> @RenderMarkupString(key)</bold>: @RenderMarkupString(value)</li>
+            <li><bold>@RenderMarkupString(key)</bold>: @RenderMarkupString(value)
+                @if (IsAuthenticated)
+                {
+                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(key)">
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                    </button>
+                }
+            </li>
+        }
+        @if (IsAuthenticated)
+        {
+            <AddProfileShortItem ValueAdded="@AddValue"></AddProfileShortItem>
         }
     </ul>
 </div>
+
+<ConfirmDialog @ref="Dialog" Content="Do you really want to delete this entry?" Title="Delete" 
+OnYesPressed="DeleteItem"></ConfirmDialog>
+
 @code {
     [Parameter]
     public string ProfileImageUrl { get; set; }
+    
+    [Parameter]
+    public bool IsAuthenticated { get; set; }
+    
+    private ConfirmDialog Dialog { get; set; }
+
+    private string currentDeleteKey;
 
     private readonly Dictionary<string, string> cv = new()
     {
@@ -27,4 +49,20 @@
         {"LinkedIn", "[Steven Giesel](https://www.linkedin.com/in/steven.giesel)"},
         {"Github", "<i class=\"fab fa-github \"></i>[linkdotnet](https://github.com/linkdotnet)"},
     };
+
+    private void ShowDeleteDialog(string key)
+    {
+        currentDeleteKey = key;
+        Dialog.Open();
+    }
+
+    private void DeleteItem()
+    {
+        cv.Remove(currentDeleteKey);
+    }
+
+    private void AddValue(KeyValuePair<string, string> toAdd)
+    {
+        cv.Add(toAdd.Key, toAdd.Value);
+    }
 }
