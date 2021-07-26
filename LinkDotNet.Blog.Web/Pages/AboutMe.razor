@@ -10,10 +10,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-4">
-                    <Profile ProfileInformation="@appConfiguration.ProfileInformation"
-                             IsAuthenticated="@httpContextAccessor.HttpContext.User.Identity.IsAuthenticated"
-                             ProfileInformationEntries=""
-                             ProfileInformationCollectionChanged=""/>
+                    <Profile IsAuthenticated="@httpContextAccessor.HttpContext.User.Identity.IsAuthenticated"/>
                 </div>
                 <div class="col-lg-9 col-md-8 tab-container">
                     <div class="row">

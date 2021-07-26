@@ -6,7 +6,7 @@ using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence
 {
-    public interface IRepository
+    public interface IBlogPostRepository
     {
         Task<BlogPost> GetByIdAsync(string blogPostId);
 

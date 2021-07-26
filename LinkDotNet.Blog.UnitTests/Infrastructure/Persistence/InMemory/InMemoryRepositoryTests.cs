@@ -9,11 +9,11 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
 {
     public class InMemoryRepositoryTests
     {
-        private readonly InMemoryRepository sut;
+        private readonly BlogPostRepository sut;
 
         public InMemoryRepositoryTests()
         {
-            sut = new InMemoryRepository();
+            sut = new BlogPostRepository();
         }
 
         [Fact]

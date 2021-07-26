@@ -1,7 +1,7 @@
 ﻿@using LinkDotNet.Infrastructure.Persistence
 @inject NavigationManager navigationManager
 @inject IToastService toastService
-@inject IRepository repository
+@inject IBlogPostRepository blogPostRepository
 
 <AuthorizeView>
     <div class="blogpost-admin">
@@ -24,7 +24,7 @@
 
     private async Task DeleteBlogPostAsync()
     {
-        await repository.DeleteAsync(BlogPostId);
+        await blogPostRepository.DeleteAsync(BlogPostId);
         toastService.ShowSuccess("The Blog Post was successfully deleted");
         navigationManager.NavigateTo("/");
     }

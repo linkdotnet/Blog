@@ -80,7 +80,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 
         private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
         {
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => localStorageService ?? new Mock<ILocalStorageService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);

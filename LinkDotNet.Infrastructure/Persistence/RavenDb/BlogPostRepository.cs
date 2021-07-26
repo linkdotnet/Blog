@@ -8,7 +8,7 @@ using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.RavenDb
 {
-    public class BlogPostRepository : IRepository
+    public class BlogPostRepository : IBlogPostRepository
     {
         private readonly IDocumentStore documentStore;
 

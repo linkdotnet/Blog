@@ -8,7 +8,8 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
     {
         public static void UseRavenDbAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered<IRepository>();
+            services.AssertNotAlreadyRegistered<IBlogPostRepository>();
+            services.AssertNotAlreadyRegistered<IProfileRepository>();
 
             services.AddSingleton(ctx =>
             {
@@ -17,7 +18,8 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
                 var databaseName = configuration.DatabaseName;
                 return RavenDbConnectionProvider.Create(connectionString, databaseName);
             });
-            services.AddScoped<IRepository, BlogPostRepository>();
+            services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
         }
     }
 }

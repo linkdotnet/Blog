@@ -3,7 +3,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using Markdig
 @using X.PagedList
-@inject IRepository repository
+@inject IBlogPostRepository blogPostRepository
 @inject AppConfiguration appConfiguration
 @inject NavigationManager navigationManager
 
@@ -34,7 +34,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        currentPage = await repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage);
+        currentPage = await blogPostRepository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage);
     }
 
     private string GetAbsolutePreviewImageUrl()
@@ -56,7 +56,7 @@
 
     private async Task GetPage(int newPage)
     {
-        currentPage = await repository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage, page: 
+        currentPage = await blogPostRepository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage, page: 
         newPage);
     }
 }

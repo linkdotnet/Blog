@@ -4,7 +4,7 @@
 @using LinkDotNet.Blog.Web.Shared.Admin
 @using LinkDotNet.Domain
 @inherits MarkdownComponentBase
-@inject IRepository repository
+@inject IBlogPostRepository blogPostRepository
 @inject IToastService toastService
 
 <div class="page">
@@ -35,13 +35,13 @@
             throw new ArgumentNullException(nameof(BlogPostId), "You have to provide an id");
         }
 
-        blogPostFromDb = await repository.GetByIdAsync(BlogPostId);
+        blogPostFromDb = await blogPostRepository.GetByIdAsync(BlogPostId);
     }
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
         blogPostFromDb.Update(blogPost);
-        await repository.StoreAsync(blogPostFromDb);
+        await blogPostRepository.StoreAsync(blogPostFromDb);
         toastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
     }
 }

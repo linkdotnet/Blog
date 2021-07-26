@@ -10,7 +10,8 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
     {
         public static void UseSqlAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered<IRepository>();
+            services.AssertNotAlreadyRegistered<IBlogPostRepository>();
+            services.AssertNotAlreadyRegistered<IProfileRepository>();
 
             services.AddScoped(s =>
             {
@@ -20,14 +21,15 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
                     .UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null))
                     .Options;
 
-                return new BlogPostContext(dbOptions);
+                return new BlogDbContext(dbOptions);
             });
-            services.AddScoped<IRepository, BlogPostRepository>();
+            services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+            services.AddScoped<IProfileRepository, ProfileRepository>();
         }
 
         public static void UseSqliteAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered<IRepository>();
+            services.AssertNotAlreadyRegistered<IBlogPostRepository>();
 
             services.AddScoped(s =>
             {
@@ -37,9 +39,9 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
                     .UseSqlite(connectionString)
                     .Options;
 
-                return new BlogPostContext(dbOptions);
+                return new BlogDbContext(dbOptions);
             });
-            services.AddScoped<IRepository, BlogPostRepository>();
+            services.AddScoped<IBlogPostRepository, BlogPostRepository>();
         }
     }
 }
