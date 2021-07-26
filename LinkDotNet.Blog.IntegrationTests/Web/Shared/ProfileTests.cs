@@ -47,6 +47,55 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
                 .FindComponents<AddProfileShortItem>().Should().HaveCount(1);
         }
 
+        [Fact]
+        public void ShouldAddEntry()
+        {
+            var repo = RegisterServices();
+            ProfileInformationEntry entryToDb = null;
+            repo.Setup(p => p.AddAsync(It.IsAny<ProfileInformationEntry>()))
+                .Callback<ProfileInformationEntry>(p => entryToDb = p);
+            var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+            var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
+            addShortItemComponent.FindAll("input")[0].Change("key");
+            addShortItemComponent.FindAll("input")[1].Change("value");
+
+            addShortItemComponent.Find("button").Click();
+
+            entryToDb.Should().NotBeNull();
+            entryToDb.Key.Should().Be("key");
+            entryToDb.Value.Should().Be("value");
+        }
+
+        [Fact]
+        public void ShouldDeleteEntryWhenConfirmed()
+        {
+            var entryToDelete = new ProfileInformationEntryBuilder().WithKey("key 2").WithCreatedDate(new DateTime(2)).Build();
+            entryToDelete.Id = "SomeId";
+            var repoMock = RegisterServices();
+            repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
+            var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+            cut.Find(".profile-keypoints li button").Click();
+
+            cut.FindComponent<ConfirmDialog>().Find("#ok").Click();
+
+            repoMock.Verify(r => r.DeleteAsync("SomeId"), Times.Once);
+        }
+
+        [Fact]
+        public void ShouldNotDeleteEntryWhenNotConfirmed()
+        {
+            var entryToDelete = new ProfileInformationEntryBuilder().WithKey("key 2").WithCreatedDate(new DateTime(2)).Build();
+            entryToDelete.Id = "SomeId";
+            var repoMock = RegisterServices();
+            repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
+            var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+            cut.Find(".profile-keypoints li button").Click();
+
+            cut.FindComponent<ConfirmDialog>().Find("#cancel").Click();
+
+            repoMock.Verify(r => r.DeleteAsync("SomeId"), Times.Never);
+        }
+
         private static AppConfiguration CreateEmptyConfiguration()
         {
             return new()
