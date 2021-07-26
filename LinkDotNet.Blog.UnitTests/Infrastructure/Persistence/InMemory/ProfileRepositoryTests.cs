@@ -8,11 +8,11 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
 {
     public class ProfileRepositoryTests
     {
-        private readonly ProfileRepository ProfileRepository;
+        private readonly ProfileRepository profileRepository;
 
         public ProfileRepositoryTests()
         {
-            ProfileRepository = new ProfileRepository();
+            profileRepository = new ProfileRepository();
         }
 
         [Fact]
@@ -20,10 +20,10 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
         {
             var item1 = new ProfileInformationEntryBuilder().WithKey("key1").WithValue("value1").Build();
             var item2 = new ProfileInformationEntryBuilder().WithKey("key2").WithValue("value2").Build();
-            await ProfileRepository.AddAsync(item1);
-            await ProfileRepository.AddAsync(item2);
+            await profileRepository.AddAsync(item1);
+            await profileRepository.AddAsync(item2);
 
-            var items = await ProfileRepository.GetAllAsync();
+            var items = await profileRepository.GetAllAsync();
 
             items[0].Key.Should().Be("key1");
             items[0].Value.Should().Be("value1");
@@ -36,12 +36,12 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
         {
             var item1 = new ProfileInformationEntryBuilder().WithKey("key1").WithValue("value1").Build();
             var item2 = new ProfileInformationEntryBuilder().WithKey("key2").WithValue("value2").Build();
-            await ProfileRepository.AddAsync(item1);
-            await ProfileRepository.AddAsync(item2);
+            await profileRepository.AddAsync(item1);
+            await profileRepository.AddAsync(item2);
 
-            await ProfileRepository.DeleteAsync(item1.Id);
+            await profileRepository.DeleteAsync(item1.Id);
 
-            var items = await ProfileRepository.GetAllAsync();
+            var items = await profileRepository.GetAllAsync();
             items.Should().HaveCount(1);
             items[0].Id.Should().Be(item2.Id);
         }
