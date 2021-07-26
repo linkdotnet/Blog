@@ -2,7 +2,6 @@
     display: inline-block;
     box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
     width: 100%;
-    /* TODO: BETTER COLOR */
     background: var(--background-gradient-start);
 }
 
@@ -69,7 +68,7 @@
     height: 8px;
 }
 
-/* As the Markupcomponent is a base class we have to use deep */
+/* As the MarkupComponent is a base class we have to use deep */
 ::deep .profile-keypoints li p {
     display: inline;
 }

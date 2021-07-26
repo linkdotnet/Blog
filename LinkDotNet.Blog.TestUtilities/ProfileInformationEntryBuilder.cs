@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Domain;
+﻿using System;
+using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.TestUtilities
 {
@@ -6,6 +7,7 @@ namespace LinkDotNet.Blog.TestUtilities
     {
         private string key = "Key";
         private string value = "Value";
+        private DateTime? createdDate;
 
         public ProfileInformationEntryBuilder WithKey(string key)
         {
@@ -19,9 +21,15 @@ namespace LinkDotNet.Blog.TestUtilities
             return this;
         }
 
+        public ProfileInformationEntryBuilder WithCreatedDate(DateTime createdDate)
+        {
+            this.createdDate = createdDate;
+            return this;
+        }
+
         public ProfileInformationEntry Build()
         {
-            return ProfileInformationEntry.Create(key, value);
+            return ProfileInformationEntry.Create(key, value, createdDate);
         }
     }
 }

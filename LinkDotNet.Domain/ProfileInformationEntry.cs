@@ -16,7 +16,7 @@ namespace LinkDotNet.Domain
 
         public DateTime CreatedDate { get; private set; }
 
-        public static ProfileInformationEntry Create(string key, string value)
+        public static ProfileInformationEntry Create(string key, string value, DateTime? createdDate = null)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -32,7 +32,7 @@ namespace LinkDotNet.Domain
             {
                 Key = key.Trim(),
                 Value = value.Trim(),
-                CreatedDate = DateTime.Now,
+                CreatedDate = createdDate ?? DateTime.Now,
             };
         }
     }
