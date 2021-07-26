@@ -23,6 +23,9 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "Introduction:Description", "desc" },
                 { "BlogPostsPerPage", "5" },
                 { "IsAboutMeEnabled", "true" },
+                { "AboutMeProfileInformation:Name", "Steven" },
+                { "AboutMeProfileInformation:Heading", "Dev" },
+                { "AboutMeProfileInformation:ProfilePictureUrl", "Url" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
@@ -42,6 +45,9 @@ namespace LinkDotNet.Blog.UnitTests.Web
             appConfiguration.Introduction.Description.Should().Be("desc");
             appConfiguration.BlogPostsPerPage.Should().Be(5);
             appConfiguration.IsAboutMeEnabled.Should().BeTrue();
+            appConfiguration.ProfileInformation.Name.Should().Be("Steven");
+            appConfiguration.ProfileInformation.Heading.Should().Be("Dev");
+            appConfiguration.ProfileInformation.ProfilePictureUrl.Should().Be("Url");
         }
 
         [Fact]
@@ -53,6 +59,7 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
                 { "BlogPostsPerPage", "2" },
+                { "IsAboutMeEnabled", "false" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)

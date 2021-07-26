@@ -22,6 +22,8 @@ namespace LinkDotNet.Blog.Web
 
         public int BlogPostsPerPage { get; init; }
 
-        public bool IsAboutMeEnabled { get; set; }
+        public bool IsAboutMeEnabled { get; init; }
+
+        public ProfileInformation ProfileInformation { get; set; }
     }
 }

@@ -1,23 +1,26 @@
-﻿@inherits MarkdownComponentBase
+﻿@using LinkDotNet.Domain
+@inherits MarkdownComponentBase
 <div class="profile">
     <div class="profile-name">
-        <span>Steven Giesel</span>
+        <span>@ProfileInformation.Name</span>
         <br/>
-        <span>Software Engineer</span>
+        <span>@ProfileInformation.Heading</span>
     </div>
     <div class="profile-image">
-        <img src="@ProfileImageUrl" alt="Profile Picture" /> 
+        <img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
     </div>
     <ul class="profile-keypoints">
-        @foreach (var (key, value) in cv)
+        @foreach (var entry in ProfileInformationEntries)
         {
-            <li><bold>@RenderMarkupString(key)</bold>: @RenderMarkupString(value)
+            <li>
                 @if (IsAuthenticated)
                 {
-                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(key)">
+                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => 
+                    ShowDeleteDialog(entry.Key)">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
                 }
+                <bold>@RenderMarkupString(entry.Key)</bold>: @RenderMarkupString(entry.Value)
             </li>
         }
         @if (IsAuthenticated)
@@ -32,23 +35,20 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
 @code {
     [Parameter]
-    public string ProfileImageUrl { get; set; }
+    public ProfileInformation ProfileInformation { get; set; }
     
     [Parameter]
     public bool IsAuthenticated { get; set; }
     
+    [Parameter]
+    public EventCallback<IList<ProfileInformationEntry>> ProfileInformationCollectionChanged { get; set; }
+
+    [Parameter]
+    public IList<ProfileInformationEntry> ProfileInformationEntries { get; set; } = new List<ProfileInformationEntry>();
+    
     private ConfirmDialog Dialog { get; set; }
 
     private string currentDeleteKey;
-
-    private readonly Dictionary<string, string> cv = new()
-    {
-        {"<i class=\"fas fa-birthday-cake\"></i> Birthday", "17.05.1991"},
-        {"E-Mail", "[something@host.com](mailto:something@host.com)"},
-        {"Telephone", "+1234567890"},
-        {"LinkedIn", "[Steven Giesel](https://www.linkedin.com/in/steven.giesel)"},
-        {"Github", "<i class=\"fab fa-github \"></i>[linkdotnet](https://github.com/linkdotnet)"},
-    };
 
     private void ShowDeleteDialog(string key)
     {
@@ -56,13 +56,22 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
         Dialog.Open();
     }
 
-    private void DeleteItem()
+    private async Task DeleteItem()
     {
-        cv.Remove(currentDeleteKey);
+        var entryToDelete = ProfileInformationEntries.Single(p => p.Key == currentDeleteKey);
+        ProfileInformationEntries.Remove(entryToDelete);
+        await ProfileInformationCollectionChanged.InvokeAsync(ProfileInformationEntries);
     }
 
-    private void AddValue(KeyValuePair<string, string> toAdd)
+    private async Task AddValue(KeyValuePair<string, string> toAdd)
     {
-        cv.Add(toAdd.Key, toAdd.Value);
+        var newEntry = new ProfileInformationEntry
+        {
+            Key = toAdd.Key,
+            Value = toAdd.Value,
+        };
+        
+        ProfileInformationEntries.Add(newEntry);
+        await ProfileInformationCollectionChanged.InvokeAsync(ProfileInformationEntries);
     }
 }

@@ -18,6 +18,13 @@ namespace LinkDotNet.Blog.Web
                 BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
                 IsAboutMeEnabled = bool.Parse(config["IsAboutMeEnabled"]),
             };
+
+            if (configuration.IsAboutMeEnabled)
+            {
+                configuration.ProfileInformation =
+                    config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
+            }
+
             return configuration;
         }
     }
