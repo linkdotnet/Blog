@@ -10,24 +10,22 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task ShouldSaveAndRetrieveAllEntries()
         {
-            var item1 = new ProfileInformationEntryBuilder().WithKey("key1").WithValue("value1").Build();
-            var item2 = new ProfileInformationEntryBuilder().WithKey("key2").WithValue("value2").Build();
+            var item1 = new ProfileInformationEntryBuilder().WithContent("key1").Build();
+            var item2 = new ProfileInformationEntryBuilder().WithContent("key2").Build();
             await ProfileRepository.AddAsync(item1);
             await ProfileRepository.AddAsync(item2);
 
             var items = await ProfileRepository.GetAllAsync();
 
-            items[0].Key.Should().Be("key1");
-            items[0].Value.Should().Be("value1");
-            items[1].Key.Should().Be("key2");
-            items[1].Value.Should().Be("value2");
+            items[0].Content.Should().Be("key1");
+            items[1].Content.Should().Be("key2");
         }
 
         [Fact]
         public async Task ShouldDelete()
         {
-            var item1 = new ProfileInformationEntryBuilder().WithKey("key1").WithValue("value1").Build();
-            var item2 = new ProfileInformationEntryBuilder().WithKey("key2").WithValue("value2").Build();
+            var item1 = new ProfileInformationEntryBuilder().WithContent("key1").Build();
+            var item2 = new ProfileInformationEntryBuilder().WithContent("key2").Build();
             await ProfileRepository.AddAsync(item1);
             await ProfileRepository.AddAsync(item2);
 
@@ -41,7 +39,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         [Fact]
         public async Task NoopOnDeleteWhenEntryNotFound()
         {
-            var item = new ProfileInformationEntryBuilder().WithKey("key1").WithValue("value1").Build();
+            var item = new ProfileInformationEntryBuilder().WithContent("key1").Build();
             await ProfileRepository.AddAsync(item);
 
             await ProfileRepository.DeleteAsync("SomeIdWhichHopefullyDoesNotExist");

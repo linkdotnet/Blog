@@ -10,22 +10,18 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         [Fact]
         public void ShouldCreateObject()
         {
-            var result = ProfileInformationEntry.Create("key", "value");
+            var result = ProfileInformationEntry.Create("key");
 
-            result.Key.Should().Be("key");
-            result.Value.Should().Be("value");
+            result.Content.Should().Be("key");
         }
 
         [Theory]
-        [InlineData("", "V")]
-        [InlineData(" ", "V")]
-        [InlineData(null, "V")]
-        [InlineData("K", "")]
-        [InlineData("K", " ")]
-        [InlineData("K", null)]
-        public void ShouldThrowExceptionWhenEmptyKeyOrValue(string key, string value)
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void ShouldThrowExceptionWhenEmptyKeyOrValue(string content)
         {
-            Action act = () => ProfileInformationEntry.Create(key, value);
+            Action act = () => ProfileInformationEntry.Create(content);
 
             act.Should().Throw<ArgumentOutOfRangeException>();
         }
@@ -33,10 +29,9 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         [Fact]
         public void ShouldTrim()
         {
-            var result = ProfileInformationEntry.Create("   key ", "   value ");
+            var result = ProfileInformationEntry.Create("   key ");
 
-            result.Key.Should().Be("key");
-            result.Value.Should().Be("value");
+            result.Content.Should().Be("key");
         }
     }
 }

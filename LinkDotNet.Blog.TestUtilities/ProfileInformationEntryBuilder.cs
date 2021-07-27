@@ -5,19 +5,12 @@ namespace LinkDotNet.Blog.TestUtilities
 {
     public class ProfileInformationEntryBuilder
     {
-        private string key = "Key";
-        private string value = "Value";
+        private string content = "Content";
         private DateTime? createdDate;
 
-        public ProfileInformationEntryBuilder WithKey(string key)
+        public ProfileInformationEntryBuilder WithContent(string key)
         {
-            this.key = key;
-            return this;
-        }
-
-        public ProfileInformationEntryBuilder WithValue(string value)
-        {
-            this.value = value;
+            this.content = key;
             return this;
         }
 
@@ -29,7 +22,7 @@ namespace LinkDotNet.Blog.TestUtilities
 
         public ProfileInformationEntry Build()
         {
-            return ProfileInformationEntry.Create(key, value, createdDate);
+            return ProfileInformationEntry.Create(content, createdDate);
         }
     }
 }

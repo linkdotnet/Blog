@@ -20,11 +20,11 @@
                 @if (IsAuthenticated)
                 {
                     <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => 
-                    ShowDeleteDialog(entry.Key)">
+                    ShowDeleteDialog(entry.Content)">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
                 }
-                <bold>@RenderMarkupString(entry.Key)</bold>: @RenderMarkupString(entry.Value)
+                @RenderMarkupString(entry.Content)
             </li>
         }
         @if (IsAuthenticated)
@@ -58,14 +58,14 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     private async Task DeleteItem()
     {
-        var entryToDelete = profileInformationEntries.Single(p => p.Key == currentDeleteKey);
+        var entryToDelete = profileInformationEntries.Single(p => p.Content == currentDeleteKey);
         profileInformationEntries.Remove(entryToDelete);
         await repository.DeleteAsync(entryToDelete.Id);
     }
 
-    private async Task AddValue(KeyValuePair<string, string> toAdd)
+    private async Task AddValue(string toAdd)
     {
-        var newEntry = ProfileInformationEntry.Create(toAdd.Key, toAdd.Value);
+        var newEntry = ProfileInformationEntry.Create(toAdd);
 
         profileInformationEntries.Add(newEntry);
         await repository.AddAsync(newEntry);

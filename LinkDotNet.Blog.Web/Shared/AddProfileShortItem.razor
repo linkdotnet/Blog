@@ -1,4 +1,4 @@
-﻿<li><input type="text" @bind-value="@key" placeholder="supports markdown"/>:<input type="text" @bind-value="@value" placeholder="supports markdown"/>
+﻿<li><input type="text" @bind-value="@content" placeholder="supports markdown"/>
     <button type="button" class="btn btn-default" aria-label="Add Item" @onclick="@AddItemAsync">
         <i class="far fa-plus-square" aria-hidden="true"></i>
     </button>
@@ -6,19 +6,18 @@
 
 @code {
     [Parameter] 
-    public EventCallback<KeyValuePair<string, string>> ValueAdded { get; set; }
+    public EventCallback<string> ValueAdded { get; set; }
     
-    private string key = string.Empty;
-    private string value = string.Empty;
+    private string content = string.Empty;
 
     private async Task AddItemAsync()
     {
-        if (string.IsNullOrWhiteSpace(key) || string.IsNullOrWhiteSpace(value))
+        if (string.IsNullOrWhiteSpace(content))
         {
             return;
         }
 
-        await ValueAdded.InvokeAsync(new KeyValuePair<string, string>(key, value));
-        key = value = string.Empty;
+        await ValueAdded.InvokeAsync(content);
+        content = string.Empty;
     }
 }

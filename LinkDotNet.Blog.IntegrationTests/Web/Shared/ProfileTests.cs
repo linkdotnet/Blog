@@ -18,8 +18,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         [Fact]
         public void ShouldRenderAllItemsSortedByCreated()
         {
-            var entry1 = new ProfileInformationEntryBuilder().WithKey("key 1").WithCreatedDate(new DateTime(1)).Build();
-            var entry2 = new ProfileInformationEntryBuilder().WithKey("key 2").WithCreatedDate(new DateTime(2)).Build();
+            var entry1 = new ProfileInformationEntryBuilder().WithContent("key 1").WithCreatedDate(new DateTime(1)).Build();
+            var entry2 = new ProfileInformationEntryBuilder().WithContent("key 2").WithCreatedDate(new DateTime(2)).Build();
             var repoMock = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync())
                 .ReturnsAsync(new List<ProfileInformationEntry> { entry1, entry2 });
@@ -56,20 +56,18 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
                 .Callback<ProfileInformationEntry>(p => entryToDb = p);
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
-            addShortItemComponent.FindAll("input")[0].Change("key");
-            addShortItemComponent.FindAll("input")[1].Change("value");
+            addShortItemComponent.Find("input").Change("key");
 
             addShortItemComponent.Find("button").Click();
 
             entryToDb.Should().NotBeNull();
-            entryToDb.Key.Should().Be("key");
-            entryToDb.Value.Should().Be("value");
+            entryToDb.Content.Should().Be("key");
         }
 
         [Fact]
         public void ShouldDeleteEntryWhenConfirmed()
         {
-            var entryToDelete = new ProfileInformationEntryBuilder().WithKey("key 2").WithCreatedDate(new DateTime(2)).Build();
+            var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").WithCreatedDate(new DateTime(2)).Build();
             entryToDelete.Id = "SomeId";
             var repoMock = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
@@ -84,7 +82,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         [Fact]
         public void ShouldNotDeleteEntryWhenNotConfirmed()
         {
-            var entryToDelete = new ProfileInformationEntryBuilder().WithKey("key 2").WithCreatedDate(new DateTime(2)).Build();
+            var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").WithCreatedDate(new DateTime(2)).Build();
             entryToDelete.Id = "SomeId";
             var repoMock = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });

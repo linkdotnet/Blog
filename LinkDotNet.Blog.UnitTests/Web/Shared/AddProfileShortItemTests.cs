@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Bunit;
+﻿using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared;
 using Xunit;
@@ -11,32 +10,26 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         [Fact]
         public void ShouldAddShortItem()
         {
-            KeyValuePair<string, string> addedItem = default;
+            string addedItem = null;
             var cut = RenderComponent<AddProfileShortItem>(
-                p => p.Add(s => s.ValueAdded, pair => addedItem = pair));
-            cut.FindAll("input")[0].Change("Key");
-            cut.FindAll("input")[1].Change("Value");
+                p => p.Add(s => s.ValueAdded, c => addedItem = c));
+            cut.Find("input").Change("Key");
 
             cut.Find("button").Click();
 
-            addedItem.Key.Should().Be("Key");
-            addedItem.Value.Should().Be("Value");
+            addedItem.Should().Be("Key");
         }
 
         [Theory]
-        [InlineData("", "v")]
-        [InlineData(" ", "v")]
-        [InlineData(null, "v")]
-        [InlineData("k", "")]
-        [InlineData("k", " ")]
-        [InlineData("k", null)]
-        public void ShouldNotAddItemWhenKeyOrValueIsEmpty(string key, string value)
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public void ShouldNotAddItemWhenKeyOrValueIsEmpty(string content)
         {
             var wasInvoked = false;
             var cut = RenderComponent<AddProfileShortItem>(
                 p => p.Add(s => s.ValueAdded, _ => wasInvoked = true));
-            cut.FindAll("input")[0].Change(key);
-            cut.FindAll("input")[1].Change(value);
+            cut.Find("input").Change(content);
 
             cut.Find("button").Click();
 
@@ -47,13 +40,11 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         public void ShouldEmptyModelAfterTextEntered()
         {
             var cut = RenderComponent<AddProfileShortItem>();
-            cut.FindAll("input")[0].Change("Key");
-            cut.FindAll("input")[1].Change("Value");
+            cut.Find("input").Change("Key");
 
             cut.Find("button").Click();
 
-            cut.FindAll("input")[0].TextContent.Should().BeEmpty();
-            cut.FindAll("input")[1].TextContent.Should().BeEmpty();
+            cut.Find("input").TextContent.Should().BeEmpty();
         }
     }
 }
