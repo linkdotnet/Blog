@@ -13,13 +13,13 @@
     <div class="profile-image">
         <img src="@appConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
     </div>
-    <ul class="profile-keypoints">
+    <ul class="profile-keypoints inverted-colors">
         @foreach (var entry in profileInformationEntries)
         {
             <li>
                 @if (IsAuthenticated)
                 {
-                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => 
+                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() =>
                     ShowDeleteDialog(entry.Content)">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>

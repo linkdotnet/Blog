@@ -8,6 +8,7 @@
 .profile-name {
     padding: 20px;
     font-size: 1.25em;
+    line-height: 1.5em;
 }
 
 .profile-name:first-child {
@@ -19,53 +20,30 @@
 }
 
 .profile-image {
-    clip-path: polygon(0 9%, 100% 0, 100% 94%, 0% 100%);
+    padding: 30px;
+    background: linear-gradient(to bottom , white 50%, var(--header1) 50.1%, var(--header1) 100%);
 }
 
 .profile-image img {
     width: 100%;
-}
-
-.profile-keypoints {
-    padding-top: 10px;
-    list-style: none;
-}
-
-.profile-keypoints li {
-    position: relative;
-    padding-bottom: 0.6em;
-    
-}
-
-.profile-keypoints li:before {
-    border-color: var(--header1);
-    content: "";
-    border-left: solid 2px;
-    height: 100%;
-    width: 1px;
-    left: -16px;
-    position: absolute;
+    margin: auto;
+    border-radius: 50vw;
     display: block;
 }
 
-.profile-keypoints li:after {
-    content: "";
-    position: absolute;
-    left: -19.5px;
-    top: 8px;
-    height: 8px;
-    width: 8px;
-    border-radius: 50%;
-    display: inline-block;
-    background-color: var(--header2);
+.profile-keypoints {
+    background-color: var(--header1);
+    padding-top: 10px;
+    padding-left: 2.5em;
+    padding-right: 1.5em;
+    list-style: none;
+    margin-bottom: 0;
 }
 
-.profile-keypoints li:first-child:before {
-    top: 8px;
-}
-
-.profile-keypoints li:last-child:before {
-    height: 8px;
+.profile-keypoints li {
+    padding-bottom: 0.6em;
+    color: var(--white);
+    letter-spacing: 0.05em;
 }
 
 /* As the MarkupComponent is a base class we have to use deep */

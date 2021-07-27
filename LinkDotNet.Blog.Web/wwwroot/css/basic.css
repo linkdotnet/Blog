@@ -84,6 +84,10 @@ a:hover {
     color: var(--text-color-inverted) !important;
 }
 
+.inverted-colors button {
+    color: var(--white) !important;
+}
+
 h1 {
     color: var(--header1);
 }
