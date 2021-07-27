@@ -21,5 +21,9 @@ namespace LinkDotNet.Blog.Web
         public string DatabaseName { get; init; }
 
         public int BlogPostsPerPage { get; init; }
+
+        public bool IsAboutMeEnabled { get; init; }
+
+        public ProfileInformation ProfileInformation { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page "/search/{searchTerm}"
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Domain
-@inject IRepository repository
+@inject IBlogPostRepository blogPostRepository
 
 <div class="page">
     <h3>Results for @SearchTerm</h3>
@@ -22,7 +22,7 @@
     protected override async Task OnInitializedAsync()
     {
         var term = Uri.UnescapeDataString(SearchTerm);
-        blogPosts = (await repository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
+        blogPosts = (await blogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
             || t.Tags.Any(tag => tag.Content == term)),
             b => b.UpdatedDate)).ToList();
     }

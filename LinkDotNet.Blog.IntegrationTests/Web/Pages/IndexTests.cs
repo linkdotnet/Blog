@@ -132,7 +132,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 
         private void RegisterComponents(TestContextBase ctx)
         {
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         }

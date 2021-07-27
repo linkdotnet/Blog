@@ -7,13 +7,13 @@ using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
 {
-    public class InMemoryRepositoryTests
+    public class BlogPostRepositoryTests
     {
-        private readonly InMemoryRepository sut;
+        private readonly BlogPostRepository sut;
 
-        public InMemoryRepositoryTests()
+        public BlogPostRepositoryTests()
         {
-            sut = new InMemoryRepository();
+            sut = new BlogPostRepository();
         }
 
         [Fact]

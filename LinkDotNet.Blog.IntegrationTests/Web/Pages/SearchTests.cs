@@ -21,7 +21,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await BlogPostRepository.StoreAsync(blogPost1);
             await BlogPostRepository.StoreAsync(blogPost2);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Title 1"));
 
@@ -39,7 +39,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await BlogPostRepository.StoreAsync(blogPost1);
             await BlogPostRepository.StoreAsync(blogPost2);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Cat"));
 
@@ -55,7 +55,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             var blogPost1 = new BlogPostBuilder().WithTitle("Title 1").Build();
             await BlogPostRepository.StoreAsync(blogPost1);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Title%201"));
 

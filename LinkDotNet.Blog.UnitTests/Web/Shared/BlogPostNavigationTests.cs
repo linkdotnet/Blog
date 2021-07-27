@@ -56,6 +56,17 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
             cut.Find("li:first-child").ClassList.Should().Contain("disabled");
         }
 
+        [Fact]
+        public void ShouldNotFireNextWhenNoPage()
+        {
+            var page = CreatePagedList(0, 0);
+            var cut = RenderComponent<BlogPostNavigation>(p =>
+                p.Add(param => param.CurrentPage, page.Object));
+
+            cut.Find("li:first-child").ClassList.Should().Contain("disabled");
+            cut.Find("li:last-child").ClassList.Should().Contain("disabled");
+        }
+
         private static Mock<IPagedList<BlogPost>> CreatePagedList(int currentPage, int pageCount)
         {
             var page = new Mock<IPagedList<BlogPost>>();

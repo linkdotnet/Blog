@@ -8,7 +8,7 @@ using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.InMemory
 {
-    public class InMemoryRepository : IRepository
+    public class BlogPostRepository : IBlogPostRepository
     {
         private readonly List<BlogPost> blogPosts = new();
 

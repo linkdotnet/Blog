@@ -4,7 +4,7 @@
 @using LinkDotNet.Blog.Web.Shared.Admin
 @using Markdig
 @using Toolbelt.Blazor.HeadElement
-@inject IRepository repository
+@inject IBlogPostRepository blogPostRepository
 @inject IJSRuntime jsRuntime
 @inherits MarkdownComponentBase
 
@@ -55,7 +55,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        BlogPost = await repository.GetByIdAsync(BlogPostId);
+        BlogPost = await blogPostRepository.GetByIdAsync(BlogPostId);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -69,8 +69,8 @@
 
     private async Task UpdateLikes(bool hasLiked)
     {
-        BlogPost = await repository.GetByIdAsync(BlogPostId);
+        BlogPost = await blogPostRepository.GetByIdAsync(BlogPostId);
         BlogPost.Likes = hasLiked ? BlogPost.Likes + 1 : BlogPost.Likes - 1;
-        await repository.StoreAsync(BlogPost);
+        await blogPostRepository.StoreAsync(BlogPost);
     }
 }

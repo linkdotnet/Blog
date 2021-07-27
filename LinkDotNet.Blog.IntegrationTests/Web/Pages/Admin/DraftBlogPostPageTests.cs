@@ -22,7 +22,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
             await BlogPostRepository.StoreAsync(unpublishedPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddScoped<IRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
             var cut = ctx.RenderComponent<DraftBlogPosts>();
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 

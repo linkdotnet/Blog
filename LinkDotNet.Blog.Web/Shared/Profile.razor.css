@@ -1,0 +1,52 @@
+﻿.profile {
+    display: inline-block;
+    box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    background: var(--background-gradient-start);
+}
+
+.profile-name {
+    padding: 20px;
+    font-size: 1.25em;
+    line-height: 1.5em;
+}
+
+.profile-name:first-child {
+    color: var(--header1);
+}
+
+.profile-name:last-child {
+    color: var(--header2);
+}
+
+.profile-image {
+    padding: 30px;
+    background: linear-gradient(to bottom , white 50%, var(--header1) 50.1%, var(--header1) 100%);
+}
+
+.profile-image img {
+    width: 100%;
+    margin: auto;
+    border-radius: 50vw;
+    display: block;
+}
+
+.profile-keypoints {
+    background-color: var(--header1);
+    padding-top: 10px;
+    padding-left: 2.5em;
+    padding-right: 1.5em;
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.profile-keypoints li {
+    padding-bottom: 0.6em;
+    color: var(--white);
+    letter-spacing: 0.05em;
+}
+
+/* As the MarkupComponent is a base class we have to use deep */
+::deep .profile-keypoints li p {
+    display: inline;
+}

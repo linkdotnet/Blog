@@ -2,7 +2,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Domain
 @attribute [Authorize]
-@inject IRepository repository
+@inject IBlogPostRepository blogPostRepository
 
 <div class="page">
     <h3>Draft Blog Posts</h3>
@@ -20,7 +20,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        blogPosts = (await repository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate)).ToList();
+        blogPosts = (await blogPostRepository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate)).ToList();
     }
 
 }

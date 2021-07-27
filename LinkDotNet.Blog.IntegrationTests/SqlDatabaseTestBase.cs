@@ -15,13 +15,16 @@ namespace LinkDotNet.Blog.IntegrationTests
             var options = new DbContextOptionsBuilder()
                 .UseSqlite(CreateInMemoryConnection())
                 .Options;
-            DbContext = new BlogPostContext(options);
-            BlogPostRepository = new BlogPostRepository(new BlogPostContext(options));
+            DbContext = new BlogDbContext(options);
+            BlogPostRepository = new BlogPostRepository(new BlogDbContext(options));
+            ProfileRepository = new ProfileRepository(new BlogDbContext(options));
         }
 
         protected BlogPostRepository BlogPostRepository { get; }
 
-        protected BlogPostContext DbContext { get; }
+        protected ProfileRepository ProfileRepository { get; }
+
+        protected BlogDbContext DbContext { get; }
 
         public Task InitializeAsync()
         {

@@ -1,0 +1,23 @@
+﻿<li><input type="text" @bind-value="@content" placeholder="supports markdown"/>
+    <button type="button" class="btn btn-default" aria-label="Add Item" @onclick="@AddItemAsync">
+        <i class="far fa-plus-square" aria-hidden="true"></i>
+    </button>
+</li>
+
+@code {
+    [Parameter] 
+    public EventCallback<string> ValueAdded { get; set; }
+    
+    private string content = string.Empty;
+
+    private async Task AddItemAsync()
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return;
+        }
+
+        await ValueAdded.InvokeAsync(content);
+        content = string.Empty;
+    }
+}

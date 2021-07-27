@@ -8,18 +8,18 @@ using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.Sql
 {
-    public class BlogPostRepository : IRepository
+    public class BlogPostRepository : IBlogPostRepository
     {
-        private readonly BlogPostContext blogPostContext;
+        private readonly BlogDbContext blogDbContext;
 
-        public BlogPostRepository(BlogPostContext blogPostContext)
+        public BlogPostRepository(BlogDbContext blogDbContext)
         {
-            this.blogPostContext = blogPostContext;
+            this.blogDbContext = blogDbContext;
         }
 
         public async Task<BlogPost> GetByIdAsync(string blogPostId)
         {
-            return await blogPostContext.BlogPosts.Include(b => b.Tags).SingleAsync(b => b.Id == blogPostId);
+            return await blogDbContext.BlogPosts.Include(b => b.Tags).SingleAsync(b => b.Id == blogPostId);
         }
 
         public async Task<IPagedList<BlogPost>> GetAllAsync(
@@ -29,7 +29,7 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
             int page = 1,
             int pageSize = 5)
         {
-            var blogPosts = blogPostContext.BlogPosts.AsNoTracking().Include(b => b.Tags).AsQueryable();
+            var blogPosts = blogDbContext.BlogPosts.AsNoTracking().Include(b => b.Tags).AsQueryable();
 
             if (filter != null)
             {
@@ -53,21 +53,21 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
         {
             if (string.IsNullOrEmpty(blogPost.Id))
             {
-                await blogPostContext.BlogPosts.AddAsync(blogPost);
+                await blogDbContext.BlogPosts.AddAsync(blogPost);
             }
             else
             {
-                blogPostContext.Entry(blogPost).State = EntityState.Modified;
+                blogDbContext.Entry(blogPost).State = EntityState.Modified;
             }
 
-            await blogPostContext.SaveChangesAsync();
+            await blogDbContext.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(string blogPostId)
         {
             var blogPostToDelete = await GetByIdAsync(blogPostId);
-            blogPostContext.Remove(blogPostToDelete);
-            await blogPostContext.SaveChangesAsync();
+            blogDbContext.Remove(blogPostToDelete);
+            await blogDbContext.SaveChangesAsync();
         }
     }
 }

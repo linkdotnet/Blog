@@ -1,0 +1,73 @@
+﻿@using LinkDotNet.Domain
+@using LinkDotNet.Infrastructure.Persistence
+@inherits MarkdownComponentBase
+
+@inject AppConfiguration appConfiguration
+@inject IProfileRepository repository
+<div class="profile">
+    <div class="profile-name">
+        <span>@appConfiguration.ProfileInformation.Name</span>
+        <br/>
+        <span>@appConfiguration.ProfileInformation.Heading</span>
+    </div>
+    <div class="profile-image">
+        <img src="@appConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
+    </div>
+    <ul class="profile-keypoints inverted-colors">
+        @foreach (var entry in profileInformationEntries)
+        {
+            <li>
+                @if (IsAuthenticated)
+                {
+                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() =>
+                    ShowDeleteDialog(entry.Content)">
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                    </button>
+                }
+                @RenderMarkupString(entry.Content)
+            </li>
+        }
+        @if (IsAuthenticated)
+        {
+            <AddProfileShortItem ValueAdded="@AddValue"></AddProfileShortItem>
+        }
+    </ul>
+</div>
+
+<ConfirmDialog @ref="Dialog" Content="Do you really want to delete this entry?" Title="Delete" 
+OnYesPressed="DeleteItem"></ConfirmDialog>
+
+@code {
+    [Parameter]
+    public bool IsAuthenticated { get; set; }
+
+    private IList<ProfileInformationEntry> profileInformationEntries = new List<ProfileInformationEntry>(); 
+    private ConfirmDialog Dialog { get; set; }
+    private string currentDeleteKey;
+
+    protected override async Task OnInitializedAsync()
+    {
+        profileInformationEntries = (await repository.GetAllAsync()).OrderBy(d => d.CreatedDate).ToList();
+    }
+
+    private void ShowDeleteDialog(string key)
+    {
+        currentDeleteKey = key;
+        Dialog.Open();
+    }
+
+    private async Task DeleteItem()
+    {
+        var entryToDelete = profileInformationEntries.Single(p => p.Content == currentDeleteKey);
+        profileInformationEntries.Remove(entryToDelete);
+        await repository.DeleteAsync(entryToDelete.Id);
+    }
+
+    private async Task AddValue(string toAdd)
+    {
+        var newEntry = ProfileInformationEntry.Create(toAdd);
+
+        profileInformationEntries.Add(newEntry);
+        await repository.AddAsync(newEntry);
+    }
+}
