@@ -1,7 +1,6 @@
 ﻿@page "/AboutMe"
-@using Microsoft.AspNetCore.Http
 @inject AppConfiguration appConfiguration
-@inject IHttpContextAccessor httpContextAccessor
+@inject AuthenticationStateProvider authenticationStateProvider
 @* TODO: Meta Tags About Me - [Name here] *@
 
 @if (appConfiguration.IsAboutMeEnabled)
@@ -10,7 +9,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-4">
-                    <Profile IsAuthenticated="@httpContextAccessor.HttpContext.User.Identity.IsAuthenticated"/>
+                    <Profile IsAuthenticated="@isAuthenticated"/>
                 </div>
                 <div class="col-lg-9 col-md-8 tab-container">
                     <div class="row">
@@ -19,4 +18,19 @@
             </div>
         </div>
     </div>
+}
+
+@code {
+
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
+        if (userIdentity != null)
+        {
+            isAuthenticated = userIdentity.IsAuthenticated;
+        }
+    }
+
 }
