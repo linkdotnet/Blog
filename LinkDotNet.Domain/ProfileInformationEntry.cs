@@ -12,9 +12,9 @@ namespace LinkDotNet.Domain
 
         public string Content { get; private set; }
 
-        public DateTime CreatedDate { get; private set; }
+        public int SortOrder { get; set; }
 
-        public static ProfileInformationEntry Create(string key, DateTime? createdDate = null)
+        public static ProfileInformationEntry Create(string key, int sortOrder)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -24,7 +24,7 @@ namespace LinkDotNet.Domain
             return new ProfileInformationEntry
             {
                 Content = key.Trim(),
-                CreatedDate = createdDate ?? DateTime.Now,
+                SortOrder = sortOrder,
             };
         }
     }

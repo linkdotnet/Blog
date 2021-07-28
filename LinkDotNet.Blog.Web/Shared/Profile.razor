@@ -47,7 +47,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     protected override async Task OnInitializedAsync()
     {
-        profileInformationEntries = (await repository.GetAllAsync()).OrderBy(d => d.CreatedDate).ToList();
+        profileInformationEntries = (await repository.GetAllAsync()).OrderBy(d => d.SortOrder).ToList();
     }
 
     private void ShowDeleteDialog(string key)
@@ -65,9 +65,20 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     private async Task AddValue(string toAdd)
     {
-        var newEntry = ProfileInformationEntry.Create(toAdd);
+        var sortOrder = GetSortOrder();
+        var newEntry = ProfileInformationEntry.Create(toAdd, sortOrder);
 
         profileInformationEntries.Add(newEntry);
         await repository.AddAsync(newEntry);
+    }
+
+    private int GetSortOrder()
+    {
+        if (profileInformationEntries.Any())
+        {
+            return profileInformationEntries.Max(p => p.SortOrder) + 1000;
+        }
+
+        return 0;
     }
 }

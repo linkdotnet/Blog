@@ -1,12 +1,11 @@
-﻿using System;
-using LinkDotNet.Domain;
+﻿using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.TestUtilities
 {
     public class ProfileInformationEntryBuilder
     {
         private string content = "Content";
-        private DateTime? createdDate;
+        private int sortOrder;
 
         public ProfileInformationEntryBuilder WithContent(string key)
         {
@@ -14,15 +13,15 @@ namespace LinkDotNet.Blog.TestUtilities
             return this;
         }
 
-        public ProfileInformationEntryBuilder WithCreatedDate(DateTime createdDate)
+        public ProfileInformationEntryBuilder WithSortOrder(int sortOrder)
         {
-            this.createdDate = createdDate;
+            this.sortOrder = sortOrder;
             return this;
         }
 
         public ProfileInformationEntry Build()
         {
-            return ProfileInformationEntry.Create(content, createdDate);
+            return ProfileInformationEntry.Create(content, sortOrder);
         }
     }
 }

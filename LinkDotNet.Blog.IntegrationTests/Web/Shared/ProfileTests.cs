@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -16,10 +15,10 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
     public class ProfileTests : TestContext
     {
         [Fact]
-        public void ShouldRenderAllItemsSortedByCreated()
+        public void ShouldRenderAllItemsSortedByOrder()
         {
-            var entry1 = new ProfileInformationEntryBuilder().WithContent("key 1").WithCreatedDate(new DateTime(1)).Build();
-            var entry2 = new ProfileInformationEntryBuilder().WithContent("key 2").WithCreatedDate(new DateTime(2)).Build();
+            var entry1 = new ProfileInformationEntryBuilder().WithContent("key 1").WithSortOrder(1).Build();
+            var entry2 = new ProfileInformationEntryBuilder().WithContent("key 2").WithSortOrder(2).Build();
             var repoMock = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync())
                 .ReturnsAsync(new List<ProfileInformationEntry> { entry1, entry2 });
@@ -62,12 +61,13 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
 
             entryToDb.Should().NotBeNull();
             entryToDb.Content.Should().Be("key");
+            entryToDb.SortOrder.Should().Be(0);
         }
 
         [Fact]
         public void ShouldDeleteEntryWhenConfirmed()
         {
-            var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").WithCreatedDate(new DateTime(2)).Build();
+            var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").Build();
             entryToDelete.Id = "SomeId";
             var repoMock = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
@@ -82,7 +82,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         [Fact]
         public void ShouldNotDeleteEntryWhenNotConfirmed()
         {
-            var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").WithCreatedDate(new DateTime(2)).Build();
+            var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").Build();
             entryToDelete.Id = "SomeId";
             var repoMock = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
@@ -92,6 +92,26 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             cut.FindComponent<ConfirmDialog>().Find("#cancel").Click();
 
             repoMock.Verify(r => r.DeleteAsync("SomeId"), Times.Never);
+        }
+
+        [Fact]
+        public void ShouldAddEntryWithCorrectSortOrder()
+        {
+            var repo = RegisterServices();
+            var entry = new ProfileInformationEntryBuilder().WithSortOrder(1).Build();
+            repo.Setup(p => p.GetAllAsync()).ReturnsAsync(new[] { entry });
+            ProfileInformationEntry entryToDb = null;
+            repo.Setup(p => p.AddAsync(It.IsAny<ProfileInformationEntry>()))
+                .Callback<ProfileInformationEntry>(p => entryToDb = p);
+            var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+            var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
+            addShortItemComponent.Find("input").Change("key");
+
+            addShortItemComponent.Find("button").Click();
+
+            entryToDb.Should().NotBeNull();
+            entryToDb.Content.Should().Be("key");
+            entryToDb.SortOrder.Should().Be(1001);
         }
 
         private static AppConfiguration CreateEmptyConfiguration()
