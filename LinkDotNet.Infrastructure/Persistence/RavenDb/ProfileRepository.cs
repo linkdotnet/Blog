@@ -20,7 +20,7 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             return await session.Query<ProfileInformationEntry>().ToListAsync();
         }
 
-        public async Task AddAsync(ProfileInformationEntry entry)
+        public async Task StoreAsync(ProfileInformationEntry entry)
         {
             using var session = documentStore.OpenAsyncSession();
             await session.StoreAsync(entry);

@@ -8,7 +8,7 @@ namespace LinkDotNet.Infrastructure.Persistence
     {
         Task<IList<ProfileInformationEntry>> GetAllAsync();
 
-        Task AddAsync(ProfileInformationEntry entry);
+        Task StoreAsync(ProfileInformationEntry entry);
 
         Task DeleteAsync(string id);
     }

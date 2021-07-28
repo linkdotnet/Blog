@@ -19,9 +19,17 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
             return await dbContext.ProfileInformationEntries.ToListAsync();
         }
 
-        public async Task AddAsync(ProfileInformationEntry entry)
+        public async Task StoreAsync(ProfileInformationEntry entry)
         {
-            await dbContext.ProfileInformationEntries.AddAsync(entry);
+            if (string.IsNullOrEmpty(entry.Id))
+            {
+                await dbContext.ProfileInformationEntries.AddAsync(entry);
+            }
+            else
+            {
+                dbContext.Entry(entry).State = EntityState.Modified;
+            }
+
             await dbContext.SaveChangesAsync();
         }
 

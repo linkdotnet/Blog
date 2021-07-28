@@ -12,8 +12,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         {
             var item1 = new ProfileInformationEntryBuilder().WithContent("key1").Build();
             var item2 = new ProfileInformationEntryBuilder().WithContent("key2").Build();
-            await ProfileRepository.AddAsync(item1);
-            await ProfileRepository.AddAsync(item2);
+            await ProfileRepository.StoreAsync(item1);
+            await ProfileRepository.StoreAsync(item2);
 
             var items = await ProfileRepository.GetAllAsync();
 
@@ -26,8 +26,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         {
             var item1 = new ProfileInformationEntryBuilder().WithContent("key1").Build();
             var item2 = new ProfileInformationEntryBuilder().WithContent("key2").Build();
-            await ProfileRepository.AddAsync(item1);
-            await ProfileRepository.AddAsync(item2);
+            await ProfileRepository.StoreAsync(item1);
+            await ProfileRepository.StoreAsync(item2);
 
             await ProfileRepository.DeleteAsync(item1.Id);
 
@@ -40,7 +40,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         public async Task NoopOnDeleteWhenEntryNotFound()
         {
             var item = new ProfileInformationEntryBuilder().WithContent("key1").Build();
-            await ProfileRepository.AddAsync(item);
+            await ProfileRepository.StoreAsync(item);
 
             await ProfileRepository.DeleteAsync("SomeIdWhichHopefullyDoesNotExist");
 

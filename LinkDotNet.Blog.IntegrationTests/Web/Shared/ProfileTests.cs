@@ -51,7 +51,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         {
             var repo = RegisterServices();
             ProfileInformationEntry entryToDb = null;
-            repo.Setup(p => p.AddAsync(It.IsAny<ProfileInformationEntry>()))
+            repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
                 .Callback<ProfileInformationEntry>(p => entryToDb = p);
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
@@ -61,7 +61,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
 
             entryToDb.Should().NotBeNull();
             entryToDb.Content.Should().Be("key");
-            entryToDb.SortOrder.Should().Be(0);
+            entryToDb.SortOrder.Should().Be(1000);
         }
 
         [Fact]
@@ -101,7 +101,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             var entry = new ProfileInformationEntryBuilder().WithSortOrder(1).Build();
             repo.Setup(p => p.GetAllAsync()).ReturnsAsync(new[] { entry });
             ProfileInformationEntry entryToDb = null;
-            repo.Setup(p => p.AddAsync(It.IsAny<ProfileInformationEntry>()))
+            repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
                 .Callback<ProfileInformationEntry>(p => entryToDb = p);
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();

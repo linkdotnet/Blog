@@ -4,6 +4,7 @@
 
 @inject AppConfiguration appConfiguration
 @inject IProfileRepository repository
+@inject ISortOrderCalculator sortOrderCalculator
 <div class="profile">
     <div class="profile-name">
         <span>@appConfiguration.ProfileInformation.Name</span>
@@ -13,19 +14,27 @@
     <div class="profile-image">
         <img src="@appConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
     </div>
-    <ul class="profile-keypoints inverted-colors">
+    <ul class="profile-keypoints inverted-colors" ondragover="event.preventDefault();">
         @foreach (var entry in profileInformationEntries)
         {
-            <li>
-                @if (IsAuthenticated)
-                {
-                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() =>
-                    ShowDeleteDialog(entry.Content)">
+            @if (IsAuthenticated)
+            {
+                <li
+                    style="cursor: move"
+                    draggable="true"
+                    @ondrag="@(() => currentDragItem = entry)"
+                    @ondrop="@(() => HandleDrop(entry))">
+
+                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
-                }
-                @RenderMarkupString(entry.Content)
-            </li>
+                    @RenderMarkupString(entry.Content)
+                </li>
+            }
+            else
+            {
+                <li>@RenderMarkupString(entry.Content)</li>
+            }
         }
         @if (IsAuthenticated)
         {
@@ -41,9 +50,10 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
     [Parameter]
     public bool IsAuthenticated { get; set; }
 
-    private IList<ProfileInformationEntry> profileInformationEntries = new List<ProfileInformationEntry>(); 
+    private List<ProfileInformationEntry> profileInformationEntries = new();
     private ConfirmDialog Dialog { get; set; }
     private string currentDeleteKey;
+    private ProfileInformationEntry currentDragItem;
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,7 +79,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
         var newEntry = ProfileInformationEntry.Create(toAdd, sortOrder);
 
         profileInformationEntries.Add(newEntry);
-        await repository.AddAsync(newEntry);
+        await repository.StoreAsync(newEntry);
     }
 
     private int GetSortOrder()
@@ -79,6 +89,22 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
             return profileInformationEntries.Max(p => p.SortOrder) + 1000;
         }
 
-        return 0;
+        return 1000;
     }
+
+    private async Task HandleDrop(ProfileInformationEntry dropTarget)
+    {
+        if (currentDragItem == null || dropTarget  == currentDragItem)
+        {
+            return;
+        }
+
+        var newSortOrder = sortOrderCalculator.GetSortOrder(dropTarget, profileInformationEntries);
+        currentDragItem.SortOrder = newSortOrder;
+        await repository.StoreAsync(currentDragItem);
+        currentDragItem = null;
+        profileInformationEntries.Sort((a, b) => a.SortOrder.CompareTo(b.SortOrder));
+        StateHasChanged();
+    }
+
 }

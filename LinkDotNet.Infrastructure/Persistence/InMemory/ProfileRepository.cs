@@ -14,7 +14,7 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
             return Task.FromResult((IList<ProfileInformationEntry>)profileInformation.ToList());
         }
 
-        public Task AddAsync(ProfileInformationEntry entry)
+        public Task StoreAsync(ProfileInformationEntry entry)
         {
             if (string.IsNullOrEmpty(entry.Id))
             {

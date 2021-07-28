@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace LinkDotNet.Domain
 {
+    [DebuggerDisplay("{Content}")]
     public class ProfileInformationEntry
     {
         private ProfileInformationEntry()
