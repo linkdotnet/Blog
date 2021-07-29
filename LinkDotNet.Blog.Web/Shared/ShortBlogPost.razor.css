@@ -69,13 +69,13 @@
 }
 .blog-card .details .date:before {
     font-family: "Font Awesome 5 Free";
-    font-weight: 400;
+    font-weight: 900;
     margin-right: 10px;
     content: "\f133";
 }
 .blog-card .details .tags ul:before {
     font-family: "Font Awesome 5 Free";
-    font-weight: 400;
+    font-weight: 900;
     content: "\f02b";
     margin-right: 10px;
 }
@@ -107,10 +107,10 @@
 .blog-card .description .read-more a:after {
     content: '\f0a9';
     font-family: "Font Awesome 5 Free";
-    font-weight: 400;
+    font-weight: 900;
+    text-decoration: none;
     margin-left: -10px;
     opacity: 0;
-    vertical-align: middle;
     transition: margin 0.3s, opacity 0.3s;
 }
 .blog-card .description .read-more a:hover:after {
