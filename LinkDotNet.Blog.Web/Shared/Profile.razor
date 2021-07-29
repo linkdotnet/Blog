@@ -14,13 +14,14 @@
     <div class="profile-image">
         <img src="@appConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
     </div>
-    <ul class="profile-keypoints inverted-colors" ondragover="event.preventDefault();">
+    <ul class="profile-keypoints inverted-colors"
+        ondragover="event.preventDefault();">
         @foreach (var entry in profileInformationEntries)
         {
             @if (IsAuthenticated)
             {
                 <li
-                    style="cursor: move"
+                    class="item-draggable"
                     draggable="true"
                     @ondrag="@(() => currentDragItem = entry)"
                     @ondrop="@(() => HandleDrop(entry))">
@@ -54,6 +55,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
     private ConfirmDialog Dialog { get; set; }
     private string currentDeleteKey;
     private ProfileInformationEntry currentDragItem;
+    private string dropClass = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,6 +96,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     private async Task HandleDrop(ProfileInformationEntry dropTarget)
     {
+        dropClass = string.Empty;
         if (currentDragItem == null || dropTarget  == currentDragItem)
         {
             return;
@@ -106,5 +109,4 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
         profileInformationEntries.Sort((a, b) => a.SortOrder.CompareTo(b.SortOrder));
         StateHasChanged();
     }
-
 }

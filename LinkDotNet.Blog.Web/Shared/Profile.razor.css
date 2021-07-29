@@ -50,3 +50,7 @@
 ::deep .profile-keypoints li p {
     display: inline;
 }
+
+.item-draggable {
+    cursor: grab;
+}

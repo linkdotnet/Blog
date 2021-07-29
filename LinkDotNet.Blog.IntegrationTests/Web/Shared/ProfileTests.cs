@@ -19,7 +19,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         {
             var entry1 = new ProfileInformationEntryBuilder().WithContent("key 1").WithSortOrder(1).Build();
             var entry2 = new ProfileInformationEntryBuilder().WithContent("key 2").WithSortOrder(2).Build();
-            var repoMock = RegisterServices();
+            var (repoMock, _) = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync())
                 .ReturnsAsync(new List<ProfileInformationEntry> { entry1, entry2 });
             var cut = RenderComponent<Profile>();
@@ -49,7 +49,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         [Fact]
         public void ShouldAddEntry()
         {
-            var repo = RegisterServices();
+            var (repo, _) = RegisterServices();
             ProfileInformationEntry entryToDb = null;
             repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
                 .Callback<ProfileInformationEntry>(p => entryToDb = p);
@@ -69,7 +69,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         {
             var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").Build();
             entryToDelete.Id = "SomeId";
-            var repoMock = RegisterServices();
+            var (repoMock, _) = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             cut.Find(".profile-keypoints li button").Click();
@@ -84,7 +84,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         {
             var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").Build();
             entryToDelete.Id = "SomeId";
-            var repoMock = RegisterServices();
+            var (repoMock, _) = RegisterServices();
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             cut.Find(".profile-keypoints li button").Click();
@@ -97,7 +97,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         [Fact]
         public void ShouldAddEntryWithCorrectSortOrder()
         {
-            var repo = RegisterServices();
+            var (repo, _) = RegisterServices();
             var entry = new ProfileInformationEntryBuilder().WithSortOrder(1).Build();
             repo.Setup(p => p.GetAllAsync()).ReturnsAsync(new[] { entry });
             ProfileInformationEntry entryToDb = null;
@@ -114,6 +114,12 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             entryToDb.SortOrder.Should().Be(1001);
         }
 
+        [Fact]
+        public void ShouldSetNewOrderWhenItemDragAndDropped()
+        {
+
+        }
+
         private static AppConfiguration CreateEmptyConfiguration()
         {
             return new()
@@ -122,13 +128,15 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             };
         }
 
-        private Mock<IProfileRepository> RegisterServices()
+        private (Mock<IProfileRepository> repoMock, Mock<ISortOrderCalculator> calcMock) RegisterServices()
         {
             var repoMock = new Mock<IProfileRepository>();
+            var calcMock = new Mock<ISortOrderCalculator>();
             Services.AddScoped(_ => CreateEmptyConfiguration());
             Services.AddScoped(_ => repoMock.Object);
+            Services.AddScoped(_ => calcMock.Object);
             repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<ProfileInformationEntry>());
-            return repoMock;
+            return (repoMock, calcMock);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
 {
     public class SortOrderCalculatorTests
     {
-        private SortOrderCalculator sut;
+        private readonly SortOrderCalculator sut;
 
         public SortOrderCalculatorTests()
         {
