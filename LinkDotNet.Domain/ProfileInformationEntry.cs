@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace LinkDotNet.Domain
 {
-    [DebuggerDisplay("{Content}")]
+    [DebuggerDisplay("{Content} with sort order {SortOrder}")]
     public class ProfileInformationEntry
     {
         private ProfileInformationEntry()

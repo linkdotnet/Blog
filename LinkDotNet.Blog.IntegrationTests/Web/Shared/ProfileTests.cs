@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AngleSharp.Dom;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -117,7 +118,22 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         [Fact]
         public void ShouldSetNewOrderWhenItemDragAndDropped()
         {
+            var target = new ProfileInformationEntryBuilder().WithSortOrder(100).Build();
+            var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
+            var (repo, calculator) = RegisterServices();
+            var profileInformationEntries = new List<ProfileInformationEntry> { target, source };
+            repo.Setup(p => p.GetAllAsync()).ReturnsAsync(profileInformationEntries);
+            ProfileInformationEntry entryToDb = null;
+            repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
+                .Callback<ProfileInformationEntry>(p => entryToDb = p);
+            var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+            calculator.Setup(s => s.GetSortOrder(target, profileInformationEntries)).Returns(150);
 
+            cut.FindAll("li")[1].Drag();
+            cut.FindAll("li")[0].Drop();
+
+            source.SortOrder.Should().Be(150);
+            entryToDb.Should().Be(source);
         }
 
         private static AppConfiguration CreateEmptyConfiguration()
