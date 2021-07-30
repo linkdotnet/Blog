@@ -43,7 +43,7 @@ namespace LinkDotNet.Domain
         {
             var enumeration = All.SingleOrDefault(p => p.key == key);
 
-            if (enumeration == null)
+            if (enumeration is null)
             {
                 throw new InvalidOperationException($"{key} is not a valid value for {typeof(TEnumeration).Name}");
             }
