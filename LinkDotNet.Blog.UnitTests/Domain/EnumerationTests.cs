@@ -76,9 +76,18 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         [Fact]
         public void ShouldDifferentEnumerations()
         {
-            var isEqual = TestEnumeration.One == TestEnumeration.Two;
+            var isEqual = TestEnumeration.One != TestEnumeration.Two;
 
-            isEqual.Should().BeFalse();
+            isEqual.Should().BeTrue();
+        }
+
+        [Fact]
+        public void GivenTwoEqualEnumerationThenHashcodeEqual()
+        {
+            var hashCode1 = TestEnumeration.One.GetHashCode();
+            var hashCode2 = TestEnumeration.Create(TestEnumeration.One.Key).GetHashCode();
+
+            hashCode1.Should().Be(hashCode2);
         }
     }
 }

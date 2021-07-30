@@ -8,7 +8,8 @@ namespace LinkDotNet.Blog.UnitTests.Domain
 
         public static readonly TestEnumeration Two = new TestEnumeration(nameof(Two));
 
-        public TestEnumeration(string key) : base(key)
+        public TestEnumeration(string key)
+            : base(key)
         {
         }
     }
