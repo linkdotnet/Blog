@@ -1,0 +1,40 @@
+﻿@using LinkDotNet.Domain
+<ModalDialog @ref="Dialog" Title="Add Skill">
+    <EditForm Model="@model">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-3">
+            <label for="title">Skill name</label>
+            <InputText class="form-control" id="title" @bind-Value="model.Skill" />
+        </div>
+        <div class="mb-3">
+            <label for="image">Image Url</label>
+            <InputText class="form-control" id="image" @bind-Value="model.ImageUrl" rows="4"/>
+            <small id="image" class="form-text text-muted">If set is used before the skill (optional)</small>
+        </div>
+        <div class="mb-3">
+                    <label for="title">Skill name</label>
+                    <InputText class="form-control" id="title" @bind-Value="model.Skill" />
+                </div>
+        <div class="mb-3">
+            <label for="tags">Proficiency</label>
+            <select class="form-select" id="tags" @bind="@model.Proficiency">
+                @foreach (var level in ProficiencyLevel.All)
+                {
+                    <option value="@level.Key">@level.Key</option>
+                }
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </EditForm>
+</ModalDialog>
+
+@code {
+    private AddSkillModel model = new();
+    private ModalDialog Dialog { get; set; }
+
+    public void Open()
+    {
+        Dialog.Open();
+    }
+}

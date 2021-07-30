@@ -1,0 +1,62 @@
+﻿@using LinkDotNet.Domain
+<div class="skill-table-container">
+    <div>
+        @if (IsAuthenticated)
+        {
+            <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()"><i class="fas
+            fa-plus-square"></i>
+                Add skill</button>
+            <AddSkillDialog @ref="AddSkillDialog"></AddSkillDialog>
+        }
+    </div>
+    <div>
+        <table class="skill-table">
+            <tbody>
+            <tr>
+                <th>Capability</th>
+                <th>Familiar with</th>
+                <th>Proficient</th>
+                <th>Expert</th>
+            </tr>
+            @foreach (var skillCapabilityGroup in skills.GroupBy(s => s.Capability))
+            {
+                <tr>
+                    <td>@skillCapabilityGroup.Key</td>
+                    @foreach (var skillLevel in ProficiencyLevel.All)
+                    {
+                        <td>
+                            @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
+                            {
+                                <div>
+                                    <SkillTag Skill="@skill"/>
+                                </div>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public bool IsAuthenticated { get; set; }
+
+    private AddSkillDialog AddSkillDialog { get; set; }
+
+    private List<Skill> skills = new()
+    {
+        new Skill {Capability = "Backend", Name = "C#", ProficiencyLevel = ProficiencyLevel.Expert, IconUrl = "https://img.icons8.com/color/48/000000/c-sharp-logo.png"},
+        new Skill {Capability = "Backend", Name = ".NET", ProficiencyLevel = ProficiencyLevel.Expert, IconUrl = ""},
+        new Skill {Capability = "UX", Name = "Figma", ProficiencyLevel = ProficiencyLevel.Expert, IconUrl = "https://miro.medium.com/max/1400/1*6XgfDCVn81AYX68Xvd2I-g@2x.png"},
+        new Skill {Capability = "UX", Name = "Webflow", ProficiencyLevel = ProficiencyLevel.Proficient},
+        new Skill {Capability = "UX", Name = "A/B Testing", ProficiencyLevel = ProficiencyLevel.Proficient},
+        new Skill {Capability = "UX", Name = "Case studies", ProficiencyLevel = ProficiencyLevel.Expert},
+        new Skill {Capability = "UX", Name = "Adobe Xd", ProficiencyLevel = ProficiencyLevel.Familiar},
+        new Skill {Capability = "Backend", Name = "Java", ProficiencyLevel = ProficiencyLevel.Familiar, IconUrl = "https://img.icons8.com/ios/50/000000/java-coffee-cup-logo--v1.png"},
+        new Skill {Capability = "Frontend", Name = "Typescript", ProficiencyLevel = ProficiencyLevel.Expert, IconUrl = ""},
+        new Skill {Capability = "DevOps", Name = "git", ProficiencyLevel = ProficiencyLevel.Expert, IconUrl = "https://e7.pngegg.com/pngimages/713/558/png-clipart-computer-icons-pro-git-github-logo-text-logo-thumbnail.png"},
+    };
+
+}
