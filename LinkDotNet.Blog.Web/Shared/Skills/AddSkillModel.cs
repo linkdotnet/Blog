@@ -11,5 +11,8 @@ namespace LinkDotNet.Blog.Web.Shared.Skills
 
         [Required]
         public string Proficiency { get; set; }
+
+        [Required]
+        public string Capability { get; set; }
     }
 }

@@ -10,11 +10,12 @@
         <div class="mb-3">
             <label for="image">Image Url</label>
             <InputText class="form-control" id="image" @bind-Value="model.ImageUrl" rows="4"/>
-            <small id="image" class="form-text text-muted">If set is used before the skill (optional)</small>
+            <small id="image" class="form-text text-muted">If set is used before the skill (optional). 24x24 pixel
+            optimal size</small>
         </div>
         <div class="mb-3">
-                    <label for="title">Skill name</label>
-                    <InputText class="form-control" id="title" @bind-Value="model.Skill" />
+                    <label for="capability">Capability</label>
+                    <InputText class="form-control" id="capability" @bind-Value="model.Capability" />
                 </div>
         <div class="mb-3">
             <label for="tags">Proficiency</label>
@@ -36,5 +37,6 @@
     public void Open()
     {
         Dialog.Open();
+        StateHasChanged();
     }
 }
