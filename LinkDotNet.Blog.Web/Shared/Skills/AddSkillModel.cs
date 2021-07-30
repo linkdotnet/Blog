@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.Web.Shared.Skills
 {
@@ -10,7 +11,7 @@ namespace LinkDotNet.Blog.Web.Shared.Skills
         public string ImageUrl { get; set; }
 
         [Required]
-        public string Proficiency { get; set; }
+        public string Proficiency { get; set; } = ProficiencyLevel.Familiar.Key;
 
         [Required]
         public string Capability { get; set; }
