@@ -1,0 +1,14 @@
+﻿@using LinkDotNet.Domain
+
+<span class="skill-tag">
+    @if (!string.IsNullOrEmpty(Skill.IconUrl))
+    {
+        <img src="@Skill.IconUrl" alt="icon"/>
+    }
+    @Skill.Name
+</span>
+
+@code {
+    [Parameter]
+    public Skill Skill { get; set; }
+}

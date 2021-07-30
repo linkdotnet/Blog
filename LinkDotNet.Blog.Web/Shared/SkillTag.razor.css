@@ -1,0 +1,12 @@
+.skill-tag {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--header1);
+    color: var(--white);
+
+}
+
+.skill-tag img {
+    padding-right: 8px;
+    width: 24px;
+}
