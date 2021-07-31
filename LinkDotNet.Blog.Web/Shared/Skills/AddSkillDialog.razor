@@ -15,12 +15,12 @@
             optimal size</small>
         </div>
         <div class="mb-3">
-                    <label for="capability">Capability</label>
-                    <InputText class="form-control" id="capability" @bind-Value="model.Capability" />
-                </div>
+            <label for="capability">Capability</label>
+            <InputText class="form-control" id="capability" @bind-Value="model.Capability" />
+        </div>
         <div class="mb-3">
-            <label for="tags">Proficiency</label>
-            <select class="form-select" id="tags" @bind="model.Proficiency">
+            <label for="proficiency">Proficiency</label>
+            <select class="form-select" id="proficiency" @bind="model.Proficiency">
                 @foreach (var level in ProficiencyLevel.All)
                 {
                     <option value="@level.Key">@level.Key</option>
