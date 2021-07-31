@@ -3,6 +3,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared.Admin;
+using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Admin
         public void ShouldDeleteBlogPostWhenOkClicked()
         {
             const string blogPostId = "2";
-            var repositoryMock = new Mock<IBlogPostRepository>();
+            var repositoryMock = new Mock<IRepository<BlogPost>>();
             using var ctx = new TestContext();
             ctx.AddTestAuthorization().SetAuthorized("s");
             ctx.Services.AddSingleton(repositoryMock.Object);
@@ -34,7 +35,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Admin
         public void ShouldNotDeleteBlogPostWhenCancelClicked()
         {
             const string blogPostId = "2";
-            var repositoryMock = new Mock<IBlogPostRepository>();
+            var repositoryMock = new Mock<IRepository<BlogPost>>();
             using var ctx = new TestContext();
             ctx.AddTestAuthorization().SetAuthorized("s");
             ctx.Services.AddSingleton(repositoryMock.Object);
@@ -51,7 +52,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Admin
         public void ShouldGoToEditPageOnEditClick()
         {
             const string blogPostId = "2";
-            var repositoryMock = new Mock<IBlogPostRepository>();
+            var repositoryMock = new Mock<IRepository<BlogPost>>();
             using var ctx = new TestContext();
             ctx.AddTestAuthorization().SetAuthorized("s");
             ctx.Services.AddSingleton(repositoryMock.Object);

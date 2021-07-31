@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using AngleSharp.Dom;
 using Bunit;
 using FluentAssertions;
@@ -9,6 +11,7 @@ using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using X.PagedList;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
@@ -21,8 +24,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             var entry1 = new ProfileInformationEntryBuilder().WithContent("key 1").WithSortOrder(1).Build();
             var entry2 = new ProfileInformationEntryBuilder().WithContent("key 2").WithSortOrder(2).Build();
             var (repoMock, _) = RegisterServices();
-            repoMock.Setup(r => r.GetAllAsync())
-                .ReturnsAsync(new List<ProfileInformationEntry> { entry1, entry2 });
+            SetupGetAll(repoMock, entry1, entry2);
             var cut = RenderComponent<Profile>();
 
             var items = cut.FindAll(".profile-keypoints li");
@@ -71,7 +73,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").Build();
             entryToDelete.Id = "SomeId";
             var (repoMock, _) = RegisterServices();
-            repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
+            SetupGetAll(repoMock, entryToDelete);
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             cut.Find(".profile-keypoints li button").Click();
 
@@ -86,7 +88,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             var entryToDelete = new ProfileInformationEntryBuilder().WithContent("key 2").Build();
             entryToDelete.Id = "SomeId";
             var (repoMock, _) = RegisterServices();
-            repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new[] { entryToDelete });
+            SetupGetAll(repoMock, entryToDelete);
             var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
             cut.Find(".profile-keypoints li button").Click();
 
@@ -100,7 +102,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
         {
             var (repo, _) = RegisterServices();
             var entry = new ProfileInformationEntryBuilder().WithSortOrder(1).Build();
-            repo.Setup(p => p.GetAllAsync()).ReturnsAsync(new[] { entry });
+            SetupGetAll(repo, entry);
             ProfileInformationEntry entryToDb = null;
             repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
                 .Callback<ProfileInformationEntry>(p => entryToDb = p);
@@ -122,7 +124,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
             var (repo, calculator) = RegisterServices();
             var profileInformationEntries = new List<ProfileInformationEntry> { target, source };
-            repo.Setup(p => p.GetAllAsync()).ReturnsAsync(profileInformationEntries);
+            SetupGetAll(repo, target, source);
             ProfileInformationEntry entryToDb = null;
             repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
                 .Callback<ProfileInformationEntry>(p => entryToDb = p);
@@ -144,14 +146,34 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             };
         }
 
-        private (Mock<IProfileRepository> repoMock, Mock<ISortOrderCalculator> calcMock) RegisterServices()
+        private static void SetupGetAll(
+            Mock<IRepository<ProfileInformationEntry>> repoMock, params
+                ProfileInformationEntry[] entries)
         {
-            var repoMock = new Mock<IProfileRepository>();
+            repoMock.Setup(r => r.GetAllAsync(
+                    It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
+                    It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
+                    It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
+                    It.IsAny<bool>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>()))
+                .ReturnsAsync(entries.ToPagedList);
+        }
+
+        private (Mock<IRepository<ProfileInformationEntry>> repoMock, Mock<ISortOrderCalculator> calcMock) RegisterServices()
+        {
+            var repoMock = new Mock<IRepository<ProfileInformationEntry>>();
             var calcMock = new Mock<ISortOrderCalculator>();
             Services.AddScoped(_ => CreateEmptyConfiguration());
             Services.AddScoped(_ => repoMock.Object);
             Services.AddScoped(_ => calcMock.Object);
-            repoMock.Setup(r => r.GetAllAsync()).ReturnsAsync(new List<ProfileInformationEntry>());
+            repoMock.Setup(r => r.GetAllAsync(
+                It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
+                It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
+                It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
+                It.IsAny<bool>(),
+                It.IsAny<int>(),
+                It.IsAny<int>())).ReturnsAsync(new List<ProfileInformationEntry>().ToPagedList());
             return (repoMock, calcMock);
         }
     }

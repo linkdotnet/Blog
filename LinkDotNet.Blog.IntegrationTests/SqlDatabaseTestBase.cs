@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Threading.Tasks;
+using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence.Sql;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,8 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests
 {
-    public abstract class SqlDatabaseTestBase : IAsyncLifetime, IAsyncDisposable
+    public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDisposable
+        where TEntity : Entity
     {
         protected SqlDatabaseTestBase()
         {
@@ -16,13 +18,10 @@ namespace LinkDotNet.Blog.IntegrationTests
                 .UseSqlite(CreateInMemoryConnection())
                 .Options;
             DbContext = new BlogDbContext(options);
-            BlogPostRepository = new BlogPostRepository(new BlogDbContext(options));
-            ProfileRepository = new ProfileRepository(new BlogDbContext(options));
+            Repository = new Repository<TEntity>(new BlogDbContext(options));
         }
 
-        protected BlogPostRepository BlogPostRepository { get; }
-
-        protected ProfileRepository ProfileRepository { get; }
+        protected Repository<TEntity> Repository { get; }
 
         protected BlogDbContext DbContext { get; }
 

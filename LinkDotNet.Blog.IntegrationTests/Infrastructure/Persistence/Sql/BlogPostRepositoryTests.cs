@@ -8,7 +8,7 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
 {
-    public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase
+    public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     {
         [Fact]
         public async Task ShouldLoadBlogPost()
@@ -17,7 +17,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
-            var blogPostFromRepo = await BlogPostRepository.GetByIdAsync(blogPost.Id);
+            var blogPostFromRepo = await Repository.GetByIdAsync(blogPost.Id, post => post.Tags);
 
             blogPostFromRepo.Should().NotBeNull();
             blogPostFromRepo.Title.Should().Be("Title");
@@ -35,7 +35,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         {
             var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
 
-            await BlogPostRepository.StoreAsync(blogPost);
+            await Repository.StoreAsync(blogPost);
 
             var blogPostFromContext = await DbContext.BlogPosts.Include(b => b.Tags).AsNoTracking().SingleOrDefaultAsync(s => s.Id == blogPost.Id);
             blogPostFromContext.Should().NotBeNull();
@@ -56,7 +56,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
-            var blogPostsFromRepo = (await BlogPostRepository.GetAllAsync()).ToList();
+            var blogPostsFromRepo = (await Repository.GetAllAsync(include: post => post.Tags)).ToList();
 
             blogPostsFromRepo.Should().NotBeNull();
             blogPostsFromRepo.Should().HaveCount(1);
@@ -77,11 +77,11 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             var blogPost = new BlogPostBuilder().Build();
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
-            var blogPostFromDb = await BlogPostRepository.GetByIdAsync(blogPost.Id);
+            var blogPostFromDb = await Repository.GetByIdAsync(blogPost.Id);
             var updater = new BlogPostBuilder().WithTitle("New Title").Build();
             blogPostFromDb.Update(updater);
 
-            await BlogPostRepository.StoreAsync(blogPostFromDb);
+            await Repository.StoreAsync(blogPostFromDb);
 
             var blogPostAfterSave = await DbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == blogPostFromDb.Id);
             blogPostAfterSave.Title.Should().Be("New Title");
@@ -93,13 +93,14 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             var olderPost = new BlogPostBuilder().Build();
             var newerPost = new BlogPostBuilder().Build();
             var filteredOutPost = new BlogPostBuilder().WithTitle("FilterOut").Build();
-            await BlogPostRepository.StoreAsync(olderPost);
-            await BlogPostRepository.StoreAsync(newerPost);
-            await BlogPostRepository.StoreAsync(filteredOutPost);
+            await Repository.StoreAsync(olderPost);
+            await Repository.StoreAsync(newerPost);
+            await Repository.StoreAsync(filteredOutPost);
 
-            var blogPosts = await BlogPostRepository.GetAllAsync(
+            var blogPosts = await Repository.GetAllAsync(
                 bp => bp.Title != "FilterOut",
                 bp => bp.UpdatedDate,
+                null,
                 false);
 
             var retrievedPosts = blogPosts.ToList();
@@ -112,9 +113,9 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
         public async Task ShouldDelete()
         {
             var blogPost = new BlogPostBuilder().Build();
-            await BlogPostRepository.StoreAsync(blogPost);
+            await Repository.StoreAsync(blogPost);
 
-            await BlogPostRepository.DeleteAsync(blogPost.Id);
+            await Repository.DeleteAsync(blogPost.Id);
 
             (await DbContext.BlogPosts.AsNoTracking().AnyAsync(b => b.Id == blogPost.Id)).Should().BeFalse();
         }

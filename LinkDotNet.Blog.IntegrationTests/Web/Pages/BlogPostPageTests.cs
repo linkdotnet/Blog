@@ -7,6 +7,7 @@ using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages;
 using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,13 +17,13 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 {
-    public class BlogPostPageTests : SqlDatabaseTestBase
+    public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         [Fact]
         public async Task ShouldAddLikeOnEvent()
         {
             var publishedPost = new BlogPostBuilder().WithLikes(2).IsPublished().Build();
-            await BlogPostRepository.StoreAsync(publishedPost);
+            await Repository.StoreAsync(publishedPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             RegisterComponents(ctx);
@@ -42,7 +43,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         public async Task ShouldSubtractLikeOnEvent()
         {
             var publishedPost = new BlogPostBuilder().WithLikes(2).IsPublished().Build();
-            await BlogPostRepository.StoreAsync(publishedPost);
+            await Repository.StoreAsync(publishedPost);
             using var ctx = new TestContext();
             var localStorage = new Mock<ILocalStorageService>();
             localStorage.Setup(l => l.ContainKeyAsync("hasLiked", default)).ReturnsAsync(true);
@@ -65,7 +66,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         public async Task ShouldSetTagsWhenAvailable()
         {
             var publishedPost = new BlogPostBuilder().IsPublished().WithTags("Tag1,Tag2").Build();
-            await BlogPostRepository.StoreAsync(publishedPost);
+            await Repository.StoreAsync(publishedPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             ctx.AddTestAuthorization();
@@ -80,7 +81,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 
         private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
         {
-            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
             ctx.Services.AddScoped(_ => localStorageService ?? new Mock<ILocalStorageService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);

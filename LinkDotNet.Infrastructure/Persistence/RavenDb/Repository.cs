@@ -8,31 +8,33 @@ using X.PagedList;
 
 namespace LinkDotNet.Infrastructure.Persistence.RavenDb
 {
-    public class BlogPostRepository : IBlogPostRepository
+    public class Repository<TEntity> : IRepository<TEntity>
+        where TEntity : Entity
     {
         private readonly IDocumentStore documentStore;
 
-        public BlogPostRepository(IDocumentStore documentStore)
+        public Repository(IDocumentStore documentStore)
         {
             this.documentStore = documentStore;
         }
 
-        public async Task<BlogPost> GetByIdAsync(string blogPostId)
+        public async Task<TEntity> GetByIdAsync(string id, Expression<Func<TEntity, object>> include = null)
         {
             using var session = documentStore.OpenAsyncSession();
-            return await session.LoadAsync<BlogPost>(blogPostId);
+            return await session.LoadAsync<TEntity>(id);
         }
 
-        public async Task<IPagedList<BlogPost>> GetAllAsync(
-            Expression<Func<BlogPost, bool>> filter = null,
-            Expression<Func<BlogPost, object>> orderBy = null,
+        public async Task<IPagedList<TEntity>> GetAllAsync(
+            Expression<Func<TEntity, bool>> filter = null,
+            Expression<Func<TEntity, object>> orderBy = null,
+            Expression<Func<TEntity, object>> include = null,
             bool descending = true,
             int page = 1,
-            int pageSize = 5)
+            int pageSize = int.MaxValue)
         {
             using var session = documentStore.OpenAsyncSession();
 
-            var query = session.Query<BlogPost>();
+            var query = session.Query<TEntity>();
             if (filter != null)
             {
                 query = query.Where(filter);
@@ -51,17 +53,17 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             return await query.ToPagedListAsync(page, pageSize);
         }
 
-        public async Task StoreAsync(BlogPost blogPost)
+        public async Task StoreAsync(TEntity entity)
         {
             using var session = documentStore.OpenAsyncSession();
-            await session.StoreAsync(blogPost);
+            await session.StoreAsync(entity);
             await session.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string blogPostId)
+        public async Task DeleteAsync(string id)
         {
             using var session = documentStore.OpenAsyncSession();
-            session.Delete(blogPostId);
+            session.Delete(id);
             await session.SaveChangesAsync();
         }
     }

@@ -1,10 +1,10 @@
 @page "/blogPost/{blogPostId}"
 @using LinkDotNet.Domain
-@using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Shared.Admin
+@using LinkDotNet.Infrastructure.Persistence
 @using Markdig
 @using Toolbelt.Blazor.HeadElement
-@inject IBlogPostRepository blogPostRepository
+@inject IRepository<BlogPost> blogPostRepository
 @inject IJSRuntime jsRuntime
 @inherits MarkdownComponentBase
 

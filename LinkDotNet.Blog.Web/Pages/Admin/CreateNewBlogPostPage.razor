@@ -4,7 +4,7 @@
 @using LinkDotNet.Blog.Web.Shared.Admin
 @using LinkDotNet.Domain
 @inherits MarkdownComponentBase
-@inject IBlogPostRepository blogPostRepository
+@inject IRepository<BlogPost> blogPostRepository
 @inject IToastService toastService
 
 <div class="page">

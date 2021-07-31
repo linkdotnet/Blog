@@ -5,23 +5,24 @@ using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages;
 using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 {
-    public class SearchTests : SqlDatabaseTestBase
+    public class SearchTests : SqlDatabaseTestBase<BlogPost>
     {
         [Fact]
         public async Task ShouldFindBlogPostWhenTitleMatches()
         {
             var blogPost1 = new BlogPostBuilder().WithTitle("Title 1").Build();
             var blogPost2 = new BlogPostBuilder().WithTitle("Title 2").Build();
-            await BlogPostRepository.StoreAsync(blogPost1);
-            await BlogPostRepository.StoreAsync(blogPost2);
+            await Repository.StoreAsync(blogPost1);
+            await Repository.StoreAsync(blogPost2);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Title 1"));
 
@@ -36,10 +37,10 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         {
             var blogPost1 = new BlogPostBuilder().WithTitle("Title 1").WithTags("Cat").Build();
             var blogPost2 = new BlogPostBuilder().WithTitle("Title 2").WithTags("Dog").Build();
-            await BlogPostRepository.StoreAsync(blogPost1);
-            await BlogPostRepository.StoreAsync(blogPost2);
+            await Repository.StoreAsync(blogPost1);
+            await Repository.StoreAsync(blogPost2);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Cat"));
 
@@ -53,9 +54,9 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         public async Task ShouldUnescapeQuery()
         {
             var blogPost1 = new BlogPostBuilder().WithTitle("Title 1").Build();
-            await BlogPostRepository.StoreAsync(blogPost1);
+            await Repository.StoreAsync(blogPost1);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Title%201"));
 

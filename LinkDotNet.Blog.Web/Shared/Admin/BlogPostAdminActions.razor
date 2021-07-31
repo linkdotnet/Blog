@@ -1,7 +1,8 @@
 ﻿@using LinkDotNet.Infrastructure.Persistence
+@using LinkDotNet.Domain
 @inject NavigationManager navigationManager
 @inject IToastService toastService
-@inject IBlogPostRepository blogPostRepository
+@inject IRepository<BlogPost> blogPostRepository
 
 <AuthorizeView>
     <div class="blogpost-admin">

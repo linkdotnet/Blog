@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Domain
 {
-    public class Skill
+    public class Skill : Entity
     {
         private Skill()
         {
@@ -15,8 +15,6 @@ namespace LinkDotNet.Domain
             Capability = capability;
             ProficiencyLevel = proficiencyLevel;
         }
-
-        public string Id { get; set; }
 
         public string IconUrl { get; set; }
 

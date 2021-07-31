@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence.InMemory;
 using Xunit;
 
@@ -9,11 +10,11 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
 {
     public class BlogPostRepositoryTests
     {
-        private readonly BlogPostRepository sut;
+        private readonly Repository<BlogPost> sut;
 
         public BlogPostRepositoryTests()
         {
-            sut = new BlogPostRepository();
+            sut = new Repository<BlogPost>();
         }
 
         [Fact]
@@ -54,6 +55,7 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
             var blogPosts = await sut.GetAllAsync(
                 bp => bp.Title != "FilterOut",
                 bp => bp.UpdatedDate,
+                null,
                 false);
 
             var retrievedPosts = blogPosts.ToList();

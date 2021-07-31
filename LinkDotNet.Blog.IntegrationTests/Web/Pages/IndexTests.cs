@@ -15,15 +15,15 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 {
-    public class IndexTests : SqlDatabaseTestBase
+    public class IndexTests : SqlDatabaseTestBase<BlogPost>
     {
         [Fact]
         public async Task ShouldShowAllBlogPostsWithLatestOneFirst()
         {
             var oldestBlogPost = new BlogPostBuilder().WithTitle("Old").Build();
             var newestBlogPost = new BlogPostBuilder().WithTitle("New").Build();
-            await BlogPostRepository.StoreAsync(oldestBlogPost);
-            await BlogPostRepository.StoreAsync(newestBlogPost);
+            await Repository.StoreAsync(oldestBlogPost);
+            await Repository.StoreAsync(newestBlogPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             RegisterComponents(ctx);
@@ -42,8 +42,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         {
             var publishedPost = new BlogPostBuilder().WithTitle("Published").IsPublished().Build();
             var unpublishedPost = new BlogPostBuilder().WithTitle("Not published").IsPublished(false).Build();
-            await BlogPostRepository.StoreAsync(publishedPost);
-            await BlogPostRepository.StoreAsync(unpublishedPost);
+            await Repository.StoreAsync(publishedPost);
+            await Repository.StoreAsync(unpublishedPost);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             RegisterComponents(ctx);
@@ -126,13 +126,13 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             for (var i = 0; i < amount; i++)
             {
                 var blogPost = new BlogPostBuilder().IsPublished().Build();
-                await BlogPostRepository.StoreAsync(blogPost);
+                await Repository.StoreAsync(blogPost);
             }
         }
 
         private void RegisterComponents(TestContextBase ctx)
         {
-            ctx.Services.AddScoped<IBlogPostRepository>(_ => BlogPostRepository);
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         }

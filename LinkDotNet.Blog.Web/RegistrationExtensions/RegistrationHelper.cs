@@ -6,13 +6,13 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
 {
     public static class RegistrationHelper
     {
-        public static void AssertNotAlreadyRegistered<T>(this IServiceCollection services)
+        public static void AssertNotAlreadyRegistered(this IServiceCollection services, Type typeTocCheck)
         {
-            var repoExists = services.Any(s => s.ServiceType == typeof(T));
+            var repoExists = services.Any(s => s.ServiceType == typeTocCheck);
             if (repoExists)
             {
                 throw new NotSupportedException(
-                    $"Can't have multiple implementations registered of type {nameof(T)}");
+                    $"Can't have multiple implementations registered of type {nameof(typeTocCheck)}");
             }
         }
     }
