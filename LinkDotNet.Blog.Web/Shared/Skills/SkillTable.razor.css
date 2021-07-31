@@ -19,6 +19,7 @@
 .skill-table td {
     width: 30%;
     border-top: 1px var(--header2) solid;
+    vertical-align: top;
 }
 
 .skill-table td div {
