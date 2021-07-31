@@ -20,16 +20,25 @@
             </tr>
             @foreach (var skillCapabilityGroup in skills.GroupBy(s => s.Capability))
             {
-                <tr>
+                <tr ondragover="event.preventDefault();">
                     <td>@skillCapabilityGroup.Key</td>
                     @foreach (var skillLevel in ProficiencyLevel.All)
                     {
-                        <td>
+                        <td @ondrop="@(() => HandleDrop(skillLevel))">
                             @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
                             {
-                                <div>
-                                    <SkillTag Skill="@skill"/>
-                                </div>
+                                @if (IsAuthenticated)
+                                {
+                                    <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab">
+                                        <SkillTag Skill="@skill"/>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <SkillTag Skill="@skill"/>
+                                    </div>
+                                }
                             }
                         </td>
                     }
@@ -47,10 +56,23 @@
 
     private List<Skill> skills = new();
 
+    private Skill currentDragItem;
+
     private Task AddSkill(Skill skillToAdd)
     {
         skills.Add(skillToAdd);
         return Task.CompletedTask;
+    }
+
+    private void HandleDrop(ProficiencyLevel proficiencyLevel)
+    {
+        if (currentDragItem == null || currentDragItem.ProficiencyLevel == proficiencyLevel)
+        {
+            return;
+        }
+
+        currentDragItem.ProficiencyLevel = proficiencyLevel;
+        currentDragItem = null;
     }
 
 }
