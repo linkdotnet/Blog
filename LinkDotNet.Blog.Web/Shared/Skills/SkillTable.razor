@@ -1,0 +1,93 @@
+﻿@using LinkDotNet.Domain
+@using LinkDotNet.Infrastructure.Persistence
+@inject IRepository<Skill> repository
+<div class="skill-table-container">
+    <div>
+        @if (IsAuthenticated)
+        {
+            <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()"><i class="fas
+            fa-plus-square"></i>
+                Add skill</button>
+            <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
+        }
+    </div>
+    <div>
+        <table class="skill-table">
+            <tbody>
+            <tr>
+                <th>Capability</th>
+                <th>Familiar with</th>
+                <th>Proficient</th>
+                <th>Expert</th>
+            </tr>
+            @foreach (var skillCapabilityGroup in skills.GroupBy(s => s.Capability))
+            {
+                <tr ondragover="event.preventDefault();">
+                    <td>@skillCapabilityGroup.Key</td>
+                    @foreach (var skillLevel in ProficiencyLevel.All)
+                    {
+                        <td @ondrop="@(() => HandleDrop(skillLevel))">
+                            @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
+                            {
+                                @if (IsAuthenticated)
+                                {
+                                    <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab">
+                                        <SkillTag Skill="@skill" IsAuthenticated="@true" DeleteSkill="@(() =>
+                                        DeleteSkill(skill))"/>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div>
+                                        <SkillTag Skill="@skill"/>
+                                    </div>
+                                }
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+@code {
+    [Parameter]
+    public bool IsAuthenticated { get; set; }
+
+    private AddSkillDialog AddSkillDialog { get; set; }
+
+    private List<Skill> skills = new();
+
+    private Skill currentDragItem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        skills = (await repository.GetAllAsync()).ToList();
+    }
+
+    private async Task AddSkill(Skill skillToAdd)
+    {
+        skills.Add(skillToAdd);
+        await repository.StoreAsync(skillToAdd);
+    }
+
+    private async Task DeleteSkill(Skill skill)
+    {
+        skills.Remove(skill);
+        await repository.DeleteAsync(skill.Id);
+    }
+
+    private async Task HandleDrop(ProficiencyLevel proficiencyLevel)
+    {
+        if (currentDragItem == null || currentDragItem.ProficiencyLevel == proficiencyLevel)
+        {
+            return;
+        }
+
+        currentDragItem.ProficiencyLevel = proficiencyLevel;
+        await repository.StoreAsync(currentDragItem);
+        currentDragItem = null;
+    }
+
+}

@@ -3,7 +3,7 @@
 @inherits MarkdownComponentBase
 
 @inject AppConfiguration appConfiguration
-@inject IProfileRepository repository
+@inject IRepository<ProfileInformationEntry> repository
 @inject ISortOrderCalculator sortOrderCalculator
 <div class="profile">
     <div class="profile-name">
@@ -44,7 +44,7 @@
     </ul>
 </div>
 
-<ConfirmDialog @ref="Dialog" Content="Do you really want to delete this entry?" Title="Delete" 
+<ConfirmDialog @ref="Dialog" Content="Do you really want to delete this entry?" Title="Delete"
 OnYesPressed="DeleteItem"></ConfirmDialog>
 
 @code {

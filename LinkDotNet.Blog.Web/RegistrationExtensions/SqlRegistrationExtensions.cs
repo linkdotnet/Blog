@@ -10,10 +10,9 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
     {
         public static void UseSqlAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered<IBlogPostRepository>();
-            services.AssertNotAlreadyRegistered<IProfileRepository>();
+            services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-            services.AddScoped(s =>
+            services.AddTransient(s =>
             {
                 var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
@@ -23,15 +22,14 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
 
                 return new BlogDbContext(dbOptions);
             });
-            services.AddScoped<IBlogPostRepository, BlogPostRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
 
         public static void UseSqliteAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered<IBlogPostRepository>();
+            services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-            services.AddScoped(s =>
+            services.AddTransient(s =>
             {
                 var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
@@ -41,7 +39,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
 
                 return new BlogDbContext(dbOptions);
             });
-            services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
     }
 }

@@ -2,7 +2,7 @@
 @using LinkDotNet.Domain
 @using LinkDotNet.Infrastructure.Persistence
 @using Toolbelt.Blazor.HeadElement
-@inject IBlogPostRepository blogPostRepository
+@inject IRepository<BlogPost> blogPostRepository
 
 <Title>Search for tag: @Tag</Title>
 

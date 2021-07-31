@@ -4,13 +4,11 @@ using System.Diagnostics;
 namespace LinkDotNet.Domain
 {
     [DebuggerDisplay("{Content} with sort order {SortOrder}")]
-    public class ProfileInformationEntry
+    public class ProfileInformationEntry : Entity
     {
         private ProfileInformationEntry()
         {
         }
-
-        public string Id { get; set; }
 
         public string Content { get; private set; }
 

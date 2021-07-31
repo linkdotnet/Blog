@@ -1,4 +1,5 @@
 ﻿using LinkDotNet.Domain;
+using LinkDotNet.Infrastructure.Persistence.Sql.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace LinkDotNet.Infrastructure.Persistence.Sql
@@ -13,30 +14,18 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
 
         public DbSet<BlogPost> BlogPosts { get; set; }
 
+        public DbSet<Tag> Tags { get; set; }
+
         public DbSet<ProfileInformationEntry> ProfileInformationEntries { get; set; }
+
+        public DbSet<Skill> Skills { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BlogPost>()
-                .HasKey(c => c.Id);
-            modelBuilder.Entity<BlogPost>()
-                .Property(c => c.Id)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<BlogPost>()
-                .HasMany(t => t.Tags)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Tag>()
-                .Property(c => c.Id)
-                .ValueGeneratedOnAdd();
-
-            modelBuilder.Entity<ProfileInformationEntry>()
-                .HasKey(c => c.Id);
-            modelBuilder.Entity<ProfileInformationEntry>()
-                .Property(c => c.Id)
-                .ValueGeneratedOnAdd();
+            modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
+            modelBuilder.ApplyConfiguration(new TagsConfiguration());
+            modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
+            modelBuilder.ApplyConfiguration(new SkillConfiguration());
         }
     }
 }

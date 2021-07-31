@@ -1,7 +1,7 @@
 ﻿@page "/search/{searchTerm}"
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Domain
-@inject IBlogPostRepository blogPostRepository
+@inject IRepository<BlogPost> blogPostRepository
 
 <div class="page">
     <h3>Results for @SearchTerm</h3>

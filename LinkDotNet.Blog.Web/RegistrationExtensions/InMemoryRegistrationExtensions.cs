@@ -8,11 +8,8 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
     {
         public static void UseInMemoryAsStorageProvider(this IServiceCollection services)
         {
-            services.AssertNotAlreadyRegistered<IBlogPostRepository>();
-            services.AssertNotAlreadyRegistered<IProfileRepository>();
-
-            services.AddScoped<IBlogPostRepository, BlogPostRepository>();
-            services.AddScoped<IProfileRepository, ProfileRepository>();
+            services.AssertNotAlreadyRegistered(typeof(IRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         }
     }
 }

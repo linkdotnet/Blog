@@ -2,7 +2,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Domain
 @attribute [Authorize]
-@inject IBlogPostRepository blogPostRepository
+@inject IRepository<BlogPost> blogPostRepository
 
 <div class="page">
     <h3>Draft Blog Posts</h3>

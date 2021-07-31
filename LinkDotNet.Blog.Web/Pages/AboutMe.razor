@@ -1,4 +1,5 @@
 ﻿@page "/AboutMe"
+@using LinkDotNet.Blog.Web.Shared.Skills
 @inject AppConfiguration appConfiguration
 @inject AuthenticationStateProvider authenticationStateProvider
 @* TODO: Meta Tags About Me - [Name here] *@
@@ -13,6 +14,9 @@
                 </div>
                 <div class="col-lg-9 col-md-8 tab-container">
                     <div class="row">
+                        <div class="col-md12 tab-content">
+                            <SkillTable IsAuthenticated="@isAuthenticated"></SkillTable>
+                        </div>
                     </div>
                 </div>
             </div>

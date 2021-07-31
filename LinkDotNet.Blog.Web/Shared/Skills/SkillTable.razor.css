@@ -1,0 +1,30 @@
+.skill-table-container {
+    display: inline-block;
+    box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    background: var(--background-gradient-start);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.skill-table {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.skill-table td:first-of-type {
+    width:10%
+}
+
+.skill-table td {
+    width: 30%;
+    border-top: 1px var(--header2) solid;
+}
+
+.skill-table td div {
+    display: inline-block;
+    margin-right: 8px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+
+}

@@ -4,13 +4,11 @@ using System.Linq;
 
 namespace LinkDotNet.Domain
 {
-    public class BlogPost
+    public class BlogPost : Entity
     {
         private BlogPost()
         {
         }
-
-        public string Id { get; set; }
 
         public string Title { get; private set; }
 
