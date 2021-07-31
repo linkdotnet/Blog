@@ -89,5 +89,29 @@ namespace LinkDotNet.Blog.UnitTests.Domain
 
             hashCode1.Should().Be(hashCode2);
         }
+
+        [Fact]
+        public void ShouldNotBeEqualWhenNull()
+        {
+            var isEqual = TestEnumeration.One.Equals(null);
+
+            isEqual.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldNotBeEqualWhenDifferentNull()
+        {
+            var isEqual = TestEnumeration.One.Equals("string");
+
+            isEqual.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldBeEqualWhenKeyTheSame()
+        {
+            var isEqual = TestEnumeration.One.Equals(TestEnumeration.One);
+
+            isEqual.Should().BeTrue();
+        }
     }
 }

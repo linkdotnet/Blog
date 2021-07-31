@@ -8,7 +8,7 @@ namespace LinkDotNet.Domain
      public abstract class Enumeration<TEnumeration>
         where TEnumeration : Enumeration<TEnumeration>
     {
-        private string key;
+        private readonly string key;
 
         protected Enumeration()
         {
@@ -56,6 +56,21 @@ namespace LinkDotNet.Domain
         }
 
         public override int GetHashCode() => Key.GetHashCode();
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null)
+            {
+                return false;
+            }
+
+            if (obj.GetType() != typeof(TEnumeration))
+            {
+                return false;
+            }
+
+            return (obj as TEnumeration).key == key;
+        }
 
         public override string ToString() => Key;
 
