@@ -30,7 +30,8 @@
                                 @if (IsAuthenticated)
                                 {
                                     <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab">
-                                        <SkillTag Skill="@skill"/>
+                                        <SkillTag Skill="@skill" IsAuthenticated="@true" DeleteSkill="@(() =>
+                                        DeleteSkill(skill))"/>
                                     </div>
                                 }
                                 else
@@ -62,6 +63,11 @@
     {
         skills.Add(skillToAdd);
         return Task.CompletedTask;
+    }
+
+    private void DeleteSkill(Skill skill)
+    {
+        skills.Remove(skill);
     }
 
     private void HandleDrop(ProficiencyLevel proficiencyLevel)
