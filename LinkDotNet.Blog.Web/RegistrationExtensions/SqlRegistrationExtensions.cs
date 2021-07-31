@@ -12,7 +12,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
         {
             services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-            services.AddScoped(s =>
+            services.AddTransient(s =>
             {
                 var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;
@@ -29,7 +29,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
         {
             services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-            services.AddScoped(s =>
+            services.AddTransient(s =>
             {
                 var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
                 var connectionString = configuration.ConnectionString;

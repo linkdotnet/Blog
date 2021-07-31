@@ -1,4 +1,6 @@
 ﻿@using LinkDotNet.Domain
+@using LinkDotNet.Infrastructure.Persistence
+@inject IRepository<Skill> repository
 <div class="skill-table-container">
     <div>
         @if (IsAuthenticated)
@@ -59,18 +61,24 @@
 
     private Skill currentDragItem;
 
-    private Task AddSkill(Skill skillToAdd)
+    protected override async Task OnInitializedAsync()
+    {
+        skills = (await repository.GetAllAsync()).ToList();
+    }
+
+    private async Task AddSkill(Skill skillToAdd)
     {
         skills.Add(skillToAdd);
-        return Task.CompletedTask;
+        await repository.StoreAsync(skillToAdd);
     }
 
-    private void DeleteSkill(Skill skill)
+    private async Task DeleteSkill(Skill skill)
     {
         skills.Remove(skill);
+        await repository.DeleteAsync(skill.Id);
     }
 
-    private void HandleDrop(ProficiencyLevel proficiencyLevel)
+    private async Task HandleDrop(ProficiencyLevel proficiencyLevel)
     {
         if (currentDragItem == null || currentDragItem.ProficiencyLevel == proficiencyLevel)
         {
@@ -78,6 +86,7 @@
         }
 
         currentDragItem.ProficiencyLevel = proficiencyLevel;
+        await repository.StoreAsync(currentDragItem);
         currentDragItem = null;
     }
 
