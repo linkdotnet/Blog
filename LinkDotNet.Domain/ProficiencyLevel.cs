@@ -6,7 +6,12 @@
         public static readonly ProficiencyLevel Proficient = new(nameof(Proficient));
         public static readonly ProficiencyLevel Expert = new(nameof(Expert));
 
-        public ProficiencyLevel(string key)
+        private ProficiencyLevel()
+            : base()
+        {
+        }
+
+        private ProficiencyLevel(string key)
             : base(key)
         {
         }

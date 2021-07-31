@@ -10,6 +10,10 @@ namespace LinkDotNet.Domain
     {
         private string key;
 
+        protected Enumeration()
+        {
+        }
+
         protected Enumeration(string key)
         {
             if (string.IsNullOrWhiteSpace(key))

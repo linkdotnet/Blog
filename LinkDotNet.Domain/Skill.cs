@@ -4,7 +4,11 @@ namespace LinkDotNet.Domain
 {
     public class Skill
     {
-        public Skill(string name, string iconUrl, string capability, ProficiencyLevel proficiencyLevel)
+        private Skill()
+        {
+        }
+
+        private Skill(string name, string iconUrl, string capability, ProficiencyLevel proficiencyLevel)
         {
             IconUrl = iconUrl;
             Name = name;
