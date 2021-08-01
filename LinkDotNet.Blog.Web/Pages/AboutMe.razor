@@ -2,7 +2,10 @@
 @using LinkDotNet.Blog.Web.Shared.Skills
 @inject AppConfiguration appConfiguration
 @inject AuthenticationStateProvider authenticationStateProvider
-@* TODO: Meta Tags About Me - [Name here] *@
+<OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
+        Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
+        Keywords="@appConfiguration.ProfileInformation.Name"
+        AbsolutePreviewImageUrl="@appConfiguration.ProfileInformation.ProfilePictureUrl"></OgData>
 
 @if (appConfiguration.IsAboutMeEnabled)
 {
@@ -27,7 +30,6 @@
 }
 
 @code {
-
     private bool isAuthenticated;
 
     protected override async Task OnInitializedAsync()
@@ -38,5 +40,4 @@
             isAuthenticated = userIdentity.IsAuthenticated;
         }
     }
-
 }
