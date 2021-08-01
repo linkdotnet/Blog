@@ -1,0 +1,33 @@
+﻿.card-container {
+    display: inline-block;
+    box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    background: var(--background-gradient-start);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.header {
+    padding: 20px;
+}
+
+.header h1 {
+    position: relative;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.header h1::after {
+    position: absolute;
+    content: "";
+    background-color: var(--header1);
+    width: 35px;
+    left: 0;
+    bottom: -0.5rem;
+    height: 8px;
+    border-radius: 3px;
+}
+
+.content {
+    padding: 20px;
+}

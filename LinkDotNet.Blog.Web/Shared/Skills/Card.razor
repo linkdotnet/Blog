@@ -1,0 +1,14 @@
+﻿<div class="card-container">
+    <div class="header">
+        <h1>@Header</h1>
+    </div>
+    <div class="content">
+        @ChildContent
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Header { get; set; }
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

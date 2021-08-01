@@ -1,9 +1,12 @@
 .skill-tag {
-    padding: 10px;
+    padding: 8px;
     border-radius: 5px;
     background-color: var(--header1);
     color: var(--white);
-
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .skill-tag img {
