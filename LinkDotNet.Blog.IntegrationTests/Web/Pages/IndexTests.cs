@@ -106,6 +106,30 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             blogPosts.Count.Should().Be(10);
         }
 
+        [Fact]
+        public async Task ShouldLoadTags()
+        {
+            var publishedPost = new BlogPostBuilder()
+                .WithTitle("Published")
+                .IsPublished()
+                .WithTags("C Sharp", "Tag2")
+                .Build();
+            await Repository.StoreAsync(publishedPost);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            RegisterComponents(ctx);
+            var cut = ctx.RenderComponent<Index>();
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+
+            var tags = cut.FindComponent<ShortBlogPost>().FindAll(".goto-tag");
+
+            tags.Should().HaveCount(2);
+            tags.Select(t => t.TextContent).Should().Contain("C Sharp");
+            tags.Select(t => t.TextContent).Should().Contain("Tag2");
+            tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).Should().Contain("/searchByTag/C%20Sharp");
+            tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).Should().Contain("/searchByTag/Tag2");
+        }
+
         private static AppConfiguration CreateSampleAppConfiguration()
         {
             return new()

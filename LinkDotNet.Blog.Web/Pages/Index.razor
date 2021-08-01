@@ -34,7 +34,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        currentPage = await blogPostRepository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage);
+        currentPage = await blogPostRepository.GetAllAsync(
+            p => p.IsPublished,
+            b => b.UpdatedDate,
+            b => b.Tags,
+            pageSize: appConfiguration.BlogPostsPerPage);
     }
 
     private string GetAbsolutePreviewImageUrl()
