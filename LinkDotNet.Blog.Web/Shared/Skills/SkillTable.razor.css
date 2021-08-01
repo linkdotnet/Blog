@@ -1,3 +1,7 @@
+.table-container {
+    overflow-x: auto;
+}
+
 .skill-table {
     margin-top: 20px;
     width: 100%;
@@ -11,6 +15,7 @@
     width: 30%;
     border-top: 1px var(--header2) solid;
     vertical-align: top;
+    min-width: 100px;
 }
 
 .skill-table td div {
@@ -18,5 +23,4 @@
     margin-right: 8px;
     margin-top: 12px;
     margin-bottom: 12px;
-
 }

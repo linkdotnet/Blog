@@ -14,7 +14,7 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Skills
 {
-    public class SkillTreeTests : SqlDatabaseTestBase<Skill>
+    public class SkillTableTests : SqlDatabaseTestBase<Skill>
     {
         [Fact]
         public async Task ShouldDeleteItem()
