@@ -12,7 +12,7 @@ namespace LinkDotNet.Blog.Web
 
         public string GithubAccountUrl { get; init; }
 
-        public bool HasGithubAccount => !string.IsNullOrEmpty(LinkedinAccountUrl);
+        public bool HasGithubAccount => !string.IsNullOrEmpty(GithubAccountUrl);
 
         public Introduction Introduction { get; init; }
 

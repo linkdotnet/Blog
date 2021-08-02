@@ -50,14 +50,23 @@ namespace LinkDotNet.Blog.UnitTests.Web
             appConfiguration.ProfileInformation.ProfilePictureUrl.Should().Be("Url");
         }
 
-        [Fact]
-        public void ShouldSetGithubLinkedAccountAccordingToValueSet()
+        [Theory]
+        [InlineData(null, null, false, false)]
+        [InlineData(null, "linkedin", false, true)]
+        [InlineData("github", null, true, false)]
+        public void ShouldSetGithubLinkedAccountAccordingToValueSet(
+            string githubUrl,
+            string linkedInUrl,
+            bool githubAvailable,
+            bool linkedInAvailable)
         {
             var inMemorySettings = new Dictionary<string, string>
             {
                 { "Introduction:BackgroundUrl", "someurl" },
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
+                { "GithubAccountUrl", githubUrl },
+                { "LinkedInAccountUrl", linkedInUrl },
                 { "BlogPostsPerPage", "2" },
                 { "IsAboutMeEnabled", "false" },
             };
@@ -67,8 +76,8 @@ namespace LinkDotNet.Blog.UnitTests.Web
 
             var appConfiguration = AppConfigurationFactory.Create(configuration);
 
-            appConfiguration.HasGithubAccount.Should().BeFalse();
-            appConfiguration.HasLinkedinAccount.Should().BeFalse();
+            appConfiguration.HasGithubAccount.Should().Be(githubAvailable);
+            appConfiguration.HasLinkedinAccount.Should().Be(linkedInAvailable);
         }
     }
 }
