@@ -14,6 +14,7 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql.Mapping
             builder.HasMany(t => t.Tags)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Navigation(x => x.Tags).AutoInclude();
         }
     }
 }

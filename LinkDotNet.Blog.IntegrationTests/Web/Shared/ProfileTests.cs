@@ -153,7 +153,6 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             repoMock.Setup(r => r.GetAllAsync(
                     It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
                     It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
-                    It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
                     It.IsAny<bool>(),
                     It.IsAny<int>(),
                     It.IsAny<int>()))
@@ -169,7 +168,6 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared
             Services.AddScoped(_ => calcMock.Object);
             repoMock.Setup(r => r.GetAllAsync(
                 It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
-                It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
                 It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
                 It.IsAny<bool>(),
                 It.IsAny<int>(),

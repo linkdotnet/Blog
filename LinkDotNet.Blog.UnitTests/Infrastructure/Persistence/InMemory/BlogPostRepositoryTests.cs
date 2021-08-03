@@ -55,7 +55,6 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
             var blogPosts = await sut.GetAllAsync(
                 bp => bp.Title != "FilterOut",
                 bp => bp.UpdatedDate,
-                null,
                 false);
 
             var retrievedPosts = blogPosts.ToList();

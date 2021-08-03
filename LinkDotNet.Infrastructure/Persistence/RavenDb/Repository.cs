@@ -18,7 +18,7 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             this.documentStore = documentStore;
         }
 
-        public async Task<TEntity> GetByIdAsync(string id, Expression<Func<TEntity, object>> include = null)
+        public async Task<TEntity> GetByIdAsync(string id)
         {
             using var session = documentStore.OpenAsyncSession();
             return await session.LoadAsync<TEntity>(id);
@@ -27,7 +27,6 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
         public async Task<IPagedList<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Expression<Func<TEntity, object>> orderBy = null,
-            Expression<Func<TEntity, object>> include = null,
             bool descending = true,
             int page = 1,
             int pageSize = int.MaxValue)

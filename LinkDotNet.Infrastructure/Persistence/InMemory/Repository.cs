@@ -13,7 +13,7 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
     {
         private readonly List<TEntity> entities = new();
 
-        public Task<TEntity> GetByIdAsync(string id, Expression<Func<TEntity, object>> include = null)
+        public Task<TEntity> GetByIdAsync(string id)
         {
             var entity = entities.SingleOrDefault(b => b.Id == id);
             return Task.FromResult(entity);
@@ -22,7 +22,6 @@ namespace LinkDotNet.Infrastructure.Persistence.InMemory
         public Task<IPagedList<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Expression<Func<TEntity, object>> orderBy = null,
-            Expression<Func<TEntity, object>> include = null,
             bool descending = true,
             int page = 1,
             int pageSize = int.MaxValue)

@@ -17,7 +17,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
-            var blogPostFromRepo = await Repository.GetByIdAsync(blogPost.Id, post => post.Tags);
+            var blogPostFromRepo = await Repository.GetByIdAsync(blogPost.Id);
 
             blogPostFromRepo.Should().NotBeNull();
             blogPostFromRepo.Title.Should().Be("Title");
@@ -56,7 +56,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             await DbContext.BlogPosts.AddAsync(blogPost);
             await DbContext.SaveChangesAsync();
 
-            var blogPostsFromRepo = (await Repository.GetAllAsync(include: post => post.Tags)).ToList();
+            var blogPostsFromRepo = (await Repository.GetAllAsync()).ToList();
 
             blogPostsFromRepo.Should().NotBeNull();
             blogPostsFromRepo.Should().HaveCount(1);
@@ -100,7 +100,6 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql
             var blogPosts = await Repository.GetAllAsync(
                 bp => bp.Title != "FilterOut",
                 bp => bp.UpdatedDate,
-                null,
                 false);
 
             var retrievedPosts = blogPosts.ToList();

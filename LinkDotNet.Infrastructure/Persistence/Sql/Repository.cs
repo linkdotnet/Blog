@@ -18,34 +18,19 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
             this.blogDbContext = blogDbContext;
         }
 
-        public async Task<TEntity> GetByIdAsync(string id, Expression<Func<TEntity, object>> include = null)
+        public async Task<TEntity> GetByIdAsync(string id)
         {
-            if (include != null)
-            {
-                return await blogDbContext.Set<TEntity>().Include(include).SingleOrDefaultAsync(b => b.Id == id);
-            }
-
             return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task<IPagedList<TEntity>> GetAllAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Expression<Func<TEntity, object>> orderBy = null,
-            Expression<Func<TEntity, object>> include = null,
             bool descending = true,
             int page = 1,
             int pageSize = int.MaxValue)
         {
-            IQueryable<TEntity> entity;
-
-            if (include != null)
-            {
-                entity = blogDbContext.Set<TEntity>().AsNoTracking().Include(include).AsQueryable();
-            }
-            else
-            {
-                entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
-            }
+            var entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
 
             if (filter != null)
             {
