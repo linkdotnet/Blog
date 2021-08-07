@@ -7,7 +7,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
       <PackageReference Include="RavenDB.Client" Version="5.2.1" />
-      <PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506">
+      <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

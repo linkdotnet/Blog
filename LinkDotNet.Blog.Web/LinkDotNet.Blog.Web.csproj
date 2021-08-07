@@ -12,7 +12,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.26.0.34506">
+        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
