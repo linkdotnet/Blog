@@ -8,9 +8,9 @@
 
     <ItemGroup>
         <PackageReference Include="bunit" Version="1.2.49" />
-        <PackageReference Include="FluentAssertions" Version="5.10.3" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+        <PackageReference Include="FluentAssertions" Version="6.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="Moq" Version="4.16.1" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380">
           <PrivateAssets>all</PrivateAssets>

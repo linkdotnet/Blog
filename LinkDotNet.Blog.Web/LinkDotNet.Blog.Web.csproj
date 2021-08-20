@@ -9,9 +9,9 @@
         <PackageReference Include="Blazored.LocalStorage" Version="4.1.2" />
         <PackageReference Include="Blazored.Toast" Version="3.1.2" />
         <PackageReference Include="Markdig" Version="0.25.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
         <PackageReference Include="SonarAnalyzer.CSharp" Version="8.27.0.35380">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
