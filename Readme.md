@@ -1,4 +1,7 @@
 ﻿# LinkDotNet.Blog
+[![.NET](https://github.com/linkdotnet/Blog/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/linkdotnet/Blog/actions/workflows/dotnet.yml)
+[![CodeQL](https://github.com/linkdotnet/Blog/actions/workflows/codeql.yml/badge.svg)](https://github.com/linkdotnet/Blog/actions/workflows/codeql.yml)
+
 This is a blog software completely written in C# / Blazor. The aim is to have it configurable as possible. 
 
 ## How does it work
