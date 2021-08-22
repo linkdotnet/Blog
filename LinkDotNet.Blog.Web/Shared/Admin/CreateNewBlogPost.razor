@@ -61,21 +61,8 @@
         </div>
     </div>
 </div>
+<FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
 
-<ModalDialog @ref="FeatureDialog" Title="Additional Features">
-    <p>Here you will find a comprehensive list over feature you can use additional to classic markdown</p>
-    <p>Features marked with <i class="fas fa-flask"></i> are experimental and can change heavily, get removed or the usage changes.</p>
-    <p>Use with caution and check the changelog</p>
-    <hr>
-    <h3 style="display:inline-block">Slide-Show</h3><i class="fas fa-flask"></i>
-    <p>Will create a slide-show with images specified by the tag.</p>
-    <strong>Usage:</strong>
-    <code><pre>&lt;slide-show&gt;
-    &lt;slide-show-image src="https://picsum.photos/600/200" title="Title 1"&gt;&lt;/slide-show-image&gt;
-    &lt;slide-show-image src="https://picsum.photos/500/200" title="Title 2"&gt;&lt;/slide-show-image&gt;
-    &lt;slide-show-image src="https://picsum.photos/550/200" title="Title 3"&gt;&lt;/slide-show-image&gt;
-&lt;/slide-show&gt;</pre></code>
-</ModalDialog>
 @code {
     [Parameter]
     public BlogPost BlogPost { get; set; }
@@ -89,7 +76,7 @@
     [Parameter]
     public bool ClearAfterCreated { get; set; } = true;
 
-    private ModalDialog FeatureDialog { get; set; }
+    private FeatureInfoDialog FeatureDialog { get; set; }
 
     private CreateNewModel model = new();
 
