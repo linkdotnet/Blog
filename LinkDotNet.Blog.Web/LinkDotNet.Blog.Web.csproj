@@ -8,7 +8,7 @@
     <ItemGroup>
         <PackageReference Include="Blazored.LocalStorage" Version="4.1.5" />
         <PackageReference Include="Blazored.Toast" Version="3.1.2" />
-        <PackageReference Include="Markdig" Version="0.25.0" />
+        <PackageReference Include="Markdig" Version="0.26.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.9" />
