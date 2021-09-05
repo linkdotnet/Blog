@@ -14,5 +14,9 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
         public int PageClicksLast30Days { get; set; }
 
         public IOrderedEnumerable<KeyValuePair<string, int>> BlogPostVisitCount { get; set; }
+
+        public int TotalAboutMeClicks { get; set; }
+
+        public int AboutMeClicksLast30Days { get; set; }
     }
 }

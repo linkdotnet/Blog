@@ -33,6 +33,9 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
             var clicks = records.Count;
             var clicks30Days = records.Count(r => r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30));
 
+            var aboutMeClicks = records.Count(r => r.UrlClicked.Contains("AboutMe"));
+            var aboutMeClicksLast30Days = records.Count(r => r.UrlClicked.Contains("AboutMe") && r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30));
+
             var visitCount = GetPageVisitCount(records);
 
             return new DashboardData
@@ -41,6 +44,8 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
                 AmountOfUsersLast30Days = users30Days,
                 TotalPageClicks = clicks,
                 PageClicksLast30Days = clicks30Days,
+                TotalAboutMeClicks = aboutMeClicks,
+                AboutMeClicksLast30Days = aboutMeClicksLast30Days,
                 BlogPostVisitCount = visitCount,
             };
         }
