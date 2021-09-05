@@ -22,11 +22,18 @@
     IList<BlogPost> blogPosts = new List<BlogPost>();
     protected override async Task OnInitializedAsync()
     {
-        await userRecordService.StoreUserRecordAsync();
         Tag = Uri.UnescapeDataString(Tag);
         blogPosts = (await blogPostRepository.GetAllAsync(
             b => b.Tags.Any(t => t.Content == Tag), 
             b => b.UpdatedDate))
             .ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
     }
 }

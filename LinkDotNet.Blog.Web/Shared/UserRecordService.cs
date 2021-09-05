@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Http;
 
 namespace LinkDotNet.Blog.Web.Shared
 {
@@ -16,20 +16,20 @@ namespace LinkDotNet.Blog.Web.Shared
     public class UserRecordService : IUserRecordService
     {
         private readonly IRepository<UserRecord> userRecordRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly NavigationManager navigationManager;
         private readonly AuthenticationStateProvider authenticationStateProvider;
+        private readonly ILocalStorageService localStorageService;
 
         public UserRecordService(
             IRepository<UserRecord> userRecordRepository,
-            IHttpContextAccessor httpContextAccessor,
             NavigationManager navigationManager,
-            AuthenticationStateProvider authenticationStateProvider)
+            AuthenticationStateProvider authenticationStateProvider,
+            ILocalStorageService localStorageService)
         {
             this.userRecordRepository = userRecordRepository;
-            this.httpContextAccessor = httpContextAccessor;
             this.navigationManager = navigationManager;
             this.authenticationStateProvider = authenticationStateProvider;
+            this.localStorageService = localStorageService;
         }
 
         public async Task StoreUserRecordAsync()
@@ -40,17 +40,30 @@ namespace LinkDotNet.Blog.Web.Shared
                 return;
             }
 
-            var httpContext = httpContextAccessor.HttpContext;
-            var ipHash = httpContext.Connection.RemoteIpAddress?.GetHashCode() ?? 0;
+            var identifierHash = await GetIdentifierHashAsync();
 
             var record = new UserRecord
             {
-                IpHash = ipHash,
+                UserIdentifierHash = identifierHash,
                 DateTimeUtcClicked = DateTime.UtcNow,
                 UrlClicked = navigationManager.ToBaseRelativePath(navigationManager.Uri),
             };
 
             await userRecordRepository.StoreAsync(record);
+        }
+
+        private async Task<int> GetIdentifierHashAsync()
+        {
+            var hasKey = await localStorageService.ContainKeyAsync("user");
+            if (hasKey)
+            {
+                var key = await localStorageService.GetItemAsync<Guid>("user");
+                return key.GetHashCode();
+            }
+
+            var id = Guid.NewGuid();
+            await localStorageService.SetItemAsync("user", id);
+            return id.GetHashCode();
         }
     }
 }

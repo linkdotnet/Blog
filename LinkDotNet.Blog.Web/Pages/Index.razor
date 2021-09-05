@@ -35,11 +35,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await userRecordService.StoreUserRecordAsync();
         currentPage = await blogPostRepository.GetAllAsync(
             p => p.IsPublished,
             b => b.UpdatedDate,
             pageSize: appConfiguration.BlogPostsPerPage);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
     }
 
     private string GetAbsolutePreviewImageUrl()

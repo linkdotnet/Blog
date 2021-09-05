@@ -35,11 +35,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await userRecordService.StoreUserRecordAsync();
         var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
         if (userIdentity != null)
         {
             isAuthenticated = userIdentity.IsAuthenticated;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
         }
     }
 }

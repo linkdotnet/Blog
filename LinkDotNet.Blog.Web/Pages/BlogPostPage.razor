@@ -56,7 +56,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await userRecordService.StoreUserRecordAsync();
         BlogPost = await blogPostRepository.GetByIdAsync(BlogPostId);
     }
 
@@ -64,6 +63,7 @@
     {
         if (firstRender)
         {
+            await userRecordService.StoreUserRecordAsync();
             await jsRuntime.InvokeVoidAsync("hljs.highlightAll");
             StateHasChanged();
         }

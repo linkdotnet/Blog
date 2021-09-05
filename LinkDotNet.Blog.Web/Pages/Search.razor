@@ -22,10 +22,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await userRecordService.StoreUserRecordAsync();
         var term = Uri.UnescapeDataString(SearchTerm);
         blogPosts = (await blogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
             || t.Tags.Any(tag => tag.Content == term)),
             b => b.UpdatedDate)).ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
     }
 }

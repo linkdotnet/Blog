@@ -25,10 +25,10 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
         public async Task<DashboardData> GetDashboardDataAsync()
         {
             var records = (await userRecordRepository.GetAllAsync()).ToList();
-            var users = records.GroupBy(r => r.IpHash).Count();
+            var users = records.GroupBy(r => r.UserIdentifierHash).Count();
             var users30Days = records
                 .Where(r => r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30))
-                .GroupBy(r => r.IpHash).Count();
+                .GroupBy(r => r.UserIdentifierHash).Count();
 
             var clicks = records.Count;
             var clicks30Days = records.Count(r => r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30));
