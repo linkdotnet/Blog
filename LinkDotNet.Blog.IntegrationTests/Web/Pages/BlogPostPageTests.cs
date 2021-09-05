@@ -85,6 +85,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped(_ => localStorageService ?? new Mock<ILocalStorageService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
         }
     }
 }

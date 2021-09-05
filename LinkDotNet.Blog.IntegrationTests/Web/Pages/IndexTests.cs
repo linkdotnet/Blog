@@ -159,6 +159,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
             ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
         }
     }
 }

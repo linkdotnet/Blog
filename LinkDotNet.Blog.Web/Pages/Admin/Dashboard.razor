@@ -1,16 +1,38 @@
 ﻿@page "/dashboard"
+@using LinkDotNet.Blog.Web.Shared.Admin.Dashboard
+@inject IDashboardService dashboardService
 @attribute [Authorize]
 
-<div class="page">
+<div class="page container-fluid ms-3">
     <h3>Dashboard</h3>
     <div class="container-fluid">
+        <div class="row my-2">
+            <div class="col-auto">
+                <DashboardCard Text="Total Users:"
+                               TotalAmount="@data.TotalAmountOfUsers"
+                               AmountLast30Days="@data.AmountOfUsersLast30Days"></DashboardCard>
+            </div>
+
+            <div class="col-auto">
+                <DashboardCard Text="Total Clicks:"
+                               TotalAmount="@data.TotalPageClicks"
+                               AmountLast30Days="@data.PageClicksLast30Days"></DashboardCard>
+            </div>
+        </div>
         <div class="row">
             <div class="col-auto">
-                <div class="card  px-3 py-3">
-                    <h5>Total amount of posts: </h5>
-                    <h5 style="text-align: center"> 12 </h5>
-                </div>
+                <VisitCountPerPage PageVisitCount="@data.BlogPostVisitCount"></VisitCountPerPage>
             </div>
         </div>
     </div>
 </div>
+
+@code {
+
+    private DashboardData data = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        data = await dashboardService.GetDashboardDataAsync();
+    }
+}

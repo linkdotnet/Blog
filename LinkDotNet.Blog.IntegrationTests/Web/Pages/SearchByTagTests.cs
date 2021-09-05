@@ -5,6 +5,7 @@ using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages;
+using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await AddBlogPostWithTagAsync("Tag 2");
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
             var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, "Tag 1"));
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
@@ -40,6 +42,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await AddBlogPostWithTagAsync("C#");
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
             var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
             cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
