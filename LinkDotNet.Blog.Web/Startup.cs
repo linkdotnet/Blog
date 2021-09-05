@@ -62,6 +62,7 @@ namespace LinkDotNet.Blog.Web
             services.AddBlazoredLocalStorage();
             services.AddHeadElementHelper();
             services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
+            services.AddScoped<IUserRecordService, UserRecordService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

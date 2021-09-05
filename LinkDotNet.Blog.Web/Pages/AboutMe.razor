@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Web.Shared.Skills
 @inject AppConfiguration appConfiguration
 @inject AuthenticationStateProvider authenticationStateProvider
+@inject IUserRecordService userRecordService
 <OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
         Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
         Keywords="@appConfiguration.ProfileInformation.Name"
@@ -34,6 +35,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await userRecordService.StoreUserRecordAsync();
         var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
         if (userIdentity != null)
         {

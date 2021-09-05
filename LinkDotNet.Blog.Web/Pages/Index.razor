@@ -6,6 +6,7 @@
 @inject IRepository<BlogPost> blogPostRepository
 @inject AppConfiguration appConfiguration
 @inject NavigationManager navigationManager
+@inject IUserRecordService userRecordService
 
 <OgData Title="@(Markdown.ToPlainText(appConfiguration.BlogName))" 
         AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
@@ -34,6 +35,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await userRecordService.StoreUserRecordAsync();
         currentPage = await blogPostRepository.GetAllAsync(
             p => p.IsPublished,
             b => b.UpdatedDate,

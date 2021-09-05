@@ -2,6 +2,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using LinkDotNet.Domain
 @inject IRepository<BlogPost> blogPostRepository
+@inject IUserRecordService userRecordService
 
 <div class="page">
     <h3>Results for @SearchTerm</h3>
@@ -21,6 +22,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await userRecordService.StoreUserRecordAsync();
         var term = Uri.UnescapeDataString(SearchTerm);
         blogPosts = (await blogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
             || t.Tags.Any(tag => tag.Content == term)),
