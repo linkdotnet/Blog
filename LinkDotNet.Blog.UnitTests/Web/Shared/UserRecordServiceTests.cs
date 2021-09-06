@@ -7,6 +7,7 @@ using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -30,7 +31,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
                 repositoryMock.Object,
                 fakeNavigationManager,
                 fakeAuthenticationStateProvider,
-                localStorageService.Object);
+                localStorageService.Object,
+                new Mock<ILogger>().Object);
         }
 
         [Fact]
@@ -77,6 +79,16 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
             await sut.StoreUserRecordAsync();
 
             repositoryMock.Verify(r => r.StoreAsync(It.IsAny<UserRecord>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task ShouldNotThrowExceptionToOutsideWorld()
+        {
+            localStorageService.Setup(l => l.ContainKeyAsync("user", default)).Throws<Exception>();
+
+            Func<Task> act = () => sut.StoreUserRecordAsync();
+
+            await act.Should().NotThrowAsync<Exception>();
         }
     }
 }

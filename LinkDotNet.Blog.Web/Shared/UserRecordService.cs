@@ -5,6 +5,7 @@ using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Shared
 {
@@ -19,20 +20,35 @@ namespace LinkDotNet.Blog.Web.Shared
         private readonly NavigationManager navigationManager;
         private readonly AuthenticationStateProvider authenticationStateProvider;
         private readonly ILocalStorageService localStorageService;
+        private readonly ILogger logger;
 
         public UserRecordService(
             IRepository<UserRecord> userRecordRepository,
             NavigationManager navigationManager,
             AuthenticationStateProvider authenticationStateProvider,
-            ILocalStorageService localStorageService)
+            ILocalStorageService localStorageService,
+            ILogger logger)
         {
             this.userRecordRepository = userRecordRepository;
             this.navigationManager = navigationManager;
             this.authenticationStateProvider = authenticationStateProvider;
             this.localStorageService = localStorageService;
+            this.logger = logger;
         }
 
         public async Task StoreUserRecordAsync()
+        {
+            try
+            {
+                await GetAndStoreUSerRecordAsync();
+            }
+            catch (Exception e)
+            {
+                logger.Log(LogLevel.Error, e, "Couldn't write user record");
+            }
+        }
+
+        private async Task GetAndStoreUSerRecordAsync()
         {
             var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
             if (userIdentity == null || userIdentity.IsAuthenticated)
