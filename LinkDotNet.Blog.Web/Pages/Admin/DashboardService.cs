@@ -53,7 +53,7 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
         private static IOrderedEnumerable<KeyValuePair<string, int>> GetPageVisitCount(IEnumerable<UserRecord> records)
         {
             return records
-                .Where(u => u.UrlClicked.Contains("blogPost"))
+                .Where(u => u.UrlClicked.StartsWith("blogPost/"))
                 .GroupBy(u => u.UrlClicked)
                 .ToDictionary(k => k.Key, v => v.Count())
                 .OrderByDescending(d => d.Value);

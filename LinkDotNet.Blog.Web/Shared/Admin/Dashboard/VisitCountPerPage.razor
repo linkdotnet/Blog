@@ -3,7 +3,7 @@
 @inject IRepository<BlogPost> blogPostRepository
 
 <div class="card">
-    <div class="card-header">Page Visit Counts</div>
+    <div class="card-header">Blog Post Visit Counts</div>
     <div class="card-body">
         <table class="table table-striped">
             <tbody>
@@ -42,6 +42,12 @@
         foreach (var (blogPost, clickCount) in PageVisitCount)
         {
             var blogPostId = blogPost[(blogPost.IndexOf('/') + 1)..];
+
+            if (string.IsNullOrEmpty(blogPostId))
+            {
+                continue;
+            }
+
             var blogPostTitle = (await blogPostRepository.GetByIdAsync(blogPostId)).Title;
 
             blogPostToCountList.Add(new KeyValuePair<string, int>(blogPostTitle, clickCount));
