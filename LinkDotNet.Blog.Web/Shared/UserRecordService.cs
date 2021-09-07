@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Shared
 {
@@ -20,35 +20,32 @@ namespace LinkDotNet.Blog.Web.Shared
         private readonly NavigationManager navigationManager;
         private readonly AuthenticationStateProvider authenticationStateProvider;
         private readonly ILocalStorageService localStorageService;
-        private readonly ILogger logger;
 
         public UserRecordService(
             IRepository<UserRecord> userRecordRepository,
             NavigationManager navigationManager,
             AuthenticationStateProvider authenticationStateProvider,
-            ILocalStorageService localStorageService,
-            ILogger logger)
+            ILocalStorageService localStorageService)
         {
             this.userRecordRepository = userRecordRepository;
             this.navigationManager = navigationManager;
             this.authenticationStateProvider = authenticationStateProvider;
             this.localStorageService = localStorageService;
-            this.logger = logger;
         }
 
         public async Task StoreUserRecordAsync()
         {
             try
             {
-                await GetAndStoreUSerRecordAsync();
+                await GetAndStoreUserRecordAsync();
             }
             catch (Exception e)
             {
-                logger.Log(LogLevel.Error, e, "Couldn't write user record");
+                Trace.Write($"Exception: {e}");
             }
         }
 
-        private async Task GetAndStoreUSerRecordAsync()
+        private async Task GetAndStoreUserRecordAsync()
         {
             var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
             if (userIdentity == null || userIdentity.IsAuthenticated)
@@ -58,11 +55,13 @@ namespace LinkDotNet.Blog.Web.Shared
 
             var identifierHash = await GetIdentifierHashAsync();
 
+            var url = GetClickedUrl();
+
             var record = new UserRecord
             {
                 UserIdentifierHash = identifierHash,
                 DateTimeUtcClicked = DateTime.UtcNow,
-                UrlClicked = navigationManager.ToBaseRelativePath(navigationManager.Uri),
+                UrlClicked = url,
             };
 
             await userRecordRepository.StoreAsync(record);
@@ -80,6 +79,19 @@ namespace LinkDotNet.Blog.Web.Shared
             var id = Guid.NewGuid();
             await localStorageService.SetItemAsync("user", id);
             return id.GetHashCode();
+        }
+
+        private string GetClickedUrl()
+        {
+            var basePath = navigationManager.ToBaseRelativePath(navigationManager.Uri);
+
+            if (string.IsNullOrEmpty(basePath))
+            {
+                return string.Empty;
+            }
+
+            var queryIndex = basePath.IndexOf('?');
+            return queryIndex <= 0 ? basePath[..(queryIndex - 1)] : basePath;
         }
     }
 }

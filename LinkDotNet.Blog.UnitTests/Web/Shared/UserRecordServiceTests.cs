@@ -7,7 +7,6 @@ using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
-using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -31,15 +30,14 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
                 repositoryMock.Object,
                 fakeNavigationManager,
                 fakeAuthenticationStateProvider,
-                localStorageService.Object,
-                new Mock<ILogger>().Object);
+                localStorageService.Object);
         }
 
         [Fact]
         public async Task ShouldStoreInformation()
         {
-            const string Url = "http://localhost/subpart";
-            fakeNavigationManager.NavigateTo(Url);
+            const string url = "http://localhost/subpart";
+            fakeNavigationManager.NavigateTo(url);
             UserRecord recordToDb = null;
             repositoryMock.Setup(r => r.StoreAsync(It.IsAny<UserRecord>()))
                 .Callback<UserRecord>(u => recordToDb = u);
@@ -89,6 +87,22 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
             Func<Task> act = () => sut.StoreUserRecordAsync();
 
             await act.Should().NotThrowAsync<Exception>();
+        }
+
+        [InlineData("http://localhost/blogPost/12?q=3", "blogPost/12")]
+        [InlineData("http://localhost/?q=3", "")]
+        [Theory]
+        public async Task ShouldRemoveQueryStringIfPresent(string url, string expectedRecord)
+        {
+            fakeNavigationManager.NavigateTo(url);
+            UserRecord recordToDb = null;
+            repositoryMock.Setup(r => r.StoreAsync(It.IsAny<UserRecord>()))
+                .Callback<UserRecord>(u => recordToDb = u);
+
+            await sut.StoreUserRecordAsync();
+
+            recordToDb.Should().NotBeNull();
+            recordToDb.UrlClicked.Should().Be(expectedRecord);
         }
     }
 }
