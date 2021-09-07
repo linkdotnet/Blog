@@ -6,6 +6,7 @@
 @inject IRepository<BlogPost> blogPostRepository
 @inject AppConfiguration appConfiguration
 @inject NavigationManager navigationManager
+@inject IUserRecordService userRecordService
 
 <OgData Title="@(Markdown.ToPlainText(appConfiguration.BlogName))" 
         AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
@@ -38,6 +39,14 @@
             p => p.IsPublished,
             b => b.UpdatedDate,
             pageSize: appConfiguration.BlogPostsPerPage);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
     }
 
     private string GetAbsolutePreviewImageUrl()

@@ -134,6 +134,13 @@ section {
     padding-top: 100px;
 }
 
+.table th {
+    background: var(--button-primary-color);
+    color: var(--white);
+}
+
+
+
 body::-webkit-scrollbar {
     display: none;
 }

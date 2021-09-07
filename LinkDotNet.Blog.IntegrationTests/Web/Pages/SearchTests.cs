@@ -8,6 +8,7 @@ using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
@@ -23,6 +24,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await Repository.StoreAsync(blogPost2);
             using var ctx = new TestContext();
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Title 1"));
 
@@ -41,6 +43,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await Repository.StoreAsync(blogPost2);
             using var ctx = new TestContext();
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Cat"));
 
@@ -57,6 +60,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await Repository.StoreAsync(blogPost1);
             using var ctx = new TestContext();
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
 
             var cut = ctx.RenderComponent<Search>(p => p.Add(s => s.SearchTerm, "Title%201"));
 

@@ -6,6 +6,7 @@
 @using Toolbelt.Blazor.HeadElement
 @inject IRepository<BlogPost> blogPostRepository
 @inject IJSRuntime jsRuntime
+@inject IUserRecordService userRecordService
 @inherits MarkdownComponentBase
 
 <div class="page">
@@ -62,6 +63,7 @@
     {
         if (firstRender)
         {
+            await userRecordService.StoreUserRecordAsync();
             await jsRuntime.InvokeVoidAsync("hljs.highlightAll");
             StateHasChanged();
         }

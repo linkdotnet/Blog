@@ -20,12 +20,15 @@ namespace LinkDotNet.Infrastructure.Persistence.Sql
 
         public DbSet<Skill> Skills { get; set; }
 
+        public DbSet<UserRecord> UserRecords { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
             modelBuilder.ApplyConfiguration(new TagsConfiguration());
             modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
             modelBuilder.ApplyConfiguration(new SkillConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRecordConfiguration());
         }
     }
 }

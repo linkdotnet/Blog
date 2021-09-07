@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Web.Shared.Skills
 @inject AppConfiguration appConfiguration
 @inject AuthenticationStateProvider authenticationStateProvider
+@inject IUserRecordService userRecordService
 <OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
         Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
         Keywords="@appConfiguration.ProfileInformation.Name"
@@ -38,6 +39,14 @@
         if (userIdentity != null)
         {
             isAuthenticated = userIdentity.IsAuthenticated;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
         }
     }
 }

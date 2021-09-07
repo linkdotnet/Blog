@@ -1,0 +1,56 @@
+﻿@using LinkDotNet.Infrastructure.Persistence
+@using LinkDotNet.Domain
+@inject IRepository<BlogPost> blogPostRepository
+
+<div class="card">
+    <div class="card-header">Blog Post Visit Counts</div>
+    <div class="card-body">
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <th>Title</th>
+                <th>Clicks</th>
+            </tr>
+            @if (PageVisitCount != null)
+            {
+                @foreach (var pageVisit in blogPostToCountList)
+                {
+                    <tr>
+                        <td>@pageVisit.Key</td>
+                        <td>@pageVisit.Value</td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IOrderedEnumerable<KeyValuePair<string, int>> PageVisitCount { get; set; }
+
+    private List<KeyValuePair<string, int>> blogPostToCountList = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (PageVisitCount == null)
+        {
+            return;
+        }
+
+        foreach (var (blogPost, clickCount) in PageVisitCount)
+        {
+            var blogPostId = blogPost[(blogPost.IndexOf('/') + 1)..];
+
+            if (string.IsNullOrEmpty(blogPostId))
+            {
+                continue;
+            }
+
+            var blogPostTitle = (await blogPostRepository.GetByIdAsync(blogPostId)).Title;
+
+            blogPostToCountList.Add(new KeyValuePair<string, int>(blogPostTitle, clickCount));
+        }
+    }
+}

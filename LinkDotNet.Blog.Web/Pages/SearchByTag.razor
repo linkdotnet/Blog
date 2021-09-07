@@ -3,6 +3,7 @@
 @using LinkDotNet.Infrastructure.Persistence
 @using Toolbelt.Blazor.HeadElement
 @inject IRepository<BlogPost> blogPostRepository
+@inject IUserRecordService userRecordService
 
 <Title>Search for tag: @Tag</Title>
 
@@ -26,5 +27,13 @@
             b => b.Tags.Any(t => t.Content == Tag), 
             b => b.UpdatedDate))
             .ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
     }
 }

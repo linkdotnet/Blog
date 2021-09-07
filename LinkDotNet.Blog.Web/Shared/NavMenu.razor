@@ -3,13 +3,13 @@
 
 <nav class="navbar navbar-expand-lg position-absolute navbar-background inverted-colors navbar-dark" style="width: 100%">
     <div class="container-fluid">
-        <a class="nav-brand barcode ms-5" href="#">@configuration.BlogName</a>
+        <a class="nav-brand barcode ms-5" href="/">@configuration.BlogName</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
-                <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
                 @if (configuration.HasLinkedinAccount)
                 {
                     <li class="nav-item"><a class="nav-link" target="_blank" href="@configuration.LinkedinAccountUrl"><i 

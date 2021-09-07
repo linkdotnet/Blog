@@ -2,6 +2,7 @@ using Blazored.LocalStorage;
 using Blazored.Toast;
 using LinkDotNet.Blog.Web.Authentication.Auth0;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
+using LinkDotNet.Blog.Web.Pages.Admin;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using LinkDotNet.Blog.Web.Shared;
 using Microsoft.AspNetCore.Builder;
@@ -62,6 +63,8 @@ namespace LinkDotNet.Blog.Web
             services.AddBlazoredLocalStorage();
             services.AddHeadElementHelper();
             services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
+            services.AddScoped<IUserRecordService, UserRecordService>();
+            services.AddScoped<IDashboardService, DashboardService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
