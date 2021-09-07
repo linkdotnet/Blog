@@ -91,7 +91,7 @@ namespace LinkDotNet.Blog.Web.Shared
             }
 
             var queryIndex = basePath.IndexOf('?');
-            return queryIndex <= 0 ? basePath[..(queryIndex - 1)] : basePath;
+            return queryIndex >= 0 ? basePath[..queryIndex] : basePath;
         }
     }
 }

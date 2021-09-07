@@ -91,6 +91,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
 
         [InlineData("http://localhost/blogPost/12?q=3", "blogPost/12")]
         [InlineData("http://localhost/?q=3", "")]
+        [InlineData("", "")]
+        [InlineData("http://localhost/someroute/subroute", "someroute/subroute")]
         [Theory]
         public async Task ShouldRemoveQueryStringIfPresent(string url, string expectedRecord)
         {
