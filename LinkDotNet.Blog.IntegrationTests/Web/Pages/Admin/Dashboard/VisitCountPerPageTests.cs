@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -17,7 +18,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
         [Fact]
         public async Task ShouldShowCounts()
         {
-            var blogPost = new BlogPostBuilder().WithTitle("I was clicked").Build();
+            var blogPost = new BlogPostBuilder().WithTitle("I was clicked").WithLikes(2).Build();
             await Repository.StoreAsync(blogPost);
             using var ctx = new TestContext();
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
@@ -29,9 +30,14 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
                 s => s.PageVisitCount, pageVisitCounts));
 
             cut.WaitForState(() => cut.FindAll("td").Any());
-            var elements = cut.FindAll("td").Select(t => t.InnerHtml).ToList();
-            elements.Should().Contain("I was clicked");
-            elements.Should().Contain("5");
+            var elements = cut.FindAll("td").ToList();
+            elements.Count.Should().Be(3);
+            var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
+            titleData.Should().NotBeNull();
+            titleData.InnerHtml.Should().Be(blogPost.Title);
+            titleData.Href.Should().Contain($"blogPost/{blogPost.Id}");
+            elements[1].InnerHtml.Should().Be("5");
+            elements[2].InnerHtml.Should().Be("2");
         }
     }
 }
