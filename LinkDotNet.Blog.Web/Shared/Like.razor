@@ -42,14 +42,14 @@
         
         HasLiked = !HasLiked;
         await OnBlogPostLiked.InvokeAsync(HasLiked);
-        await localStorage.SetItemAsync("hasLiked", HasLiked);
+        await localStorage.SetItemAsync($"hasLiked/{BlogPost.Id}", HasLiked);
     }
 
     private async Task<bool> GetHasLiked()
     {
-        if (await localStorage.ContainKeyAsync("hasLiked"))
+        if (await localStorage.ContainKeyAsync($"hasLiked/{BlogPost.Id}"))
         {
-            return await localStorage.GetItemAsync<bool>("hasLiked");
+            return await localStorage.GetItemAsync<bool>($"hasLiked/{BlogPost.Id}");
         }
 
         return false;

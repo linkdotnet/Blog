@@ -46,8 +46,9 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             await Repository.StoreAsync(publishedPost);
             using var ctx = new TestContext();
             var localStorage = new Mock<ILocalStorageService>();
-            localStorage.Setup(l => l.ContainKeyAsync("hasLiked", default)).ReturnsAsync(true);
-            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked", default)).ReturnsAsync(true);
+            var hasLikedStorage = $"hasLiked/{publishedPost.Id}";
+            localStorage.Setup(l => l.ContainKeyAsync(hasLikedStorage, default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.GetItemAsync<bool>(hasLikedStorage, default)).ReturnsAsync(true);
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             RegisterComponents(ctx, localStorage.Object);
             ctx.AddTestAuthorization().SetAuthorized("s");
