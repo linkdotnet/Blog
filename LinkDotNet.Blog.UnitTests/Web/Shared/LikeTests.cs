@@ -54,22 +54,24 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
             var localStorage = new Mock<ILocalStorageService>();
             Services.AddScoped(_ => localStorage.Object);
             var blogPost = new BlogPostBuilder().Build();
+            blogPost.Id = "id";
             var cut = RenderComponent<Like>(
                 p => p.Add(l => l.BlogPost, blogPost));
 
             cut.Find("button").Click();
 
-            localStorage.Verify(l => l.SetItemAsync("hasLiked", true, default), Times.Once);
+            localStorage.Verify(l => l.SetItemAsync("hasLiked/id", true, default), Times.Once);
         }
 
         [Fact]
         public void ShouldCheckLocalStorageOnInit()
         {
             var localStorage = new Mock<ILocalStorageService>();
-            localStorage.Setup(l => l.ContainKeyAsync("hasLiked", default)).ReturnsAsync(true);
-            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked", default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id", default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id", default)).ReturnsAsync(true);
             Services.AddScoped(_ => localStorage.Object);
             var blogPost = new BlogPostBuilder().Build();
+            blogPost.Id = "id";
             var wasLike = true;
             var cut = RenderComponent<Like>(
                 p => p.Add(l => l.BlogPost, blogPost)
@@ -86,12 +88,13 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
             var localStorage = new Mock<ILocalStorageService>();
             Services.AddScoped(_ => localStorage.Object);
             var blogPost = new BlogPostBuilder().Build();
+            blogPost.Id = "id";
             var wasClicked = false;
             var cut = RenderComponent<Like>(
                 p => p.Add(l => l.BlogPost, blogPost)
                     .Add(l => l.OnBlogPostLiked, _ => wasClicked = true));
-            localStorage.Setup(l => l.ContainKeyAsync("hasLiked", default)).ReturnsAsync(true);
-            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked", default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id", default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id", default)).ReturnsAsync(true);
 
             cut.Find("button").Click();
 
