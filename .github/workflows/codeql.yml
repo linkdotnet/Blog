@@ -17,6 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+          include-prerelease: true
+
+      - run: git checkout HEAD^2
+        if: ${{ github.event_name == 'pull_request' }}
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
 
