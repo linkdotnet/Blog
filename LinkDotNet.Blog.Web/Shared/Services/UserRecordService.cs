@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Blazored.LocalStorage;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace LinkDotNet.Blog.Web.Shared
+namespace LinkDotNet.Blog.Web.Shared.Services
 {
     public interface IUserRecordService
     {

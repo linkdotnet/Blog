@@ -1,10 +1,9 @@
-using Blazored.LocalStorage;
 using Blazored.Toast;
 using LinkDotNet.Blog.Web.Authentication.Auth0;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.Pages.Admin;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
-using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +29,6 @@ namespace LinkDotNet.Blog.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-
             services.AddSingleton(service =>
                 AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
 
@@ -60,8 +58,8 @@ namespace LinkDotNet.Blog.Web
              */
 
             services.AddBlazoredToast();
-            services.AddBlazoredLocalStorage();
             services.AddHeadElementHelper();
+            services.AddScoped<ILocalStorageService, LocalStorageService>();
             services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
             services.AddScoped<IUserRecordService, UserRecordService>();
             services.AddScoped<IDashboardService, DashboardService>();

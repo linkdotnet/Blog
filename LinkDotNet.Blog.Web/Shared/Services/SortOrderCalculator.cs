@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using LinkDotNet.Domain;
 
-namespace LinkDotNet.Blog.Web.Shared
+namespace LinkDotNet.Blog.Web.Shared.Services
 {
     public class SortOrderCalculator : ISortOrderCalculator
     {

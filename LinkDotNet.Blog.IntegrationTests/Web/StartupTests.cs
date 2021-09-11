@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Pages.Admin;
-using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore;

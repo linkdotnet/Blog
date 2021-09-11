@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Blazored.LocalStorage;
 using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
-using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Moq;
@@ -55,9 +54,9 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         {
             UserRecord recordToDb = null;
             var guidForUser = Guid.NewGuid();
-            localStorageService.Setup(l => l.ContainKeyAsync("user", default))
+            localStorageService.Setup(l => l.ContainKeyAsync("user"))
                 .ReturnsAsync(true);
-            localStorageService.Setup(l => l.GetItemAsync<Guid>("user", default))
+            localStorageService.Setup(l => l.GetItemAsync<Guid>("user"))
                 .ReturnsAsync(guidForUser);
             repositoryMock.Setup(r => r.StoreAsync(It.IsAny<UserRecord>()))
                 .Callback<UserRecord>(u => recordToDb = u);
@@ -82,7 +81,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         [Fact]
         public async Task ShouldNotThrowExceptionToOutsideWorld()
         {
-            localStorageService.Setup(l => l.ContainKeyAsync("user", default)).Throws<Exception>();
+            localStorageService.Setup(l => l.ContainKeyAsync("user")).Throws<Exception>();
 
             Func<Task> act = () => sut.StoreUserRecordAsync();
 

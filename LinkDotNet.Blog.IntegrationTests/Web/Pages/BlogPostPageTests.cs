@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Blazored.LocalStorage;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
@@ -7,6 +6,7 @@ using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages;
 using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +47,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             using var ctx = new TestContext();
             var localStorage = new Mock<ILocalStorageService>();
             var hasLikedStorage = $"hasLiked/{publishedPost.Id}";
-            localStorage.Setup(l => l.ContainKeyAsync(hasLikedStorage, default)).ReturnsAsync(true);
-            localStorage.Setup(l => l.GetItemAsync<bool>(hasLikedStorage, default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.ContainKeyAsync(hasLikedStorage)).ReturnsAsync(true);
+            localStorage.Setup(l => l.GetItemAsync<bool>(hasLikedStorage)).ReturnsAsync(true);
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             RegisterComponents(ctx, localStorage.Object);
             ctx.AddTestAuthorization().SetAuthorized("s");

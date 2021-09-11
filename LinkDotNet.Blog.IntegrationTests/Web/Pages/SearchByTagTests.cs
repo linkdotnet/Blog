@@ -5,7 +5,7 @@ using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages;
-using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Domain;
 using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;

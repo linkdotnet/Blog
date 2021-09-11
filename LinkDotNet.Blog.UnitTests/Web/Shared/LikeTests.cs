@@ -1,8 +1,8 @@
-﻿using Blazored.LocalStorage;
-using Bunit;
+﻿using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Shared;
+using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
@@ -60,15 +60,15 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
 
             cut.Find("button").Click();
 
-            localStorage.Verify(l => l.SetItemAsync("hasLiked/id", true, default), Times.Once);
+            localStorage.Verify(l => l.SetItemAsync("hasLiked/id", true), Times.Once);
         }
 
         [Fact]
         public void ShouldCheckLocalStorageOnInit()
         {
             var localStorage = new Mock<ILocalStorageService>();
-            localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id", default)).ReturnsAsync(true);
-            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id", default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id")).ReturnsAsync(true);
+            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id")).ReturnsAsync(true);
             Services.AddScoped(_ => localStorage.Object);
             var blogPost = new BlogPostBuilder().Build();
             blogPost.Id = "id";
@@ -93,8 +93,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
             var cut = RenderComponent<Like>(
                 p => p.Add(l => l.BlogPost, blogPost)
                     .Add(l => l.OnBlogPostLiked, _ => wasClicked = true));
-            localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id", default)).ReturnsAsync(true);
-            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id", default)).ReturnsAsync(true);
+            localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id")).ReturnsAsync(true);
+            localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id")).ReturnsAsync(true);
 
             cut.Find("button").Click();
 
