@@ -19,3 +19,4 @@ robots.txt
 .idea/
 *.csproj.user
 *.dotsettings.user
+**/coverage*.xml

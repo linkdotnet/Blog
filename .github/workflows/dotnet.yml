@@ -22,4 +22,22 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[LinkDotNet.*]*" /p:Exclude="[*Test*]*"
+    - name: Publish Code coverage
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.12
+      with:
+        reports: '**/coverage.cobertura.xml'
+        targetdir: coveragereport
+        reporttypes: 'HtmlInline;Badges;MarkdownSummary'
+
+    - name: Publish coverage summary on pull request
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        path: coveragereport/Summary.md
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: CoverageReport      
+        path: coveragereport
+
