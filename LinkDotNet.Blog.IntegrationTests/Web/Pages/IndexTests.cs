@@ -4,7 +4,6 @@ using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
-using LinkDotNet.Blog.Web.Pages;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Domain;
@@ -13,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Toolbelt.Blazor.HeadElement;
 using Xunit;
+
+using Index = LinkDotNet.Blog.Web.Pages.Index;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 {
