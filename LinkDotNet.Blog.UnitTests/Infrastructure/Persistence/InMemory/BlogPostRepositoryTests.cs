@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
@@ -61,6 +62,20 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
             retrievedPosts.Any(b => b.Id == filteredOutPost.Id).Should().BeFalse();
             retrievedPosts[0].Id.Should().Be(olderPost.Id);
             retrievedPosts[1].Id.Should().Be(newerPost.Id);
+        }
+
+        [Fact]
+        public async Task ShouldOrderDescending()
+        {
+            var olderPost = new BlogPostBuilder().WithUpdatedDate(DateTime.MinValue).Build();
+            var newerPost = new BlogPostBuilder().WithUpdatedDate(DateTime.MaxValue).Build();
+            await sut.StoreAsync(olderPost);
+            await sut.StoreAsync(newerPost);
+
+            var blogPosts = await sut.GetAllAsync(orderBy: bp => bp.UpdatedDate, descending: true);
+
+            blogPosts[0].Should().Be(newerPost);
+            blogPosts[1].Should().Be(olderPost);
         }
 
         [Fact]

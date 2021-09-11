@@ -35,7 +35,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
             toastService.Verify(t => t.ShowInfo("Created BlogPost My Title", string.Empty), Times.Once);
         }
 
-        private void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
+        private static void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
         {
             cut.Find("#title").Change("My Title");
             cut.Find("#short").Change("My short Description");
