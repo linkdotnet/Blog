@@ -8,11 +8,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace LinkDotNet.Blog.Web.Shared.Services
 {
-    public interface IUserRecordService
-    {
-        Task StoreUserRecordAsync();
-    }
-
     public class UserRecordService : IUserRecordService
     {
         private readonly IRepository<UserRecord> userRecordRepository;
