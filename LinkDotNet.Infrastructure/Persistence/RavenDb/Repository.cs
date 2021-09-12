@@ -31,7 +31,7 @@ namespace LinkDotNet.Infrastructure.Persistence.RavenDb
             int page = 1,
             int pageSize = int.MaxValue)
         {
-            using var session = documentStore.OpenAsyncSession();
+            using var session = documentStore.OpenSession();
 
             var query = session.Query<TEntity>();
             if (filter != null)
