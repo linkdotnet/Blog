@@ -10,7 +10,7 @@
 @inject IUserRecordService userRecordService
 
 <OgData Title="@(Markdown.ToPlainText(appConfiguration.BlogName))" 
-        AbsolutePreviewImageUrl="@GetAbsolutePreviewImageUrl()"
+        AbsolutePreviewImageUrl="@ImageUrl"
         Description="@(Markdown.ToPlainText(appConfiguration.Introduction.Description))"></OgData>
 <section class="introduction">
     <IntroductionCard Introduction="appConfiguration.Introduction"></IntroductionCard>
@@ -34,6 +34,8 @@
 @code {
     IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
 
+    private string ImageUrl => appConfiguration.Introduction.BackgroundUrl.ToAbsoluteUrl(navigationManager.BaseUri);
+
     protected override async Task OnInitializedAsync()
     {
         currentPage = await blogPostRepository.GetAllAsync(
@@ -48,23 +50,6 @@
         {
             await userRecordService.StoreUserRecordAsync();
         }
-    }
-
-    private string GetAbsolutePreviewImageUrl()
-    {
-        var backgroundUrl = appConfiguration.Introduction.BackgroundUrl;
-        if (IsAbsoluteUrl(backgroundUrl))
-        {
-            return backgroundUrl;
-        }
-
-        var successful = Uri.TryCreate(new Uri(navigationManager.BaseUri, UriKind.Absolute), new Uri(backgroundUrl, UriKind.RelativeOrAbsolute), out var uri);
-        return successful ? uri.ToString() : backgroundUrl;
-    }
-    
-    private bool IsAbsoluteUrl(string url)
-    {
-        return Uri.TryCreate(url, UriKind.Absolute, out _);
     }
 
     private async Task GetPage(int newPage)
