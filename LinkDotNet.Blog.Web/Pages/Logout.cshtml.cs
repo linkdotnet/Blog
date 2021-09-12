@@ -13,9 +13,9 @@ namespace LinkDotNet.Blog.Web.Pages
             this.loginManager = loginManager;
         }
 
-        public async Task OnGet()
+        public async Task OnGet(string redirectUri)
         {
-            await loginManager.SignOutAsync();
+            await loginManager.SignOutAsync(redirectUri);
         }
     }
 }
