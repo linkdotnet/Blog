@@ -9,7 +9,7 @@ using LinkDotNet.Infrastructure.Persistence;
 using Moq;
 using Xunit;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Shared
+namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
 {
     public class UserRecordServiceTests : TestContext
     {
