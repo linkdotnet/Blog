@@ -13,9 +13,9 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb
 {
     public sealed class BlogPostRepositoryTests : RavenTestDriver
     {
+        private static bool serverRunning;
         private readonly IDocumentStore store;
         private readonly IRepository<BlogPost> sut;
-        private static bool serverRunning;
 
         public BlogPostRepositoryTests()
         {
