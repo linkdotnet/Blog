@@ -43,7 +43,6 @@
     --background-gradient-end: var(--wild-sand);
 }
 
-
 html {
     height: 100%;
 }
@@ -60,6 +59,10 @@ a {
     transition: 0.3s ease-in-out !important;
     font-weight: 500;
     color: var(--active-link) !important;
+}
+
+a:visited {
+    color: var(--disabled-link) !important;
 }
 
 a:hover {
