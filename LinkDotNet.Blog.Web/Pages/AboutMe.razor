@@ -4,10 +4,11 @@
 @inject AppConfiguration appConfiguration
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IUserRecordService userRecordService
+@inject NavigationManager navigationManager
 <OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
         Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
         Keywords="@appConfiguration.ProfileInformation.Name"
-        AbsolutePreviewImageUrl="@appConfiguration.ProfileInformation.ProfilePictureUrl"></OgData>
+        AbsolutePreviewImageUrl="@ImageUrl"></OgData>
 
 @if (appConfiguration.IsAboutMeEnabled)
 {
@@ -33,6 +34,8 @@
 
 @code {
     private bool isAuthenticated;
+
+    private string ImageUrl => appConfiguration.ProfileInformation.ProfilePictureUrl.ToAbsoluteUrl(navigationManager.BaseUri);
 
     protected override async Task OnInitializedAsync()
     {

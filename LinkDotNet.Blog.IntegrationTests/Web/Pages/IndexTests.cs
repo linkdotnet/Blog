@@ -132,6 +132,21 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).Should().Contain("/searchByTag/Tag2");
         }
 
+        [Theory]
+        [InlineData("relative/url", "http://localhost/relative/url")]
+        [InlineData("http://localhost/relative/url", "http://localhost/relative/url")]
+        public void ShouldSetAbsoluteUriForOgData(string givenUri, string expectedUri)
+        {
+            using var ctx = new TestContext();
+            RegisterComponents(ctx);
+            ctx.Services.GetService<AppConfiguration>()!.Introduction.BackgroundUrl = givenUri;
+
+            var cut = ctx.RenderComponent<Index>();
+
+            cut.WaitForState(() => cut.FindComponents<OgData>().Any());
+            cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expectedUri);
+        }
+
         private static AppConfiguration CreateSampleAppConfiguration()
         {
             return new()
