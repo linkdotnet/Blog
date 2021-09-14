@@ -5,7 +5,8 @@
 <article>
   <div class="blog-card @AltCssClass">
     <div class="meta">
-      <div class="photo" style="background-image: url(@BlogPost.PreviewImageUrl)"></div>
+      <div class="photo"><img style="height: 100%; width: 100%; display:block;object-position: center; object-fit: cover;" data-src="@BlogPost.PreviewImageUrl" alt=""
+      loading="lazy" /></div>
       <ul class="details">
         <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
         @if (BlogPost.Tags != null)

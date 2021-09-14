@@ -142,8 +142,6 @@ section {
     color: var(--white);
 }
 
-
-
 body::-webkit-scrollbar {
     display: none;
 }
