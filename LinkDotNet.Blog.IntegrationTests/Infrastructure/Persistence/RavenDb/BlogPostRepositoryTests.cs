@@ -146,7 +146,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb
                 ConfigureServer(new TestServerOptions
                 {
                     DataDirectory = "./RavenDbTest/",
-                    FrameworkVersion = "6.0.0-preview.7.21378.6",
+                    FrameworkVersion = "6.0.0-rc.1.21452.15",
                 });
             }
         }
