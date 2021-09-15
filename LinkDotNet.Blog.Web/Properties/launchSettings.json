@@ -13,6 +13,10 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnet": {
+        "commandName": "Project",
+        "hotReloadProfile": "aspnetcore"
       }
     },
     "LinkDotNet.Blog.Web": {
