@@ -22,7 +22,6 @@ The appsettings.json file has a lot of options to customize the content of the b
 
 ```json
 {
-  ...
   "BlogName": "linkdotnet",
   "GithubAccountUrl": "",
   "LinkedInAccountUrl": "",
@@ -31,6 +30,7 @@ The appsettings.json file has a lot of options to customize the content of the b
     "BackgroundUrl": "assets/profile-background.webp",
     "ProfilePictureUrl": "assets/profile-picture.webp"
   },
+  "PersistenceProvider": "SqlServer",
   "ConnectionString": "",
   "DatabaseName": "",
   "Auth0": {
@@ -49,33 +49,34 @@ The appsettings.json file has a lot of options to customize the content of the b
 
 ```
 
-| Property                  | Type           | Description                                                                                                                                       |
-| ------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page.                                                                    |
-| GithubAccountUrl          | string         | Url to your github account. If not set the navigation link is not shown                                                                           |
-| LinkedInAccountUrl        | string         | Url to your LinkedIn account. If not set the navigation link is not shown                                                                         |
-| Introduction              |                | Is used for the introduction part of the blog                                                                                                     |
-| Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text. |
-| BackgroundUrl             | string         | Url or path to the background image                                                                                                               |
-| ProfilePictureUrl         | string         | Url or path to your profile picture                                                                                                               |
-| ConnectionString          | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                             |
-| DatabaseName              | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                     |
-| Auth0                     |                | Configuration for setting up Auth0                                                                                                                |
-| Domain                    | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
-| ClientId                  | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
-| ClientSecret              | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                        |
-| BlogPostsPerPage          | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                           |
-| IsAboutMeEnabled          | bool           | If true, enalbes the "About Me" page                                                                                                              |
-| AboutMeProfileInformation | node           | If `IsAboutMeEnabled` is set to `false` this node can be left empty.                                                                              |
-| Name                      | string         | Name, which is displayed on top of the profile card                                                                                               |
-| Heading                   | string         | Displayed under the name. For example job title                                                                                                   |
-| ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                         |
+| Property                  | Type           | Description                                                                                                                                                |
+| ------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page.                                                                             |
+| GithubAccountUrl          | string         | Url to your github account. If not set the navigation link is not shown                                                                                    |
+| LinkedInAccountUrl        | string         | Url to your LinkedIn account. If not set the navigation link is not shown                                                                                  |
+| Introduction              |                | Is used for the introduction part of the blog                                                                                                              |
+| Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text.          |
+| BackgroundUrl             | string         | Url or path to the background image                                                                                                                        |
+| ProfilePictureUrl         | string         | Url or path to your profile picture                                                                                                                        |
+| PersistenceProvider       | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `SqliteServer`, `RavenDb`, `InMemory`). More in-depth explanation down below |
+| ConnectionString          | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                                      |
+| DatabaseName              | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                              |
+| Auth0                     |                | Configuration for setting up Auth0                                                                                                                         |
+| Domain                    | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
+| ClientId                  | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
+| ClientSecret              | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
+| BlogPostsPerPage          | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                                    |
+| IsAboutMeEnabled          | bool           | If true, enalbes the "About Me" page                                                                                                                       |
+| AboutMeProfileInformation | node           | If `IsAboutMeEnabled` is set to `false` this node can be left empty.                                                                                       |
+| Name                      | string         | Name, which is displayed on top of the profile card                                                                                                        |
+| Heading                   | string         | Displayed under the name. For example job title                                                                                                            |
+| ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                  |
 
 The usage might shift directly into the extension methods, where they are used.
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:
- * InMemory - Basically a list holding your data (per request)
+ * InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
  * RavenDb - As the name suggests for RavenDb
  * Sqlite - Based on EF Core, so it can be easily adapted for other Sql Dialects
  * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects

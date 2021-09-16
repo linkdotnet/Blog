@@ -29,17 +29,8 @@ namespace LinkDotNet.Blog.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton(service =>
-                AppConfigurationFactory.Create(service.GetService<IConfiguration>()));
-
-            // This can be extended to use other repositories
-            services.UseSqlAsStorageProvider();
-            /****************
-             * Possible Storage Providers:
-             * services.UseSqliteAsStorageProvider();
-             * services.UseRavenDbAsStorageProvider();
-             * services.UseInMemoryAsStorageProvider();
-             */
+            services.AddSingleton(_ => AppConfigurationFactory.Create(Configuration));
+            services.AddStorageProvider(Configuration);
 
             // Here you can setup up your identity provider
             if (environment.IsDevelopment())
