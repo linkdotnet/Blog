@@ -47,6 +47,10 @@
     <ItemGroup>
       <Folder Include="Infrastructure\Persistence" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Web\Shared\Services\LocalStorageServiceTests.cs" />
+    </ItemGroup>
     <PropertyGroup>
         <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

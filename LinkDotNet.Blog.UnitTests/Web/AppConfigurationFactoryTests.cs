@@ -25,6 +25,10 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "AboutMeProfileInformation:Name", "Steven" },
                 { "AboutMeProfileInformation:Heading", "Dev" },
                 { "AboutMeProfileInformation:ProfilePictureUrl", "Url" },
+                { "Giscus:Repository", "repo" },
+                { "Giscus:RepositoryId", "repoid" },
+                { "Giscus:Category", "general" },
+                { "Giscus:CategoryId", "generalid" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
@@ -47,6 +51,10 @@ namespace LinkDotNet.Blog.UnitTests.Web
             appConfiguration.ProfileInformation.Name.Should().Be("Steven");
             appConfiguration.ProfileInformation.Heading.Should().Be("Dev");
             appConfiguration.ProfileInformation.ProfilePictureUrl.Should().Be("Url");
+            appConfiguration.Giscus.Repository.Should().Be("repo");
+            appConfiguration.Giscus.RepositoryId.Should().Be("repoid");
+            appConfiguration.Giscus.Category.Should().Be("general");
+            appConfiguration.Giscus.CategoryId.Should().Be("generalid");
         }
 
         [Theory]
@@ -95,6 +103,25 @@ namespace LinkDotNet.Blog.UnitTests.Web
             var appConfiguration = AppConfigurationFactory.Create(configuration);
 
             appConfiguration.IsAboutMeEnabled.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ShouldSetGiscusToFalseWhenNoInformation()
+        {
+            var inMemorySettings = new Dictionary<string, string>
+            {
+                { "Introduction:BackgroundUrl", "someurl" },
+                { "Introduction:ProfilePictureUrl", "anotherurl" },
+                { "Introduction:Description", "desc" },
+                { "BlogPostsPerPage", "2" },
+            };
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
+            var appConfiguration = AppConfigurationFactory.Create(configuration);
+
+            appConfiguration.IsGiscusEnabled.Should().BeFalse();
         }
     }
 }

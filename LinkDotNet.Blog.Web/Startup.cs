@@ -54,6 +54,7 @@ namespace LinkDotNet.Blog.Web
             services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
             services.AddScoped<IUserRecordService, UserRecordService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IGiscusService, GiscusService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
