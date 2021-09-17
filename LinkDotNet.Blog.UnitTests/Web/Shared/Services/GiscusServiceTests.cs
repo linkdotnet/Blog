@@ -24,5 +24,16 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
             init.Arguments.Should().Contain("giscus");
             init.Arguments.Should().Contain(giscus);
         }
+
+        [Fact]
+        public async Task ShouldNotEnabledGiscussWhenNotSet()
+        {
+            JSInterop.Mode = JSRuntimeMode.Loose;
+            var sut = new GiscusService(JSInterop.JSRuntime, new AppConfiguration { Giscus = null });
+
+            await sut.EnableCommentSection("div");
+
+            JSInterop.Invocations.Any(i => i.Identifier == "initGiscus").Should().BeFalse();
+        }
     }
 }

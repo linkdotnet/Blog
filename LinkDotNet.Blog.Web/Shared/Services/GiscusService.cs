@@ -16,7 +16,10 @@ namespace LinkDotNet.Blog.Web.Shared.Services
 
         public async Task EnableCommentSection(string className)
         {
-            await jsRuntime.InvokeVoidAsync("initGiscus", "giscus", appConfiguration.Giscus);
+            if (appConfiguration.IsGiscusEnabled)
+            {
+                await jsRuntime.InvokeVoidAsync("initGiscus", "giscus", appConfiguration.Giscus);
+            }
         }
     }
 }

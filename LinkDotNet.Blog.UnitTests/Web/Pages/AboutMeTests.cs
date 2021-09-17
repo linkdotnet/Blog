@@ -26,7 +26,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages
         public void ShouldPassIsAuthenticated()
         {
             this.AddTestAuthorization().SetAuthorized("test");
-            var config = CreateAppConfiguration(true);
+            var config = CreateAppConfiguration(new ProfileInformation { ProfilePictureUrl = string.Empty });
             SetupMocks(config);
 
             var cut = RenderComponent<AboutMe>();
@@ -39,7 +39,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages
         public void ShouldNotShowWhenEnabledFalse()
         {
             this.AddTestAuthorization().SetNotAuthorized();
-            var config = CreateAppConfiguration(false);
+            var config = CreateAppConfiguration();
             SetupMocks(config);
 
             var cut = RenderComponent<AboutMe>();
@@ -57,7 +57,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages
                 Name = "My Name",
                 ProfilePictureUrl = "someurl",
             };
-            var config = CreateAppConfiguration(false, profileInformation);
+            var config = CreateAppConfiguration(profileInformation);
             SetupMocks(config);
 
             var cut = RenderComponent<AboutMe>();
@@ -69,15 +69,11 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages
             ogData.Description.Should().Contain("About Me,My Name");
         }
 
-        private static AppConfiguration CreateAppConfiguration(bool pageEnabled, ProfileInformation info = null)
+        private static AppConfiguration CreateAppConfiguration(ProfileInformation info = null)
         {
             return new AppConfiguration
             {
-                IsAboutMeEnabled = pageEnabled,
-                ProfileInformation = info ?? new ProfileInformation
-                {
-                    ProfilePictureUrl = "not null",
-                },
+                ProfileInformation = info,
             };
         }
 

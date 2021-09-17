@@ -5,13 +5,13 @@
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IUserRecordService userRecordService
 @inject NavigationManager navigationManager
-<OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
-        Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
-        Keywords="@appConfiguration.ProfileInformation.Name"
-        AbsolutePreviewImageUrl="@ImageUrl"></OgData>
-
 @if (appConfiguration.IsAboutMeEnabled)
 {
+    <OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
+            Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
+            Keywords="@appConfiguration.ProfileInformation.Name"
+            AbsolutePreviewImageUrl="@ImageUrl"></OgData>
+
     <div class="page">
         <div class="container">
             <div class="row">

@@ -20,9 +20,7 @@ namespace LinkDotNet.Blog.Web
                 DatabaseName = config["DatabaseName"],
                 BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
                 ProfileInformation = profileInformation,
-                IsAboutMeEnabled = profileInformation != null,
                 Giscus = giscus,
-                IsGiscusEnabled = giscus != null,
             };
 
             return configuration;

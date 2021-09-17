@@ -38,7 +38,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin
         {
             return new AppConfiguration
             {
-                IsAboutMeEnabled = aboutMeEnabled,
+                ProfileInformation = aboutMeEnabled ? new ProfileInformation() : null,
             };
         }
     }

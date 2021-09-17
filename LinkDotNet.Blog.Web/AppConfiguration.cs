@@ -23,12 +23,12 @@ namespace LinkDotNet.Blog.Web
 
         public int BlogPostsPerPage { get; init; }
 
-        public bool IsAboutMeEnabled { get; init; }
+        public bool IsAboutMeEnabled => ProfileInformation != null;
 
         public ProfileInformation ProfileInformation { get; init; }
 
         public Giscus Giscus { get; init; }
-        
-        public bool IsGiscusEnabled { get; init; }
+
+        public bool IsGiscusEnabled => Giscus != null;
     }
 }
