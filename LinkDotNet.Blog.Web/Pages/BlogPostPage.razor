@@ -8,7 +8,7 @@
 @inject IRepository<BlogPost> blogPostRepository
 @inject IJSRuntime jsRuntime
 @inject IUserRecordService userRecordService
-@inject ICommentService commentService
+@inject IGiscusService gisgusService
 @inherits MarkdownComponentBase
 
 <div class="page">
@@ -69,7 +69,7 @@
         {
             await userRecordService.StoreUserRecordAsync();
             await jsRuntime.InvokeVoidAsync("hljs.highlightAll");
-            await commentService.EnableCommentSection("giscus");
+            await gisgusService.EnableCommentSection("giscus");
             StateHasChanged();
         }
     }

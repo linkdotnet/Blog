@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Blog.Web.Shared.Services
 {
-    public interface ICommentService
+    public interface IGiscusService
     {
         Task EnableCommentSection(string className);
     }
