@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Domain;
+﻿using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Domain;
 using Microsoft.Extensions.Configuration;
 
 namespace LinkDotNet.Blog.Web
@@ -8,6 +9,7 @@ namespace LinkDotNet.Blog.Web
         public static AppConfiguration Create(IConfiguration config)
         {
             var profileInformation = config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
+            var giscus = config.GetSection("Giscus").Get<Giscus>();
             var configuration = new AppConfiguration
             {
                 BlogName = config["BlogName"],
@@ -19,6 +21,8 @@ namespace LinkDotNet.Blog.Web
                 BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
                 ProfileInformation = profileInformation,
                 IsAboutMeEnabled = profileInformation != null,
+                Giscus = giscus,
+                IsGiscusEnabled = giscus != null,
             };
 
             return configuration;

@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Domain;
+﻿using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Domain;
 
 namespace LinkDotNet.Blog.Web
 {
@@ -24,6 +25,10 @@ namespace LinkDotNet.Blog.Web
 
         public bool IsAboutMeEnabled { get; init; }
 
-        public ProfileInformation ProfileInformation { get; set; }
+        public ProfileInformation ProfileInformation { get; init; }
+
+        public Giscus Giscus { get; init; }
+        
+        public bool IsGiscusEnabled { get; init; }
     }
 }
