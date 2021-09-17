@@ -23,16 +23,16 @@
         </div>
     </header>
     <div class="content px-4 my-2">
-        @for (var i = 0; i < currentPage.Count; i++)
-        {
-            <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-        }
+        <Virtualize Items="@currentPage.ToList()">
+            <ShortBlogPost BlogPost="context" UseAlternativeStyle="@(currentLine++ % 2 != 0)"></ShortBlogPost>
+        </Virtualize>
     </div>
     <BlogPostNavigation CurrentPage="@currentPage" OnPageChanged="@GetPage"></BlogPostNavigation>
 </section>
 
 @code {
-    IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
+    private IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
+    private int currentLine;
 
     private string ImageUrl => appConfiguration.Introduction.BackgroundUrl.ToAbsoluteUrl(navigationManager.BaseUri);
 
@@ -54,7 +54,10 @@
 
     private async Task GetPage(int newPage)
     {
-        currentPage = await blogPostRepository.GetAllAsync(p => p.IsPublished, b => b.UpdatedDate, pageSize: appConfiguration.BlogPostsPerPage, page: 
-        newPage);
+        currentPage = await blogPostRepository.GetAllAsync(
+            p => p.IsPublished,
+            b => b.UpdatedDate,
+            pageSize: appConfiguration.BlogPostsPerPage,
+            page: newPage);
     }
 }
