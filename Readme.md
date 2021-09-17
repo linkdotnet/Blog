@@ -43,6 +43,12 @@ The appsettings.json file has a lot of options to customize the content of the b
     "Name": "Steven Giesel",
     "Heading": "Software Engineer",
     "ProfilePictureUrl": "assets/profile-picture.webp"
+  },
+  "Giscus": {
+    "Repository": "github/repo",
+    "RepositoryId": "id",
+    "Category": "general",
+    "CategoryId": "id"
   }
 }
 
@@ -69,8 +75,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Name                      | string         | Name, which is displayed on top of the profile card                                                                                                        |
 | Heading                   | string         | Displayed under the name. For example job title                                                                                                            |
 | ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                  |
-
-The usage might shift directly into the extension methods, where they are used.
+| Giscus                    | node           | Enables the comment section. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:
@@ -79,13 +84,37 @@ Currently there are 4 Storage-Provider:
  * Sqlite - Based on EF Core, so it can be easily adapted for other Sql Dialects
  * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects
 
-### Using
-To use one of those just use the extension method in the Startup.cs in `ConfigureServices`:
-```csharp
-services.UseSqlAsStorageProvider();
-```
+## Comment Section
+For comments the blog is using [giscus](https://giscus.app/). To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
+There you can enter all the information. You will find a detailed guide on the site.
 
-It is only one storage provider at a time allowed. Registering multiple will result in an exception.
+In short:
+ * You need a public repository where the comments are hosted. Recommendation: Create a new repository just for the comments
+ * You have to link the [giscuss app](https://github.com/apps/giscus) to at least the repository where the comments are hosted
+ * You have to enable the discussion feature in the repository (see (here)[https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/enabling-or-disabling-github-discussions-for-a-repository]
+ )
+
+ After you configured everything on the site, you get the `<script>` tag which you could embed. The blog needs the following information.
+
+ Here you can find an example. This is how the script tag looks on giscus.
+ ```javascript
+ <script src="https://giscus.app/client.js"
+        data-repo="your_username/reponame"
+        data-repo-id="M9/ab=="
+        data-category="General"
+        data-category-id="AbC==/8_D"
+        async>
+</script>
+```
+Now you can copy/paste those information into the appsettings.json. With the given information abobe your appsettings.json looks like this:
+```json
+  "Giscus": {
+    "Repository": "your_username/reponame",
+    "RepositoryId": "M9/ab==",
+    "Category": "General",
+    "CategoryId": "AbC==/8_D"
+  }
+```
 
 ## Authorization
 There is only one real mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
