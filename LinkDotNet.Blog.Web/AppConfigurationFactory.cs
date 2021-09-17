@@ -7,6 +7,7 @@ namespace LinkDotNet.Blog.Web
     {
         public static AppConfiguration Create(IConfiguration config)
         {
+            var profileInformation = config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
             var configuration = new AppConfiguration
             {
                 BlogName = config["BlogName"],
@@ -16,14 +17,9 @@ namespace LinkDotNet.Blog.Web
                 ConnectionString = config["ConnectionString"],
                 DatabaseName = config["DatabaseName"],
                 BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
-                IsAboutMeEnabled = bool.Parse(config["IsAboutMeEnabled"]),
+                ProfileInformation = profileInformation,
+                IsAboutMeEnabled = profileInformation != null,
             };
-
-            if (configuration.IsAboutMeEnabled)
-            {
-                configuration.ProfileInformation =
-                    config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
-            }
 
             return configuration;
         }

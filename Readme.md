@@ -39,7 +39,6 @@ The appsettings.json file has a lot of options to customize the content of the b
     "ClientSecret": ""
   },
   "BlogPostsPerPage": 10,
-  "IsAboutMeEnabled": true,
   "AboutMeProfileInformation": {
     "Name": "Steven Giesel",
     "Heading": "Software Engineer",
@@ -66,8 +65,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ClientId                  | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
 | ClientSecret              | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
 | BlogPostsPerPage          | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                                    |
-| IsAboutMeEnabled          | bool           | If true, enalbes the "About Me" page                                                                                                                       |
-| AboutMeProfileInformation | node           | If `IsAboutMeEnabled` is set to `false` this node can be left empty.                                                                                       |
+| AboutMeProfileInformation | node           | Sets information for the About Me Page. If omitted the page is disabled completely                                                                         |
 | Name                      | string         | Name, which is displayed on top of the profile card                                                                                                        |
 | Heading                   | string         | Displayed under the name. For example job title                                                                                                            |
 | ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                  |

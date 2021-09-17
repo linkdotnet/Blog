@@ -22,7 +22,6 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
                 { "BlogPostsPerPage", "5" },
-                { "IsAboutMeEnabled", "true" },
                 { "AboutMeProfileInformation:Name", "Steven" },
                 { "AboutMeProfileInformation:Heading", "Dev" },
                 { "AboutMeProfileInformation:ProfilePictureUrl", "Url" },
@@ -68,7 +67,6 @@ namespace LinkDotNet.Blog.UnitTests.Web
                 { "GithubAccountUrl", githubUrl },
                 { "LinkedInAccountUrl", linkedInUrl },
                 { "BlogPostsPerPage", "2" },
-                { "IsAboutMeEnabled", "false" },
             };
             var configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
@@ -78,6 +76,25 @@ namespace LinkDotNet.Blog.UnitTests.Web
 
             appConfiguration.HasGithubAccount.Should().Be(githubAvailable);
             appConfiguration.HasLinkedinAccount.Should().Be(linkedInAvailable);
+        }
+
+        [Fact]
+        public void ShouldSetIsAboutMeEnabledToFalseWhenNoInformation()
+        {
+            var inMemorySettings = new Dictionary<string, string>
+            {
+                { "Introduction:BackgroundUrl", "someurl" },
+                { "Introduction:ProfilePictureUrl", "anotherurl" },
+                { "Introduction:Description", "desc" },
+                { "BlogPostsPerPage", "2" },
+            };
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
+            var appConfiguration = AppConfigurationFactory.Create(configuration);
+
+            appConfiguration.IsAboutMeEnabled.Should().BeFalse();
         }
     }
 }
