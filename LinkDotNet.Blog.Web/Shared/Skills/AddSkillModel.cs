@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using LinkDotNet.Domain;
+using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Web.Shared.Skills
 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinkDotNet.Domain;
+using LinkDotNet.Blog.Domain;
 using X.PagedList;
 
-namespace LinkDotNet.Infrastructure.Persistence
+namespace LinkDotNet.Blog.Infrastructure.Persistence
 {
     public interface IRepository<TEntity>
     where TEntity : Entity

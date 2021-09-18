@@ -1,5 +1,5 @@
-﻿using LinkDotNet.Infrastructure.Persistence;
-using LinkDotNet.Infrastructure.Persistence.InMemory;
+﻿using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.InMemory;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web.RegistrationExtensions

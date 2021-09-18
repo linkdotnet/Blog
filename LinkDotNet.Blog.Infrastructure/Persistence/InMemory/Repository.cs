@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinkDotNet.Domain;
+using LinkDotNet.Blog.Domain;
 using X.PagedList;
 
-namespace LinkDotNet.Infrastructure.Persistence.InMemory
+namespace LinkDotNet.Blog.Infrastructure.Persistence.InMemory
 {
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : Entity

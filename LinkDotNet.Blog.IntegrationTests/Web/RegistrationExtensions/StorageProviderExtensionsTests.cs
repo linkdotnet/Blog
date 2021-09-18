@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using FluentAssertions;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
-using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

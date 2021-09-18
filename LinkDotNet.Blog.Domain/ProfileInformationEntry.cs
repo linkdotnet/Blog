@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace LinkDotNet.Domain
+namespace LinkDotNet.Blog.Domain
 {
     [DebuggerDisplay("{Content} with sort order {SortOrder}")]
     public class ProfileInformationEntry : Entity

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Domain;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql

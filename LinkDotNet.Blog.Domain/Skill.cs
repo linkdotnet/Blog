@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LinkDotNet.Domain
+namespace LinkDotNet.Blog.Domain
 {
     public class Skill : Entity
     {

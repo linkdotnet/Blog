@@ -1,4 +1,4 @@
-﻿using LinkDotNet.Infrastructure.Persistence;
+﻿using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

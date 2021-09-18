@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LinkDotNet.Domain
+namespace LinkDotNet.Blog.Domain
 {
     public class BlogPost : Entity
     {

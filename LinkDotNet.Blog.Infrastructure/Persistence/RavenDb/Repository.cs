@@ -1,12 +1,12 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinkDotNet.Domain;
+using LinkDotNet.Blog.Domain;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 using X.PagedList;
 
-namespace LinkDotNet.Infrastructure.Persistence.RavenDb
+namespace LinkDotNet.Blog.Infrastructure.Persistence.RavenDb
 {
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : Entity

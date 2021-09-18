@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Pages.Admin;
-using LinkDotNet.Domain;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard

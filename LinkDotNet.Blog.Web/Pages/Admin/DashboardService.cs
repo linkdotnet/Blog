@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 
 namespace LinkDotNet.Blog.Web.Pages.Admin
 {

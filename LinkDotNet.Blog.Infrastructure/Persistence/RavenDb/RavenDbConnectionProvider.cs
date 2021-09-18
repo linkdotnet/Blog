@@ -1,6 +1,6 @@
 ﻿using Raven.Client.Documents;
 
-namespace LinkDotNet.Infrastructure.Persistence.RavenDb
+namespace LinkDotNet.Blog.Infrastructure.Persistence.RavenDb
 {
     public static class RavenDbConnectionProvider
     {

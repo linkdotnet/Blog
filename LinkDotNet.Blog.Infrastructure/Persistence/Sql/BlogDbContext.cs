@@ -1,8 +1,8 @@
-﻿using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence.Sql.Mapping;
+﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 using Microsoft.EntityFrameworkCore;
 
-namespace LinkDotNet.Infrastructure.Persistence.Sql
+namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql
 {
     public sealed class BlogDbContext : DbContext
     {

@@ -1,6 +1,6 @@
-﻿using LinkDotNet.Domain;
+﻿using LinkDotNet.Blog.Domain;
 
-namespace LinkDotNet.Infrastructure.Persistence
+namespace LinkDotNet.Blog.Infrastructure.Persistence
 {
     public class PersistenceProvider : Enumeration<PersistenceProvider>
     {

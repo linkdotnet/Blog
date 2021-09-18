@@ -2,9 +2,9 @@
 using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Shared.Admin;
-using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;

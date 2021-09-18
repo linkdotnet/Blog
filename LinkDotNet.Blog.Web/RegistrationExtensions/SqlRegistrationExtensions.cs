@@ -1,6 +1,6 @@
 ﻿using System;
-using LinkDotNet.Infrastructure.Persistence;
-using LinkDotNet.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

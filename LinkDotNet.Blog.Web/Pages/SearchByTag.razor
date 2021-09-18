@@ -1,8 +1,8 @@
 ﻿@page "/searchByTag/{tag}"
-@using LinkDotNet.Domain
-@using LinkDotNet.Infrastructure.Persistence
 @using Toolbelt.Blazor.HeadElement
 @using LinkDotNet.Blog.Web.Shared.Services
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<BlogPost> blogPostRepository
 @inject IUserRecordService userRecordService
 

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Domain;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Shared.Services;
-using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence;
 using Moq;
 using Xunit;
 

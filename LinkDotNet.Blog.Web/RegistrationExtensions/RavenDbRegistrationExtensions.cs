@@ -1,5 +1,5 @@
-﻿using LinkDotNet.Infrastructure.Persistence;
-using LinkDotNet.Infrastructure.Persistence.RavenDb;
+﻿using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.RavenDb;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web.RegistrationExtensions

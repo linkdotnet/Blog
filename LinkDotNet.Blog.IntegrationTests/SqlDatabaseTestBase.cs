@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Data.Common;
 using System.Threading.Tasks;
-using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;

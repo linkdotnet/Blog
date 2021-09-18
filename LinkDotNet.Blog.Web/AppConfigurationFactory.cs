@@ -1,5 +1,5 @@
-﻿using LinkDotNet.Blog.Web.Shared.Services;
-using LinkDotNet.Domain;
+﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace LinkDotNet.Blog.Web

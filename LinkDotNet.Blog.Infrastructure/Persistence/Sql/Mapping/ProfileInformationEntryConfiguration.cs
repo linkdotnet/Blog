@@ -1,8 +1,8 @@
-﻿using LinkDotNet.Domain;
+﻿using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LinkDotNet.Infrastructure.Persistence.Sql.Mapping
+namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping
 {
     public class ProfileInformationEntryConfiguration : IEntityTypeConfiguration<ProfileInformationEntry>
     {

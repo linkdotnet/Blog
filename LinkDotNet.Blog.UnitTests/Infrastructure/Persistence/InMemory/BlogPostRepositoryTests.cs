@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence.InMemory;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Domain;
-using LinkDotNet.Infrastructure.Persistence.InMemory;
 using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory

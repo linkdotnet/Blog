@@ -1,4 +1,4 @@
-﻿namespace LinkDotNet.Domain
+﻿namespace LinkDotNet.Blog.Domain
 {
     public record ProfileInformation
     {

@@ -1,6 +1,6 @@
 ﻿@page "/draft"
-@using LinkDotNet.Infrastructure.Persistence
-@using LinkDotNet.Domain
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
 @attribute [Authorize]
 @inject IRepository<BlogPost> blogPostRepository
 

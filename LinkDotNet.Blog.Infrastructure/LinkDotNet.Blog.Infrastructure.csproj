@@ -2,10 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <Nullable>disable</Nullable>
+        <AssemblyName>LinkDotNet.Blog.Infrastructure</AssemblyName>
+        <RootNamespace>LinkDotNet.Blog.Infrastructure</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.1.21452.10" />
+      <PackageReference Include="RavenDB.Client" Version="5.2.2" />
       <PackageReference Include="SonarAnalyzer.CSharp" Version="8.29.0.36737">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -14,6 +17,11 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="X.PagedList" Version="8.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,5 +30,6 @@
     <PropertyGroup>
         <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
+
 
 </Project>

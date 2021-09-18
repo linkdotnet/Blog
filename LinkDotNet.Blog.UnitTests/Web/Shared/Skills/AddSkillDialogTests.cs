@@ -1,8 +1,8 @@
 ﻿using Blazored.Toast.Services;
 using Bunit;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Shared.Skills;
-using LinkDotNet.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;

@@ -1,7 +1,7 @@
 ﻿using Bunit;
 using FluentAssertions;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Domain;
 using Moq;
 using X.PagedList;
 using Xunit;

@@ -38,7 +38,7 @@
     <ItemGroup>
       <ProjectReference Include="..\LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj" />
       <ProjectReference Include="..\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
-      <ProjectReference Include="..\LinkDotNet.Infrastructure\LinkDotNet.Infrastructure.csproj" />
+      <ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

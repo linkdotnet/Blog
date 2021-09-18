@@ -1,9 +1,9 @@
 ﻿@page "/"
-@using LinkDotNet.Domain
-@using LinkDotNet.Infrastructure.Persistence
 @using Markdig
 @using X.PagedList
 @using LinkDotNet.Blog.Web.Shared.Services
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<BlogPost> blogPostRepository
 @inject AppConfiguration appConfiguration
 @inject NavigationManager navigationManager

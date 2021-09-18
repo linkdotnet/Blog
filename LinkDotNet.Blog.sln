@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.Web", "LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj", "{6D6519BF-9265-488D-AA3B-C879F427930F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Domain", "LinkDotNet.Domain\LinkDotNet.Domain.csproj", "{18F8E09D-FF0B-4FF9-93A9-971A388D0E2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.Domain", "LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj", "{18F8E09D-FF0B-4FF9-93A9-971A388D0E2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Infrastructure", "LinkDotNet.Infrastructure\LinkDotNet.Infrastructure.csproj", "{E8ED38D2-FCD3-473D-BD78-43EE78E08EE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.Infrastructure", "LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj", "{E8ED38D2-FCD3-473D-BD78-43EE78E08EE6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.UnitTests", "LinkDotNet.Blog.UnitTests\LinkDotNet.Blog.UnitTests.csproj", "{5B868911-7C93-4190-AEE4-3A6694F2FFCE}"
 EndProject
