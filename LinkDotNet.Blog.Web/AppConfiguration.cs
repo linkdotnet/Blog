@@ -27,8 +27,8 @@ namespace LinkDotNet.Blog.Web
 
         public ProfileInformation ProfileInformation { get; init; }
 
-        public Giscus Giscus { get; init; }
+        public GiscusConfiguration GiscusConfiguration { get; init; }
 
-        public bool IsGiscusEnabled => Giscus != null;
+        public bool IsGiscusEnabled => GiscusConfiguration != null;
     }
 }

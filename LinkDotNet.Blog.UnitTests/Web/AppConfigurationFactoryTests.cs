@@ -51,10 +51,10 @@ namespace LinkDotNet.Blog.UnitTests.Web
             appConfiguration.ProfileInformation.Name.Should().Be("Steven");
             appConfiguration.ProfileInformation.Heading.Should().Be("Dev");
             appConfiguration.ProfileInformation.ProfilePictureUrl.Should().Be("Url");
-            appConfiguration.Giscus.Repository.Should().Be("repo");
-            appConfiguration.Giscus.RepositoryId.Should().Be("repoid");
-            appConfiguration.Giscus.Category.Should().Be("general");
-            appConfiguration.Giscus.CategoryId.Should().Be("generalid");
+            appConfiguration.GiscusConfiguration.Repository.Should().Be("repo");
+            appConfiguration.GiscusConfiguration.RepositoryId.Should().Be("repoid");
+            appConfiguration.GiscusConfiguration.Category.Should().Be("general");
+            appConfiguration.GiscusConfiguration.CategoryId.Should().Be("generalid");
         }
 
         [Theory]

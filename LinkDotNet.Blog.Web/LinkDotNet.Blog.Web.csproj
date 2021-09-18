@@ -36,6 +36,12 @@
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Shared\Giscus.razor.js">
+        <DependentUpon>Giscus.razor</DependentUpon>
+      </None>
+    </ItemGroup>
     <PropertyGroup>
         <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

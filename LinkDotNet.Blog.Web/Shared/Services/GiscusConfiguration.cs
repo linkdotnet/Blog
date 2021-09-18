@@ -1,6 +1,6 @@
 ﻿namespace LinkDotNet.Blog.Web.Shared.Services
 {
-    public class Giscus
+    public class GiscusConfiguration
     {
         public string Repository { get; set; }
 

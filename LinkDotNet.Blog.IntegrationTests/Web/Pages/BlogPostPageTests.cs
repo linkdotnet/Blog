@@ -6,6 +6,7 @@ using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Pages;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
@@ -87,7 +88,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
             ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
             ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
-            ctx.Services.AddScoped(_ => new Mock<IGiscusService>().Object);
+            ctx.Services.AddScoped(_ => new AppConfiguration());
         }
     }
 }
