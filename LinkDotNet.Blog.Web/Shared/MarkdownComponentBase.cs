@@ -1,4 +1,5 @@
 ﻿using Markdig;
+using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Components;
 
 namespace LinkDotNet.Blog.Web.Shared
@@ -7,6 +8,7 @@ namespace LinkDotNet.Blog.Web.Shared
     {
         private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
+            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
             .UseEmojiAndSmiley()
             .UseCitations()
             .UseBootstrap()
