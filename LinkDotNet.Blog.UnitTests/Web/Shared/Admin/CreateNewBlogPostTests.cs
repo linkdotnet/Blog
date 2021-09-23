@@ -40,7 +40,12 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
         [Fact]
         public void ShouldFillGivenBlogPost()
         {
-            var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Desc").WithContent("Content").Build();
+            var blogPost = new BlogPostBuilder()
+                .WithTitle("Title")
+                .WithShortDescription("Desc")
+                .WithContent("Content")
+                .WithTags("tag1", "tag2")
+                .Build();
             BlogPost blogPostFromComponent = null;
             var cut = RenderComponent<CreateNewBlogPost>(
                 p =>
@@ -55,6 +60,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
             blogPostFromComponent.Title.Should().Be("My new Title");
             blogPostFromComponent.ShortDescription.Should().Be("Desc");
             blogPostFromComponent.Content.Should().Be("Content");
+            blogPostFromComponent.Tags.Select(t => t.Content).Should().Contain("tag1");
+            blogPostFromComponent.Tags.Select(t => t.Content).Should().Contain("tag2");
         }
 
         [Fact]
