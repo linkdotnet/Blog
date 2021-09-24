@@ -42,12 +42,6 @@ namespace LinkDotNet.Blog.Web
                 services.UseAuth0Authentication(Configuration);
             }
 
-            /****************
-             * Possible authentication mechanism:
-             * services.UseDummyAuthentication();
-             * services.UseAuth0Authentication();
-             */
-
             services.AddBlazoredToast();
             services.AddHeadElementHelper();
             services.AddScoped<ILocalStorageService, LocalStorageService>();
