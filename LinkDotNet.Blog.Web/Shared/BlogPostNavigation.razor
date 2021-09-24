@@ -1,14 +1,14 @@
 ﻿@using X.PagedList
 @using LinkDotNet.Blog.Domain
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item @(!CurrentPage.IsFirstPage && CurrentPage.Count > 0 ? string.Empty : "disabled")">
-                <a class="page-link" href="#" tabindex="-1" @onclick="PreviousPage">Previous</a>
+                <a class="page-link" href="" tabindex="-1" @onclick="PreviousPage">Previous</a>
             </li>
             <li class="page-item @(!CurrentPage.IsLastPage && CurrentPage.Count > 0 ? string.Empty : "disabled")">
                 <a class="page-link"
                    @onclick="NextPage"
-                   href="#">Next</a>
+                   href="">Next</a>
             </li>
         </ul>
     </nav>

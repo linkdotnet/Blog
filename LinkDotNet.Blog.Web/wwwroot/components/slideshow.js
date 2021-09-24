@@ -37,7 +37,7 @@ templateSlideshowContainer.innerHTML = `
 }
 
 .text {
-  color: var(--white);p
+  color: var(--white);
   font-size: 15px;
   padding: 8px 12px;
   position: absolute;
