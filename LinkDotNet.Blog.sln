@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.UnitTests", "LinkDotNet.Blog.UnitTests\LinkDotNet.Blog.UnitTests.csproj", "{5B868911-7C93-4190-AEE4-3A6694F2FFCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkDotNet.Blog.IntegrationTests", "LinkDotNet.Blog.IntegrationTests\LinkDotNet.Blog.IntegrationTests.csproj", "{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.IntegrationTests", "LinkDotNet.Blog.IntegrationTests\LinkDotNet.Blog.IntegrationTests.csproj", "{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkDotNet.Blog.TestUtilities", "LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj", "{310ABEE1-C131-43E6-A759-F2DB75A483DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.TestUtilities", "LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj", "{310ABEE1-C131-43E6-A759-F2DB75A483DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
