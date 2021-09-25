@@ -20,7 +20,7 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql
 
         public async Task<TEntity> GetByIdAsync(string id)
         {
-            return await blogDbContext.Set<TEntity>().AsNoTracking().SingleOrDefaultAsync(b => b.Id == id);
+            return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
         }
 
         public async Task<IPagedList<TEntity>> GetAllAsync(
