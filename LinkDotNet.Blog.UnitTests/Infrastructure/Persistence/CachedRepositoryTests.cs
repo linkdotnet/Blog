@@ -132,8 +132,8 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence
 
             repositoryMock.Verify(
                 r => r.GetAllAsync(
-                It.IsAny<Expression<Func<BlogPost,bool>>>(),
-                It.IsAny<Expression<Func<BlogPost,object>>>(),
+                It.IsAny<Expression<Func<BlogPost, bool>>>(),
+                It.IsAny<Expression<Func<BlogPost, object>>>(),
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()),
