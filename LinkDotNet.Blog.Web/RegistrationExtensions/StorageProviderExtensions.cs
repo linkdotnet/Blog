@@ -30,6 +30,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
             }
 
             services.AddScoped<IRepository<BlogPost>, Repository<BlogPost>>();
+            services.AddMemoryCache();
             services.Decorate(typeof(IRepository<>), typeof(CachedRepository<>));
         }
     }

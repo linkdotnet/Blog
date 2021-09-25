@@ -121,6 +121,25 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence
             repositoryMock.Verify(r => r.DeleteAsync("id"), Times.Once);
         }
 
+        [Fact]
+        public async Task ShouldGetFreshDataAfterDelete()
+        {
+            SetupRepository();
+            await sut.GetAllAsync();
+            await sut.DeleteAsync("some_id");
+
+            await sut.GetAllAsync();
+
+            repositoryMock.Verify(
+                r => r.GetAllAsync(
+                It.IsAny<Expression<Func<BlogPost,bool>>>(),
+                It.IsAny<Expression<Func<BlogPost,object>>>(),
+                It.IsAny<bool>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()),
+                Times.Exactly(2));
+        }
+
         private void SetupRepository()
         {
             var blogPost = new BlogPostBuilder().Build();
