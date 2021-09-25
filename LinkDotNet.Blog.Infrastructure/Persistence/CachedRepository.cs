@@ -21,14 +21,13 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence
 
         public async Task<T> GetByIdAsync(string id)
         {
-            if (memoryCache.TryGetValue(id, out T item))
+            if (!memoryCache.TryGetValue(id, out T value))
             {
-                return item;
+                value = await repository.GetByIdAsync(id);
+                memoryCache.Set(id, value);
             }
 
-            var fromDb = await repository.GetByIdAsync(id);
-            memoryCache.Set(id, fromDb);
-            return fromDb;
+            return value;
         }
 
         public async Task<IPagedList<T>> GetAllAsync(
@@ -38,12 +37,12 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence
             int page = 1,
             int pageSize = int.MaxValue)
         {
-            var key = $"{page}-{pageSize}";
+            var key = $"{filter?.Body}-{orderBy?.Body}-{descending}-{page}-{pageSize}";
             return await memoryCache.GetOrCreate(key, async e =>
             {
                 e.SetOptions(new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1),
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1),
                 });
                 return await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
             });
@@ -51,11 +50,13 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence
 
         public async Task StoreAsync(T entity)
         {
+            memoryCache.Set(entity.Id, entity, TimeSpan.FromHours(1));
             await repository.StoreAsync(entity);
         }
 
         public async Task DeleteAsync(string id)
         {
+            memoryCache.Remove(id);
             await repository.DeleteAsync(id);
         }
     }
