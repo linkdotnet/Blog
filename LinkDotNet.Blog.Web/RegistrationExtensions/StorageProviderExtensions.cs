@@ -1,4 +1,6 @@
-﻿using LinkDotNet.Blog.Infrastructure.Persistence;
+﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +28,10 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions
             {
                 services.UseSqlAsStorageProvider();
             }
+
+            services.AddScoped<IRepository<BlogPost>, Repository<BlogPost>>();
+            services.AddMemoryCache();
+            services.Decorate(typeof(IRepository<>), typeof(CachedRepository<>));
         }
     }
 }
