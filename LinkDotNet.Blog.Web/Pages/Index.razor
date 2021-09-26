@@ -1,4 +1,5 @@
 ﻿@page "/"
+@page "/{page:int}"
 @using Markdig
 @using X.PagedList
 @using LinkDotNet.Blog.Web.Shared.Services
@@ -27,21 +28,25 @@
             <ShortBlogPost BlogPost="context" UseAlternativeStyle="@(currentLine++ % 2 != 0)"></ShortBlogPost>
         </Virtualize>
     </div>
-    <BlogPostNavigation CurrentPage="@currentPage" OnPageChanged="@GetPage"></BlogPostNavigation>
+    <BlogPostNavigation CurrentPage="@currentPage" OnPageChanged="@SetPageNumber"></BlogPostNavigation>
 </section>
 
 @code {
+    [Parameter]
+    public int? Page { get; set; }
+
     private IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
     private int currentLine;
 
     private string ImageUrl => appConfiguration.Introduction.BackgroundUrl.ToAbsoluteUrl(navigationManager.BaseUri);
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        currentPage = await blogPostRepository.GetAllAsync(
+         currentPage = await blogPostRepository.GetAllAsync(
             p => p.IsPublished,
             b => b.UpdatedDate,
-            pageSize: appConfiguration.BlogPostsPerPage);
+            pageSize: appConfiguration.BlogPostsPerPage,
+            page: Page ?? 1);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -52,12 +57,8 @@
         }
     }
 
-    private async Task GetPage(int newPage)
+    private void SetPageNumber(int newPage)
     {
-        currentPage = await blogPostRepository.GetAllAsync(
-            p => p.IsPublished,
-            b => b.UpdatedDate,
-            pageSize: appConfiguration.BlogPostsPerPage,
-            page: newPage);
+        navigationManager.NavigateTo($"/{newPage}");
     }
 }
