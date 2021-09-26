@@ -22,7 +22,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
         public UserRecordServiceTests()
         {
             repositoryMock = new Mock<IRepository<UserRecord>>();
-            fakeNavigationManager = new FakeNavigationManager(this.Renderer);
+            fakeNavigationManager = new FakeNavigationManager(Renderer);
             fakeAuthenticationStateProvider = new FakeAuthenticationStateProvider();
             localStorageService = new Mock<ILocalStorageService>();
             sut = new UserRecordService(

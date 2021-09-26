@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using FluentAssertions;
@@ -8,6 +9,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Toolbelt.Blazor.HeadElement;
@@ -74,7 +76,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
         }
 
         [Fact]
-        public async Task ShouldLoadNextBatchOnClick()
+        public async Task ShouldGoToNextPageOnNextClick()
         {
             await CreatePublishedBlogPosts(11);
             using var ctx = new TestContext();
@@ -84,28 +86,42 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
 
             cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
 
-            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 1);
-            var blogPosts = cut.FindComponents<ShortBlogPost>();
-            blogPosts.Count.Should().Be(1);
+            var navigationManager = ctx.Services.GetService<NavigationManager>();
+            cut.WaitForState(() => navigationManager.Uri.Contains("/2"));
+            navigationManager.Uri.Should().Contain("/2");
         }
 
         [Fact]
-        public async Task ShouldLoadPreviousBatchOnClick()
+        public async Task ShouldGoToPreviousPageOnPreviousClick()
         {
             await CreatePublishedBlogPosts(11);
             using var ctx = new TestContext();
             ctx.JSInterop.Mode = JSRuntimeMode.Loose;
             RegisterComponents(ctx);
-            var cut = ctx.RenderComponent<Index>();
-            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
-            cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
-            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 1);
+            var cut = ctx.RenderComponent<Index>(
+                p => p.Add(s => s.Page, 2));
 
             cut.FindComponent<BlogPostNavigation>().Find("li:first-child a").Click();
 
-            cut.WaitForState(() => cut.FindAll(".blog-card").Count > 1);
+            var navigationManager = ctx.Services.GetService<NavigationManager>();
+            cut.WaitForState(() => navigationManager.Uri.Contains("/1"));
+            navigationManager.Uri.Should().Contain("/1");
+        }
+
+        [Fact]
+        public async Task ShouldLoadOnlyItemsInPage()
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            RegisterComponents(ctx);
+
+            var cut = ctx.RenderComponent<Index>(
+                p => p.Add(s => s.Page, 2));
+
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
             var blogPosts = cut.FindComponents<ShortBlogPost>();
-            blogPosts.Count.Should().Be(10);
+            blogPosts.Should().HaveCount(1);
         }
 
         [Fact]

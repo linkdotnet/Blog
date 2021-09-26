@@ -42,7 +42,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-         currentPage = await blogPostRepository.GetAllAsync(
+        currentPage = await blogPostRepository.GetAllAsync(
             p => p.IsPublished,
             b => b.UpdatedDate,
             pageSize: appConfiguration.BlogPostsPerPage,
