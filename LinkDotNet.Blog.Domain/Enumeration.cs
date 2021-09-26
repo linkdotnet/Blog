@@ -8,8 +8,6 @@ namespace LinkDotNet.Blog.Domain
      public abstract class Enumeration<TEnumeration>
         where TEnumeration : Enumeration<TEnumeration>
     {
-        private readonly string key;
-
         protected Enumeration()
         {
         }
@@ -21,12 +19,12 @@ namespace LinkDotNet.Blog.Domain
                 throw new ArgumentException("The enum key cannot be null or empty");
             }
 
-            this.key = key;
+            Key = key;
         }
 
         public static IReadOnlyCollection<TEnumeration> All => GetEnumerations();
 
-        public string Key => key;
+        public string Key { get; }
 
         public static bool operator ==(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b)
         {
@@ -35,7 +33,7 @@ namespace LinkDotNet.Blog.Domain
                 return false;
             }
 
-            return a.key.Equals(b.key);
+            return a.Key.Equals(b.Key);
         }
 
         public static bool operator !=(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b)
@@ -45,7 +43,7 @@ namespace LinkDotNet.Blog.Domain
 
         public static TEnumeration Create(string key)
         {
-            var enumeration = All.SingleOrDefault(p => p.key == key);
+            var enumeration = All.SingleOrDefault(p => p.Key == key);
 
             if (enumeration is null)
             {
@@ -69,7 +67,7 @@ namespace LinkDotNet.Blog.Domain
                 return false;
             }
 
-            return (obj as TEnumeration).key == key;
+            return ((TEnumeration)obj).Key == Key;
         }
 
         public override string ToString() => Key;

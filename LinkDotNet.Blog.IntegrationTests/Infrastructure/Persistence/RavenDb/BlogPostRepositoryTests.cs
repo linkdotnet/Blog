@@ -66,6 +66,24 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb
         }
 
         [Fact]
+        public async Task ShouldSort()
+        {
+            var olderPost = new BlogPostBuilder().Build();
+            var newerPost = new BlogPostBuilder().Build();
+            await SaveBlogPostAsync(olderPost, newerPost);
+            await sut.StoreAsync(olderPost);
+            await sut.StoreAsync(newerPost);
+
+            var blogPosts = await sut.GetAllAsync(
+                orderBy: bp => bp.UpdatedDate,
+                descending: true);
+
+            var retrievedPosts = blogPosts.ToList();
+            retrievedPosts[0].Id.Should().Be(newerPost.Id);
+            retrievedPosts[1].Id.Should().Be(olderPost.Id);
+        }
+
+        [Fact]
         public async Task ShouldSaveBlogPost()
         {
             var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });

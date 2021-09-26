@@ -65,6 +65,21 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence.InMemory
         }
 
         [Fact]
+        public async Task ShouldGetAll()
+        {
+            var olderPost = new BlogPostBuilder().Build();
+            var newerPost = new BlogPostBuilder().Build();
+            var filteredOutPost = new BlogPostBuilder().WithTitle("FilterOut").Build();
+            await sut.StoreAsync(olderPost);
+            await sut.StoreAsync(newerPost);
+            await sut.StoreAsync(filteredOutPost);
+
+            var blogPosts = await sut.GetAllAsync();
+
+            blogPosts.Count.Should().Be(3);
+        }
+
+        [Fact]
         public async Task ShouldOrderDescending()
         {
             var olderPost = new BlogPostBuilder().WithUpdatedDate(DateTime.MinValue).Build();
