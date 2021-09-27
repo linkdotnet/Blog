@@ -58,7 +58,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-      await Task.Delay(10000);
         BlogPost = await blogPostRepository.GetByIdAsync(BlogPostId);
     }
 
