@@ -43,10 +43,7 @@
     <ItemGroup>
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Web\Shared\Services\LocalStorageServiceTests.cs" />
-    </ItemGroup>
+    
     <PropertyGroup>
         <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

@@ -22,8 +22,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
             await Repository.StoreAsync(blogPost);
             using var ctx = new TestContext();
             ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            var visits = new List<KeyValuePair<string, int>>();
-            visits.Add(new KeyValuePair<string, int>($"blogPost/{blogPost.Id}", 5));
+            var visits = new List<KeyValuePair<string, int>> { new($"blogPost/{blogPost.Id}", 5) };
             var pageVisitCounts = visits.OrderByDescending(s => s.Value);
 
             var cut = ctx.RenderComponent<VisitCountPerPage>(p => p.Add(
@@ -38,6 +37,34 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
             titleData.Href.Should().Contain($"blogPost/{blogPost.Id}");
             elements[1].InnerHtml.Should().Be("5");
             elements[2].InnerHtml.Should().Be("2");
+        }
+
+        [Fact]
+        public void ShouldIgnoreNullForBlogPostVisits()
+        {
+            using var ctx = new TestContext();
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+
+            var cut = ctx.RenderComponent<VisitCountPerPage>(p => p.Add(
+                s => s.PageVisitCount, null));
+
+            var elements = cut.FindAll("td").ToList();
+            elements.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void ShouldIgnoreNotBlogPosts()
+        {
+            using var ctx = new TestContext();
+            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+            var visits = new List<KeyValuePair<string, int>> { new("notablogpost", 5) };
+            var pageVisitCounts = visits.OrderByDescending(s => s.Value);
+
+            var cut = ctx.RenderComponent<VisitCountPerPage>(p => p.Add(
+                s => s.PageVisitCount, pageVisitCounts));
+
+            var elements = cut.FindAll("td").ToList();
+            elements.Should().BeEmpty();
         }
     }
 }
