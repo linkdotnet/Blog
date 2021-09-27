@@ -13,7 +13,7 @@
 <div class="page">
     @if (BlogPost == null)
     {
-        <h3>Loading...</h3>
+        <Loading></Loading>
     }
     else
     {
@@ -58,6 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+      await Task.Delay(10000);
         BlogPost = await blogPostRepository.GetByIdAsync(BlogPostId);
     }
 
