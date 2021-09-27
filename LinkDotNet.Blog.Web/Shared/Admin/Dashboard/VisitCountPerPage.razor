@@ -43,14 +43,16 @@
 
         foreach (var (blogPostUrl, clickCount) in PageVisitCount)
         {
-            var blogPostId = blogPostUrl[(blogPostUrl.IndexOf('/') + 1)..];
+            const string urlToBlogPost = "blogPost/";
+            var possibleBlogPostId = blogPostUrl.IndexOf(urlToBlogPost, StringComparison.InvariantCultureIgnoreCase);
 
-            if (string.IsNullOrEmpty(blogPostId))
+            if (possibleBlogPostId == -1)
             {
                 continue;
             }
 
-            var blogPost = (await blogPostRepository.GetByIdAsync(blogPostId));
+            var blogPostId = blogPostUrl[urlToBlogPost.Length..];
+            var blogPost = await blogPostRepository.GetByIdAsync(blogPostId);
 
             blogPostToCountList.Add(new KeyValuePair<BlogPost, int>(blogPost, clickCount));
         }
