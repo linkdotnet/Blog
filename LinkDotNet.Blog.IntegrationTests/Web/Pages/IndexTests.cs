@@ -128,6 +128,24 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expectedUri);
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public async Task ShouldSetPageToFirstIfOutOfRange(int? page)
+        {
+            await CreatePublishedBlogPosts(11);
+            using var ctx = new TestContext();
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            RegisterComponents(ctx);
+
+            var cut = ctx.RenderComponent<Index>(p => p.Add(
+                i => i.Page, page));
+
+            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+            cut.WaitForState(() => cut.FindAll(".blog-card").Count == 10);
+        }
+
         private static AppConfiguration CreateSampleAppConfiguration()
         {
             return new()

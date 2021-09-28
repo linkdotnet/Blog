@@ -42,6 +42,11 @@
 
     protected override async Task OnParametersSetAsync()
     {
+        if (Page == null || Page < 1)
+        {
+            Page = 1;
+        }
+
         currentPage = await blogPostRepository.GetAllAsync(
             p => p.IsPublished,
             b => b.UpdatedDate,
