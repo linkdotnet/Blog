@@ -42,7 +42,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (Page == null || Page < 1)
+        if (Page is null or < 1)
         {
             Page = 1;
         }
@@ -51,7 +51,7 @@
             p => p.IsPublished,
             b => b.UpdatedDate,
             pageSize: appConfiguration.BlogPostsPerPage,
-            page: Page ?? 1);
+            page: Page.Value);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
