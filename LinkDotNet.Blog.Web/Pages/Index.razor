@@ -28,7 +28,7 @@
             <ShortBlogPost BlogPost="context" UseAlternativeStyle="@(currentLine++ % 2 != 0)"></ShortBlogPost>
         </Virtualize>
     </div>
-    <BlogPostNavigation CurrentPage="@currentPage" OnPageChanged="@SetPageNumber"></BlogPostNavigation>
+    <BlogPostNavigation PageList="@currentPage"></BlogPostNavigation>
 </section>
 
 @code {
@@ -55,10 +55,5 @@
         {
             await userRecordService.StoreUserRecordAsync();
         }
-    }
-
-    private void SetPageNumber(int newPage)
-    {
-        navigationManager.NavigateTo($"/{newPage}");
     }
 }

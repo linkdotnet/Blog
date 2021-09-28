@@ -1,4 +1,6 @@
-﻿using Bunit;
+﻿using System.Linq;
+using AngleSharp.Html.Dom;
+using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Shared;
@@ -13,27 +15,23 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         [Fact]
         public void ShouldFireEventWhenGoingToNextPage()
         {
-            var actualNewPage = 0;
             var page = CreatePagedList(2, 3);
-            var cut = RenderComponent<BlogPostNavigation>(p => p.Add(param => param.CurrentPage, page.Object)
-                .Add(param => param.OnPageChanged, newPage => actualNewPage = newPage));
 
-            cut.Find("li:last-child a").Click();
+            var cut = RenderComponent<BlogPostNavigation>(p =>
+                p.Add(param => param.PageList, page.Object));
 
-            actualNewPage.Should().Be(3);
+            cut.FindAll("a").Cast<IHtmlAnchorElement>().Last().Href.Should().EndWith("/3");
         }
 
         [Fact]
         public void ShouldFireEventWhenGoingToPreviousPage()
         {
-            var actualNewPage = 0;
             var page = CreatePagedList(2, 3);
-            var cut = RenderComponent<BlogPostNavigation>(p => p.Add(param => param.CurrentPage, page.Object)
-                .Add(param => param.OnPageChanged, newPage => actualNewPage = newPage));
 
-            cut.Find("li:first-child a").Click();
+            var cut = RenderComponent<BlogPostNavigation>(p =>
+                p.Add(param => param.PageList, page.Object));
 
-            actualNewPage.Should().Be(1);
+            cut.FindAll("a").Cast<IHtmlAnchorElement>().First().Href.Should().EndWith("/1");
         }
 
         [Fact]
@@ -41,7 +39,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         {
             var page = CreatePagedList(2, 2);
             var cut = RenderComponent<BlogPostNavigation>(p =>
-                p.Add(param => param.CurrentPage, page.Object));
+                p.Add(param => param.PageList, page.Object));
 
             cut.Find("li:last-child").ClassList.Should().Contain("disabled");
         }
@@ -51,7 +49,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         {
             var page = CreatePagedList(1, 2);
             var cut = RenderComponent<BlogPostNavigation>(p =>
-                p.Add(param => param.CurrentPage, page.Object));
+                p.Add(param => param.PageList, page.Object));
 
             cut.Find("li:first-child").ClassList.Should().Contain("disabled");
         }
@@ -61,7 +59,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared
         {
             var page = CreatePagedList(0, 0);
             var cut = RenderComponent<BlogPostNavigation>(p =>
-                p.Add(param => param.CurrentPage, page.Object));
+                p.Add(param => param.PageList, page.Object));
 
             cut.Find("li:first-child").ClassList.Should().Contain("disabled");
             cut.Find("li:last-child").ClassList.Should().Contain("disabled");

@@ -8,7 +8,6 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Toolbelt.Blazor.HeadElement;
@@ -72,39 +71,6 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
             var blogPosts = cut.FindComponents<ShortBlogPost>();
 
             blogPosts.Count.Should().Be(10);
-        }
-
-        [Fact]
-        public async Task ShouldGoToNextPageOnNextClick()
-        {
-            await CreatePublishedBlogPosts(11);
-            using var ctx = new TestContext();
-            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            RegisterComponents(ctx);
-            var cut = ctx.RenderComponent<Index>();
-
-            cut.FindComponent<BlogPostNavigation>().Find("li:last-child a").Click();
-
-            var navigationManager = ctx.Services.GetService<NavigationManager>();
-            cut.WaitForState(() => navigationManager.Uri.Contains("/2"));
-            navigationManager.Uri.Should().Contain("/2");
-        }
-
-        [Fact]
-        public async Task ShouldGoToPreviousPageOnPreviousClick()
-        {
-            await CreatePublishedBlogPosts(11);
-            using var ctx = new TestContext();
-            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            RegisterComponents(ctx);
-            var cut = ctx.RenderComponent<Index>(
-                p => p.Add(s => s.Page, 2));
-
-            cut.FindComponent<BlogPostNavigation>().Find("li:first-child a").Click();
-
-            var navigationManager = ctx.Services.GetService<NavigationManager>();
-            cut.WaitForState(() => navigationManager.Uri.Contains("/1"));
-            navigationManager.Uri.Should().Contain("/1");
         }
 
         [Fact]

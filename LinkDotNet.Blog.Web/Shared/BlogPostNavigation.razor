@@ -2,36 +2,17 @@
 @using LinkDotNet.Blog.Domain
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            <li class="page-item @(!CurrentPage.IsFirstPage && CurrentPage.Count > 0 ? string.Empty : "disabled")">
-                <a class="page-link" href="" tabindex="-1" @onclick="PreviousPage">Previous</a>
+            <li class="page-item @(!PageList.IsFirstPage && PageList.Count > 0 ? string.Empty : "disabled")">
+                <a class="page-link" href="/@(PageList.PageNumber - 1)" tabindex="-1">Previous</a>
             </li>
-            <li class="page-item @(!CurrentPage.IsLastPage && CurrentPage.Count > 0 ? string.Empty : "disabled")">
+            <li class="page-item @(!PageList.IsLastPage && PageList.Count > 0 ? string.Empty : "disabled")">
                 <a class="page-link"
-                   @onclick="NextPage"
-                   href="">Next</a>
+                   href="/@(PageList.PageNumber + 1)">Next</a>
             </li>
         </ul>
     </nav>
 
     @code {
         [Parameter]
-        public IPagedList<BlogPost> CurrentPage { get; set; }
-        
-        [Parameter]
-        public EventCallback<int> OnPageChanged { get; set; }
-
-        private async Task PageHasChanged(int newPage)
-        {
-            await OnPageChanged.InvokeAsync(newPage);
-        }
-
-        private async Task PreviousPage()
-        {
-            await PageHasChanged(CurrentPage.PageNumber - 1);
-        }
-        
-        private async Task NextPage()
-        {
-            await PageHasChanged(CurrentPage.PageNumber + 1);
-        }
+        public IPagedList<BlogPost> PageList { get; set; }
     }
