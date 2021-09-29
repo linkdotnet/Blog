@@ -58,9 +58,9 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence
 
         public async Task StoreAsync(T entity)
         {
+            await repository.StoreAsync(entity);
             ResetCache();
             memoryCache.Set(entity.Id, entity, Options);
-            await repository.StoreAsync(entity);
         }
 
         public async Task DeleteAsync(string id)

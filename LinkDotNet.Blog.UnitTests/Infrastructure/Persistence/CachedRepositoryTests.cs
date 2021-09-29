@@ -101,9 +101,9 @@ namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence
         public async Task ShouldUpdateCacheOnStore()
         {
             var blogPost = new BlogPostBuilder().Build();
-            blogPost.Id = "id";
+            repositoryMock.Setup(r => r.StoreAsync(blogPost))
+                .Callback(() => blogPost.Id = "id");
             repositoryMock.Setup(r => r.GetByIdAsync("id")).ReturnsAsync(blogPost);
-            await sut.GetByIdAsync("id");
             var update = new BlogPostBuilder().WithTitle("new").Build();
             blogPost.Update(update);
             await sut.StoreAsync(blogPost);
