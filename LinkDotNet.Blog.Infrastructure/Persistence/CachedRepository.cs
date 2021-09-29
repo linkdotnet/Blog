@@ -48,7 +48,7 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence
             int page = 1,
             int pageSize = int.MaxValue)
         {
-            var key = $"{filter?.Body}-{orderBy?.Body}-{descending}-{page}-{pageSize}";
+            var key = $"{filter?.GetHashCode()}-{orderBy?.GetHashCode()}-{descending}-{page}-{pageSize}";
             return await memoryCache.GetOrCreate(key, async e =>
             {
                 e.SetOptions(Options);
