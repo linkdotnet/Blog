@@ -10,41 +10,39 @@
 @inject IUserRecordService userRecordService
 @inherits MarkdownComponentBase
 
-<div class="page">
-    @if (BlogPost == null)
-    {
-        <Loading></Loading>
-    }
-    else
-    {
-        <Title>@BlogPost.Title</Title>
-        <OgData Title="@BlogPost.Title" 
-                AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl" 
-                Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
-                Keywords="@Tags"></OgData>
-        <div class="blog-outer-box">
-            <div class="content blog-container">
-                <div class="blog-content">
-                    <header>
-                        <h1>@BlogPost.Title</h1></header>
-                    <div class="blogpost-date">
-                        @BlogPost.UpdatedDate.ToString("dd/MM/yyyy")
-                    </div>
-
-                    <div class="admin-action">
-                        <BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
-                    </div>
-
-                    <div class="blogpost-content">
-                        @(RenderMarkupString(BlogPost.Content))
-                    </div>
+@if (BlogPost == null)
+{
+    <Loading></Loading>
+}
+else
+{
+    <Title>@BlogPost.Title</Title>
+    <OgData Title="@BlogPost.Title"
+            AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl"
+            Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
+            Keywords="@Tags"></OgData>
+    <div class="blog-outer-box">
+        <div class="content blog-container">
+            <div class="blog-content">
+                <header>
+                    <h1>@BlogPost.Title</h1></header>
+                <div class="blogpost-date">
+                    @BlogPost.UpdatedDate.ToString("dd/MM/yyyy")
                 </div>
-                <Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
-                <Giscus></Giscus>
+
+                <div class="admin-action">
+                    <BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
+                </div>
+
+                <div class="blogpost-content">
+                    @(RenderMarkupString(BlogPost.Content))
+                </div>
             </div>
+            <Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
+            <Giscus></Giscus>
         </div>
-    }
-</div>
+    </div>
+}
 
 @code {
     [Parameter]

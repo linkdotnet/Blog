@@ -7,20 +7,18 @@
 @inject IRepository<BlogPost> blogPostRepository
 @inject IToastService toastService
 
-<div class="page">
-    @if (blogPostFromDb != null)
-    {
-        <CreateNewBlogPost
-            Title="Update BlogPost"
-            BlogPost="@blogPostFromDb"
-            OnBlogPostCreated="StoreBlogPostAsync"
-            ClearAfterCreated="false"></CreateNewBlogPost>
-    }
-    else
-    {
-        <Loading></Loading>
-    }
-</div>
+@if (blogPostFromDb != null)
+{
+    <CreateNewBlogPost
+        Title="Update BlogPost"
+        BlogPost="@blogPostFromDb"
+        OnBlogPostCreated="StoreBlogPostAsync"
+        ClearAfterCreated="false"></CreateNewBlogPost>
+}
+else
+{
+    <Loading></Loading>
+}
 
 @code {
     [Parameter]

@@ -5,15 +5,13 @@
 @inject IRepository<BlogPost> blogPostRepository
 @inject IUserRecordService userRecordService
 
-<div class="page">
-    <h3>Results for @SearchTerm</h3>
+<h3>Results for @SearchTerm</h3>
 
-    <div class="content px-4">
-        @for (var i = 0; i < blogPosts.Count; i++)
-        {
-            <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-        }
-    </div>
+<div class="content px-4">
+    @for (var i = 0; i < blogPosts.Count; i++)
+    {
+        <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+    }
 </div>
 @code {
     [Parameter]
