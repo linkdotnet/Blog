@@ -3,11 +3,10 @@
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item @(!PageList.IsFirstPage && PageList.Count > 0 ? string.Empty : "disabled")">
-                <a class="page-link" href="/@(PageList.PageNumber - 1)" tabindex="-1">Previous</a>
+                <a class="page-link" href="@PreviousPageLink" tabindex="-1">Previous</a>
             </li>
             <li class="page-item @(!PageList.IsLastPage && PageList.Count > 0 ? string.Empty : "disabled")">
-                <a class="page-link"
-                   href="/@(PageList.PageNumber + 1)">Next</a>
+                <a class="page-link" href="@NextPageLink">Next</a>
             </li>
         </ul>
     </nav>
@@ -15,4 +14,7 @@
     @code {
         [Parameter]
         public IPagedList<BlogPost> PageList { get; set; }
+
+        private string PreviousPageLink => PageList.IsFirstPage ? string.Empty : $"/{PageList.PageNumber - 1}";
+        private string NextPageLink => PageList.IsLastPage ? string.Empty : $"/{PageList.PageNumber + 1}";
     }
