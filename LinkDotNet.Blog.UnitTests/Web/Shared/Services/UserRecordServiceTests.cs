@@ -81,7 +81,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
         [Fact]
         public async Task ShouldNotThrowExceptionToOutsideWorld()
         {
-            localStorageService.Setup(l => l.SetItemAsync("user", "some value")).Throws<Exception>();
+            localStorageService.Setup(l => l.SetItemAsync("user", It.IsAny<Guid>())).Throws<Exception>();
 
             Func<Task> act = () => sut.StoreUserRecordAsync();
 
