@@ -5,7 +5,6 @@
 }
 
 .introduction-container {
-    padding-top: 78px;
     height: 438px;
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
@@ -20,7 +19,7 @@
     height: 175px;
     border-radius: 50%;
     border: white;
-    margin: 4px 0 0 4px;
+    margin: auto;
     box-shadow: 0 0 0 4px white;
     background-image: var(--profile-image);
     background-repeat: no-repeat;
@@ -29,6 +28,7 @@
 }
 
 .profile-text {
+    margin: auto;
     grid-area: profile-text;
     font-size: clamp(1rem, 0.6479rem + 1.1268vw, 1.5rem);
     color: var(--text-color-inverted);
