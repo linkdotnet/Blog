@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -35,7 +34,7 @@ namespace LinkDotNet.Blog.Web.Shared.Services
             }
             catch (Exception e)
             {
-                Trace.Write($"Exception: {e}");
+                Console.Write($"Exception: {e}");
             }
         }
 
@@ -63,7 +62,7 @@ namespace LinkDotNet.Blog.Web.Shared.Services
 
         private async Task<int> GetIdentifierHashAsync()
         {
-            var hasKey = await localStorageService.ContainKeyAsync("user");
+            var hasKey = await TryGetKey();
             if (hasKey)
             {
                 var key = await localStorageService.GetItemAsync<Guid>("user");
@@ -73,6 +72,20 @@ namespace LinkDotNet.Blog.Web.Shared.Services
             var id = Guid.NewGuid();
             await localStorageService.SetItemAsync("user", id);
             return id.GetHashCode();
+        }
+
+        private async Task<bool> TryGetKey()
+        {
+            try
+            {
+                var hasKey = await localStorageService.ContainKeyAsync("user");
+                return hasKey;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Couldn't obtain key: \"user\": {e}");
+                return false;
+            }
         }
 
         private string GetClickedUrl()

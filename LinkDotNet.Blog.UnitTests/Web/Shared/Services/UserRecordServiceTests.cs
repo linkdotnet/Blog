@@ -81,11 +81,22 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
         [Fact]
         public async Task ShouldNotThrowExceptionToOutsideWorld()
         {
-            localStorageService.Setup(l => l.ContainKeyAsync("user")).Throws<Exception>();
+            localStorageService.Setup(l => l.SetItemAsync("user", "some value")).Throws<Exception>();
 
             Func<Task> act = () => sut.StoreUserRecordAsync();
 
             await act.Should().NotThrowAsync<Exception>();
+        }
+
+        [Fact]
+        public async Task ShouldReturnFalseWhenContainKeyOnExceptionAndCreateNewOne()
+        {
+            localStorageService.Setup(l => l.ContainKeyAsync("user")).Throws<Exception>();
+
+            await sut.StoreUserRecordAsync();
+
+            repositoryMock.Verify(l => l.StoreAsync(It.IsAny<UserRecord>()), Times.Once);
+            localStorageService.Verify(l => l.SetItemAsync("user", It.IsAny<Guid>()), Times.Once);
         }
 
         [InlineData("http://localhost/blogPost/12?q=3", "blogPost/12")]
