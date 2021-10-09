@@ -37,7 +37,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
             var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
             blogPostFromDb.Should().NotBeNull();
             blogPostFromDb.ShortDescription.Should().Be("My new Description");
-            toastService.Verify(t => t.ShowInfo("Updated BlogPost Title", string.Empty), Times.Once);
+            toastService.Verify(t => t.ShowInfo("Updated BlogPost Title", string.Empty, null), Times.Once);
         }
 
         [Fact]

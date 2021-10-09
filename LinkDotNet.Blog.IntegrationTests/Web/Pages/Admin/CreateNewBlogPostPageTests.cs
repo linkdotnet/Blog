@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
@@ -32,7 +33,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
             var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Title == "My Title");
             blogPostFromDb.Should().NotBeNull();
             blogPostFromDb.ShortDescription.Should().Be("My short Description");
-            toastService.Verify(t => t.ShowInfo("Created BlogPost My Title", string.Empty), Times.Once);
+            toastService.Verify(t => t.ShowInfo("Created BlogPost My Title", string.Empty, null), Times.Once);
         }
 
         private static void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
