@@ -1,0 +1,35 @@
+﻿@page "/Sitemap"
+@using LinkDotNet.Blog.Web.Shared.Services.Sitemap
+@inject ISitemapService sitemapService
+
+<div class="row">
+    <button class="btn btn-primary" @onclick="CreateSitemap">Create Sitemap</button>
+
+    @if (urlSet != null)
+    {
+        <table class="table table-striped table-hover">
+            <tbody>
+            <tr>
+                <th>Url</th>
+                <th>Last Changed</th>
+            </tr>
+            @foreach (var url in urlSet.Urls)
+            {
+                <tr>
+                    <td>@url.Location</td>
+                    <td>@url.LastModified</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private UrlSet urlSet;
+
+    private async Task CreateSitemap()
+    {
+        urlSet = await sitemapService.CreateSitemapAsync();
+    }
+}
