@@ -3,7 +3,7 @@
 namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap
 {
     [XmlRoot(ElementName="url")]
-    public class Url
+    public class SitemapUrl
     {
         [XmlElement(ElementName="loc")]
         public string Location { get; set; }

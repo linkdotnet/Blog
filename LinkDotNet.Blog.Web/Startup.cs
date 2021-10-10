@@ -4,6 +4,7 @@ using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.Pages.Admin;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Shared.Services.Sitemap;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -44,10 +45,7 @@ namespace LinkDotNet.Blog.Web
 
             services.AddBlazoredToast();
             services.AddHeadElementHelper();
-            services.AddScoped<ILocalStorageService, LocalStorageService>();
-            services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
-            services.AddScoped<IUserRecordService, UserRecordService>();
-            services.AddScoped<IDashboardService, DashboardService>();
+            RegisterServices(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -78,6 +76,15 @@ namespace LinkDotNet.Blog.Web
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });
+        }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+            services.AddScoped<ILocalStorageService, LocalStorageService>();
+            services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
+            services.AddScoped<IUserRecordService, UserRecordService>();
+            services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<ISitemapService, SitemapService>();
         }
     }
 }

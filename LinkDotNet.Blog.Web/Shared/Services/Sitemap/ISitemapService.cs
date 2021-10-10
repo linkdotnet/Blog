@@ -4,6 +4,8 @@ namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap
 {
     public interface ISitemapService
     {
-        Task<UrlSet> CreateSitemapAsync();
+        Task<SitemapUrlSet> CreateSitemapAsync();
+
+        Task SaveSitemapToFileAsync(SitemapUrlSet sitemap);
     }
 }
