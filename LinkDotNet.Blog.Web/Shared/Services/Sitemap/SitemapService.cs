@@ -50,7 +50,7 @@ namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap
         {
             return blogPosts.Select(b => new SitemapUrl
             {
-                Location = $"{navigationManager.BaseUri}blogPosts/{b.Id}",
+                Location = $"{navigationManager.BaseUri}blogPost/{b.Id}",
                 LastModified = b.UpdatedDate.ToString("yyyy-MM-dd"),
             }).ToList();
         }
