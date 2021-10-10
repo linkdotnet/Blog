@@ -85,6 +85,7 @@ namespace LinkDotNet.Blog.Web
             services.AddScoped<IUserRecordService, UserRecordService>();
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<ISitemapService, SitemapService>();
+            services.AddScoped<IXmlFileWriter, XmlFileWriter>();
         }
     }
 }

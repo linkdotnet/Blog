@@ -1,6 +1,7 @@
 ﻿@page "/Sitemap"
 @using LinkDotNet.Blog.Web.Shared.Services.Sitemap
 @inject ISitemapService sitemapService
+@attribute [Authorize]
 
 <div class="row">
     <button class="btn btn-primary" @onclick="CreateSitemap">Create Sitemap</button>
