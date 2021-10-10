@@ -43,7 +43,7 @@ namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap
 
         public async Task SaveSitemapToFileAsync(SitemapUrlSet sitemap)
         {
-            await xmlFileWriter.WriteObjectToXmlFileAsync(sitemap, "sitemap.xml");
+            await xmlFileWriter.WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml");
         }
 
         private IEnumerable<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPost> blogPosts)

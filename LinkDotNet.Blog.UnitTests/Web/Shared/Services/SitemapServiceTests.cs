@@ -74,7 +74,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
 
             await sut.SaveSitemapToFileAsync(sitemap);
 
-            xmlFileWriterMock.Verify(x => x.WriteObjectToXmlFileAsync(sitemap, "sitemap.xml"));
+            xmlFileWriterMock.Verify(x => x.WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml"));
         }
     }
 }
