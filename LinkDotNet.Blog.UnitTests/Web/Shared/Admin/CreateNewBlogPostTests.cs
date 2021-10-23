@@ -135,5 +135,31 @@ namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin
 
             found.Should().HaveCount(0);
         }
+
+        [Fact]
+        public void ShouldAcceptInputWithoutLosingFocusOrEnter()
+        {
+            BlogPost blogPost = null;
+            var cut = RenderComponent<CreateNewBlogPost>(
+                p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
+            cut.Find("#title").Input("My Title");
+            cut.Find("#short").Input("My short Description");
+            cut.Find("#content").Input("My content");
+            cut.Find("#preview").Change("My preview url");
+            cut.Find("#published").Change(false);
+            cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+
+            cut.Find("form").Submit();
+
+            cut.WaitForState(() => cut.Find("#title").TextContent == string.Empty);
+            blogPost.Should().NotBeNull();
+            blogPost.Title.Should().Be("My Title");
+            blogPost.ShortDescription.Should().Be("My short Description");
+            blogPost.Content.Should().Be("My content");
+            blogPost.PreviewImageUrl.Should().Be("My preview url");
+            blogPost.IsPublished.Should().BeFalse();
+            blogPost.Tags.Should().HaveCount(3);
+            blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
+        }
     }
 }
