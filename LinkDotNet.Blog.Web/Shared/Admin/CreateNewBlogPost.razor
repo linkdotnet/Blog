@@ -10,16 +10,18 @@
             <ValidationSummary />
             <div class="mb-3">
                 <label for="title">Title</label>
-                <InputText class="form-control" id="title" @bind-Value="model.Title" />
+                <InputText class="form-control" id="title" @bind-Value="model.Title"
+                           @oninput="args => model.Title = args.Value.ToString()"/>
             </div>
             <div class="mb-3">
                 <label for="short">Short Description</label>
-                <InputTextArea class="form-control" id="short" @bind-Value="model.ShortDescription" rows="4"/>
+                <InputTextArea class="form-control" id="short" @bind-Value="model.ShortDescription" rows="4"
+                @oninput="args => model.ShortDescription = args.Value.ToString()"/>
                 <small id="short" class="form-text text-muted">You can use markdown to style your component.</small>
             </div>
             <div class="mb-3">
                 <label for="content">Content</label>
-                <InputTextArea class="form-control" id="content" @bind-Value="model.Content" rows="10" />
+                <InputTextArea class="form-control" id="content" @bind-Value="model.Content" @oninput="args => model.Content = args.Value.ToString()" rows="10" />
                 <small id="content" class="form-text text-muted">You can use markdown to style your component. Additional features are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
                 @* <small id="content" class="form-text text-muted">Drag and drop images to upload and insert picture.</small> *@
             </div>
