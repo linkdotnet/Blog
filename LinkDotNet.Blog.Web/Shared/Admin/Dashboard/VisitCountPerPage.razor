@@ -51,7 +51,7 @@
     private async Task LoadBlogPostInformationAsync()
     {
         visitData = await (from ur in blogDbContext.UserRecords
-            where ur.DateTimeUtcClicked > startDate
+            where ur.DateTimeUtcClicked >= startDate
             join bp in blogDbContext.BlogPosts
                 on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
             group new { ur, bp } by new { ur.UrlClicked }
