@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace LinkDotNet.Blog.Web.Pages.Admin
+﻿namespace LinkDotNet.Blog.Web.Pages.Admin
 {
     public class DashboardData
     {
@@ -12,8 +9,6 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
         public int TotalPageClicks { get; set; }
 
         public int PageClicksLast30Days { get; set; }
-
-        public IOrderedEnumerable<KeyValuePair<string, int>> BlogPostVisitCount { get; set; }
 
         public int TotalAboutMeClicks { get; set; }
 
