@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Common;
+using System.Linq;
 using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
@@ -8,6 +9,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Pages.Admin;
 using LinkDotNet.Blog.Web.Shared.Admin.Dashboard;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -20,11 +22,15 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin
         [Fact]
         public void ShouldNotShowAboutMeStatisticsWhenDisabled()
         {
+            var options = new DbContextOptionsBuilder()
+                .UseSqlite(CreateInMemoryConnection())
+                .Options;
             var dashboardService = new Mock<IDashboardService>();
             this.AddTestAuthorization().SetAuthorized("test");
             Services.AddScoped(_ => CreateAppConfiguration(false));
             Services.AddScoped(_ => dashboardService.Object);
             Services.AddScoped(_ => new Mock<IRepository<BlogPost>>().Object);
+            Services.AddScoped(_ => new BlogDbContext(options));
             dashboardService.Setup(d => d.GetDashboardDataAsync())
                 .ReturnsAsync(new DashboardData());
 
@@ -42,6 +48,15 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin
             {
                 ProfileInformation = aboutMeEnabled ? new ProfileInformation() : null,
             };
+        }
+
+        private static DbConnection CreateInMemoryConnection()
+        {
+            var connection = new SqliteConnection("Filename=:memory:");
+
+            connection.Open();
+
+            return connection;
         }
     }
 }
