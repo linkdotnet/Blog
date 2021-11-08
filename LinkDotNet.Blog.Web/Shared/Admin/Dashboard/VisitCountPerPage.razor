@@ -8,30 +8,33 @@
 <div class="card">
     <div class="card-header">Blog Post Visit Counts</div>
     <div class="card-body">
-        <table class="table table-striped table-hover">
-            <tbody>
-            <tr>
-                <th>Title</th>
-                <th>Clicks</th>
-                <th>Likes</th>
-            </tr>
-            @if (visitData != null)
-            {
-                @foreach (var date in visitData)
+        <div class="row">
+            <DateRangeSelector></DateRangeSelector>
+            <table class="table table-striped table-hover">
+                <tbody>
+                <tr>
+                    <th>Title</th>
+                    <th>Clicks</th>
+                    <th>Likes</th>
+                </tr>
+                @if (visitData != null)
                 {
-                    <tr>
-                        <td><a href="blogPost/@date.Id">@date.Title</a></td>
-                        <td>@date.ClickCount</td>
-                        <td>@date.Likes</td>
-                    </tr>
+                    @foreach (var date in visitData)
+                    {
+                        <tr>
+                            <td><a href="blogPost/@date.Id">@date.Title</a></td>
+                            <td>@date.ClickCount</td>
+                            <td>@date.Likes</td>
+                        </tr>
+                    }
                 }
-            }
-            else
-            {
-                <Loading></Loading>
-            }
-            </tbody>
-        </table>
+                else
+                {
+                    <Loading></Loading>
+                }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

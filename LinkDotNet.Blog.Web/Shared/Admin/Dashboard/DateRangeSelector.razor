@@ -1,0 +1,30 @@
+﻿<div class="col-1">
+    <p>Since: </p>
+</div>
+<div class="col-2">
+    <select @onchange="RaiseDateTimeSpanChanged">
+        @foreach (var (title, time) in options)
+        {
+            <option value="@time">@title</option>
+        }
+    </select>
+</div>
+@code {
+    [Parameter]
+    public EventCallback<DateTime> DateTimeSpanChanged { get; set; }
+
+    private readonly Dictionary<string, DateTime> options = new()
+    {
+        { "Beginning of time", DateTime.MinValue },
+        { "Last 90 Days", DateTime.UtcNow.AddDays(-90) },
+        { "Last 30 Days", DateTime.UtcNow.AddDays(-30) },
+        { "Last 7 Days", DateTime.UtcNow.AddDays(-7) },
+        { "Since Today", DateTime.UtcNow.Date },
+    };
+
+    private void RaiseDateTimeSpanChanged(ChangeEventArgs args)
+    {
+        Console.WriteLine(args.Value);
+    }
+
+}
