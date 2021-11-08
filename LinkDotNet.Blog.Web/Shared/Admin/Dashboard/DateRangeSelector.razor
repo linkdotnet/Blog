@@ -22,9 +22,9 @@
         { "Since Today", DateTime.UtcNow.Date },
     };
 
-    private void RaiseDateTimeSpanChanged(ChangeEventArgs args)
+    private async Task RaiseDateTimeSpanChanged(ChangeEventArgs args)
     {
-        Console.WriteLine(args.Value);
+        await DateTimeSpanChanged.InvokeAsync(DateTime.Parse(args.Value!.ToString()));
     }
 
 }
