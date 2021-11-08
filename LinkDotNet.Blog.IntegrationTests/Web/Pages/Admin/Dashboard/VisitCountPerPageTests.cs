@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Bunit;
 using FluentAssertions;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Shared.Admin.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +11,7 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
 {
-    public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
+    public sealed class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
     {
         [Fact]
         public async Task ShouldShowCounts()
@@ -21,12 +19,10 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
             var blogPost = new BlogPostBuilder().WithTitle("I was clicked").WithLikes(2).Build();
             await Repository.StoreAsync(blogPost);
             using var ctx = new TestContext();
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            var visits = new List<KeyValuePair<string, int>> { new($"blogPost/{blogPost.Id}", 5) };
-            var pageVisitCounts = visits.OrderByDescending(s => s.Value);
+            ctx.Services.AddScoped(_ => DbContext);
+            await SaveBlogPostArticleClicked(blogPost.Id, 10);
 
-            var cut = ctx.RenderComponent<VisitCountPerPage>(p => p.Add(
-                s => s.PageVisitCount, pageVisitCounts));
+            var cut = ctx.RenderComponent<VisitCountPerPage>();
 
             cut.WaitForState(() => cut.FindAll("td").Any());
             var elements = cut.FindAll("td").ToList();
@@ -35,36 +31,23 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard
             titleData.Should().NotBeNull();
             titleData.InnerHtml.Should().Be(blogPost.Title);
             titleData.Href.Should().Contain($"blogPost/{blogPost.Id}");
-            elements[1].InnerHtml.Should().Be("5");
+            elements[1].InnerHtml.Should().Be("10");
             elements[2].InnerHtml.Should().Be("2");
         }
 
-        [Fact]
-        public void ShouldIgnoreNullForBlogPostVisits()
+        private async Task SaveBlogPostArticleClicked(string blogPostId, int count)
         {
-            using var ctx = new TestContext();
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+            var urlClicked = $"blogPost/{blogPostId}";
+            for (var i = 0; i < count; i++)
+            {
+                var data = new UserRecord
+                {
+                    UrlClicked = urlClicked,
+                };
+                await DbContext.UserRecords.AddAsync(data);
+            }
 
-            var cut = ctx.RenderComponent<VisitCountPerPage>(p => p.Add(
-                s => s.PageVisitCount, null));
-
-            var elements = cut.FindAll("td").ToList();
-            elements.Should().BeEmpty();
-        }
-
-        [Fact]
-        public void ShouldIgnoreNotBlogPosts()
-        {
-            using var ctx = new TestContext();
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            var visits = new List<KeyValuePair<string, int>> { new("notablogpost", 5) };
-            var pageVisitCounts = visits.OrderByDescending(s => s.Value);
-
-            var cut = ctx.RenderComponent<VisitCountPerPage>(p => p.Add(
-                s => s.PageVisitCount, pageVisitCounts));
-
-            var elements = cut.FindAll("td").ToList();
-            elements.Should().BeEmpty();
+            await DbContext.SaveChangesAsync();
         }
     }
 }
