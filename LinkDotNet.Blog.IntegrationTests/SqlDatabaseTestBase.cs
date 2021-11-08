@@ -37,7 +37,6 @@ namespace LinkDotNet.Blog.IntegrationTests
 
         public async ValueTask DisposeAsync()
         {
-            await DbContext.Database.EnsureDeletedAsync();
             await DbContext.DisposeAsync();
         }
 

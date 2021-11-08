@@ -1,60 +1,74 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@inject IRepository<BlogPost> blogPostRepository
+@using System.Linq.Expressions
+@using LinkDotNet.Blog.Infrastructure.Persistence.Sql
+@using Microsoft.EntityFrameworkCore
+@inject BlogDbContext blogDbContext
 
 <div class="card">
     <div class="card-header">Blog Post Visit Counts</div>
     <div class="card-body">
-        <table class="table table-striped table-hover">
-            <tbody>
-            <tr>
-                <th>Title</th>
-                <th>Clicks</th>
-                <th>Likes</th>
-            </tr>
-            @if (PageVisitCount != null)
-            {
-                @foreach (var (blogPost, visitCount) in blogPostToCountList)
+        <div class="row">
+            <DateRangeSelector DateTimeSpanChanged="RefreshVisitCount"></DateRangeSelector>
+            <table class="table table-striped table-hover">
+                <tbody>
+                <tr>
+                    <th>Title</th>
+                    <th>Clicks</th>
+                    <th>Likes</th>
+                </tr>
+                @if (visitData != null)
                 {
-                    <tr>
-                        <td><a href="blogPost/@blogPost.Id">@blogPost.Title</a></td>
-                        <td>@visitCount</td>
-                        <td>@blogPost.Likes</td>
-                    </tr>
+                    @foreach (var date in visitData)
+                    {
+                        <tr>
+                            <td><a href="blogPost/@date.Id">@date.Title</a></td>
+                            <td>@date.ClickCount</td>
+                            <td>@date.Likes</td>
+                        </tr>
+                    }
                 }
-            }
-            </tbody>
-        </table>
+                else
+                {
+                    <Loading></Loading>
+                }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 @code {
-    [Parameter]
-    public IOrderedEnumerable<KeyValuePair<string, int>> PageVisitCount { get; set; }
 
-    private List<KeyValuePair<BlogPost, int>> blogPostToCountList = new();
+    private DateTime startDate = DateTime.MinValue;
+    private IList<VisitCountPageData> visitData;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (PageVisitCount == null)
-        {
-            return;
-        }
+        await LoadBlogPostInformationAsync();
+    }
 
-        foreach (var (blogPostUrl, clickCount) in PageVisitCount)
-        {
-            const string urlToBlogPost = "blogPost/";
-            var possibleBlogPostId = blogPostUrl.IndexOf(urlToBlogPost, StringComparison.InvariantCultureIgnoreCase);
-
-            if (possibleBlogPostId == -1)
+    private async Task LoadBlogPostInformationAsync()
+    {
+        visitData = await (from ur in blogDbContext.UserRecords
+            where ur.DateTimeUtcClicked >= startDate
+            join bp in blogDbContext.BlogPosts
+                on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
+            group new { ur, bp } by new { ur.UrlClicked }
+            into gp
+            orderby gp.Count() descending
+            select new VisitCountPageData
             {
-                continue;
-            }
+                Id = gp.FirstOrDefault().bp.Id,
+                Title = gp.FirstOrDefault().bp.Title,
+                Likes = gp.FirstOrDefault().bp.Likes,
+                ClickCount = gp.Count()
+            }).ToListAsync();
+    }
 
-            var blogPostId = blogPostUrl[urlToBlogPost.Length..];
-            var blogPost = await blogPostRepository.GetByIdAsync(blogPostId);
-
-            blogPostToCountList.Add(new KeyValuePair<BlogPost, int>(blogPost, clickCount));
-        }
+    private async Task RefreshVisitCount(DateTime newBeginning)
+    {
+        startDate = newBeginning;
+        await LoadBlogPostInformationAsync();
     }
 }

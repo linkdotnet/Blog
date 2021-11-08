@@ -36,8 +36,6 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
             var aboutMeClicks = records.Count(r => r.UrlClicked.Contains("AboutMe"));
             var aboutMeClicksLast30Days = records.Count(r => r.UrlClicked.Contains("AboutMe") && r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30));
 
-            var visitCount = GetPageVisitCount(records);
-
             return new DashboardData
             {
                 TotalAmountOfUsers = users,
@@ -46,17 +44,7 @@ namespace LinkDotNet.Blog.Web.Pages.Admin
                 PageClicksLast30Days = clicks30Days,
                 TotalAboutMeClicks = aboutMeClicks,
                 AboutMeClicksLast30Days = aboutMeClicksLast30Days,
-                BlogPostVisitCount = visitCount,
             };
-        }
-
-        private static IOrderedEnumerable<KeyValuePair<string, int>> GetPageVisitCount(IEnumerable<UserRecord> records)
-        {
-            return records
-                .Where(u => u.UrlClicked.StartsWith("blogPost/"))
-                .GroupBy(u => u.UrlClicked)
-                .ToDictionary(k => k.Key, v => v.Count())
-                .OrderByDescending(d => d.Value);
         }
     }
 }
