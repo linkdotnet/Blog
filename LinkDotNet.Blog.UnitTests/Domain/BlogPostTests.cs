@@ -28,6 +28,20 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         }
 
         [Fact]
+        public void ShouldUpdateTagsWhenExisting()
+        {
+            var blogPostToUpdate = new BlogPostBuilder().WithTags("tag 1").Build();
+            blogPostToUpdate.Id = "random-id";
+            var blogPost = new BlogPostBuilder().WithTags("tag 2").Build();
+            blogPost.Id = "something else";
+
+            blogPostToUpdate.Update(blogPost);
+
+            blogPostToUpdate.Tags.Should().HaveCount(1);
+            blogPostToUpdate.Tags.Single().Content.Should().Be("tag 2");
+        }
+
+        [Fact]
         public void ShouldTrimWhitespacesFromTags()
         {
             var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, tags: new[] { " Tag 1", " Tag 2 ", });

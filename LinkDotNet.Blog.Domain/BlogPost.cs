@@ -57,7 +57,23 @@ namespace LinkDotNet.Blog.Domain
             UpdatedDate = from.UpdatedDate;
             PreviewImageUrl = from.PreviewImageUrl;
             IsPublished = from.IsPublished;
-            Tags = from.Tags;
+            ReplaceTags(from.Tags);
+        }
+
+        private void ReplaceTags(IEnumerable<Tag> tags)
+        {
+            Tags?.Clear();
+            if (Tags == null || tags == null)
+            {
+                Tags = tags?.ToList();
+            }
+            else
+            {
+                foreach (var tag in tags)
+                {
+                    Tags.Add(tag);
+                }
+            }
         }
     }
 }
