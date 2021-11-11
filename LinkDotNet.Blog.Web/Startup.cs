@@ -9,70 +9,69 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.Web
+namespace LinkDotNet.Blog.Web;
+
+public class Startup
 {
-    public class Startup
+    private readonly IWebHostEnvironment environment;
+
+    public Startup(IWebHostEnvironment env, IConfiguration configuration)
     {
-        private readonly IWebHostEnvironment environment;
+        environment = env;
+        Configuration = configuration;
+    }
 
-        public Startup(IWebHostEnvironment env, IConfiguration configuration)
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddRazorPages();
+        services.AddServerSideBlazor();
+        services.AddSingleton(_ => AppConfigurationFactory.Create(Configuration));
+        services.AddStorageProvider(Configuration);
+
+        // Here you can setup up your identity provider
+        if (environment.IsDevelopment())
         {
-            environment = env;
-            Configuration = configuration;
+            services.UseDummyAuthentication();
+        }
+        else
+        {
+            services.UseAuth0Authentication(Configuration);
         }
 
-        public IConfiguration Configuration { get; }
+        services.AddBlazoredToast();
+        services.AddHeadElementHelper();
+        services.RegisterServices();
+    }
 
-        public void ConfigureServices(IServiceCollection services)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddSingleton(_ => AppConfigurationFactory.Create(Configuration));
-            services.AddStorageProvider(Configuration);
-
-            // Here you can setup up your identity provider
-            if (environment.IsDevelopment())
-            {
-                services.UseDummyAuthentication();
-            }
-            else
-            {
-                services.UseAuth0Authentication(Configuration);
-            }
-
-            services.AddBlazoredToast();
-            services.AddHeadElementHelper();
-            services.RegisterServices();
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        app.UseHeadElementServerPrerendering();
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
+        app.UseCookiePolicy();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
-
-            app.UseHeadElementServerPrerendering();
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseCookiePolicy();
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
-            });
-        }
+            endpoints.MapBlazorHub();
+            endpoints.MapFallbackToPage("/_Host");
+        });
     }
 }

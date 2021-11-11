@@ -3,62 +3,61 @@ using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared;
 using Xunit;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Shared
+namespace LinkDotNet.Blog.UnitTests.Web.Shared;
+
+public class SearchInputTests : TestContext
 {
-    public class SearchInputTests : TestContext
+    [Fact]
+    public void ShouldReturnEnteredText()
     {
-        [Fact]
-        public void ShouldReturnEnteredText()
-        {
-            var enteredString = string.Empty;
-            var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => enteredString = s));
-            cut.Find("input").Change("Test");
+        var enteredString = string.Empty;
+        var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => enteredString = s));
+        cut.Find("input").Change("Test");
 
-            cut.Find("button").Click();
+        cut.Find("button").Click();
 
-            enteredString.Should().Be("Test");
-        }
+        enteredString.Should().Be("Test");
+    }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData("\t")]
-        public void ShouldNotReturnValueWhenOnlyWhitespaces(string input)
-        {
-            var wasInvoked = false;
-            var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, _ => wasInvoked = true));
-            cut.Find("input").Change(input);
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    [InlineData("\t")]
+    public void ShouldNotReturnValueWhenOnlyWhitespaces(string input)
+    {
+        var wasInvoked = false;
+        var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, _ => wasInvoked = true));
+        cut.Find("input").Change(input);
 
-            cut.Find("button").Click();
+        cut.Find("button").Click();
 
-            wasInvoked.Should().BeFalse();
-        }
+        wasInvoked.Should().BeFalse();
+    }
 
-        [Fact]
-        public void ShouldTrimData()
-        {
-            var enteredString = string.Empty;
-            var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => enteredString = s));
-            cut.Find("input").Change("   Test 1 ");
+    [Fact]
+    public void ShouldTrimData()
+    {
+        var enteredString = string.Empty;
+        var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => enteredString = s));
+        cut.Find("input").Change("   Test 1 ");
 
-            cut.Find("button").Click();
+        cut.Find("button").Click();
 
-            enteredString.Should().Be("Test 1");
-        }
+        enteredString.Should().Be("Test 1");
+    }
 
-        [Theory]
-        [InlineData("Enter", true)]
-        [InlineData("Escape", false)]
-        [InlineData("Backspace", false)]
-        public void ShouldReturnValueWhenEnterWasPressed(string key, bool expectedInvoke)
-        {
-            var wasInvoked = false;
-            var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => wasInvoked = true));
-            cut.Find("input").Change("Text");
+    [Theory]
+    [InlineData("Enter", true)]
+    [InlineData("Escape", false)]
+    [InlineData("Backspace", false)]
+    public void ShouldReturnValueWhenEnterWasPressed(string key, bool expectedInvoke)
+    {
+        var wasInvoked = false;
+        var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => wasInvoked = true));
+        cut.Find("input").Change("Text");
 
-            cut.Find("input").KeyUp(Key.Get(key));
+        cut.Find("input").KeyUp(Key.Get(key));
 
-            wasInvoked.Should().Be(expectedInvoke);
-        }
+        wasInvoked.Should().Be(expectedInvoke);
     }
 }

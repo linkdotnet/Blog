@@ -6,25 +6,24 @@ using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions
+namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions;
+
+public class SqliteRegistrationExtensionsTests
 {
-    public class SqliteRegistrationExtensionsTests
+    [Fact]
+    public void ShouldGetValidRepository()
     {
-        [Fact]
-        public void ShouldGetValidRepository()
+        var serviceCollection = new ServiceCollection();
+        var appConfig = new AppConfiguration
         {
-            var serviceCollection = new ServiceCollection();
-            var appConfig = new AppConfiguration
-            {
-                ConnectionString = "Filename=:memory:",
-            };
-            serviceCollection.AddScoped(_ => appConfig);
+            ConnectionString = "Filename=:memory:",
+        };
+        serviceCollection.AddScoped(_ => appConfig);
 
-            serviceCollection.UseSqliteAsStorageProvider();
+        serviceCollection.UseSqliteAsStorageProvider();
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            serviceProvider.GetService<IRepository<BlogPost>>().Should().NotBeNull();
-            serviceProvider.GetService<IRepository<Skill>>().Should().NotBeNull();
-        }
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        serviceProvider.GetService<IRepository<BlogPost>>().Should().NotBeNull();
+        serviceProvider.GetService<IRepository<Skill>>().Should().NotBeNull();
     }
 }

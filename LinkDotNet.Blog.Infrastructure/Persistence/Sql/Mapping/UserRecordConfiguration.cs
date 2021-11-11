@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping
+namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
+
+public class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
 {
-    public class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
+    public void Configure(EntityTypeBuilder<UserRecord> builder)
     {
-        public void Configure(EntityTypeBuilder<UserRecord> builder)
-        {
-            builder.HasKey(s => s.Id);
-            builder.Property(s => s.Id).ValueGeneratedOnAdd();
-        }
+        builder.HasKey(s => s.Id);
+        builder.Property(s => s.Id).ValueGeneratedOnAdd();
     }
 }

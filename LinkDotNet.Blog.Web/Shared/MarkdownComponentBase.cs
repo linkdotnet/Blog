@@ -2,26 +2,25 @@
 using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Components;
 
-namespace LinkDotNet.Blog.Web.Shared
+namespace LinkDotNet.Blog.Web.Shared;
+
+public abstract class MarkdownComponentBase : ComponentBase
 {
-    public abstract class MarkdownComponentBase : ComponentBase
+    private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+        .UseEmojiAndSmiley()
+        .UseCitations()
+        .UseBootstrap()
+        .Build();
+
+    protected static MarkupString RenderMarkupString(string content)
     {
-        private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
-            .UseAdvancedExtensions()
-            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-            .UseEmojiAndSmiley()
-            .UseCitations()
-            .UseBootstrap()
-            .Build();
-
-        protected static MarkupString RenderMarkupString(string content)
+        if (string.IsNullOrEmpty(content))
         {
-            if (string.IsNullOrEmpty(content))
-            {
-                return default;
-            }
-
-            return (MarkupString)Markdown.ToHtml(content, MarkdownPipeline);
+            return default;
         }
+
+        return (MarkupString)Markdown.ToHtml(content, MarkdownPipeline);
     }
 }

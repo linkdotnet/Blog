@@ -13,49 +13,48 @@ using Moq;
 using Toolbelt.Blazor.HeadElement;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages
+namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
+
+public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 {
-    public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
+    [Fact]
+    public async Task ShouldOnlyDisplayTagsGivenByParameter()
     {
-        [Fact]
-        public async Task ShouldOnlyDisplayTagsGivenByParameter()
-        {
-            using var ctx = new TestContext();
-            await AddBlogPostWithTagAsync("Tag 1");
-            await AddBlogPostWithTagAsync("Tag 1");
-            await AddBlogPostWithTagAsync("Tag 2");
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
-            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
-            var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, "Tag 1"));
-            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        using var ctx = new TestContext();
+        await AddBlogPostWithTagAsync("Tag 1");
+        await AddBlogPostWithTagAsync("Tag 1");
+        await AddBlogPostWithTagAsync("Tag 2");
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
+        ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
+        var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, "Tag 1"));
+        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
-            var tags = cut.FindAll(".blog-card");
+        var tags = cut.FindAll(".blog-card");
 
-            tags.Should().HaveCount(2);
-        }
+        tags.Should().HaveCount(2);
+    }
 
-        [Fact]
-        public async Task ShouldHandleSpecialCharacters()
-        {
-            using var ctx = new TestContext();
-            await AddBlogPostWithTagAsync("C#");
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
-            ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
-            var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
-            cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+    [Fact]
+    public async Task ShouldHandleSpecialCharacters()
+    {
+        using var ctx = new TestContext();
+        await AddBlogPostWithTagAsync("C#");
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
+        ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
+        var cut = ctx.RenderComponent<SearchByTag>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
+        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
-            var tags = cut.FindAll(".blog-card");
+        var tags = cut.FindAll(".blog-card");
 
-            tags.Should().HaveCount(1);
-        }
+        tags.Should().HaveCount(1);
+    }
 
-        private async Task AddBlogPostWithTagAsync(string tag)
-        {
-            var blogPost = new BlogPostBuilder().WithTags(tag).Build();
-            await DbContext.AddAsync(blogPost);
-            await DbContext.SaveChangesAsync();
-        }
+    private async Task AddBlogPostWithTagAsync(string tag)
+    {
+        var blogPost = new BlogPostBuilder().WithTags(tag).Build();
+        await DbContext.AddAsync(blogPost);
+        await DbContext.SaveChangesAsync();
     }
 }

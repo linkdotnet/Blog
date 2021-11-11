@@ -14,51 +14,50 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin
+namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin;
+
+public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {
-    public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
+    [Fact]
+    public async Task ShouldSaveBlogPostOnSave()
     {
-        [Fact]
-        public async Task ShouldSaveBlogPostOnSave()
-        {
-            using var ctx = new TestContext();
-            var toastService = new Mock<IToastService>();
-            var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
-            await Repository.StoreAsync(blogPost);
-            ctx.AddTestAuthorization().SetAuthorized("some username");
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            ctx.Services.AddScoped(_ => toastService.Object);
-            using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
-                p => p.Add(s => s.BlogPostId, blogPost.Id));
-            var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
+        using var ctx = new TestContext();
+        var toastService = new Mock<IToastService>();
+        var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
+        await Repository.StoreAsync(blogPost);
+        ctx.AddTestAuthorization().SetAuthorized("some username");
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => toastService.Object);
+        using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, blogPost.Id));
+        var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
-            TriggerUpdate(newBlogPost);
+        TriggerUpdate(newBlogPost);
 
-            var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
-            blogPostFromDb.Should().NotBeNull();
-            blogPostFromDb.ShortDescription.Should().Be("My new Description");
-            toastService.Verify(t => t.ShowInfo("Updated BlogPost Title", string.Empty, null), Times.Once);
-        }
+        var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
+        blogPostFromDb.Should().NotBeNull();
+        blogPostFromDb.ShortDescription.Should().Be("My new Description");
+        toastService.Verify(t => t.ShowInfo("Updated BlogPost Title", string.Empty, null), Times.Once);
+    }
 
-        [Fact]
-        public void ShouldThrowWhenNoIdProvided()
-        {
-            using var ctx = new TestContext();
-            ctx.AddTestAuthorization().SetAuthorized("some username");
-            ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-            ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+    [Fact]
+    public void ShouldThrowWhenNoIdProvided()
+    {
+        using var ctx = new TestContext();
+        ctx.AddTestAuthorization().SetAuthorized("some username");
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
 
-            Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(
-                p => p.Add(s => s.BlogPostId, null));
+        Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, null));
 
-            act.Should().ThrowExactly<ArgumentNullException>();
-        }
+        act.Should().ThrowExactly<ArgumentNullException>();
+    }
 
-        private static void TriggerUpdate(IRenderedFragment cut)
-        {
-            cut.Find("#short").Change("My new Description");
+    private static void TriggerUpdate(IRenderedFragment cut)
+    {
+        cut.Find("#short").Change("My new Description");
 
-            cut.Find("form").Submit();
-        }
+        cut.Find("form").Submit();
     }
 }

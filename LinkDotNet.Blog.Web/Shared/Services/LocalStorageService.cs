@@ -1,30 +1,29 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-namespace LinkDotNet.Blog.Web.Shared.Services
+namespace LinkDotNet.Blog.Web.Shared.Services;
+
+public class LocalStorageService : ILocalStorageService
 {
-    public class LocalStorageService : ILocalStorageService
+    private readonly ProtectedLocalStorage localStorage;
+
+    public LocalStorageService(ProtectedLocalStorage localStorage)
     {
-        private readonly ProtectedLocalStorage localStorage;
+        this.localStorage = localStorage;
+    }
 
-        public LocalStorageService(ProtectedLocalStorage localStorage)
-        {
-            this.localStorage = localStorage;
-        }
+    public async Task<bool> ContainKeyAsync(string key)
+    {
+        return (await localStorage.GetAsync<object>(key)).Success;
+    }
 
-        public async Task<bool> ContainKeyAsync(string key)
-        {
-            return (await localStorage.GetAsync<object>(key)).Success;
-        }
+    public async Task<T> GetItemAsync<T>(string key)
+    {
+        return (await localStorage.GetAsync<T>(key)).Value;
+    }
 
-        public async Task<T> GetItemAsync<T>(string key)
-        {
-            return (await localStorage.GetAsync<T>(key)).Value;
-        }
-
-        public async Task SetItemAsync<T>(string key, T value)
-        {
-            await localStorage.SetAsync(key, value);
-        }
+    public async Task SetItemAsync<T>(string key, T value)
+    {
+        await localStorage.SetAsync(key, value);
     }
 }

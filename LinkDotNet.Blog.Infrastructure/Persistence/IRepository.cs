@@ -4,23 +4,22 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using X.PagedList;
 
-namespace LinkDotNet.Blog.Infrastructure.Persistence
+namespace LinkDotNet.Blog.Infrastructure.Persistence;
+
+public interface IRepository<TEntity>
+where TEntity : Entity
 {
-    public interface IRepository<TEntity>
-    where TEntity : Entity
-    {
-        Task<TEntity> GetByIdAsync(string id);
+    Task<TEntity> GetByIdAsync(string id);
 
-        Task<IPagedList<TEntity>> GetAllAsync(
-            Expression<Func<TEntity, bool>> filter = null,
-            Expression<Func<TEntity,
-                object>> orderBy = null,
-            bool descending = true,
-            int page = 1,
-            int pageSize = int.MaxValue);
+    Task<IPagedList<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>> filter = null,
+        Expression<Func<TEntity,
+            object>> orderBy = null,
+        bool descending = true,
+        int page = 1,
+        int pageSize = int.MaxValue);
 
-        Task StoreAsync(TEntity entity);
+    Task StoreAsync(TEntity entity);
 
-        Task DeleteAsync(string id);
-    }
+    Task DeleteAsync(string id);
 }

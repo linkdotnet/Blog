@@ -6,65 +6,64 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 
-namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap
+namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap;
+
+public class SitemapService : ISitemapService
 {
-    public class SitemapService : ISitemapService
+    private readonly IRepository<BlogPost> repository;
+    private readonly NavigationManager navigationManager;
+    private readonly IXmlFileWriter xmlFileWriter;
+
+    public SitemapService(
+        IRepository<BlogPost> repository,
+        NavigationManager navigationManager,
+        IXmlFileWriter xmlFileWriter)
     {
-        private readonly IRepository<BlogPost> repository;
-        private readonly NavigationManager navigationManager;
-        private readonly IXmlFileWriter xmlFileWriter;
+        this.repository = repository;
+        this.navigationManager = navigationManager;
+        this.xmlFileWriter = xmlFileWriter;
+    }
 
-        public SitemapService(
-            IRepository<BlogPost> repository,
-            NavigationManager navigationManager,
-            IXmlFileWriter xmlFileWriter)
+    public async Task<SitemapUrlSet> CreateSitemapAsync()
+    {
+        const string sitemapNamespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
+        var urlSet = new SitemapUrlSet
         {
-            this.repository = repository;
-            this.navigationManager = navigationManager;
-            this.xmlFileWriter = xmlFileWriter;
-        }
+            Namespace = sitemapNamespace,
+        };
 
-        public async Task<SitemapUrlSet> CreateSitemapAsync()
+        var blogPosts = (await repository.GetAllAsync(f => f.IsPublished, b => b.UpdatedDate)).ToList();
+
+        urlSet.Urls.Add(new SitemapUrl { Location = navigationManager.BaseUri });
+        urlSet.Urls.AddRange(CreateUrlsForBlogPosts(blogPosts));
+        urlSet.Urls.AddRange(CreateUrlsForTags(blogPosts));
+
+        return urlSet;
+    }
+
+    public async Task SaveSitemapToFileAsync(SitemapUrlSet sitemap)
+    {
+        await xmlFileWriter.WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml");
+    }
+
+    private IEnumerable<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPost> blogPosts)
+    {
+        return blogPosts.Select(b => new SitemapUrl
         {
-            const string sitemapNamespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
-            var urlSet = new SitemapUrlSet
+            Location = $"{navigationManager.BaseUri}blogPost/{b.Id}",
+            LastModified = b.UpdatedDate.ToString("yyyy-MM-dd"),
+        }).ToList();
+    }
+
+    private IEnumerable<SitemapUrl> CreateUrlsForTags(IEnumerable<BlogPost> blogPosts)
+    {
+        return blogPosts
+            .SelectMany(b => b.Tags)
+            .Select(t => t.Content)
+            .Distinct()
+            .Select(t => new SitemapUrl
             {
-                Namespace = sitemapNamespace,
-            };
-
-            var blogPosts = (await repository.GetAllAsync(f => f.IsPublished, b => b.UpdatedDate)).ToList();
-
-            urlSet.Urls.Add(new SitemapUrl { Location = navigationManager.BaseUri });
-            urlSet.Urls.AddRange(CreateUrlsForBlogPosts(blogPosts));
-            urlSet.Urls.AddRange(CreateUrlsForTags(blogPosts));
-
-            return urlSet;
-        }
-
-        public async Task SaveSitemapToFileAsync(SitemapUrlSet sitemap)
-        {
-            await xmlFileWriter.WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml");
-        }
-
-        private IEnumerable<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPost> blogPosts)
-        {
-            return blogPosts.Select(b => new SitemapUrl
-            {
-                Location = $"{navigationManager.BaseUri}blogPost/{b.Id}",
-                LastModified = b.UpdatedDate.ToString("yyyy-MM-dd"),
-            }).ToList();
-        }
-
-        private IEnumerable<SitemapUrl> CreateUrlsForTags(IEnumerable<BlogPost> blogPosts)
-        {
-            return blogPosts
-                .SelectMany(b => b.Tags)
-                .Select(t => t.Content)
-                .Distinct()
-                .Select(t => new SitemapUrl
-                {
-                    Location = $"{navigationManager.BaseUri}searchByTag/{Uri.EscapeDataString(t)}",
-                });
-        }
+                Location = $"{navigationManager.BaseUri}searchByTag/{Uri.EscapeDataString(t)}",
+            });
     }
 }

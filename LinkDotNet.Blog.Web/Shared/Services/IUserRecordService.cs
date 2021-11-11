@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace LinkDotNet.Blog.Web.Shared.Services
+namespace LinkDotNet.Blog.Web.Shared.Services;
+
+public interface IUserRecordService
 {
-    public interface IUserRecordService
-    {
-        Task StoreUserRecordAsync();
-    }
+    Task StoreUserRecordAsync();
 }

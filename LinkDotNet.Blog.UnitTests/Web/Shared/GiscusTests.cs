@@ -7,40 +7,39 @@ using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Shared
+namespace LinkDotNet.Blog.UnitTests.Web.Shared;
+
+public class GiscusTests : TestContext
 {
-    public class GiscusTests : TestContext
+    [Fact]
+    public void ShouldLoadJavascript()
     {
-        [Fact]
-        public void ShouldLoadJavascript()
+        var giscusData = new GiscusConfiguration
         {
-            var giscusData = new GiscusConfiguration
-            {
-                Repository = "linkdotnet/somerepo",
-                RepositoryId = "some_repo_id",
-                Category = "General",
-                CategoryId = "GeneralId",
-            };
-            Services.AddScoped(_ => new AppConfiguration { GiscusConfiguration = giscusData });
-            JSInterop.SetupModule("./Shared/Giscus.razor.js");
-            JSInterop.Mode = JSRuntimeMode.Loose;
+            Repository = "linkdotnet/somerepo",
+            RepositoryId = "some_repo_id",
+            Category = "General",
+            CategoryId = "GeneralId",
+        };
+        Services.AddScoped(_ => new AppConfiguration { GiscusConfiguration = giscusData });
+        JSInterop.SetupModule("./Shared/Giscus.razor.js");
+        JSInterop.Mode = JSRuntimeMode.Loose;
 
-            RenderComponent<Giscus>();
+        RenderComponent<Giscus>();
 
-            var init = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "initGiscus");
-            init.Should().NotBeNull();
-            init.Arguments.Should().Contain("giscus");
-            init.Arguments.Should().Contain(giscusData);
-        }
+        var init = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "initGiscus");
+        init.Should().NotBeNull();
+        init.Arguments.Should().Contain("giscus");
+        init.Arguments.Should().Contain(giscusData);
+    }
 
-        [Fact]
-        public void ShouldNotInitGiscusWhenNoInformationProvided()
-        {
-            Services.AddScoped(_ => new AppConfiguration());
+    [Fact]
+    public void ShouldNotInitGiscusWhenNoInformationProvided()
+    {
+        Services.AddScoped(_ => new AppConfiguration());
 
-            RenderComponent<Giscus>();
+        RenderComponent<Giscus>();
 
-            JSInterop.Invocations.Should().BeEmpty();
-        }
+        JSInterop.Invocations.Should().BeEmpty();
     }
 }

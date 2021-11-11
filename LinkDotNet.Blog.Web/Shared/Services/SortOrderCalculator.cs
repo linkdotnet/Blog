@@ -1,23 +1,22 @@
 ﻿using System.Collections.Generic;
 using LinkDotNet.Blog.Domain;
 
-namespace LinkDotNet.Blog.Web.Shared.Services
+namespace LinkDotNet.Blog.Web.Shared.Services;
+
+public class SortOrderCalculator : ISortOrderCalculator
 {
-    public class SortOrderCalculator : ISortOrderCalculator
+    public int GetSortOrder(ProfileInformationEntry target, IEnumerable<ProfileInformationEntry> all)
     {
-        public int GetSortOrder(ProfileInformationEntry target, IEnumerable<ProfileInformationEntry> all)
+        var linkedEntries = new LinkedList<ProfileInformationEntry>(all);
+        var targetNode = linkedEntries.Find(target);
+        var next = targetNode!.Next;
+
+        if (next == null)
         {
-            var linkedEntries = new LinkedList<ProfileInformationEntry>(all);
-            var targetNode = linkedEntries.Find(target);
-            var next = targetNode!.Next;
-
-            if (next == null)
-            {
-                var prev = targetNode.Previous;
-                return (target.SortOrder + prev!.Value.SortOrder) / 2;
-            }
-
-            return (target.SortOrder + next.Value.SortOrder) / 2;
+            var prev = targetNode.Previous;
+            return (target.SortOrder + prev!.Value.SortOrder) / 2;
         }
+
+        return (target.SortOrder + next.Value.SortOrder) / 2;
     }
 }

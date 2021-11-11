@@ -5,20 +5,19 @@ using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions
+namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions;
+
+public class InMemoryRegistrationExtensionsTests
 {
-    public class InMemoryRegistrationExtensionsTests
+    [Fact]
+    public void ShouldGetValidRepository()
     {
-        [Fact]
-        public void ShouldGetValidRepository()
-        {
-            var serviceCollection = new ServiceCollection();
+        var serviceCollection = new ServiceCollection();
 
-            serviceCollection.UseInMemoryAsStorageProvider();
+        serviceCollection.UseInMemoryAsStorageProvider();
 
-            var serviceProvider = serviceCollection.BuildServiceProvider();
-            serviceProvider.GetService<IRepository<BlogPost>>().Should().NotBeNull();
-            serviceProvider.GetService<IRepository<Skill>>().Should().NotBeNull();
-        }
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        serviceProvider.GetService<IRepository<BlogPost>>().Should().NotBeNull();
+        serviceProvider.GetService<IRepository<Skill>>().Should().NotBeNull();
     }
 }

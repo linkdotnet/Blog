@@ -10,55 +10,54 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions
+namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions;
+
+public class StorageProviderExtensionsTests
 {
-    public class StorageProviderExtensionsTests
+    [Theory]
+    [InlineData("SqlServer")]
+    [InlineData("SqliteServer")]
+    [InlineData("RavenDb")]
+    [InlineData("InMemory")]
+    public void ShouldRegisterPersistenceProvider(string persistenceKey)
     {
-        [Theory]
-        [InlineData("SqlServer")]
-        [InlineData("SqliteServer")]
-        [InlineData("RavenDb")]
-        [InlineData("InMemory")]
-        public void ShouldRegisterPersistenceProvider(string persistenceKey)
-        {
-            var collection = new ServiceCollection();
-            var config = new Mock<IConfiguration>();
-            config.Setup(c => c["PersistenceProvider"])
-                .Returns(persistenceKey);
+        var collection = new ServiceCollection();
+        var config = new Mock<IConfiguration>();
+        config.Setup(c => c["PersistenceProvider"])
+            .Returns(persistenceKey);
 
-            collection.AddStorageProvider(config.Object);
+        collection.AddStorageProvider(config.Object);
 
-            var enumerable = collection.Select(c => c.ServiceType).ToList();
-            enumerable.Should().Contain(typeof(IRepository<>));
-        }
+        var enumerable = collection.Select(c => c.ServiceType).ToList();
+        enumerable.Should().Contain(typeof(IRepository<>));
+    }
 
-        [Fact]
-        public void ShouldThrowExceptionWhenNotKnown()
-        {
-            var collection = new ServiceCollection();
-            var config = new Mock<IConfiguration>();
-            config.Setup(c => c["PersistenceProvider"])
-                .Returns("not known");
+    [Fact]
+    public void ShouldThrowExceptionWhenNotKnown()
+    {
+        var collection = new ServiceCollection();
+        var config = new Mock<IConfiguration>();
+        config.Setup(c => c["PersistenceProvider"])
+            .Returns("not known");
 
-            Action act = () => collection.AddStorageProvider(config.Object);
+        Action act = () => collection.AddStorageProvider(config.Object);
 
-            act.Should().Throw<Exception>();
-        }
+        act.Should().Throw<Exception>();
+    }
 
-        [Fact]
-        public void ShouldHaveCacheRepositoryOnlyForBlogPosts()
-        {
-            var collection = new ServiceCollection();
-            var config = new Mock<IConfiguration>();
-            config.Setup(c => c["PersistenceProvider"])
-                .Returns("SqliteServer");
-            collection.AddScoped(_ => new AppConfiguration { ConnectionString = "Filename=:memory:" });
+    [Fact]
+    public void ShouldHaveCacheRepositoryOnlyForBlogPosts()
+    {
+        var collection = new ServiceCollection();
+        var config = new Mock<IConfiguration>();
+        config.Setup(c => c["PersistenceProvider"])
+            .Returns("SqliteServer");
+        collection.AddScoped(_ => new AppConfiguration { ConnectionString = "Filename=:memory:" });
 
-            collection.AddStorageProvider(config.Object);
+        collection.AddStorageProvider(config.Object);
 
-            var serviceProvider = collection.BuildServiceProvider();
-            serviceProvider.GetService<IRepository<BlogPost>>().Should().BeOfType<CachedRepository<BlogPost>>();
-            serviceProvider.GetService<IRepository<Skill>>().Should().NotBeOfType<CachedRepository<BlogPost>>();
-        }
+        var serviceProvider = collection.BuildServiceProvider();
+        serviceProvider.GetService<IRepository<BlogPost>>().Should().BeOfType<CachedRepository<BlogPost>>();
+        serviceProvider.GetService<IRepository<Skill>>().Should().NotBeOfType<CachedRepository<BlogPost>>();
     }
 }

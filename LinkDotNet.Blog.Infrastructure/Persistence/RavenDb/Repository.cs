@@ -6,64 +6,63 @@ using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 using X.PagedList;
 
-namespace LinkDotNet.Blog.Infrastructure.Persistence.RavenDb
+namespace LinkDotNet.Blog.Infrastructure.Persistence.RavenDb;
+
+public class Repository<TEntity> : IRepository<TEntity>
+    where TEntity : Entity
 {
-    public class Repository<TEntity> : IRepository<TEntity>
-        where TEntity : Entity
+    private readonly IDocumentStore documentStore;
+
+    public Repository(IDocumentStore documentStore)
     {
-        private readonly IDocumentStore documentStore;
+        this.documentStore = documentStore;
+    }
 
-        public Repository(IDocumentStore documentStore)
+    public async Task<TEntity> GetByIdAsync(string id)
+    {
+        using var session = documentStore.OpenAsyncSession();
+        return await session.LoadAsync<TEntity>(id);
+    }
+
+    public async Task<IPagedList<TEntity>> GetAllAsync(
+        Expression<Func<TEntity, bool>> filter = null,
+        Expression<Func<TEntity, object>> orderBy = null,
+        bool descending = true,
+        int page = 1,
+        int pageSize = int.MaxValue)
+    {
+        using var session = documentStore.OpenSession();
+
+        var query = session.Query<TEntity>();
+        if (filter != null)
         {
-            this.documentStore = documentStore;
+            query = query.Where(filter);
         }
 
-        public async Task<TEntity> GetByIdAsync(string id)
+        if (orderBy != null)
         {
-            using var session = documentStore.OpenAsyncSession();
-            return await session.LoadAsync<TEntity>(id);
-        }
-
-        public async Task<IPagedList<TEntity>> GetAllAsync(
-            Expression<Func<TEntity, bool>> filter = null,
-            Expression<Func<TEntity, object>> orderBy = null,
-            bool descending = true,
-            int page = 1,
-            int pageSize = int.MaxValue)
-        {
-            using var session = documentStore.OpenSession();
-
-            var query = session.Query<TEntity>();
-            if (filter != null)
+            if (descending)
             {
-                query = query.Where(filter);
+                return await query.OrderByDescending(orderBy).ToPagedListAsync(page, pageSize);
             }
 
-            if (orderBy != null)
-            {
-                if (descending)
-                {
-                    return await query.OrderByDescending(orderBy).ToPagedListAsync(page, pageSize);
-                }
-
-                return await query.OrderBy(orderBy).ToPagedListAsync(page, pageSize);
-            }
-
-            return await query.ToPagedListAsync(page, pageSize);
+            return await query.OrderBy(orderBy).ToPagedListAsync(page, pageSize);
         }
 
-        public async Task StoreAsync(TEntity entity)
-        {
-            using var session = documentStore.OpenAsyncSession();
-            await session.StoreAsync(entity);
-            await session.SaveChangesAsync();
-        }
+        return await query.ToPagedListAsync(page, pageSize);
+    }
 
-        public async Task DeleteAsync(string id)
-        {
-            using var session = documentStore.OpenAsyncSession();
-            session.Delete(id);
-            await session.SaveChangesAsync();
-        }
+    public async Task StoreAsync(TEntity entity)
+    {
+        using var session = documentStore.OpenAsyncSession();
+        await session.StoreAsync(entity);
+        await session.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        using var session = documentStore.OpenAsyncSession();
+        session.Delete(id);
+        await session.SaveChangesAsync();
     }
 }

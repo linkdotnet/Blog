@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 
-namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap
-{
-    public interface ISitemapService
-    {
-        Task<SitemapUrlSet> CreateSitemapAsync();
+namespace LinkDotNet.Blog.Web.Shared.Services.Sitemap;
 
-        Task SaveSitemapToFileAsync(SitemapUrlSet sitemap);
-    }
+public interface ISitemapService
+{
+    Task<SitemapUrlSet> CreateSitemapAsync();
+
+    Task SaveSitemapToFileAsync(SitemapUrlSet sitemap);
 }

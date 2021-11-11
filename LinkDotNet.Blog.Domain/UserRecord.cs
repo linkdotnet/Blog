@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace LinkDotNet.Blog.Domain
+namespace LinkDotNet.Blog.Domain;
+
+public class UserRecord : Entity
 {
-    public class UserRecord : Entity
-    {
-        public int UserIdentifierHash { get; set; }
+    public int UserIdentifierHash { get; set; }
 
-        public DateTime DateTimeUtcClicked { get; set; }
+    public DateTime DateTimeUtcClicked { get; set; }
 
-        public string UrlClicked { get; set; }
-    }
+    public string UrlClicked { get; set; }
 }

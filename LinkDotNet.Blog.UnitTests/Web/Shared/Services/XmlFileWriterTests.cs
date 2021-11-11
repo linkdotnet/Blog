@@ -5,36 +5,35 @@ using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Xunit;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services
+namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services;
+
+public sealed class XmlFileWriterTests : IDisposable
 {
-    public sealed class XmlFileWriterTests : IDisposable
+    private const string OutputFilename = "somefile.txt";
+
+    [Fact]
+    public async Task ShouldWriteToFile()
     {
-        private const string OutputFilename = "somefile.txt";
+        var myObj = new MyObject { Property = "Prop" };
 
-        [Fact]
-        public async Task ShouldWriteToFile()
+        await new XmlFileWriter().WriteObjectToXmlFileAsync(myObj, OutputFilename);
+
+        var content = await File.ReadAllTextAsync(OutputFilename);
+        content.Should().NotBeNull();
+        content.Should().Contain("<MyObject");
+        content.Should().Contain("<Property>Prop</Property>");
+    }
+
+    public void Dispose()
+    {
+        if (File.Exists(OutputFilename))
         {
-            var myObj = new MyObject { Property = "Prop" };
-
-            await new XmlFileWriter().WriteObjectToXmlFileAsync(myObj, OutputFilename);
-
-            var content = await File.ReadAllTextAsync(OutputFilename);
-            content.Should().NotBeNull();
-            content.Should().Contain("<MyObject");
-            content.Should().Contain("<Property>Prop</Property>");
+            File.Delete(OutputFilename);
         }
+    }
 
-        public void Dispose()
-        {
-            if (File.Exists(OutputFilename))
-            {
-                File.Delete(OutputFilename);
-            }
-        }
-
-        public class MyObject
-        {
-            public string Property { get; set; }
-        }
+    public class MyObject
+    {
+        public string Property { get; set; }
     }
 }

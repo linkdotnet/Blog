@@ -2,13 +2,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping
+namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
+
+public class TagsConfiguration : IEntityTypeConfiguration<Tag>
 {
-    public class TagsConfiguration : IEntityTypeConfiguration<Tag>
+    public void Configure(EntityTypeBuilder<Tag> builder)
     {
-        public void Configure(EntityTypeBuilder<Tag> builder)
-        {
-            builder.Property(c => c.Id).ValueGeneratedOnAdd();
-        }
+        builder.Property(c => c.Id).ValueGeneratedOnAdd();
     }
 }

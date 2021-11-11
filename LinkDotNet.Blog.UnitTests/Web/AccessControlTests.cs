@@ -4,30 +4,29 @@ using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared;
 using Xunit;
 
-namespace LinkDotNet.Blog.UnitTests.Web
+namespace LinkDotNet.Blog.UnitTests.Web;
+
+public class AccessControlTests : TestContext
 {
-    public class AccessControlTests : TestContext
+    [Fact]
+    public void ShouldShowLoginAndHideAdminWhenNotLoggedIn()
     {
-        [Fact]
-        public void ShouldShowLoginAndHideAdminWhenNotLoggedIn()
-        {
-            this.AddTestAuthorization();
+        this.AddTestAuthorization();
 
-            var cut = RenderComponent<AccessControl>();
+        var cut = RenderComponent<AccessControl>();
 
-            cut.FindAll("a:contains('Admin')").Should().HaveCount(0);
-            cut.FindAll("a:contains('Log in')").Should().HaveCount(1);
-        }
+        cut.FindAll("a:contains('Admin')").Should().HaveCount(0);
+        cut.FindAll("a:contains('Log in')").Should().HaveCount(1);
+    }
 
-        [Fact]
-        public void ShouldShowLogoutAndAdminWhenLoggedIn()
-        {
-            this.AddTestAuthorization().SetAuthorized("steven");
+    [Fact]
+    public void ShouldShowLogoutAndAdminWhenLoggedIn()
+    {
+        this.AddTestAuthorization().SetAuthorized("steven");
 
-            var cut = RenderComponent<AccessControl>();
+        var cut = RenderComponent<AccessControl>();
 
-            cut.FindAll("a:contains('Admin')").Should().HaveCount(1);
-            cut.FindAll("a:contains('Log out')").Should().HaveCount(1);
-        }
+        cut.FindAll("a:contains('Admin')").Should().HaveCount(1);
+        cut.FindAll("a:contains('Log out')").Should().HaveCount(1);
     }
 }

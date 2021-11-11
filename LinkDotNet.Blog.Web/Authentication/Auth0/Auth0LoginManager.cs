@@ -4,29 +4,28 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
-namespace LinkDotNet.Blog.Web.Authentication.Auth0
+namespace LinkDotNet.Blog.Web.Authentication.Auth0;
+
+public class Auth0LoginManager : ILoginManager
 {
-    public class Auth0LoginManager : ILoginManager
+    private readonly HttpContext httpContext;
+
+    public Auth0LoginManager(IHttpContextAccessor httpContextAccessor)
     {
-        private readonly HttpContext httpContext;
+        httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+    }
 
-        public Auth0LoginManager(IHttpContextAccessor httpContextAccessor)
+    public async Task SignInAsync(string redirectUri)
+    {
+        await httpContext.ChallengeAsync("Auth0", new AuthenticationProperties
         {
-            httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        }
+            RedirectUri = redirectUri,
+        });
+    }
 
-        public async Task SignInAsync(string redirectUri)
-        {
-            await httpContext.ChallengeAsync("Auth0", new AuthenticationProperties
-            {
-                RedirectUri = redirectUri,
-            });
-        }
-
-        public async Task SignOutAsync(string redirectUri = "/")
-        {
-            await httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = redirectUri });
-            await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        }
+    public async Task SignOutAsync(string redirectUri = "/")
+    {
+        await httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = redirectUri });
+        await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

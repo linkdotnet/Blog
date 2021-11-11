@@ -7,46 +7,45 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace LinkDotNet.Blog.IntegrationTests
+namespace LinkDotNet.Blog.IntegrationTests;
+
+public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDisposable
+    where TEntity : Entity
 {
-    public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDisposable
-        where TEntity : Entity
+    protected SqlDatabaseTestBase()
     {
-        protected SqlDatabaseTestBase()
-        {
-            var options = new DbContextOptionsBuilder()
-                .UseSqlite(CreateInMemoryConnection())
-                .Options;
-            DbContext = new BlogDbContext(options);
-            Repository = new Repository<TEntity>(new BlogDbContext(options));
-        }
+        var options = new DbContextOptionsBuilder()
+            .UseSqlite(CreateInMemoryConnection())
+            .Options;
+        DbContext = new BlogDbContext(options);
+        Repository = new Repository<TEntity>(new BlogDbContext(options));
+    }
 
-        protected Repository<TEntity> Repository { get; }
+    protected Repository<TEntity> Repository { get; }
 
-        protected BlogDbContext DbContext { get; }
+    protected BlogDbContext DbContext { get; }
 
-        public Task InitializeAsync()
-        {
-            return Task.CompletedTask;
-        }
+    public Task InitializeAsync()
+    {
+        return Task.CompletedTask;
+    }
 
-        async Task IAsyncLifetime.DisposeAsync()
-        {
-            await DisposeAsync();
-        }
+    async Task IAsyncLifetime.DisposeAsync()
+    {
+        await DisposeAsync();
+    }
 
-        public async ValueTask DisposeAsync()
-        {
-            await DbContext.DisposeAsync();
-        }
+    public async ValueTask DisposeAsync()
+    {
+        await DbContext.DisposeAsync();
+    }
 
-        private static DbConnection CreateInMemoryConnection()
-        {
-            var connection = new SqliteConnection("Filename=:memory:");
+    private static DbConnection CreateInMemoryConnection()
+    {
+        var connection = new SqliteConnection("Filename=:memory:");
 
-            connection.Open();
+        connection.Open();
 
-            return connection;
-        }
+        return connection;
     }
 }
