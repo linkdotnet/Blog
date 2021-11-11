@@ -43,7 +43,7 @@ public class BlogPost : Entity
             UpdatedDate = updatedDate ?? DateTime.Now,
             PreviewImageUrl = previewImageUrl,
             IsPublished = isPublished,
-            Tags = tags?.Select(t => new Tag { Content = t.Trim() }).ToList(),
+            Tags = tags?.Select(Tag.Create).ToList(),
         };
 
         return blogPost;
