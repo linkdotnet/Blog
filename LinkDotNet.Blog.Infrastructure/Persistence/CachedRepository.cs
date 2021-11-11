@@ -9,14 +9,12 @@ using X.PagedList;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
-public class CachedRepository<T> : IRepository<T>
+public sealed class CachedRepository<T> : IRepository<T>, IDisposable
     where T : Entity
 {
-    private static CancellationTokenSource resetToken = new();
-
     private readonly IRepository<T> repository;
-
     private readonly IMemoryCache memoryCache;
+    private CancellationTokenSource resetToken = new();
 
     public CachedRepository(IRepository<T> repository, IMemoryCache memoryCache)
     {
@@ -24,7 +22,7 @@ public class CachedRepository<T> : IRepository<T>
         this.memoryCache = memoryCache;
     }
 
-    private static MemoryCacheEntryOptions Options => new()
+    private MemoryCacheEntryOptions Options => new()
     {
         ExpirationTokens = { new CancellationChangeToken(resetToken.Token) },
         AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
@@ -70,7 +68,12 @@ public class CachedRepository<T> : IRepository<T>
         await repository.DeleteAsync(id);
     }
 
-    private static void ResetCache()
+    public void Dispose()
+    {
+        resetToken?.Dispose();
+    }
+
+    private void ResetCache()
     {
         if (resetToken is { IsCancellationRequested: false, Token: { CanBeCanceled: true } })
         {

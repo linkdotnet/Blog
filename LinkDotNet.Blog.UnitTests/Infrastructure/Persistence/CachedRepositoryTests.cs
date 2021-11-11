@@ -12,7 +12,7 @@ using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence;
 
-public class CachedRepositoryTests
+public sealed class CachedRepositoryTests : IDisposable
 {
     private readonly Mock<IRepository<BlogPost>> repositoryMock;
     private readonly CachedRepository<BlogPost> sut;
@@ -138,6 +138,11 @@ public class CachedRepositoryTests
             It.IsAny<int>(),
             It.IsAny<int>()),
             Times.Exactly(2));
+    }
+
+    public void Dispose()
+    {
+        sut.Dispose();
     }
 
     private void SetupRepository()

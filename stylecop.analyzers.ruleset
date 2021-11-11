@@ -367,7 +367,7 @@
     <Rule Id="S3898" Action="None" />
     <Rule Id="S3900" Action="None" />
     <Rule Id="S3902" Action="None" />
-    <Rule Id="S3903" Action="Info" />
+    <Rule Id="S3903" Action="None" />
     <Rule Id="S3904" Action="Info" />
     <Rule Id="S3906" Action="None" />
     <Rule Id="S3908" Action="None" />
