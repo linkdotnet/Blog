@@ -37,6 +37,7 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDispo
 
     public async ValueTask DisposeAsync()
     {
+        GC.SuppressFinalize(this);
         await DbContext.DisposeAsync();
     }
 
