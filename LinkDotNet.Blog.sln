@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.Web", "LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj", "{6D6519BF-9265-488D-AA3B-C879F427930F}"
 EndProject
@@ -14,6 +14,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.IntegrationTests", "LinkDotNet.Blog.IntegrationTests\LinkDotNet.Blog.IntegrationTests.csproj", "{DEFDA17A-9586-4E50-83FB-8F75AC29D39A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.TestUtilities", "LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj", "{310ABEE1-C131-43E6-A759-F2DB75A483DD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B6AF0B6E-14FB-4737-A69B-13B0D7195E2B}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+		stylecop.analyzers.ruleset = stylecop.analyzers.ruleset
+		stylecop.json = stylecop.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
