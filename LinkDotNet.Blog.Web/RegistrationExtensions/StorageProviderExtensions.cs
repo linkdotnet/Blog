@@ -1,6 +1,7 @@
 ﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,8 +30,8 @@ public static class StorageProviderExtensions
             services.UseSqlAsStorageProvider();
         }
 
-        services.AddScoped<IRepository<BlogPost>, Repository<BlogPost>>();
         services.AddMemoryCache();
-        services.Decorate(typeof(IRepository<>), typeof(CachedRepository<>));
+        services.AddScoped<Repository<BlogPost>>();
+        services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(provider.GetRequiredService<Repository<BlogPost>>(), provider.GetRequiredService<IMemoryCache>()));
     }
 }
