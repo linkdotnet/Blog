@@ -16,13 +16,19 @@ public class Skill : Entity
         ProficiencyLevel = proficiencyLevel;
     }
 
-    public string IconUrl { get; set; }
+    public string IconUrl { get; private set; }
 
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
-    public string Capability { get; set; }
+    public string Capability { get; private set; }
 
-    public ProficiencyLevel ProficiencyLevel { get; set; }
+    public ProficiencyLevel ProficiencyLevel { get; private set; }
+
+    public void SetProficiencyLevel(ProficiencyLevel level)
+    {
+        ArgumentNullException.ThrowIfNull(level);
+        ProficiencyLevel = level;
+    }
 
     public static Skill Create(string name, string iconUrl, string capability, string proficiencyLevel)
     {

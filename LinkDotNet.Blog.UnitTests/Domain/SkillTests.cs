@@ -57,4 +57,24 @@ public class SkillTests
 
         skill.IconUrl.Should().BeNull();
     }
+
+    [Fact]
+    public void ShouldSetProficiencyLevel()
+    {
+        var skill = Skill.Create("name", null, "cap", ProficiencyLevel.Familiar.Key);
+
+        skill.SetProficiencyLevel(ProficiencyLevel.Proficient);
+
+        skill.ProficiencyLevel.Should().Be(ProficiencyLevel.Proficient);
+    }
+
+    [Fact]
+    public void ShouldThrowWhenProficiencyIsNull()
+    {
+        var skill = Skill.Create("name", null, "cap", ProficiencyLevel.Familiar.Key);
+
+        Action result = () => skill.SetProficiencyLevel(null);
+
+        result.Should().Throw<ArgumentNullException>();
+    }
 }

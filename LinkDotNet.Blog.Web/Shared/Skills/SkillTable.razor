@@ -83,7 +83,7 @@
             return;
         }
 
-        currentDragItem.ProficiencyLevel = proficiencyLevel;
+        currentDragItem.SetProficiencyLevel(proficiencyLevel);
         await repository.StoreAsync(currentDragItem);
         currentDragItem = null;
     }
