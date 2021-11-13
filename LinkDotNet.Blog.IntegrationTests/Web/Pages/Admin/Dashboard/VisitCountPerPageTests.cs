@@ -37,25 +37,28 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
     }
 
     [Fact]
-    public async Task ShouldFilterStartDate()
+    public async Task ShouldFilterByDate()
     {
         var blogPost1 = new BlogPostBuilder().WithTitle("1").WithLikes(2).Build();
         var blogPost2 = new BlogPostBuilder().WithTitle("2").WithLikes(2).Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var urlClicked1New = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = DateTime.UtcNow };
-        var urlClicked1Old = new UserRecord
+        var clicked1 = new UserRecord
+        { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = new DateTime(2020, 1, 1) };
+        var clicked2 = new UserRecord
         { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = DateTime.MinValue };
-        var urlClicked2 = new UserRecord
+        var clicked3 = new UserRecord
         { UrlClicked = $"blogPost/{blogPost2.Id}", DateTimeUtcClicked = DateTime.MinValue };
-        await DbContext.UserRecords.AddRangeAsync(new[] { urlClicked1New, urlClicked1Old, urlClicked2 });
+        var clicked4 = new UserRecord
+        { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = new DateTime(2021, 1, 1) };
+        await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         ctx.Services.AddScoped(_ => DbContext);
         var cut = ctx.RenderComponent<VisitCountPerPage>();
 
-        cut.FindComponent<DateRangeSelector>().Find("select").Change(DateTime.UtcNow.Date);
+        cut.FindComponent<DateRangeSelector>().Find("#startDate").Change(new DateTime(2019, 1, 1));
+        cut.FindComponent<DateRangeSelector>().Find("#endDate").Change(new DateTime(2020, 12, 31));
 
         cut.WaitForState(() => cut.FindAll("td").Any());
         var elements = cut.FindAll("td").ToList();

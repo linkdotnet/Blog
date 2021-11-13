@@ -24,12 +24,6 @@ public class Skill : Entity
 
     public ProficiencyLevel ProficiencyLevel { get; private set; }
 
-    public void SetProficiencyLevel(ProficiencyLevel level)
-    {
-        ArgumentNullException.ThrowIfNull(level);
-        ProficiencyLevel = level;
-    }
-
     public static Skill Create(string name, string iconUrl, string capability, string proficiencyLevel)
     {
         if (string.IsNullOrWhiteSpace(name))
@@ -46,5 +40,11 @@ public class Skill : Entity
 
         iconUrl = string.IsNullOrWhiteSpace(iconUrl) ? null : iconUrl;
         return new Skill(name.Trim(), iconUrl, capability.Trim(), level);
+    }
+
+    public void SetProficiencyLevel(ProficiencyLevel level)
+    {
+        ArgumentNullException.ThrowIfNull(level);
+        ProficiencyLevel = level;
     }
 }

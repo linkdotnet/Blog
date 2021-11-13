@@ -1,30 +1,33 @@
-﻿<div class="col-lg-1 col-md-2 col-sm-3 col-4">
-    <p>Since: </p>
-</div>
-<div class="col-lg-2 col-md-4 col-sm-6 col-8">
-    <select @onchange="RaiseDateTimeSpanChanged">
-        @foreach (var (title, time) in options)
-        {
-            <option value="@time">@title</option>
-        }
-    </select>
+﻿<div class="row mb-3">
+    <div class="col-2">
+        <label for="startDate">Since</label>
+        <input type="date" class="form-control" id="startDate" @onchange="StartDateChanged"/>
+    </div>
+    <div class="col-2">
+        <label for="endDate">To</label>
+        <input type="date" class="form-control" id="endDate" @onchange="EndDateChanged"/>
+    </div>
 </div>
 @code {
     [Parameter]
-    public EventCallback<DateTime> DateTimeSpanChanged { get; set; }
+    public EventCallback<Filter> FilterChanged { get; set; }
 
-    private readonly Dictionary<string, DateTime> options = new()
-    {
-        { "Beginning of time", DateTime.MinValue },
-        { "Last 90 Days", DateTime.UtcNow.AddDays(-90) },
-        { "Last 30 Days", DateTime.UtcNow.AddDays(-30) },
-        { "Last 7 Days", DateTime.UtcNow.AddDays(-7) },
-        { "Since Today", DateTime.UtcNow.Date },
-    };
+    private Filter filter = new();
 
-    private async Task RaiseDateTimeSpanChanged(ChangeEventArgs args)
+    private async Task ApplyFilters()
     {
-        await DateTimeSpanChanged.InvokeAsync(DateTime.Parse(args.Value!.ToString()));
+        await FilterChanged.InvokeAsync(filter);
     }
 
+    private async Task StartDateChanged(ChangeEventArgs args)
+    {
+        filter.StartDate = args.Value is string dateTime ? DateTime.Parse(dateTime) : null;
+        await ApplyFilters();
+    }
+
+    private async Task EndDateChanged(ChangeEventArgs args)
+    {
+        filter.EndDate = args.Value is string dateTime ? DateTime.Parse(dateTime) : null;
+        await ApplyFilters();
+    }
 }
