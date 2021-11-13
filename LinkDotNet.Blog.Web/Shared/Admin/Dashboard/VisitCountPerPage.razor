@@ -51,13 +51,13 @@
     private async Task LoadBlogPostInformationAsync()
     {
         visitData = await (from ur in blogDbContext.UserRecords
-            where ur.DateTimeUtcClicked >= startDate
-            join bp in blogDbContext.BlogPosts
-                on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
-            group new { ur, bp } by new { ur.UrlClicked }
+                           where ur.DateTimeUtcClicked >= startDate
+                           join bp in blogDbContext.BlogPosts
+                               on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
+                           group new { ur, bp } by new { ur.UrlClicked }
             into gp
-            orderby gp.Count() descending
-            select new VisitCountPageData
+                           orderby gp.Count() descending
+                           select new VisitCountPageData
             {
                 Id = gp.FirstOrDefault().bp.Id,
                 Title = gp.FirstOrDefault().bp.Title,
@@ -69,6 +69,7 @@
     private async Task RefreshVisitCount(DateTime newBeginning)
     {
         startDate = newBeginning;
+        visitData = null;
         await LoadBlogPostInformationAsync();
     }
 }
