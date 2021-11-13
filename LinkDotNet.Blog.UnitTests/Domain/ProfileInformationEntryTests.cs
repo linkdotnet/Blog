@@ -24,7 +24,7 @@ public class ProfileInformationEntryTests
     {
         Action act = () => ProfileInformationEntry.Create(content, 0);
 
-        act.Should().Throw<ArgumentOutOfRangeException>();
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [Fact]

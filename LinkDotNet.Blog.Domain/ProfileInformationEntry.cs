@@ -18,7 +18,7 @@ public class ProfileInformationEntry : Entity
     {
         if (string.IsNullOrWhiteSpace(key))
         {
-            throw new ArgumentOutOfRangeException(nameof(key));
+            throw new ArgumentNullException(nameof(key));
         }
 
         return new ProfileInformationEntry
