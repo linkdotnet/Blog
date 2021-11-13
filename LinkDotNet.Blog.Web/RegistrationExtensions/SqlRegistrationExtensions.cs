@@ -2,6 +2,7 @@
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web.RegistrationExtensions;
@@ -16,11 +17,11 @@ public static class SqlRegistrationExtensions
         {
             var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
             var connectionString = configuration.ConnectionString;
-            var dbOptions = new DbContextOptionsBuilder()
+            var dbOptions = new DbContextOptionsBuilder<BlogDbContext>()
                 .UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null))
                 .Options;
 
-            return new BlogDbContext(dbOptions);
+            return new PooledDbContextFactory<BlogDbContext>(dbOptions).CreateDbContext();
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
@@ -33,11 +34,11 @@ public static class SqlRegistrationExtensions
         {
             var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
             var connectionString = configuration.ConnectionString;
-            var dbOptions = new DbContextOptionsBuilder()
+            var dbOptions = new DbContextOptionsBuilder<BlogDbContext>()
                 .UseSqlite(connectionString)
                 .Options;
 
-            return new BlogDbContext(dbOptions);
+            return new PooledDbContextFactory<BlogDbContext>(dbOptions).CreateDbContext();
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
