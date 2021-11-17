@@ -7,6 +7,7 @@
 
     <ItemGroup>
         <PackageReference Include="Blazored.Toast" Version="3.2.2" />
+        <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
         <PackageReference Include="Markdig" Version="0.26.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
