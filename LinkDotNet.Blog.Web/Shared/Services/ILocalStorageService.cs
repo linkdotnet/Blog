@@ -4,9 +4,9 @@ namespace LinkDotNet.Blog.Web.Shared.Services;
 
 public interface ILocalStorageService
 {
-    Task<bool> ContainKeyAsync(string key);
+    ValueTask<bool> ContainKeyAsync(string key);
 
-    Task<T> GetItemAsync<T>(string key);
+    ValueTask<T> GetItemAsync<T>(string key);
 
-    Task SetItemAsync<T>(string key, T value);
+    ValueTask SetItemAsync<T>(string key, T value);
 }
