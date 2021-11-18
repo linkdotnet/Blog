@@ -47,12 +47,19 @@ html {
     height: 100%;
 }
 
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     background-image: linear-gradient(to bottom, var(--background-gradient-start) 40%, var(--background-gradient-end));
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: 'Quicksand', sans-serif;
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
 }
 
 a {
