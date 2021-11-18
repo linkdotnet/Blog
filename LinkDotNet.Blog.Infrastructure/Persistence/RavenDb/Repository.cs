@@ -18,13 +18,13 @@ public class Repository<TEntity> : IRepository<TEntity>
         this.documentStore = documentStore;
     }
 
-    public async Task<TEntity> GetByIdAsync(string id)
+    public async ValueTask<TEntity> GetByIdAsync(string id)
     {
         using var session = documentStore.OpenAsyncSession();
         return await session.LoadAsync<TEntity>(id);
     }
 
-    public async Task<IPagedList<TEntity>> GetAllAsync(
+    public async ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
@@ -49,14 +49,14 @@ public class Repository<TEntity> : IRepository<TEntity>
         return await query.ToPagedListAsync(page, pageSize);
     }
 
-    public async Task StoreAsync(TEntity entity)
+    public async ValueTask StoreAsync(TEntity entity)
     {
         using var session = documentStore.OpenAsyncSession();
         await session.StoreAsync(entity);
         await session.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(string id)
+    public async ValueTask DeleteAsync(string id)
     {
         using var session = documentStore.OpenAsyncSession();
         session.Delete(id);

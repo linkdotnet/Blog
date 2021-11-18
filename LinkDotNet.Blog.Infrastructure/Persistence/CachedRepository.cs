@@ -28,7 +28,7 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
     };
 
-    public async Task<T> GetByIdAsync(string id)
+    public async ValueTask<T> GetByIdAsync(string id)
     {
         if (!memoryCache.TryGetValue(id, out T value))
         {
@@ -39,7 +39,7 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         return value;
     }
 
-    public async Task<IPagedList<T>> GetAllAsync(
+    public async ValueTask<IPagedList<T>> GetAllAsync(
         Expression<Func<T, bool>> filter = null,
         Expression<Func<T, object>> orderBy = null,
         bool descending = true,
@@ -54,14 +54,14 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         });
     }
 
-    public async Task StoreAsync(T entity)
+    public async ValueTask StoreAsync(T entity)
     {
         await repository.StoreAsync(entity);
         ResetCache();
         memoryCache.Set(entity.Id, entity, Options);
     }
 
-    public async Task DeleteAsync(string id)
+    public async ValueTask DeleteAsync(string id)
     {
         ResetCache();
         memoryCache.Remove(id);

@@ -18,12 +18,12 @@ public class Repository<TEntity> : IRepository<TEntity>
         this.blogDbContext = blogDbContext;
     }
 
-    public async Task<TEntity> GetByIdAsync(string id)
+    public async ValueTask<TEntity> GetByIdAsync(string id)
     {
         return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
     }
 
-    public async Task<IPagedList<TEntity>> GetAllAsync(
+    public async ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
@@ -47,7 +47,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return await entity.ToPagedListAsync(page, pageSize);
     }
 
-    public async Task StoreAsync(TEntity entity)
+    public async ValueTask StoreAsync(TEntity entity)
     {
         if (string.IsNullOrEmpty(entity.Id))
         {
@@ -61,7 +61,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         await blogDbContext.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(string id)
+    public async ValueTask DeleteAsync(string id)
     {
         var entityToDelete = await GetByIdAsync(id);
         if (entityToDelete != null)

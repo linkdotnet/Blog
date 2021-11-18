@@ -9,9 +9,9 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence;
 public interface IRepository<TEntity>
 where TEntity : Entity
 {
-    Task<TEntity> GetByIdAsync(string id);
+    ValueTask<TEntity> GetByIdAsync(string id);
 
-    Task<IPagedList<TEntity>> GetAllAsync(
+    ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity,
             object>> orderBy = null,
@@ -19,7 +19,7 @@ where TEntity : Entity
         int page = 1,
         int pageSize = int.MaxValue);
 
-    Task StoreAsync(TEntity entity);
+    ValueTask StoreAsync(TEntity entity);
 
-    Task DeleteAsync(string id);
+    ValueTask DeleteAsync(string id);
 }

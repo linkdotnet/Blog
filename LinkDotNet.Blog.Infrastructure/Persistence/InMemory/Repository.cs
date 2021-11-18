@@ -13,13 +13,13 @@ public class Repository<TEntity> : IRepository<TEntity>
 {
     private readonly List<TEntity> entities = new();
 
-    public Task<TEntity> GetByIdAsync(string id)
+    public ValueTask<TEntity> GetByIdAsync(string id)
     {
         var entity = entities.SingleOrDefault(b => b.Id == id);
-        return Task.FromResult(entity);
+        return new ValueTask<TEntity>(entity);
     }
 
-    public Task<IPagedList<TEntity>> GetAllAsync(
+    public ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
@@ -39,10 +39,10 @@ public class Repository<TEntity> : IRepository<TEntity>
                 : result.OrderBy(orderBy.Compile());
         }
 
-        return Task.FromResult(result.ToPagedList(page, pageSize));
+        return new ValueTask<IPagedList<TEntity>>(result.ToPagedList(page, pageSize));
     }
 
-    public Task StoreAsync(TEntity entity)
+    public ValueTask StoreAsync(TEntity entity)
     {
         if (string.IsNullOrEmpty(entity.Id))
         {
@@ -56,10 +56,10 @@ public class Repository<TEntity> : IRepository<TEntity>
         }
 
         entities.Add(entity);
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 
-    public Task DeleteAsync(string id)
+    public ValueTask DeleteAsync(string id)
     {
         var blogPostToDelete = entities.SingleOrDefault(b => b.Id == id);
         if (blogPostToDelete != null)
@@ -67,6 +67,6 @@ public class Repository<TEntity> : IRepository<TEntity>
             entities.Remove(blogPostToDelete);
         }
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }
