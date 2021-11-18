@@ -41,12 +41,9 @@ public class Repository<TEntity> : IRepository<TEntity>
 
         if (orderBy != null)
         {
-            if (descending)
-            {
-                return await query.OrderByDescending(orderBy).ToPagedListAsync(page, pageSize);
-            }
-
-            return await query.OrderBy(orderBy).ToPagedListAsync(page, pageSize);
+            query = descending
+                ? query.OrderByDescending(orderBy)
+                : query.OrderBy(orderBy);
         }
 
         return await query.ToPagedListAsync(page, pageSize);

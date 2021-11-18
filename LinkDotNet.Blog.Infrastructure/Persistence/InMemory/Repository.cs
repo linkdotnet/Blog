@@ -34,15 +34,12 @@ public class Repository<TEntity> : IRepository<TEntity>
 
         if (orderBy != null)
         {
-            if (descending)
-            {
-                return Task.FromResult(result.OrderByDescending(orderBy.Compile()).ToPagedList(page, pageSize));
-            }
-
-            return Task.FromResult(result.OrderBy(orderBy.Compile()).ToPagedList(page, pageSize));
+            result = descending
+                ? result.OrderByDescending(orderBy.Compile())
+                : result.OrderBy(orderBy.Compile());
         }
 
-        return Task.FromResult(entities.ToPagedList(page, pageSize));
+        return Task.FromResult(result.ToPagedList(page, pageSize));
     }
 
     public Task StoreAsync(TEntity entity)
