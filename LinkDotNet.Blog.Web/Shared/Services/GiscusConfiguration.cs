@@ -1,12 +1,12 @@
 ﻿namespace LinkDotNet.Blog.Web.Shared.Services;
 
-public class GiscusConfiguration
+public record GiscusConfiguration
 {
-    public string Repository { get; set; }
+    public string Repository { get; init; }
 
-    public string RepositoryId { get; set; }
+    public string RepositoryId { get; init; }
 
-    public string Category { get; set; }
+    public string Category { get; init; }
 
-    public string CategoryId { get; set; }
+    public string CategoryId { get; init; }
 }
