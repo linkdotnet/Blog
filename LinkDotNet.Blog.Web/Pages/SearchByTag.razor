@@ -19,7 +19,7 @@
     public string Tag { get; set; }
     
     IList<BlogPost> blogPosts = new List<BlogPost>();
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);
         blogPosts = (await blogPostRepository.GetAllAsync(
