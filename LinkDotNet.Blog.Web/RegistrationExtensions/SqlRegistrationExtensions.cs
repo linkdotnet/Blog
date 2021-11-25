@@ -13,11 +13,15 @@ public static class SqlRegistrationExtensions
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddDbContextPool<BlogDbContext>((s, options) =>
+        services.AddTransient(s =>
         {
             var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
             var connectionString = configuration.ConnectionString;
-            options.UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null));
+            var dbOptions = new DbContextOptionsBuilder<BlogDbContext>()
+                .UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null))
+                .Options;
+
+            return new PooledDbContextFactory<BlogDbContext>(dbOptions).CreateDbContext();
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
@@ -26,11 +30,15 @@ public static class SqlRegistrationExtensions
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddDbContextPool<BlogDbContext>((s, options) =>
+        services.AddTransient(s =>
         {
             var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
             var connectionString = configuration.ConnectionString;
-            options.UseSqlite(connectionString);
+            var dbOptions = new DbContextOptionsBuilder<BlogDbContext>()
+                .UseSqlite(connectionString)
+                .Options;
+
+            return new PooledDbContextFactory<BlogDbContext>(dbOptions).CreateDbContext();
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
