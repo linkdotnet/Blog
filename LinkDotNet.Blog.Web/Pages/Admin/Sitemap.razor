@@ -8,8 +8,12 @@
         important pages. Especially newer sites benefit from having a sitemap.xml.
         The file will be created at the root of the site. To see the sitemap.xml go here: <a href="/sitemap.xml">sitemap.xml</a>.<br/>
         If you get a 404 there is currently no sitemap.xml</p>
-    <button class="btn btn-primary" @onclick="CreateSitemap">Create Sitemap</button>
+    <button class="btn btn-primary" @onclick="CreateSitemap" disabled="@isGenerating">Create Sitemap</button>
 
+    @if (isGenerating)
+    {
+        <Loading></Loading>
+    }
     @if (sitemapUrlSet != null)
     {
         <table class="table table-striped table-hover h-50">
@@ -34,10 +38,13 @@
 
 @code {
     private SitemapUrlSet sitemapUrlSet;
+    private bool isGenerating;
 
     private async Task CreateSitemap()
     {
+        isGenerating = true;
         sitemapUrlSet = await sitemapService.CreateSitemapAsync();
+        isGenerating = false;
         await sitemapService.SaveSitemapToFileAsync(sitemapUrlSet);
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
 using LinkDotNet.Blog.Web.Pages.Admin;
+using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services.Sitemap;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -52,5 +54,33 @@ public class SitemapTests : TestContext
         var row = cut.FindAll("tr").Last();
         row.Children.First().InnerHtml.Should().Be("loc");
         row.Children.Last().InnerHtml.Should().Be("Now");
+    }
+
+    [Fact]
+    public void ShouldShowLoadingWhenGenerating()
+    {
+        this.AddTestAuthorization().SetAuthorized("steven");
+        var sitemapMock = new Mock<ISitemapService>();
+        Services.AddScoped(_ => sitemapMock.Object);
+        var sitemap = new SitemapUrlSet
+        {
+            Urls = new List<SitemapUrl>
+                {
+                    new() { Location = "loc", LastModified = "Now" },
+                },
+        };
+        sitemapMock.Setup(s => s.CreateSitemapAsync())
+            .Returns(async () =>
+            {
+                await Task.Delay(1000);
+                return sitemap;
+            });
+        var cut = RenderComponent<Sitemap>();
+
+        cut.Find("button").Click();
+
+        cut.FindComponents<Loading>().Count.Should().Be(1);
+        var btn = cut.Find("button");
+        btn.Attributes.Any(a => a.Name == "disabled").Should().BeTrue();
     }
 }
