@@ -30,4 +30,36 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
         allWithTag2.Count.Should().Be(1);
         allWithTag2.Single().Tags.Single().Content.Should().Be("tag 2");
     }
+
+    [Fact]
+    public async Task ShouldResetOnDelete()
+    {
+        var bp1 = new BlogPostBuilder().WithTitle("1").Build();
+        var bp2 = new BlogPostBuilder().WithTitle("2").Build();
+        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()));
+        await sut.StoreAsync(bp1);
+        await sut.StoreAsync(bp2);
+        await sut.GetAllAsync();
+        await sut.DeleteAsync(bp1.Id);
+
+        var db = await sut.GetAllAsync();
+
+        db.Single().Title.Should().Be("2");
+    }
+
+    [Fact]
+    public async Task ShouldResetOnSave()
+    {
+        var bp1 = new BlogPostBuilder().WithTitle("1").Build();
+        var bp2 = new BlogPostBuilder().WithTitle("2").Build();
+        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()));
+        await sut.StoreAsync(bp1);
+        await sut.GetAllAsync();
+        bp1.Update(bp2);
+        await sut.StoreAsync(bp1);
+
+        var db = await sut.GetAllAsync();
+
+        db.Single().Title.Should().Be("2");
+    }
 }

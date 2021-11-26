@@ -40,9 +40,9 @@ public class SitemapTests : TestContext
         var sitemap = new SitemapUrlSet
         {
             Urls = new List<SitemapUrl>
-                {
-                    new() { Location = "loc", LastModified = "Now" },
-                },
+            {
+                new() { Location = "loc", LastModified = "Now" },
+            },
         };
         sitemapMock.Setup(s => s.CreateSitemapAsync())
             .ReturnsAsync(sitemap);
@@ -65,9 +65,9 @@ public class SitemapTests : TestContext
         var sitemap = new SitemapUrlSet
         {
             Urls = new List<SitemapUrl>
-                {
-                    new() { Location = "loc", LastModified = "Now" },
-                },
+            {
+                new() { Location = "loc", LastModified = "Now" },
+            },
         };
         sitemapMock.Setup(s => s.CreateSitemapAsync())
             .Returns(async () =>

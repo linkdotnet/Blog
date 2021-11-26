@@ -64,7 +64,6 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
     public async ValueTask DeleteAsync(string id)
     {
         ResetCache();
-        memoryCache.Remove(id);
         await repository.DeleteAsync(id);
     }
 
