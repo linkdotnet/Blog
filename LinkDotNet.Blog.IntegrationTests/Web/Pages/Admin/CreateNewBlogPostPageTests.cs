@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
