@@ -13,7 +13,6 @@ using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Toolbelt.Blazor.HeadElement;
 using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
@@ -86,7 +85,6 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => localStorageService ?? new Mock<ILocalStorageService>().Object);
         ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
-        ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
         ctx.Services.AddScoped(_ => new AppConfiguration());
     }

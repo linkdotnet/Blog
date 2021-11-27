@@ -14,7 +14,6 @@ using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Blog.Web.Shared.Skills;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Toolbelt.Blazor.HeadElement;
 using X.PagedList;
 using Xunit;
 
@@ -101,7 +100,6 @@ public class AboutMeTests : TestContext
         Services.AddScoped(_ => new Mock<ISortOrderCalculator>().Object);
         Services.AddScoped(_ => skillRepo.Object);
         Services.AddScoped(_ => profileRepo.Object);
-        Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         Services.AddScoped(_ => new Mock<IToastService>().Object);
     }
 }

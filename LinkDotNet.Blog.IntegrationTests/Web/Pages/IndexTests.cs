@@ -10,7 +10,6 @@ using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Toolbelt.Blazor.HeadElement;
 using Xunit;
 
 using Index = LinkDotNet.Blog.Web.Pages.Index;
@@ -174,7 +173,6 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     {
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
-        ctx.Services.AddScoped(_ => new Mock<IHeadElementHelper>().Object);
         ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
     }
 }
