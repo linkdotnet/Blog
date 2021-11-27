@@ -26,11 +26,7 @@ public class SitemapService : ISitemapService
 
     public async Task<SitemapUrlSet> CreateSitemapAsync()
     {
-        const string sitemapNamespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
-        var urlSet = new SitemapUrlSet
-        {
-            Namespace = sitemapNamespace,
-        };
+        var urlSet = new SitemapUrlSet();
 
         var blogPosts = (await repository.GetAllAsync(f => f.IsPublished, b => b.UpdatedDate)).ToList();
 

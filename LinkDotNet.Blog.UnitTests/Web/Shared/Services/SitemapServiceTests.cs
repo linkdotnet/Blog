@@ -58,7 +58,6 @@ public class SitemapServiceTests : TestContext
 
         var sitemap = await sut.CreateSitemapAsync();
 
-        sitemap.Namespace.Should().Be("http://www.sitemaps.org/schemas/sitemap/0.9");
         sitemap.Urls.Should().HaveCount(5);
         sitemap.Urls[0].Location.Should().Be($"{fakeNavigationManager.BaseUri}");
         sitemap.Urls[1].Location.Should().Be($"{fakeNavigationManager.BaseUri}blogPost/id1");
