@@ -57,8 +57,6 @@ public class Startup
             app.UseHsts();
         }
 
-        app.UseHeadElementServerPrerendering();
-
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 

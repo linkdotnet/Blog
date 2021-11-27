@@ -1,19 +1,20 @@
 ﻿@inject NavigationManager navigationManager
 @using Toolbelt.Blazor.HeadElement
 
-<Meta Name="title" Property="og:title" Content="@Title" />
-<Meta Name="image" Property="og:image" Content="@AbsolutePreviewImageUrl" />
-<Meta Property="og:type" Content="article" />
-<Meta Property="og:url" Content="@navigationManager.Uri" />
-@if (Keywords != null)
-{
-    <Meta name="keywords" content="@Keywords"/>
-}
-@if (Description != null)
-{
-    <Meta name="description" property="og:description" content="@Description" />
-}
-
+<HeadContent>
+    <meta name="title" property="og:title" content="@Title" />
+    <meta name="image" property="og:image" content="@AbsolutePreviewImageUrl" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="@navigationManager.Uri" />
+    @if (Keywords != null)
+    {
+        <meta name="keywords" content="@Keywords"/>
+    }
+    @if (Description != null)
+    {
+        <meta name="description" property="og:description" content="@Description" />
+    }
+</HeadContent>
 @code {
 
     [Parameter]

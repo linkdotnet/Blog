@@ -1,5 +1,6 @@
 ﻿@page "/"
 @namespace LinkDotNet.Blog.Web.Pages
+@using Microsoft.AspNetCore.Components.Web
 @inject AppConfiguration appConfiguration
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
@@ -33,6 +34,7 @@
     <link rel="preload" href="_content/Blazored.Toast/blazored-toast.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="_content/Blazored.Toast/blazored-toast.min.css"></noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/monokai.min.css" integrity="sha512-RLF8eOxhuwsRINc7r56dpl9a3VStqrXD+udWahutJrYdyh++2Ghnf+s4jFsOyryKZt/GNjPwbXVPH3MJpKrn2g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
 <component type="typeof(App)" render-mode="ServerPrerendered"/>
