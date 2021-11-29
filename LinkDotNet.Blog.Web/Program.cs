@@ -29,6 +29,7 @@ public static class Program
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
+        builder.Services.AddResponseCompression();
 
         if (builder.Environment.IsDevelopment())
         {
@@ -52,6 +53,7 @@ public static class Program
             app.UseHsts();
         }
 
+        app.UseResponseCompression();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
