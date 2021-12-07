@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace LinkDotNet.Blog.Web;
 
-public static class Program
+public class Program
 {
     public static void Main(string[] args)
     {

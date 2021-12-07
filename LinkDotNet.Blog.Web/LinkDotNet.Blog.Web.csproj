@@ -36,6 +36,10 @@
         <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="LinkDotNet.Blog.IntegrationTests" />
+	</ItemGroup>
+
     <ItemGroup>
       <None Update="Shared\Giscus.razor.js">
         <DependentUpon>Giscus.razor</DependentUpon>
