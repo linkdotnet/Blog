@@ -6,13 +6,22 @@ using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests
 {
-    public class SmokeTest
+    public class SmokeTest : IClassFixture<WebApplicationFactory<Program>>
     {
+        private readonly WebApplicationFactory<Program> factory;
+
+        public SmokeTest(WebApplicationFactory<Program> factory)
+        {
+            this.factory = factory.WithWebHostBuilder(builder =>
+            {
+                builder.UseSetting("PersistenceProvider", "InMemory");
+            });
+        }
+
         [Fact]
         public async Task ShouldBootUpApplication()
         {
-            var application = new WebApplicationFactory<Program>().WithWebHostBuilder(b => { });
-            var client = application.CreateClient();
+            var client = factory.CreateClient();
 
             var result = await client.GetAsync("/");
 

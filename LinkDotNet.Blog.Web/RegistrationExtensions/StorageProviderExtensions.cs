@@ -1,6 +1,5 @@
 ﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,27 +10,38 @@ public static class StorageProviderExtensions
 {
     public static void AddStorageProvider(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddMemoryCache();
+
         var persistenceProvider = PersistenceProvider.Create(configuration["PersistenceProvider"]);
 
         if (persistenceProvider == PersistenceProvider.InMemory)
         {
             services.UseInMemoryAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.InMemory.Repository<BlogPost>>();
         }
         else if (persistenceProvider == PersistenceProvider.RavenDb)
         {
             services.UseRavenDbAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
         }
         else if (persistenceProvider == PersistenceProvider.SqliteServer)
         {
             services.UseSqliteAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
         else if (persistenceProvider == PersistenceProvider.SqlServer)
         {
             services.UseSqlAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
+    }
 
-        services.AddMemoryCache();
-        services.AddScoped<Repository<BlogPost>>();
-        services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(provider.GetRequiredService<Repository<BlogPost>>(), provider.GetRequiredService<IMemoryCache>()));
+    private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
+        where TRepo : class, IRepository<BlogPost>
+    {
+        services.AddScoped<TRepo>();
+        services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(
+                provider.GetRequiredService<TRepo>(),
+                provider.GetRequiredService<IMemoryCache>()));
     }
 }
