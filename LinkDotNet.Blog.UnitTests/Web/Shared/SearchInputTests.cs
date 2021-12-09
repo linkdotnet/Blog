@@ -53,7 +53,7 @@ public class SearchInputTests : TestContext
     public void ShouldReturnValueWhenEnterWasPressed(string key, bool expectedInvoke)
     {
         var wasInvoked = false;
-        var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, s => wasInvoked = true));
+        var cut = RenderComponent<SearchInput>(p => p.Add(s => s.SearchEntered, _ => wasInvoked = true));
         cut.Find("input").Change("Text");
 
         cut.Find("input").KeyUp(Key.Get(key));

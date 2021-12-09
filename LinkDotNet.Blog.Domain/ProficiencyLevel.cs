@@ -7,7 +7,6 @@ public class ProficiencyLevel : Enumeration<ProficiencyLevel>
     public static readonly ProficiencyLevel Expert = new(nameof(Expert));
 
     private ProficiencyLevel()
-        : base()
     {
     }
 
