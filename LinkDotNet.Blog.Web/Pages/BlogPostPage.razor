@@ -37,7 +37,10 @@ else
                     @(RenderMarkupString(BlogPost.Content))
                 </div>
             </div>
-            <Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
+            <div class="d-flex justify-content-between py-2">
+                <Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
+                <ShareBlogPost></ShareBlogPost>
+            </div>            
             <Giscus></Giscus>
         </div>
     </div>
