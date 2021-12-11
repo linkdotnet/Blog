@@ -60,7 +60,7 @@ public sealed class CachedRepositoryTests : IDisposable
             2,
             30);
 
-            repositoryMock.Verify(
+        repositoryMock.Verify(
             r => r.GetAllAsync(
                 It.IsAny<Expression<Func<BlogPost, bool>>>(),
                 It.IsAny<Expression<Func<BlogPost, object>>>(),

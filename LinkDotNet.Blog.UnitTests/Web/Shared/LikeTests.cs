@@ -22,9 +22,9 @@ public class LikeTests : TestContext
         var cut = RenderComponent<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
-        var label = cut.Find("small").TextContent;
+        var label = cut.Find("button").TextContent;
 
-        label.Should().Be(expectedText);
+        label.Should().Contain(expectedText);
     }
 
     [Fact]
