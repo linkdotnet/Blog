@@ -46,12 +46,7 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         int page = 1,
         int pageSize = int.MaxValue)
     {
-        var key = $"{filter?.GetHashCode()}-{orderBy?.GetHashCode()}-{descending}-{page}-{pageSize}";
-        return await memoryCache.GetOrCreate(key, async e =>
-        {
-            e.SetOptions(Options);
-            return await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
-        });
+        return await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
     }
 
     public async ValueTask StoreAsync(T entity)

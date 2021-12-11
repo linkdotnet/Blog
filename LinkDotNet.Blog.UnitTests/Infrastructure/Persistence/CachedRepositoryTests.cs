@@ -38,33 +38,6 @@ public sealed class CachedRepositoryTests : IDisposable
     }
 
     [Fact]
-    public async Task ShouldGetAllFromCacheWhenLoaded()
-    {
-        var blogPost = new BlogPostBuilder().Build();
-        repositoryMock.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<BlogPost, bool>>>(),
-                It.IsAny<Expression<Func<BlogPost, object>>>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<BlogPost>(new[] { blogPost }, 1, 1));
-        var firstCall = await sut.GetAllAsync();
-
-        var secondCall = await sut.GetAllAsync();
-
-        firstCall.Count.Should().Be(1);
-        secondCall.Count.Should().Be(1);
-        repositoryMock.Verify(
-            r => r.GetAllAsync(
-            It.IsAny<Expression<Func<BlogPost, bool>>>(),
-            It.IsAny<Expression<Func<BlogPost, object>>>(),
-            It.IsAny<bool>(),
-            It.IsAny<int>(),
-            It.IsAny<int>()),
-            Times.Once);
-    }
-
-    [Fact]
     public async Task ShouldNotCacheWhenParameterDifferent()
     {
         SetupRepository();
@@ -87,7 +60,7 @@ public sealed class CachedRepositoryTests : IDisposable
             2,
             30);
 
-        repositoryMock.Verify(
+            repositoryMock.Verify(
             r => r.GetAllAsync(
                 It.IsAny<Expression<Func<BlogPost, bool>>>(),
                 It.IsAny<Expression<Func<BlogPost, object>>>(),
