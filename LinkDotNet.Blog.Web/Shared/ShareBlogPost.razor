@@ -3,8 +3,8 @@
 @inject IToastService toastService
 
 <div class="flex-row">
-    <a href="@LinkedInShare" target="_blank"><i class="fab fa-linkedin fa-lg"></i></a>
-    <a href="javascript:void(0)" @onclick="CopyToClipboard"><i class="fas fa-link fa-lg"></i></a>
+    <a id="share-linkedin" href="@LinkedInShare" target="_blank"><i class="fab fa-linkedin fa-lg"></i></a>
+    <a id="share-clipboard" href="javascript:void(0)" @onclick="CopyToClipboard"><i class="fas fa-link fa-lg"></i></a>
 </div>
 @code {
     private string LinkedInShare => $"https://www.linkedin.com/shareArticle?mini=true&url={navigationManager.Uri}";

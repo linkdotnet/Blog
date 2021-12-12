@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using AngleSharp.Html.Dom;
+using AngleSharp.Dom;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
@@ -21,7 +21,7 @@ public class ShareBlogPostTests : TestContext
         Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
         var cut = RenderComponent<ShareBlogPost>();
 
-        cut.FindAll("a")[1].Click();
+        cut.Find("#share-clipboard").Click();
 
         var copyToClipboardInvocation = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "navigator.clipboard.writeText");
         copyToClipboardInvocation.Arguments[0].Should().Be("http://localhost/blogPost/1");
@@ -35,8 +35,7 @@ public class ShareBlogPostTests : TestContext
 
         var cut = RenderComponent<ShareBlogPost>();
 
-        var linkedInShare = (IHtmlAnchorElement)cut.FindAll("a")[0];
-        linkedInShare.Href.Should()
-            .Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
+        var linkedInShare = cut.Find("#share-linkedin").Attributes.Single(s => s.Name == "href").Value;
+        linkedInShare.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
     }
 }
