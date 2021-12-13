@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using AngleSharp.Html.Dom;
+using AngleSharpWrappers;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
@@ -34,7 +36,7 @@ public class ShareBlogPostTests : TestContext
 
         var cut = RenderComponent<ShareBlogPost>();
 
-        var linkedInShare = cut.Find("#share-linkedin").Attributes.Single(s => s.Name == "href").Value;
-        linkedInShare.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
+        var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin").Unwrap();
+        linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
     }
 }
