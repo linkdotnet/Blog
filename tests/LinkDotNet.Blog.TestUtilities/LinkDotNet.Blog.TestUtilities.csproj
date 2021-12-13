@@ -16,14 +16,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+        <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
+      <ProjectReference Include="..\..\src\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
     </ItemGroup>
     <PropertyGroup>
-        <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>..\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
 </Project>

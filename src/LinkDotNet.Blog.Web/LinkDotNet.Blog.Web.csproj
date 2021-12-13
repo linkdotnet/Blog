@@ -33,7 +33,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="..\stylecop.json" Link="stylecop.json" />
+        <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
     </ItemGroup>
 
 	<ItemGroup>
@@ -46,7 +46,7 @@
       </None>
     </ItemGroup>
     <PropertyGroup>
-        <CodeAnalysisRuleSet>..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
+        <CodeAnalysisRuleSet>..\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
 
