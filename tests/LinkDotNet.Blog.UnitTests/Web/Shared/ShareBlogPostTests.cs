@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using AngleSharp.Html.Dom;
 using AngleSharpWrappers;
 using Blazored.Toast.Services;
@@ -38,5 +39,17 @@ public class ShareBlogPostTests : TestContext
 
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin").Unwrap();
         linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
+    }
+
+    [Fact]
+    public void ShouldNotCrashWhenCopyingLinkNotWorking()
+    {
+        Services.AddScoped(_ => new Mock<IToastService>().Object);
+        JSInterop.SetupVoid(s => s.InvocationMethodName == "navigator.clipboard.writeText").SetException(new Exception());
+        var cut = RenderComponent<ShareBlogPost>();
+
+        var act = () => cut.Find("#share-clipboard").Click();
+
+        act.Should().NotThrow<Exception>();
     }
 }
