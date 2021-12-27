@@ -65,9 +65,10 @@ else
     {
         if (firstRender)
         {
-            await userRecordService.StoreUserRecordAsync();
+            var userRecordTask = userRecordService.StoreUserRecordAsync();
             await jsRuntime.InvokeVoidAsync("hljs.highlightAll");
             StateHasChanged();
+            await userRecordTask;
         }
     }
 
