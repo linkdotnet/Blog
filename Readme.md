@@ -78,8 +78,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Name                      | string         | Name, which is displayed on top of the profile card                                                                                                        |
 | Heading                   | string         | Displayed under the name. For example job title                                                                                                            |
 | ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                  |
-| Giscus                    | node           | Enables the comment section. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
-| Disqus                    | node           | Enables the comment section. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
+| Giscus                    | node           | Enables the comment section via giscus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
+| Disqus                    | node           | Enables the comment section via disqus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:
@@ -91,7 +91,8 @@ Currently there are 4 Storage-Provider:
 ## Comment Section
 For comments the blog is using [giscus](https://giscus.app/) or [disqus](https://disqus.com/). 
 
-**Note**: Please only register one service / provide the configuration for one note. The given configuration shows both only for demonstrational purposes.
+**Note**: Please only register one service / provide the configuration for one node. The given configuration shows both only for demonstrational purposes.
+If multiple comment plugins are configured at the same time a warning will be displayed under the blog post itself.
 
 ### Giscus
 To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
@@ -140,7 +141,7 @@ The blog includes some of the most important tags to get indexed by a crawler. F
 
 ### Robots.txt
 In the wwwroot/ you can find a default robots.txt. It allows that the site gets completely indexed. If you want to tweak that behavior feel free.
-Also you can provide a sitemap.xml to get a better ranking. 
+Also you can provide a sitemap.xml to get a better ranking. The blog can create a sitemap.xml on its own. For that login and click on the `Admin` button in the navigation bar and afterwards on `Sitemap`. There you can let the blog create a new one for you. This is especially helpful after you created a new blog post to make easier for indexer like Google.  
 
 ### Open Graph Tags
 To get better results when for example shared via LinkedIn some of the `<meta property="og:tag">` tags are implemented.
