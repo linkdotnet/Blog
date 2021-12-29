@@ -29,6 +29,7 @@ public class AppConfigurationFactoryTests
                 { "Giscus:RepositoryId", "repoid" },
                 { "Giscus:Category", "general" },
                 { "Giscus:CategoryId", "generalid" },
+                { "Disqus:Shortname", "blog" },
             };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
@@ -55,6 +56,7 @@ public class AppConfigurationFactoryTests
         appConfiguration.GiscusConfiguration.RepositoryId.Should().Be("repoid");
         appConfiguration.GiscusConfiguration.Category.Should().Be("general");
         appConfiguration.GiscusConfiguration.CategoryId.Should().Be("generalid");
+        appConfiguration.DisqusConfiguration.Shortname.Should().Be("blog");
     }
 
     [Theory]
@@ -106,7 +108,7 @@ public class AppConfigurationFactoryTests
     }
 
     [Fact]
-    public void ShouldSetGiscusToFalseWhenNoInformation()
+    public void ShouldSetCommentPluginsToFalseWhenNoInformation()
     {
         var inMemorySettings = new Dictionary<string, string>
             {
@@ -122,5 +124,6 @@ public class AppConfigurationFactoryTests
         var appConfiguration = AppConfigurationFactory.Create(configuration);
 
         appConfiguration.IsGiscusEnabled.Should().BeFalse();
+        appConfiguration.IsDisqusEnabled.Should().BeFalse();
     }
 }
