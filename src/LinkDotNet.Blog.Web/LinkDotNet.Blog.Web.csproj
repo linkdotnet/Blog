@@ -40,11 +40,18 @@
 		<InternalsVisibleTo Include="LinkDotNet.Blog.IntegrationTests" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Shared\Disqus.razor.js">
+	    <DependentUpon>Disqus.razor</DependentUpon>
+	  </None>
+	</ItemGroup>
+
     <ItemGroup>
-      <None Update="Shared\Giscus.razor.js">
-        <DependentUpon>Giscus.razor</DependentUpon>
-      </None>
+        <None Update="Shared\Giscus.razor.js">
+            <DependentUpon>Giscus.razor</DependentUpon>
+        </None>
     </ItemGroup>
+    
     <PropertyGroup>
         <CodeAnalysisRuleSet>..\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>

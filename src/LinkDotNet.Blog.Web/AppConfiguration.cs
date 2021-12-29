@@ -30,4 +30,8 @@ public record AppConfiguration
     public GiscusConfiguration GiscusConfiguration { get; init; }
 
     public bool IsGiscusEnabled => GiscusConfiguration != null;
+
+    public DisqusConfiguration DisqusConfiguration { get; init; }
+
+    public bool IsDisqusEnabled => DisqusConfiguration != null;
 }
