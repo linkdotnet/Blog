@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Blog.Domain;
+﻿using System;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.Configuration;
 
@@ -10,6 +11,7 @@ public static class AppConfigurationFactory
     {
         var profileInformation = config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
         var giscus = config.GetSection("Giscus").Get<GiscusConfiguration>();
+        var disqus = config.GetSection("Disqus").Get<DisqusConfiguration>();
         var configuration = new AppConfiguration
         {
             BlogName = config["BlogName"],
@@ -21,6 +23,7 @@ public static class AppConfigurationFactory
             BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
             ProfileInformation = profileInformation,
             GiscusConfiguration = giscus,
+            DisqusConfiguration = disqus,
         };
 
         return configuration;

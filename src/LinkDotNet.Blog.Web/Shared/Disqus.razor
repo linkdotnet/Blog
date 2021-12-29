@@ -1,0 +1,15 @@
+@inject IJSRuntime jsRuntime
+@inject AppConfiguration appConfiguration
+<div id="disqus_thread">
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && appConfiguration.IsDisqusEnabled)
+        {
+            await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Disqus.razor.js");
+            await jsRuntime.InvokeVoidAsync("initDisqus", appConfiguration.DisqusConfiguration);
+        }
+    }
+}
