@@ -49,7 +49,10 @@ The appsettings.json file has a lot of options to customize the content of the b
     "RepositoryId": "id",
     "Category": "general",
     "CategoryId": "id"
-  }
+  },
+ "Disqus": {
+  "Shortname": "blog"
+ }
 }
 
 ```
@@ -76,6 +79,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Heading                   | string         | Displayed under the name. For example job title                                                                                                            |
 | ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                  |
 | Giscus                    | node           | Enables the comment section. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
+| Disqus                    | node           | Enables the comment section. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:
@@ -85,7 +89,12 @@ Currently there are 4 Storage-Provider:
  * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects
 
 ## Comment Section
-For comments the blog is using [giscus](https://giscus.app/). To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
+For comments the blog is using [giscus](https://giscus.app/) or [disqus](https://disqus.com/). 
+
+**Note**: Please only register one service / provide the configuration for one note. The given configuration shows both only for demonstrational purposes.
+
+### Giscus
+To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
 There you can enter all the information. You will find a detailed guide on the site.
 
 In short:
@@ -115,6 +124,9 @@ Now you can copy/paste those information into the appsettings.json. With the giv
     "CategoryId": "AbC==/8_D"
   }
 ```
+
+### Disqus
+For disqus you only need the shortname (site-name) which you can find for example under your [home-tab](https://disqus.com/home/).
 
 ## Authorization
 There is only one real mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
