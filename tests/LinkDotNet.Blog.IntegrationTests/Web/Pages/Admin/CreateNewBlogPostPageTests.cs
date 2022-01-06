@@ -6,7 +6,9 @@ using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Pages.Admin;
+using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Admin;
+using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -24,6 +26,8 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
+        ctx.ComponentFactories.AddStub<UploadFile>();
+        ctx.Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
         using var cut = ctx.RenderComponent<CreateNewBlogPostPage>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
