@@ -1,0 +1,45 @@
+@using System.IO
+@inject IJSRuntime jsRuntime
+
+<div>
+    <InputFile
+        class="@CssClass"
+        @ondragenter="@(_ => dropClass = "can-drop")"
+        @ondragleave="@(_ => dropClass = string.Empty)"
+        id="@id"
+        OnChange="HandleFileUpload"/>
+</div>
+
+@code {
+    private string dropClass = string.Empty;
+    private string otherClasses = string.Empty;
+    private string CssClass => dropClass + " " + otherClasses;
+    private string id = string.Empty;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object> AdditionalAttributes { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnFileUploaded { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (AdditionalAttributes != null && AdditionalAttributes.ContainsKey("class"))
+        {
+            otherClasses = AdditionalAttributes["class"].ToString();
+        }
+
+        if (AdditionalAttributes != null && AdditionalAttributes.ContainsKey("id"))
+        {
+            id = AdditionalAttributes["id"].ToString();
+        }
+    }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs args)
+    {
+        await using var stream = args.File.OpenReadStream();
+        var reader = new StreamReader(stream);
+        var content = await reader.ReadToEndAsync();
+        await OnFileUploaded.InvokeAsync(content);
+    }
+}

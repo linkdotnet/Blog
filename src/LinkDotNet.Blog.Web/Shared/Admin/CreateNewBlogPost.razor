@@ -17,13 +17,15 @@
                 <label for="short">Short Description</label>
                 <InputTextArea class="form-control" id="short" @bind-Value="model.ShortDescription" rows="4"
                 @oninput="args => model.ShortDescription = args.Value.ToString()"/>
-                <small id="short" class="form-text text-muted">You can use markdown to style your component.</small>
+                <small for="short" class="form-text text-muted">You can use markdown to style your component.</small>
             </div>
             <div class="mb-3">
                 <label for="content">Content</label>
                 <InputTextArea class="form-control" id="content" @bind-Value="model.Content" @oninput="args => model.Content = args.Value.ToString()" rows="10" />
-                <small id="content" class="form-text text-muted">You can use markdown to style your component. Additional features are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
-                @* <small id="content" class="form-text text-muted">Drag and drop images to upload and insert picture.</small> *@
+                <small for="content" class="form-text text-muted">You can use markdown to style your component. Additional features are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
+                <UploadFile OnFileUploaded="SetContentFromFile" id="content-upload"></UploadFile>
+                <small for="content-upload" class="form-text text-muted">Drag and drop markdown files to upload and
+                insert them</small>
             </div>
             <div class="mb-3">
                 <label for="preview">Preview-Url</label>
@@ -32,7 +34,7 @@
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />
                 <label class="form-check-label" for="published">Publish</label><br/>
-                <small id="published" class="form-text text-muted">If this blog post is only draft uncheck the box</small>
+                <small for="published" class="form-text text-muted">If this blog post is only draft uncheck the box</small>
             </div>
             <div class="mb-3">
                 <label for="tags">Tags</label>
@@ -43,7 +45,8 @@
                 <div class="form-check">
                     <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
                     <label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
-                    <small id="updatedate" class="form-text text-muted">If set the publish date is set to now, otherwise its original date</small>
+                    <small for="updatedate" class="form-text text-muted">If set the publish date is set to now,
+                    otherwise its original date</small>
                 </div>
             }
             <button class="btn btn-primary" type="submit">Submit</button>
@@ -68,10 +71,10 @@
 @code {
     [Parameter]
     public BlogPost BlogPost { get; set; }
-    
+
     [Parameter]
     public string Title { get; set; }
-    
+
     [Parameter]
     public EventCallback<BlogPost> OnBlogPostCreated { get; set; }
 
@@ -97,12 +100,17 @@
         await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
         ClearModel();
     }
-    
+
     private void ClearModel()
     {
         if (ClearAfterCreated)
         {
             model = new CreateNewModel();
         }
+    }
+
+    private void SetContentFromFile(string content)
+    {
+        model.Content = content;
     }
 }
