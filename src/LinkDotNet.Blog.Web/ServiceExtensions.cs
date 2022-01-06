@@ -15,5 +15,6 @@ public static class ServiceExtensions
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlFileWriter, XmlFileWriter>();
+        services.AddScoped<IFileProcessor, FileProcessor>();
     }
 }

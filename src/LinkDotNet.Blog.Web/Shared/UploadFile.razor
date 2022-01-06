@@ -1,5 +1,6 @@
 @using System.IO
-@inject IJSRuntime jsRuntime
+@using LinkDotNet.Blog.Web.Shared.Services
+@inject IFileProcessor fileProcessor
 
 <div>
     <InputFile
@@ -37,9 +38,7 @@
 
     private async Task HandleFileUpload(InputFileChangeEventArgs args)
     {
-        await using var stream = args.File.OpenReadStream();
-        var reader = new StreamReader(stream);
-        var content = await reader.ReadToEndAsync();
+        var content = await fileProcessor.GetContent(args.File);
         await OnFileUploaded.InvokeAsync(content);
     }
 }
