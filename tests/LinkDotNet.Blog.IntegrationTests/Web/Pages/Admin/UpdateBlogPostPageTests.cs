@@ -8,6 +8,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages.Admin;
+using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Admin;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
+        ctx.ComponentFactories.AddStub<UploadFile>();
         using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPost.Id));
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
