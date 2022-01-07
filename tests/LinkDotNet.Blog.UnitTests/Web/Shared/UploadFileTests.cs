@@ -58,4 +58,27 @@ public class UploadFileTests : TestContext
         cut.FindAll(".some-class").Should().NotBeEmpty();
         cut.FindAll("#some-id").Should().NotBeEmpty();
     }
+
+    [Fact]
+    public void ShouldIndicateDragAndDropBehavior()
+    {
+        Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
+        var cut = RenderComponent<UploadFile>();
+
+        cut.Find("input").DragEnter();
+
+        cut.Find(".can-drop").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void ShouldRemoveDragAndDropBehaviorWhenOutside()
+    {
+        Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
+        var cut = RenderComponent<UploadFile>();
+        cut.Find("input").DragEnter();
+
+        cut.Find("input").DragLeave();
+
+        cut.FindAll(".can-drop").Should().BeEmpty();
+    }
 }
