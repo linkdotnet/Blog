@@ -11,7 +11,7 @@
         }
     </div>
 <div class="table-container">
-    <table class="skill-table">
+    <table class="skill-table" id="skill-table">
         <tbody>
         <tr>
             <th>Capability</th>
@@ -48,6 +48,10 @@
         }
         </tbody>
     </table>
+    @if (IsAuthenticated)
+    {
+        <small for="skill-table">You can drag and drop your skills from one proficency to another</small>
+    }
 </div>
 @code {
     [Parameter]
