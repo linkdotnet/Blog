@@ -6,7 +6,6 @@ using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 
@@ -16,7 +15,6 @@ public class UploadFileTests : TestContext
 {
     public UploadFileTests()
     {
-        Services.AddSingleton(Options.Create(new RemoteBrowserFileStreamOptions()));
         JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init")
             .SetVoidResult();
     }
