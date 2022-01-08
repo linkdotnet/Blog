@@ -1,5 +1,4 @@
-﻿using System;
-using LinkDotNet.Blog.Domain;
+﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.Configuration;
 
