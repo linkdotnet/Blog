@@ -100,7 +100,7 @@ There you can enter all the information. You will find a detailed guide on the s
 
 In short:
  * You need a public repository where the comments are hosted. Recommendation: Create a new repository just for the comments
- * You have to link the [giscuss app](https://github.com/apps/giscus) to at least the repository where the comments are hosted
+ * You have to link the [giscus app](https://github.com/apps/giscus) to at least the repository where the comments are hosted
  * You have to enable the discussion feature in the repository (see [here](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/enabling-or-disabling-github-discussions-for-a-repository)
  )
 
