@@ -23,7 +23,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         using var ctx = new TestContext();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
-        ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));
         cut.WaitForState(() => cut.HasComponent<SkillTag>());
@@ -40,7 +40,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     {
         using var ctx = new TestContext();
         ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
-        ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));
         cut.Find("button").Click();

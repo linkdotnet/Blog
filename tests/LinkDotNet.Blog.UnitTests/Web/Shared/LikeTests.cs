@@ -17,7 +17,7 @@ public class LikeTests : TestContext
     [InlineData(2, "2 Likes")]
     public void ShouldDisplayLikes(int likes, string expectedText)
     {
-        Services.AddScoped(_ => new Mock<ILocalStorageService>().Object);
+        Services.AddScoped(_ => Mock.Of<ILocalStorageService>());
         var blogPost = new BlogPostBuilder().WithLikes(likes).Build();
         var cut = RenderComponent<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
@@ -30,7 +30,7 @@ public class LikeTests : TestContext
     [Fact]
     public void ShouldInvokeEventWhenButtonClicked()
     {
-        Services.AddScoped(_ => new Mock<ILocalStorageService>().Object);
+        Services.AddScoped(_ => Mock.Of<ILocalStorageService>());
         var blogPost = new BlogPostBuilder().Build();
         var wasClicked = false;
         var wasLike = false;

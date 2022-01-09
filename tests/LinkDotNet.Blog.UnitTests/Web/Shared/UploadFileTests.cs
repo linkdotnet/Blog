@@ -44,7 +44,7 @@ public class UploadFileTests : TestContext
     [Fact]
     public void ShouldPutIdAndClassOnItems()
     {
-        Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
+        Services.AddScoped(_ => Mock.Of<IFileProcessor>());
         var attributes = new Dictionary<string, object>
         {
             { "class", "some-class" },
@@ -60,7 +60,7 @@ public class UploadFileTests : TestContext
     [Fact]
     public void ShouldIndicateDragAndDropBehavior()
     {
-        Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
+        Services.AddScoped(_ => Mock.Of<IFileProcessor>());
         var cut = RenderComponent<UploadFile>();
 
         cut.Find("input").DragEnter();
@@ -71,7 +71,7 @@ public class UploadFileTests : TestContext
     [Fact]
     public void ShouldRemoveDragAndDropBehaviorWhenOutside()
     {
-        Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
+        Services.AddScoped(_ => Mock.Of<IFileProcessor>());
         var cut = RenderComponent<UploadFile>();
         cut.Find("input").DragEnter();
 

@@ -29,7 +29,7 @@ public class DashboardTests : TestContext
         this.AddTestAuthorization().SetAuthorized("test");
         Services.AddScoped(_ => CreateAppConfiguration(false));
         Services.AddScoped(_ => dashboardService.Object);
-        Services.AddScoped(_ => new Mock<IRepository<BlogPost>>().Object);
+        Services.AddScoped(_ => Mock.Of<IRepository<BlogPost>>());
         Services.AddScoped(_ => new BlogDbContext(options));
         dashboardService.Setup(d => d.GetDashboardDataAsync())
             .ReturnsAsync(new DashboardData());

@@ -96,10 +96,10 @@ public class AboutMeTests : TestContext
             .ReturnsAsync(new PagedList<ProfileInformationEntry>(Array.Empty<ProfileInformationEntry>(), 1, 1));
 
         Services.AddScoped(_ => config);
-        Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
-        Services.AddScoped(_ => new Mock<ISortOrderCalculator>().Object);
+        Services.AddScoped(_ => Mock.Of<IUserRecordService>());
+        Services.AddScoped(_ => Mock.Of<ISortOrderCalculator>());
         Services.AddScoped(_ => skillRepo.Object);
         Services.AddScoped(_ => profileRepo.Object);
-        Services.AddScoped(_ => new Mock<IToastService>().Object);
+        Services.AddScoped(_ => Mock.Of<IToastService>());
     }
 }

@@ -22,7 +22,7 @@ public class BlogPostAdminActionsTests
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("s");
         ctx.Services.AddSingleton(repositoryMock.Object);
-        ctx.Services.AddSingleton(new Mock<IToastService>().Object);
+        ctx.Services.AddSingleton(Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
@@ -39,7 +39,7 @@ public class BlogPostAdminActionsTests
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("s");
         ctx.Services.AddSingleton(repositoryMock.Object);
-        ctx.Services.AddSingleton(new Mock<IToastService>().Object);
+        ctx.Services.AddSingleton(Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
@@ -56,7 +56,7 @@ public class BlogPostAdminActionsTests
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("s");
         ctx.Services.AddSingleton(repositoryMock.Object);
-        ctx.Services.AddSingleton(new Mock<IToastService>().Object);
+        ctx.Services.AddSingleton(Mock.Of<IToastService>());
         var navigationManager = ctx.Services.GetRequiredService<NavigationManager>();
         var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
 

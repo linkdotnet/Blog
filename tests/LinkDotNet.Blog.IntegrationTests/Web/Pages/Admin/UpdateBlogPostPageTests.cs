@@ -48,7 +48,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-        ctx.Services.AddScoped(_ => new Mock<IToastService>().Object);
+        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
 
         Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, null));

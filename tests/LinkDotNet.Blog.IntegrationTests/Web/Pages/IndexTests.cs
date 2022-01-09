@@ -173,6 +173,6 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     {
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
-        ctx.Services.AddScoped(_ => new Mock<IUserRecordService>().Object);
+        ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
     }
 }

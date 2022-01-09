@@ -27,7 +27,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
         ctx.ComponentFactories.AddStub<UploadFile>();
-        ctx.Services.AddScoped(_ => new Mock<IFileProcessor>().Object);
+        ctx.Services.AddScoped(_ => Mock.Of<IFileProcessor>());
         using var cut = ctx.RenderComponent<CreateNewBlogPostPage>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
