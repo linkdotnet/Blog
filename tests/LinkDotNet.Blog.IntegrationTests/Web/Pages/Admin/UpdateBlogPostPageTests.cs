@@ -58,7 +58,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
     private static void TriggerUpdate(IRenderedFragment cut)
     {
-        cut.Find("#short").Change("My new Description");
+        cut.Find("#short").Input("My new Description");
 
         cut.Find("form").Submit();
     }

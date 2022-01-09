@@ -23,9 +23,9 @@ public class CreateNewBlogPostTests : TestContext
         BlogPost blogPost = null;
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
-        cut.Find("#title").Change("My Title");
-        cut.Find("#short").Change("My short Description");
-        cut.Find("#content").Change("My content");
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#published").Change(false);
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
@@ -57,7 +57,7 @@ public class CreateNewBlogPostTests : TestContext
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
                  .Add(c => c.BlogPost, blogPost));
-        cut.Find("#title").Change("My new Title");
+        cut.Find("#title").Input("My new Title");
 
         cut.Find("form").Submit();
 
@@ -77,9 +77,9 @@ public class CreateNewBlogPostTests : TestContext
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, true)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
-        cut.Find("#title").Change("My Title");
-        cut.Find("#short").Change("My short Description");
-        cut.Find("#content").Change("My content");
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
         cut.Find("form").Submit();
@@ -97,9 +97,9 @@ public class CreateNewBlogPostTests : TestContext
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, false)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
-        cut.Find("#title").Change("My Title");
-        cut.Find("#short").Change("My short Description");
-        cut.Find("#content").Change("My content");
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
         cut.Find("form").Submit();
@@ -121,9 +121,9 @@ public class CreateNewBlogPostTests : TestContext
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
                     .Add(c => c.BlogPost, originalBlogPost));
 
-        cut.Find("#title").Change("My Title");
-        cut.Find("#short").Change("My short Description");
-        cut.Find("#content").Change("My content");
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
         cut.Find("#updatedate").Change(false);

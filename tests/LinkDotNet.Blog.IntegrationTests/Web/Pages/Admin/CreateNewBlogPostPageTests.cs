@@ -41,9 +41,9 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
     private static void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
     {
-        cut.Find("#title").Change("My Title");
-        cut.Find("#short").Change("My short Description");
-        cut.Find("#content").Change("My content");
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#published").Change(false);
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
