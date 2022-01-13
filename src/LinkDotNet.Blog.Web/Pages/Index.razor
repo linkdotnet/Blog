@@ -24,9 +24,10 @@
         </div>
     </header>
     <div class="content px-4 my-2">
-        <Virtualize Items="@currentPage.ToList()">
-            <ShortBlogPost BlogPost="context" UseAlternativeStyle="@(currentLine++ % 2 != 0)"></ShortBlogPost>
-        </Virtualize>
+    @for (var i = 0; i < currentPage.Count; i++)
+    {
+        <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+    }
     </div>
     <BlogPostNavigation PageList="@currentPage"></BlogPostNavigation>
 </section>
@@ -36,7 +37,6 @@
     public int? Page { get; set; }
 
     private IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
-    private int currentLine;
 
     private string ImageUrl => appConfiguration.Introduction.BackgroundUrl.ToAbsoluteUrl(navigationManager.BaseUri);
 
