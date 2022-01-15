@@ -2,7 +2,7 @@
     <Authorized>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" 
-            aria-expanded="false">
+               aria-expanded="false">
                 Admin
             </a>
             <ul class="dropdown-menu original" aria-labelledby="navbarDropdown">
@@ -19,9 +19,15 @@
                 <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases">Version 2.12</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="logout">Log out</a></li>
+        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri">Log out</a></li>
     </Authorized>
     <NotAuthorized>
-        <li class="nav-item"><a class="nav-link" href="login?redirectUri=/">Log in</a></li>
+        <li class="nav-item"><a class="nav-link" href="login?redirectUri=@CurrentUri">Log in</a></li>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    [Parameter]
+    public string CurrentUri { get; set; } = string.Empty;
+
+}
