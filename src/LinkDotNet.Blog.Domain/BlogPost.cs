@@ -51,6 +51,11 @@ public class BlogPost : Entity
 
     public void Update(BlogPost from)
     {
+        if (from == this)
+        {
+            return;
+        }
+
         Title = from.Title;
         ShortDescription = from.ShortDescription;
         Content = from.Content;

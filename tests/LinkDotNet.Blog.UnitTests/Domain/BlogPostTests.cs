@@ -59,4 +59,15 @@ public class BlogPostTests
 
         blog.UpdatedDate.Should().Be(somewhen);
     }
+
+    [Fact]
+    public void ShouldNotDeleteTagsWhenSameReference()
+    {
+        var bp = new BlogPostBuilder().WithTags("tag 1").Build();
+
+        bp.Update(bp);
+
+        bp.Tags.Should().HaveCount(1);
+        bp.Tags.Single().Content.Should().Be("tag 1");
+    }
 }
