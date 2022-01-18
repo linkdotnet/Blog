@@ -61,4 +61,20 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         fromRepo.Capability.Should().Be("capability");
         fromRepo.ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
     }
+
+    [Fact]
+    public async Task ShouldNotAllowToEditSkillTagsWhenNotAdmin()
+    {
+        using var ctx = new TestContext();
+        var skill = new SkillBuilder().Build();
+        await Repository.StoreAsync(skill);
+        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+
+        var cut = ctx.RenderComponent<SkillTable>(p =>
+            p.Add(s => s.IsAuthenticated, false));
+
+        cut.WaitForState(() => cut.FindComponents<SkillTag>().Any());
+        cut.FindComponent<SkillTag>().Instance.IsAuthenticated.Should().BeFalse();
+    }
 }
