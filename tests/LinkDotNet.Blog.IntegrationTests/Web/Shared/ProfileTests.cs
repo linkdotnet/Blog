@@ -138,6 +138,20 @@ public class ProfileTests : TestContext
         entryToDb.Should().Be(source);
     }
 
+    [Fact]
+    public void ShouldNotChangeSortOrderWhenDroppedOnItself()
+    {
+        var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
+        var (repo, _) = RegisterServices();
+        SetupGetAll(repo, source);
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+
+        cut.FindAll("li")[0].Drag();
+        cut.FindAll("li")[0].Drop();
+
+        source.SortOrder.Should().Be(200);
+    }
+
     private static AppConfiguration CreateEmptyConfiguration()
     {
         return new()
