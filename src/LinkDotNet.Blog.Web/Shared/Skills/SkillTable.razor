@@ -25,14 +25,16 @@
                 <td>@skillCapabilityGroup.Key</td>
                 @foreach (var skillLevel in ProficiencyLevel.All)
                 {
-                    <td @ondrop="@(() => HandleDrop(skillLevel))">
+                    <td @ondrop="@(() => HandleDrop(skillLevel))" class="proficiency-level">
                         @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
                         {
                             @if (IsAuthenticated)
                             {
-                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab">
-                                    <SkillTag Skill="@skill" IsAuthenticated="@true" DeleteSkill="@(() =>
-                                                                                                      DeleteSkill(skill))"/>
+                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab"
+                                 class="skill-tag">
+                                    <SkillTag Skill="@skill"
+                                              IsAuthenticated="@true"
+                                              DeleteSkill="@(() => DeleteSkill(skill))"/>
                                 </div>
                             }
                             else
