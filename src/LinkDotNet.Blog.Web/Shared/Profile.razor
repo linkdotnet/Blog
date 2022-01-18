@@ -56,7 +56,6 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
     private ConfirmDialog Dialog { get; set; }
     private string currentDeleteKey;
     private ProfileInformationEntry currentDragItem;
-    private string dropClass = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,7 +96,6 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     private async Task HandleDrop(ProfileInformationEntry dropTarget)
     {
-        dropClass = string.Empty;
         if (currentDragItem == null || dropTarget  == currentDragItem)
         {
             return;
