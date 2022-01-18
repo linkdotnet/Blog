@@ -89,7 +89,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));
-        cut.WaitForElement(".skill-tag");
+        cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
 
         cut.FindAll(".skill-tag")[0].Drag();
         cut.FindAll(".proficiency-level")[1].Drop();
