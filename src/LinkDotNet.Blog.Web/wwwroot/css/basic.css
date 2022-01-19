@@ -10,7 +10,7 @@
     --big-stone: #193441;  
 
     --white: #ffffff;
-    --wild-sand: #f4f4f4;    
+    --wild-sand: #f4f4f4;
 
     /* Usages - this colors have to be defined in every theme */
     --active-link: var(--big-stone);
