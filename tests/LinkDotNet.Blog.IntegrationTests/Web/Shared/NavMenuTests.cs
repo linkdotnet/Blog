@@ -69,4 +69,20 @@ public class NavMenuTests : TestContext
             .Cast<IHtmlAnchorElement>()
             .Count(a => a.Href.Contains("AboutMe")).Should().Be(1);
     }
+
+    [Fact]
+    public void ShouldPassCorrectUriToComponent()
+    {
+        var config = new AppConfiguration
+        {
+            ProfileInformation = new ProfileInformation(),
+        };
+        Services.AddScoped(_ => config);
+        this.AddTestAuthorization();
+        var cut = RenderComponent<NavMenu>();
+
+        Services.GetService<NavigationManager>()!.NavigateTo("test");
+
+        cut.FindComponent<AccessControl>().Instance.CurrentUri.Should().Contain("test");
+    }
 }

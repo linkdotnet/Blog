@@ -1,5 +1,6 @@
 ﻿@inject AppConfiguration configuration
 @inject NavigationManager navigationManager
+@implements IDisposable
 
 <nav class="navbar navbar-expand-lg position-absolute navbar-background inverted-colors navbar-dark" style="width: 100%">
     <div class="container-fluid">
@@ -29,7 +30,7 @@
                             me</a></li>
                 }
                 
-                <AccessControl CurrentUri="@navigationManager.Uri"></AccessControl>
+                <AccessControl CurrentUri="@currentUri"></AccessControl>
                 <li class="nav-item d-flex">
                     <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
@@ -38,9 +39,29 @@
     </div>
 </nav>
 @code {
+    private string currentUri = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        navigationManager.LocationChanged += UpdateUri;
+        currentUri = navigationManager.Uri;
+    }
+
     private void NavigateToSearchPage(string searchTerm)
     {
         var escapeDataString = Uri.EscapeDataString(searchTerm);
         navigationManager.NavigateTo($"search/{escapeDataString}");
     }
+
+    public void Dispose()
+    {
+        navigationManager.LocationChanged -= UpdateUri;
+    }
+
+    private void UpdateUri(object sender, LocationChangedEventArgs e)
+    {
+        currentUri = e.Location;
+        StateHasChanged();
+    }
+
 }
