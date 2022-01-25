@@ -177,4 +177,28 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.Tags.Should().HaveCount(3);
         blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
     }
+
+    [Theory]
+    [InlineData("short", "b", true, "**", "**Test**")]
+    [InlineData("short", "i", true, "*", "*Test*")]
+    [InlineData("short", "b", false, "**", "Test")]
+    [InlineData("short", "f", false, "**", "Test")]
+    [InlineData("content", "b", true, "**", "**Test**")]
+    [InlineData("content", "i", true, "*", "*Test*")]
+    [InlineData("content", "b", false, "**", "Test")]
+    [InlineData("content", "f", false, "**", "Test")]
+    public void ShouldSetMarkerOnKeyUp(string id, string key, bool ctrlPressed, string fence, string expected)
+    {
+        var markerMock = new Mock<IMarkerService>();
+        markerMock.Setup(m => m.GetNewMarkdownForElementAsync(id, "Test", fence, fence))
+            .ReturnsAsync(expected);
+        Services.AddScoped(_ => markerMock.Object);
+        var cut = RenderComponent<CreateNewBlogPost>();
+        cut.Find($"#{id}").Input("Test");
+        cut.Find($"#{id}").KeyUp(key, ctrlKey: ctrlPressed);
+
+        var content = cut.Find($"#{id}").TextContent;
+
+        content.Should().Be(expected);
+    }
 }
