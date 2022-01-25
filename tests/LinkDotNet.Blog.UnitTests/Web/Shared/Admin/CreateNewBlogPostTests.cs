@@ -6,6 +6,9 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Admin;
+using LinkDotNet.Blog.Web.Shared.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin;
@@ -14,12 +17,13 @@ public class CreateNewBlogPostTests : TestContext
 {
     public CreateNewBlogPostTests()
     {
-        ComponentFactories.Add<UploadFile, UploadFile>():
+        ComponentFactories.AddStub<UploadFile>();
     }
 
     [Fact]
     public void ShouldCreateNewBlogPostWhenValidDataGiven()
     {
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         BlogPost blogPost = null;
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
@@ -53,6 +57,7 @@ public class CreateNewBlogPostTests : TestContext
             .WithTags("tag1", "tag2")
             .Build();
         BlogPost blogPostFromComponent = null;
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>(
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
@@ -74,6 +79,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotDeleteModelWhenSet()
     {
         BlogPost blogPost = null;
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, true)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
@@ -94,6 +100,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotDeleteModelWhenNotSet()
     {
         BlogPost blogPost = null;
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, false)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
@@ -113,6 +120,7 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldNotUpdateUpdatedDateWhenCheckboxSet()
     {
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var somewhen = new DateTime(1991, 5, 17);
         var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(somewhen).Build();
         BlogPost blogPostFromComponent = null;
@@ -135,6 +143,7 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldNotSetOptionToNotUpdateUpdatedDateOnInitialCreate()
     {
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>();
 
         var found = cut.FindAll("#updatedate");
@@ -145,6 +154,7 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldAcceptInputWithoutLosingFocusOrEnter()
     {
+        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         BlogPost blogPost = null;
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
