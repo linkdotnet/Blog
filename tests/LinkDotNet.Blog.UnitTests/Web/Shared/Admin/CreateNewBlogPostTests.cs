@@ -14,7 +14,7 @@ public class CreateNewBlogPostTests : TestContext
 {
     public CreateNewBlogPostTests()
     {
-        ComponentFactories.AddStub<UploadFile>();
+        ComponentFactories.Add<UploadFile, UploadFile>():
     }
 
     [Fact]

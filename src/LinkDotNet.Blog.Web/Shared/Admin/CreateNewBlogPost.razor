@@ -1,5 +1,7 @@
 ﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Shared.Services
 @inherits MarkdownComponentBase
+@inject IMarkerService markerService
 
 <h3>@Title</h3>
 
@@ -15,13 +17,14 @@
             </div>
             <div class="mb-3">
                 <label for="short">Short Description</label>
-                <textarea class="form-control" id="short" rows="4"
+                <textarea class="form-control" id="short" rows="4" @onkeyup="MarkShortDescription"
                        @oninput="args => model.ShortDescription = args.Value.ToString()">@model.ShortDescription</textarea>
                 <small for="short" class="form-text text-muted">You can use markdown to style your component.</small>
             </div>
             <div class="mb-3">
                 <label for="content">Content</label>
-                <textarea class="form-control" id="content" @oninput="args => model.Content = args.Value.ToString()" rows="10">@model.Content</textarea>
+                <textarea class="form-control" id="content" @oninput="args => model.Content = args.Value.ToString()" rows="10"
+                            @onkeyup="MarkContent">@model.Content</textarea>
                 <small for="content" class="form-text text-muted">You can use markdown to style your component. Additional features are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
                 <UploadFile OnFileUploaded="SetContentFromFile" id="content-upload"></UploadFile>
                 <small for="content-upload" class="form-text text-muted">Drag and drop markdown files to upload and
@@ -83,6 +86,8 @@
 
     private FeatureInfoDialog FeatureDialog { get; set; }
 
+    private ElementReference reference;
+
     private CreateNewModel model = new();
 
     protected override void OnParametersSet()
@@ -114,4 +119,25 @@
     {
         model.Content = content;
     }
+
+    private async Task MarkShortDescription(KeyboardEventArgs keyboardEventArgs)
+    {
+        model.ShortDescription = await GetNewMarkdownForElementAsync(keyboardEventArgs, model.ShortDescription, "short");
+    }
+
+    private async Task MarkContent(KeyboardEventArgs keyboardEventArgs)
+    {
+        model.Content = await GetNewMarkdownForElementAsync(keyboardEventArgs, model.Content, "content");
+    }
+
+    private async Task<string> GetNewMarkdownForElementAsync(KeyboardEventArgs keyboardEventArgs, string original, string elementId)
+    {
+        return keyboardEventArgs.CtrlKey ? keyboardEventArgs.Key switch
+        {
+            "b" => await markerService.GetNewMarkdownForElementAsync(elementId, original, "**", "**"),
+            "i" => await markerService.GetNewMarkdownForElementAsync(elementId, original, "*", "*"),
+            _ => original,
+        } : original;
+    }
+
 }
