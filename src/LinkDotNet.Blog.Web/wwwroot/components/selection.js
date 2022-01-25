@@ -4,3 +4,9 @@ window.getSelectionFromElement = function (id) {
     const end = elem.selectionEnd
     return { start, end }
 }
+
+window.setSelectionFromElement = function (id, cursor) {
+    const elem = document.getElementById(id)
+    elem.selectionStart = cursor
+    elem.selectionEnd = cursor
+}

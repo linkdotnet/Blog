@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 
 namespace LinkDotNet.Blog.Web.Shared.Services;
 
-public partial class MarkerService : IMarkerService
+public class MarkerService : IMarkerService
 {
     private readonly IJSRuntime jsRuntime;
 
@@ -23,6 +23,7 @@ public partial class MarkerService : IMarkerService
         var beforeMarker = selectionRange.Start > 0 ? content[..selectionRange.Start] : string.Empty;
         var marker = content[selectionRange.Start..selectionRange.End];
         var afterMarker = content[selectionRange.End..];
+        await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, selectionRange.Start + fenceBegin.Length);
         return beforeMarker + fenceBegin + marker + fenceEnd + afterMarker;
     }
 }
