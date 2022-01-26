@@ -39,12 +39,12 @@ public class MarkerServiceTests : TestContext
         const string element = "id";
         JSInterop.Mode = JSRuntimeMode.Loose;
         JSInterop.Setup<SelectionRange>("getSelectionFromElement", element)
-            .SetResult(new SelectionRange { Start = 1, End = 3 });
+            .SetResult(new SelectionRange { Start = 2, End = 5 });
 
-        await cut.GetNewMarkdownForElementAsync(element, "Test", "**", "**");
+        await cut.GetNewMarkdownForElementAsync(element, "Hello World", "**", "**");
 
         var setSelection = JSInterop.Invocations.SingleOrDefault(s => s.Identifier == "setSelectionFromElement");
         setSelection.Arguments.Should().Contain(element);
-        setSelection.Arguments.Should().Contain(3);
+        setSelection.Arguments.Should().Contain(9);
     }
 }

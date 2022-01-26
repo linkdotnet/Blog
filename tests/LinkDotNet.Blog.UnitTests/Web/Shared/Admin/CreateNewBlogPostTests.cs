@@ -181,10 +181,12 @@ public class CreateNewBlogPostTests : TestContext
     [Theory]
     [InlineData("short", "b", true, "**", "**Test**")]
     [InlineData("short", "i", true, "*", "*Test*")]
+    [InlineData("short", "h", true, "*", "Test")]
     [InlineData("short", "b", false, "**", "Test")]
     [InlineData("short", "f", false, "**", "Test")]
     [InlineData("content", "b", true, "**", "**Test**")]
     [InlineData("content", "i", true, "*", "*Test*")]
+    [InlineData("content", "h", true, "*", "Test")]
     [InlineData("content", "b", false, "**", "Test")]
     [InlineData("content", "f", false, "**", "Test")]
     public void ShouldSetMarkerOnKeyUp(string id, string key, bool ctrlPressed, string fence, string expected)

@@ -23,7 +23,8 @@ public class MarkerService : IMarkerService
         var beforeMarker = selectionRange.Start > 0 ? content[..selectionRange.Start] : string.Empty;
         var marker = content[selectionRange.Start..selectionRange.End];
         var afterMarker = content[selectionRange.End..];
-        await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, selectionRange.Start + fenceBegin.Length);
+        var shift = selectionRange.End + fenceBegin.Length + fenceEnd.Length;
+        await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift);
         return beforeMarker + fenceBegin + marker + fenceEnd + afterMarker;
     }
 }

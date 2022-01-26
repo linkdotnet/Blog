@@ -19,7 +19,7 @@
                 <label for="short">Short Description</label>
                 <textarea class="form-control" id="short" rows="4" @onkeyup="MarkShortDescription"
                        @oninput="args => model.ShortDescription = args.Value.ToString()">@model.ShortDescription</textarea>
-                <small for="short" class="form-text text-muted">You can use markdown to style your component.</small>
+                <small for="short" class="form-text text-muted">You can use markdown to style your component</small>
             </div>
             <div class="mb-3">
                 <label for="content">Content</label>
@@ -86,8 +86,6 @@
 
     private FeatureInfoDialog FeatureDialog { get; set; }
 
-    private ElementReference reference;
-
     private CreateNewModel model = new();
 
     protected override void OnParametersSet()
@@ -123,11 +121,13 @@
     private async Task MarkShortDescription(KeyboardEventArgs keyboardEventArgs)
     {
         model.ShortDescription = await GetNewMarkdownForElementAsync(keyboardEventArgs, model.ShortDescription, "short");
+        StateHasChanged();
     }
 
     private async Task MarkContent(KeyboardEventArgs keyboardEventArgs)
     {
         model.Content = await GetNewMarkdownForElementAsync(keyboardEventArgs, model.Content, "content");
+        StateHasChanged();
     }
 
     private async Task<string> GetNewMarkdownForElementAsync(KeyboardEventArgs keyboardEventArgs, string original, string elementId)
