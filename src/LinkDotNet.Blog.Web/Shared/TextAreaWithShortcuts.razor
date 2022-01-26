@@ -6,6 +6,8 @@
 
 @code {
     private string textContent = string.Empty;
+    private const string SelectedMarker = "#selection#";
+    private const string CursorMarker = "#cursor#";
 
     [Parameter]
     public string Value
@@ -39,13 +41,16 @@
         StateHasChanged();
     }
 
-    private async Task<string> GetNewMarkdownForElementAsync(KeyboardEventArgs keyboardEventArgs, string original, string elementId)
+    private async Task<string> GetNewMarkdownForElementAsync(
+        KeyboardEventArgs keyboardEventArgs,
+        string original,
+        string elementId)
     {
         return keyboardEventArgs.CtrlKey ? keyboardEventArgs.Key switch
         {
-            "b" => await GetNewMarkdownForElementAsync(elementId, original, "**", "**"),
-            "i" => await GetNewMarkdownForElementAsync(elementId, original, "*", "*"),
-            "m" => await GetNewMarkdownForElementAsync(elementId, original, "[","]()"),
+            "b" => await GetNewMarkdownForElementAsync(elementId, original, $"**{SelectedMarker}**{CursorMarker}"),
+            "i" => await GetNewMarkdownForElementAsync(elementId, original, $"*{SelectedMarker}*{CursorMarker}"),
+            "m" => await GetNewMarkdownForElementAsync(elementId, original, $"[{SelectedMarker}]({CursorMarker})"),
             _ => original,
             } : original;
     }
@@ -53,8 +58,7 @@
     private async Task<string> GetNewMarkdownForElementAsync(
         string elementId,
         string content,
-        string fenceBegin,
-        string fenceEnd)
+        string fence)
     {
         var selectionRange = await jsRuntime.InvokeAsync<SelectionRange>("getSelectionFromElement", elementId);
         if (selectionRange.Start == selectionRange.End)
@@ -63,10 +67,12 @@
         }
 
         var beforeMarker = selectionRange.Start > 0 ? content[..selectionRange.Start] : string.Empty;
-        var marker = content[selectionRange.Start..selectionRange.End];
+        var selectedContent = content[selectionRange.Start..selectionRange.End];
+        var fencedContent = fence.Replace(SelectedMarker, selectedContent);
         var afterMarker = content[selectionRange.End..];
-        var shift = selectionRange.End + fenceBegin.Length + fenceEnd.Length;
+        var shift = selectionRange.Start + fencedContent.IndexOf(CursorMarker, StringComparison.Ordinal);
+        var removedCursor = fencedContent.Replace(CursorMarker, string.Empty);
         await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift);
-        return beforeMarker + fenceBegin + marker + fenceEnd + afterMarker;
+        return beforeMarker + removedCursor + afterMarker;
     }
 }
