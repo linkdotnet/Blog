@@ -16,6 +16,5 @@ public static class ServiceExtensions
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlFileWriter, XmlFileWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
-        services.AddScoped<IMarkerService, MarkerService>();
     }
 }

@@ -1,4 +1,4 @@
-namespace LinkDotNet.Blog.Web.Shared.Services;
+namespace LinkDotNet.Blog.Web.Shared;
 
 public sealed class SelectionRange
 {

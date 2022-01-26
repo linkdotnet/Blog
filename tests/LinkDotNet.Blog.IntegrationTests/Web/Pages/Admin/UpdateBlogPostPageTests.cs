@@ -10,7 +10,6 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages.Admin;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Admin;
-using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -31,7 +30,6 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
         ctx.ComponentFactories.AddStub<UploadFile>();
-        ctx.Services.AddScoped(_ => Mock.Of<IMarkerService>());
         using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPost.Id));
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();

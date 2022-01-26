@@ -6,9 +6,6 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Admin;
-using LinkDotNet.Blog.Web.Shared.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin;
@@ -23,7 +20,6 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldCreateNewBlogPostWhenValidDataGiven()
     {
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         BlogPost blogPost = null;
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
@@ -57,7 +53,6 @@ public class CreateNewBlogPostTests : TestContext
             .WithTags("tag1", "tag2")
             .Build();
         BlogPost blogPostFromComponent = null;
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>(
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
@@ -79,7 +74,6 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotDeleteModelWhenSet()
     {
         BlogPost blogPost = null;
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, true)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
@@ -100,7 +94,6 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotDeleteModelWhenNotSet()
     {
         BlogPost blogPost = null;
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, false)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
@@ -120,7 +113,6 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldNotUpdateUpdatedDateWhenCheckboxSet()
     {
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var somewhen = new DateTime(1991, 5, 17);
         var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(somewhen).Build();
         BlogPost blogPostFromComponent = null;
@@ -143,7 +135,6 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldNotSetOptionToNotUpdateUpdatedDateOnInitialCreate()
     {
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         var cut = RenderComponent<CreateNewBlogPost>();
 
         var found = cut.FindAll("#updatedate");
@@ -154,7 +145,6 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldAcceptInputWithoutLosingFocusOrEnter()
     {
-        Services.AddScoped(_ => Mock.Of<IMarkerService>());
         BlogPost blogPost = null;
         var cut = RenderComponent<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
@@ -176,31 +166,5 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.IsPublished.Should().BeFalse();
         blogPost.Tags.Should().HaveCount(3);
         blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
-    }
-
-    [Theory]
-    [InlineData("short", "b", true, "**", "**Test**")]
-    [InlineData("short", "i", true, "*", "*Test*")]
-    [InlineData("short", "h", true, "*", "Test")]
-    [InlineData("short", "b", false, "**", "Test")]
-    [InlineData("short", "f", false, "**", "Test")]
-    [InlineData("content", "b", true, "**", "**Test**")]
-    [InlineData("content", "i", true, "*", "*Test*")]
-    [InlineData("content", "h", true, "*", "Test")]
-    [InlineData("content", "b", false, "**", "Test")]
-    [InlineData("content", "f", false, "**", "Test")]
-    public void ShouldSetMarkerOnKeyUp(string id, string key, bool ctrlPressed, string fence, string expected)
-    {
-        var markerMock = new Mock<IMarkerService>();
-        markerMock.Setup(m => m.GetNewMarkdownForElementAsync(id, "Test", fence, fence))
-            .ReturnsAsync(expected);
-        Services.AddScoped(_ => markerMock.Object);
-        var cut = RenderComponent<CreateNewBlogPost>();
-        cut.Find($"#{id}").Input("Test");
-        cut.Find($"#{id}").KeyUp(key, ctrlKey: ctrlPressed);
-
-        var content = cut.Find($"#{id}").TextContent;
-
-        content.Should().Be(expected);
     }
 }
