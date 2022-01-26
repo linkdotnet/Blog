@@ -24,7 +24,7 @@
                 <label for="content">Content</label>
                 <TextAreaWithShortcuts Id="content" Class="form-control" Rows="10"
                                        @bind-Value="@model.Content"></TextAreaWithShortcuts>
-                <small for="content" class="form-text text-muted">You can use markdown to style your component. Additional features are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
+                <small for="content" class="form-text text-muted">You can use markdown to style your component. Additional features and keyboard shortcuts are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
                 <UploadFile OnFileUploaded="SetContentFromFile" id="content-upload"></UploadFile>
                 <small for="content-upload" class="form-text text-muted">Drag and drop markdown files to upload and
                 insert them</small>

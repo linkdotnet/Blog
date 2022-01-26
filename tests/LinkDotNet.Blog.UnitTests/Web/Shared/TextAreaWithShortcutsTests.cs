@@ -11,6 +11,7 @@ public class TextAreaWithShortcutsTests : TestContext
     [Theory]
     [InlineData("b", 0, 4, true, "**Test**")]
     [InlineData("i", 0, 4, true, "*Test*")]
+    [InlineData("m", 0, 4, true, "[Test]()")]
     [InlineData("h", 0, 1, true, "Test")]
     [InlineData("b", 0, 1, false, "Test")]
     [InlineData("f", 0, 4, false, "Test")]

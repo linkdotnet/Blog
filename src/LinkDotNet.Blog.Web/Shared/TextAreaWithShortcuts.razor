@@ -1,7 +1,8 @@
 @inject IJSRuntime jsRuntime
 
-<textarea class="@Class" id="@Id" rows="@Rows" @onkeyup="MarkShortDescription"
-                       @oninput="args => Value = args.Value.ToString()">@Value</textarea>
+<textarea class="@Class" id="@Id" rows="@Rows"
+    @onkeyup="MarkShortDescription" @onkeyup:preventDefault="true" @onabort:stopPropagation="true"
+    @oninput="args => Value = args.Value.ToString()">@Value</textarea>
 
 @code {
     private string textContent = string.Empty;
@@ -44,6 +45,7 @@
         {
             "b" => await GetNewMarkdownForElementAsync(elementId, original, "**", "**"),
             "i" => await GetNewMarkdownForElementAsync(elementId, original, "*", "*"),
+            "m" => await GetNewMarkdownForElementAsync(elementId, original, "[","]()"),
             _ => original,
             } : original;
     }
