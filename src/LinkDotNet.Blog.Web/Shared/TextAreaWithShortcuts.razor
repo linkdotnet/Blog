@@ -1,7 +1,7 @@
 @inject IJSRuntime jsRuntime
 
 <textarea class="@Class" id="@Id" rows="@Rows"
-    @onkeyup="MarkShortDescription" @onkeyup:preventDefault="true" @onabort:stopPropagation="true"
+    @onkeyup="MarkShortDescription"
     @oninput="args => Value = args.Value.ToString()">@Value</textarea>
 
 @code {
