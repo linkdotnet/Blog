@@ -72,7 +72,7 @@
         var afterMarker = content[selectionRange.End..];
         var shift = selectionRange.Start + fencedContent.IndexOf(CursorMarker, StringComparison.Ordinal);
         var removedCursor = fencedContent.Replace(CursorMarker, string.Empty);
-        await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift);
+        await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift, removedCursor);
         return beforeMarker + removedCursor + afterMarker;
     }
 }

@@ -5,8 +5,9 @@ window.getSelectionFromElement = function (id) {
     return { start, end }
 }
 
-window.setSelectionFromElement = function (id, cursor) {
+window.setSelectionFromElement = function (id, cursor, newText) {
     const elem = document.getElementById(id)
+    document.execCommand("insertText", false, newText)
     elem.selectionStart = cursor
     elem.selectionEnd = cursor
 }

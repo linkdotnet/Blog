@@ -52,5 +52,6 @@ public class TextAreaWithShortcutsTests : TestContext
         var setSelection = JSInterop.Invocations.SingleOrDefault(s => s.Identifier == "setSelectionFromElement");
         setSelection.Arguments.Should().Contain(element);
         setSelection.Arguments.Should().Contain(9);
+        setSelection.Arguments.Should().Contain("**llo**");
     }
 }
