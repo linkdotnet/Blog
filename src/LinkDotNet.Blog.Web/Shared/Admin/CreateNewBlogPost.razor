@@ -12,7 +12,7 @@
             <div class="mb-3">
                 <label for="title">Title</label>
                 <input class="form-control" id="title"
-                           @oninput="args => model.Title = args.Value.ToString()"/>
+                           @oninput="args => model.Title = args.Value.ToString()" value="@model.Title"/>
             </div>
             <div class="mb-3">
                 <label for="short">Short Description</label>

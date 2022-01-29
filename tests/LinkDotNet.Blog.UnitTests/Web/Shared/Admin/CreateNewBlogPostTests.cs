@@ -57,13 +57,12 @@ public class CreateNewBlogPostTests : TestContext
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
                  .Add(c => c.BlogPost, blogPost));
-        cut.Find("#title").Input("My new Title");
 
         cut.Find("form").Submit();
 
         cut.WaitForState(() => cut.Find("#title").TextContent == string.Empty);
         blogPostFromComponent.Should().NotBeNull();
-        blogPostFromComponent.Title.Should().Be("My new Title");
+        blogPostFromComponent.Title.Should().Be("Title");
         blogPostFromComponent.ShortDescription.Should().Be("Desc");
         blogPostFromComponent.Content.Should().Be("Content");
         blogPostFromComponent.Tags.Select(t => t.Content).Should().Contain("tag1");
