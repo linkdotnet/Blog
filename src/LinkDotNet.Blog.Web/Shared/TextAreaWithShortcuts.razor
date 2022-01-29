@@ -46,13 +46,13 @@
         string original,
         string elementId)
     {
-        return keyboardEventArgs.CtrlKey ? keyboardEventArgs.Key switch
+        return (keyboardEventArgs.Key, keyboardEventArgs.CtrlKey) switch
         {
-            "b" => await GetNewMarkdownForElementAsync(elementId, original, $"**{SelectedMarker}**{CursorMarker}"),
-            "i" => await GetNewMarkdownForElementAsync(elementId, original, $"*{SelectedMarker}*{CursorMarker}"),
-            "m" => await GetNewMarkdownForElementAsync(elementId, original, $"[{SelectedMarker}]({CursorMarker})"),
+            ("b", true) => await GetNewMarkdownForElementAsync(elementId, original, $"**{SelectedMarker}**{CursorMarker}"),
+            ("i", true) => await GetNewMarkdownForElementAsync(elementId, original, $"*{SelectedMarker}*{CursorMarker}"),
+            ("m", true) => await GetNewMarkdownForElementAsync(elementId, original, $"[{SelectedMarker}]({CursorMarker})"),
             _ => original,
-            } : original;
+        };
     }
 
     private async Task<string> GetNewMarkdownForElementAsync(
