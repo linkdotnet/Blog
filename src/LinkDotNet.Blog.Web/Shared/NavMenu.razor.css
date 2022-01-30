@@ -8,9 +8,9 @@
 }
 
 .barcode {
-    font-family: 'JetBrains Mono', cursive;
+    font-family: 'Libre Barcode 128 Text', cursive;
     text-decoration: none;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 3rem;
 }
 
