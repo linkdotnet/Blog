@@ -1,5 +1,6 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap');
 
 :root {
     /* Color definitions */
@@ -151,6 +152,10 @@ section {
 
 body::-webkit-scrollbar {
     display: none;
+}
+
+code {
+    font-family: 'JetBrains Mono', cursive;
 }
 
 /* Template defined css */
