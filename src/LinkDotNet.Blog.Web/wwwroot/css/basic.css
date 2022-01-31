@@ -13,6 +13,10 @@
     --white: #ffffff;
     --wild-sand: #f4f4f4;
 
+    /* Fonts */
+    --default-font: 'Quicksand';
+    --code-font: 'JetBrains Mono';
+
     /* Usages - this colors have to be defined in every theme */
     --active-link: var(--big-stone);
     --disabled-link: var(--pewter);
@@ -57,7 +61,7 @@ body {
     background-image: linear-gradient(to bottom, var(--background-gradient-start) 40%, var(--background-gradient-end));
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: 'Quicksand', sans-serif;
+    font-family: var(--default-font), sans-serif;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
@@ -155,7 +159,7 @@ body::-webkit-scrollbar {
 }
 
 code {
-    font-family: 'JetBrains Mono', cursive;
+    font-family: var(--code-font), cursive;
 }
 
 /* Template defined css */
