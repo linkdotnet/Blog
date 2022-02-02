@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using AngleSharp.Html.Dom;
+using AngleSharpWrappers;
 using Bunit;
 using Bunit.TestDoubles;
 using FluentAssertions;
@@ -81,8 +82,28 @@ public class NavMenuTests : TestContext
         this.AddTestAuthorization();
         var cut = RenderComponent<NavMenu>();
 
-        Services.GetService<NavigationManager>()!.NavigateTo("test");
+        Services.GetRequiredService<NavigationManager>().NavigateTo("test");
 
         cut.FindComponent<AccessControl>().Instance.CurrentUri.Should().Contain("test");
+    }
+
+    [Fact]
+    public void ShouldShowBrandImageIfAvailable()
+    {
+        var config = new AppConfiguration
+        {
+            ProfileInformation = new ProfileInformation(),
+            BlogBrandUrl = "http://localhost/img.png",
+        };
+        Services.AddScoped(_ => config);
+        this.AddTestAuthorization();
+
+        var cut = RenderComponent<NavMenu>();
+
+        var brandImage = cut.Find(".nav-brand img");
+
+        var image = brandImage.Unwrap() as IHtmlImageElement;
+        image.Should().NotBeNull();
+        image.Source.Should().Be("http://localhost/img.png");
     }
 }
