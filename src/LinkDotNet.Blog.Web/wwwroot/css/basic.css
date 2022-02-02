@@ -145,10 +145,6 @@ section {
     padding-bottom: 10px;
 }
 
-.page {
-    padding-top: 88px;
-}
-
 .table th {
     background: var(--button-primary-color);
     color: var(--white);
