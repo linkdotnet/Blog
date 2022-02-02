@@ -14,6 +14,7 @@ public static class AppConfigurationFactory
         var configuration = new AppConfiguration
         {
             BlogName = config["BlogName"],
+            BlogBrandUrl = config["BlogBrandUrl"],
             GithubAccountUrl = config["GithubAccountUrl"],
             LinkedinAccountUrl = config["LinkedInAccountUrl"],
             Introduction = config.GetSection("Introduction").Get<Introduction>(),

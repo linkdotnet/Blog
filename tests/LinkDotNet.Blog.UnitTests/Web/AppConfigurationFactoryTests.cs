@@ -14,6 +14,7 @@ public class AppConfigurationFactoryTests
         var inMemorySettings = new Dictionary<string, string>
             {
                 { "BlogName", "UnitTest" },
+                { "BlogBrandUrl", "http://localhost" },
                 { "GithubAccountUrl", "github" },
                 { "LinkedInAccountUrl", "linkedIn" },
                 { "ConnectionString", "cs" },
@@ -38,6 +39,7 @@ public class AppConfigurationFactoryTests
         var appConfiguration = AppConfigurationFactory.Create(configuration);
 
         appConfiguration.BlogName.Should().Be("UnitTest");
+        appConfiguration.BlogBrandUrl.Should().Be("http://localhost");
         appConfiguration.GithubAccountUrl.Should().Be("github");
         appConfiguration.HasGithubAccount.Should().BeTrue();
         appConfiguration.LinkedinAccountUrl.Should().Be("linkedIn");

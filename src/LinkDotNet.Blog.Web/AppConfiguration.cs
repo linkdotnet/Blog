@@ -7,6 +7,9 @@ public record AppConfiguration
 {
     public string BlogName { get; init; }
 
+
+    public string BlogBrandUrl { get; init; }
+
     public string LinkedinAccountUrl { get; init; }
 
     public bool HasLinkedinAccount => !string.IsNullOrEmpty(LinkedinAccountUrl);
