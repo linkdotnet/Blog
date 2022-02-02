@@ -54,17 +54,16 @@
         readTime = (int)Math.Ceiling(readTimeInPrecision / 60);
     }
 
-  private int GetAllOccurrences(string text, string lookup)
-  {
-    var currentPosition = -1;
-    var count = 0;
-
-    while ((currentPosition = text.IndexOf(lookup, currentPosition + 1, StringComparison.Ordinal)) != -1)
+    private int GetAllOccurrences(string text, string lookup)
     {
-      count++;
+        var currentPosition = -1;
+        var count = 0;
+
+        while ((currentPosition = text.IndexOf(lookup, currentPosition + 1, StringComparison.Ordinal)) != -1)
+        {
+          count++;
+        }
+
+        return count;
     }
-
-    return count;
-  }
-
 }
