@@ -51,7 +51,7 @@
       var words = BlogPost.Content.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries).Length;
 
         var readTimeInPrecision = images * 15 + words / 3.333;
-        readTime = (int)Math.Floor(readTimeInPrecision / 60);
+        readTime = (int)Math.Ceiling(readTimeInPrecision / 60);
     }
 
   private int GetAllOccurrences(string text, string lookup)
