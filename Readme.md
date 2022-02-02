@@ -23,6 +23,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 ```json
 {
   "BlogName": "linkdotnet",
+  "BlogBrandUrl": "http//some.url/image.png",
   "GithubAccountUrl": "",
   "LinkedInAccountUrl": "",
   "Introduction": {
@@ -59,11 +60,12 @@ The appsettings.json file has a lot of options to customize the content of the b
 
 | Property                  | Type           | Description                                                                                                                                                |
 | ------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page.                                                                             |
+| BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page. Will not be shown when `BlogBrandUrl` is set                                |
+| BlogBrandUrl              | string         | The url to an image which is used as a brand image in the navigation bar. If not set or `null` the `BlogName` will be shown                                |
 | GithubAccountUrl          | string         | Url to your github account. If not set the navigation link is not shown                                                                                    |
 | LinkedInAccountUrl        | string         | Url to your LinkedIn account. If not set the navigation link is not shown                                                                                  |
 | Introduction              |                | Is used for the introduction part of the blog                                                                                                              |
-| Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text.          |
+| Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text           |
 | BackgroundUrl             | string         | Url or path to the background image                                                                                                                        |
 | ProfilePictureUrl         | string         | Url or path to your profile picture                                                                                                                        |
 | PersistenceProvider       | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `SqliteServer`, `RavenDb`, `InMemory`). More in-depth explanation down below |
