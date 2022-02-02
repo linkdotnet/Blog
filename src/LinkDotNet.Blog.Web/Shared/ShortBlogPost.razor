@@ -1,4 +1,5 @@
 ﻿@using System.Net
+@using System.Text.RegularExpressions
 @using System.Web
 @using LinkDotNet.Blog.Domain
 @inherits MarkdownComponentBase
@@ -19,6 +20,7 @@
             </ul>
           </li>
         }
+        <li class="read-time">@readTime min</li>
       </ul>
     </div>
     <div class="description">
@@ -40,4 +42,29 @@
     public bool UseAlternativeStyle { get; set; }
 
     private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
+
+    private int readTime;
+
+    protected override void OnInitialized()
+    {
+      var images = GetAllOccurrences(RenderMarkupString(BlogPost.Content).Value, "<img");
+      var words = BlogPost.Content.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries).Length;
+
+        var readTimeInPrecision = images * 15 + words / 3.333;
+        readTime = (int)Math.Floor(readTimeInPrecision / 60);
+    }
+
+  private int GetAllOccurrences(string text, string lookup)
+  {
+    var currentPosition = -1;
+    var count = 0;
+
+    while ((currentPosition = text.IndexOf(lookup, currentPosition + 1, StringComparison.Ordinal)) != -1)
+    {
+      count++;
+    }
+
+    return count;
+  }
+
 }

@@ -82,9 +82,7 @@
 .blog-card .details .tags li {
     margin-right: 2px;
 }
-.blog-card .details .tags li:first-child {
-    margin-left: -4px;
-}
+
 .blog-card .description {
     padding: 1rem;
     background: #fff;
@@ -117,6 +115,14 @@
     margin-left: 5px;
     opacity: 1;
 }
+
+.blog-card .read-time:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    margin-right: 10px;
+    content: "\f017";
+}
+
 .blog-card p {
     position: relative;
     margin: 1rem 0 0;
