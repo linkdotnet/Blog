@@ -119,7 +119,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         RegisterComponents(ctx);
-        ctx.Services.GetService<AppConfiguration>()!.Introduction.BackgroundUrl = givenUri;
+        ctx.Services.GetService<AppConfiguration>()!.Introduction.ProfilePictureUrl = givenUri;
 
         var cut = ctx.RenderComponent<Index>();
 
@@ -142,7 +142,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
             i => i.Page, page));
 
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
-        cut.WaitForState(() => cut.FindAll(".blog-card").Count == 10);
+        cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 
     private static AppConfiguration CreateSampleAppConfiguration()

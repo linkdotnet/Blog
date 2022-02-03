@@ -1,11 +1,9 @@
 ﻿@using LinkDotNet.Blog.Domain
 @inherits MarkdownComponentBase
 
-<div style="--profile-background: url(@Introduction.BackgroundUrl)"
-     class="inverted-colors introduction-background">
+<div style="--profile-background: url(@Introduction.BackgroundUrl)" class="@IntroductionClass">
     <div class="introduction-container">
         <div class="profile-picture" style="--profile-image: url(@Introduction.ProfilePictureUrl)">
-
         </div>
         <div class="profile-text">
             @RenderMarkupString(Introduction.Description)
@@ -15,4 +13,6 @@
 @code {
     [Parameter]
     public Introduction Introduction { get; set; }
+
+    private string IntroductionClass => Introduction.BackgroundUrl != null ? "introduction-background" : string.Empty;
 }

@@ -1,12 +1,3 @@
-/* TODO: There has to be a better way */
-.navbar-background {
-    background: linear-gradient(
-            rgba(0, 0, 0, 0.44),
-            rgba(0, 0, 0, 0.44)
-    ) !important;
-    backdrop-filter: blur(6px) !important;
-}
-
 .barcode {
     font-family: 'Libre Barcode 128 Text', cursive;
     text-decoration: none;

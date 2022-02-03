@@ -58,30 +58,30 @@ The appsettings.json file has a lot of options to customize the content of the b
 
 ```
 
-| Property                  | Type           | Description                                                                                                                                                |
-| ------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page. Will not be shown when `BlogBrandUrl` is set                                |
-| BlogBrandUrl              | string         | The url to an image which is used as a brand image in the navigation bar. If not set or `null` the `BlogName` will be shown                                |
-| GithubAccountUrl          | string         | Url to your github account. If not set the navigation link is not shown                                                                                    |
-| LinkedInAccountUrl        | string         | Url to your LinkedIn account. If not set the navigation link is not shown                                                                                  |
-| Introduction              |                | Is used for the introduction part of the blog                                                                                                              |
-| Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text           |
-| BackgroundUrl             | string         | Url or path to the background image                                                                                                                        |
-| ProfilePictureUrl         | string         | Url or path to your profile picture                                                                                                                        |
-| PersistenceProvider       | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `SqliteServer`, `RavenDb`, `InMemory`). More in-depth explanation down below |
-| ConnectionString          | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                                      |
-| DatabaseName              | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                              |
-| Auth0                     |                | Configuration for setting up Auth0                                                                                                                         |
-| Domain                    | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
-| ClientId                  | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
-| ClientSecret              | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                 |
-| BlogPostsPerPage          | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                                    |
-| AboutMeProfileInformation | node           | Sets information for the About Me Page. If omitted the page is disabled completely                                                                         |
-| Name                      | string         | Name, which is displayed on top of the profile card                                                                                                        |
-| Heading                   | string         | Displayed under the name. For example job title                                                                                                            |
-| ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                  |
-| Giscus                    | node           | Enables the comment section via giscus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
-| Disqus                    | node           | Enables the comment section via disqus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below       |
+| Property                  | Type           | Description                                                                                                                                                     |
+| ------------------------- | -------------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page. Will not be shown when `BlogBrandUrl` is set                                     |
+| BlogBrandUrl              | string         | The url to an image which is used as a brand image in the navigation bar. If not set or `null` the `BlogName` will be shown                                     |
+| GithubAccountUrl          | string         | Url to your github account. If not set the navigation link is not shown                                                                                         |
+| LinkedInAccountUrl        | string         | Url to your LinkedIn account. If not set the navigation link is not shown                                                                                       |
+| Introduction              |                | Is used for the introduction part of the blog                                                                                                                   |
+| Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text                |
+| BackgroundUrl             | string         | Url or path to the background image. (Optional)                                                                                                                 |
+| ProfilePictureUrl         | string         | Url or path to your profile picture                                                                                                                             |
+| PersistenceProvider       | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `SqliteServer`, `RavenDb`, `InMemory`). More in-depth explanation down below      |
+| ConnectionString          | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                                           |
+| DatabaseName              | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                                   |
+| Auth0                     |                | Configuration for setting up Auth0                                                                                                                              |
+| Domain                    | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                      |
+| ClientId                  | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                      |
+| ClientSecret              | string         | See more details here: https://manage.auth0.com/dashboard/                                                                                                      |
+| BlogPostsPerPage          | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                                         |
+| AboutMeProfileInformation | node           | Sets information for the About Me Page. If omitted the page is disabled completely                                                                              |
+| Name                      | string         | Name, which is displayed on top of the profile card                                                                                                             |
+| Heading                   | string         | Displayed under the name. For example job title                                                                                                                 |
+| ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                       |
+| Giscus                    | node           | Enables the comment section via giscus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below |
+| Disqus                    | node           | Enables the comment section via disqus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below |
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:

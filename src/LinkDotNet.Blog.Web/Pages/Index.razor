@@ -38,7 +38,7 @@
 
     private IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
 
-    private string ImageUrl => appConfiguration.Introduction.BackgroundUrl.ToAbsoluteUrl(navigationManager.BaseUri);
+    private string ImageUrl => appConfiguration.Introduction.ProfilePictureUrl.ToAbsoluteUrl(navigationManager.BaseUri);
 
     protected override async Task OnParametersSetAsync()
     {

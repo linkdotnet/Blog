@@ -12,6 +12,7 @@
 
     --white: #ffffff;
     --wild-sand: #f4f4f4;
+    --silver: #DADADA;
 
     /* Fonts */
     --default-font: 'Quicksand';
@@ -44,8 +45,8 @@
 
     --blog-post-background-color: var(--big-stone);
 
-    --background-gradient-start: var(--white);
-    --background-gradient-end: var(--wild-sand);
+    --background-gradient-start: var(--wild-sand);
+    --background-gradient-end: var(--silver);
 }
 
 html {
@@ -71,10 +72,6 @@ a {
     transition: 0.3s ease-in-out !important;
     font-weight: 500;
     color: var(--active-link) !important;
-}
-
-a:visited {
-    color: var(--disabled-link) !important;
 }
 
 a:hover {

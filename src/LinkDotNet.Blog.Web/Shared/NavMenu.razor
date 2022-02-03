@@ -2,12 +2,12 @@
 @inject NavigationManager navigationManager
 @implements IDisposable
 
-<nav class="navbar navbar-expand-lg navbar-background inverted-colors navbar-dark w-100">
+<nav class="navbar navbar-expand-lg navbar-dark w-100">
     <div class="container-fluid">
         @if (configuration.BlogBrandUrl != null)
         {
             <a class="nav-brand ms-5" href="/">
-                <img style="max-height: 62px;"
+                <img style="max-height: 70px;"
                      src="@configuration.BlogBrandUrl.ToAbsoluteUrl(navigationManager.BaseUri)"
                      alt="brand" />
             </a>
