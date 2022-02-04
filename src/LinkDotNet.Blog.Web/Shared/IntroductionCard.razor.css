@@ -35,6 +35,7 @@
     margin: auto;
     grid-area: profile-text;
     font-size: clamp(0.9rem, 0.6479rem + 1.1268vw, 1.5rem);
+    color: var(--text-color-inverted);
     line-height: clamp(1.5em, 0.6479rem + 1.1268vw, 2.25em);
     text-align: center
 }
