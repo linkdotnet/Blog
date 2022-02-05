@@ -15,7 +15,7 @@ public class TextAreaWithShortcutsTests : TestContext
     [InlineData("h", 0, 1, true, "Test")]
     [InlineData("b", 0, 1, false, "Test")]
     [InlineData("f", 0, 4, false, "Test")]
-    [InlineData("b", 0, 0, true, "Test")]
+    [InlineData("b", 0, 0, true, "****Test")]
     public void ShouldSetMarkerOnKeyUp(string key, int start, int end, bool ctrlPressed, string expected)
     {
         const string id = "id";

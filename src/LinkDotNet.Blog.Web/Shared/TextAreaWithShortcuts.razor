@@ -61,10 +61,6 @@
         string fence)
     {
         var selectionRange = await jsRuntime.InvokeAsync<SelectionRange>("getSelectionFromElement", elementId);
-        if (selectionRange.Start == selectionRange.End)
-        {
-            return content;
-        }
 
         var beforeMarker = selectionRange.Start > 0 ? content[..selectionRange.Start] : string.Empty;
         var selectedContent = content[selectionRange.Start..selectionRange.End];
@@ -72,6 +68,7 @@
         var afterMarker = content[selectionRange.End..];
         var shift = selectionRange.Start + fencedContent.IndexOf(CursorMarker, StringComparison.Ordinal);
         var removedCursor = fencedContent.Replace(CursorMarker, string.Empty);
+
         await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift, removedCursor);
         return beforeMarker + removedCursor + afterMarker;
     }
