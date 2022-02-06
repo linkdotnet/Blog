@@ -7,5 +7,4 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
     </ItemGroup>
-
 </Project>

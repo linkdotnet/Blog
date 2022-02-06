@@ -34,7 +34,7 @@ public class UserRecordService : IUserRecordService
         }
         catch (Exception e)
         {
-            Console.Write($"Exception: {e}");
+            Console.Write($"TException: {e}");
         }
     }
 
