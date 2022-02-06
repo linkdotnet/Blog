@@ -22,6 +22,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Test without publish
+      run: dotnet test
     - name: Test
       run: dotnet test --collect:"XPlat Code Coverage" --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover --blame-hang --blame-hang-timeout 2m
     - name: Codecov
