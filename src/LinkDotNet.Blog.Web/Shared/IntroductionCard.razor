@@ -14,5 +14,7 @@
     [Parameter]
     public Introduction Introduction { get; set; }
 
-    private string IntroductionClass => Introduction.BackgroundUrl != null ? "introduction-background" : string.Empty;
+    private string IntroductionClass => !string.IsNullOrEmpty(Introduction.BackgroundUrl)
+        ? "introduction-background"
+        : string.Empty;
 }

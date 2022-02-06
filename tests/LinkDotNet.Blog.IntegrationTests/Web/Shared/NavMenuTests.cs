@@ -99,9 +99,30 @@ public class NavMenuTests : TestContext
         var cut = RenderComponent<NavMenu>();
 
         var brandImage = cut.Find(".nav-brand img");
-
         var image = brandImage.Unwrap() as IHtmlImageElement;
         image.Should().NotBeNull();
         image.Source.Should().Be("http://localhost/img.png");
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void ShouldShowBlogNameWhenNotBrand(string brandUrl)
+    {
+        var config = new AppConfiguration
+        {
+            ProfileInformation = new ProfileInformation(),
+            BlogBrandUrl = brandUrl,
+            BlogName = "Steven",
+        };
+        Services.AddScoped(_ => config);
+        this.AddTestAuthorization();
+
+        var cut = RenderComponent<NavMenu>();
+
+        var brandImage = cut.Find(".nav-brand");
+        var image = brandImage.Unwrap() as IHtmlAnchorElement;
+        image.Should().NotBeNull();
+        image.TextContent.Should().Be("Steven");
     }
 }
