@@ -8,28 +8,11 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0-release-20220113-05" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.35.0.42613">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj" />
       <ProjectReference Include="..\..\src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
-    </ItemGroup>
-    
-    <PropertyGroup>
-        <CodeAnalysisRuleSet>..\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
-
 
 </Project>

@@ -10,14 +10,6 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0-release-20220113-05" />
         <PackageReference Include="RavenDB.TestDriver" Version="5.3.100" />
-        <PackageReference Include="SonarAnalyzer.CSharp" Version="8.35.0.42613">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.406">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -25,12 +17,5 @@
       <ProjectReference Include="..\..\src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
       <ProjectReference Include="..\..\src\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-        <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
-    </ItemGroup>
-    <PropertyGroup>
-        <CodeAnalysisRuleSet>..\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
-    </PropertyGroup>
 
 </Project>
