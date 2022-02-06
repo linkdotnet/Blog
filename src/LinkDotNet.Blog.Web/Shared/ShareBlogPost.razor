@@ -16,10 +16,9 @@
             await jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", navigationManager.Uri);
             toastService.ShowSuccess("Copied link to clipboard");
         }
-        catch (Exception e)
+        catch
         {
             toastService.ShowError("There was an error copying the link. Please copy the link from your address bar instead.");
-            Console.WriteLine(e);
         }
     }
 }
