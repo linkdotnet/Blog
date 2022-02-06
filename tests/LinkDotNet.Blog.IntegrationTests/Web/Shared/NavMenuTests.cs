@@ -3,13 +3,11 @@ using AngleSharp.Html.Dom;
 using AngleSharpWrappers;
 using Bunit;
 using Bunit.TestDoubles;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Shared;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 

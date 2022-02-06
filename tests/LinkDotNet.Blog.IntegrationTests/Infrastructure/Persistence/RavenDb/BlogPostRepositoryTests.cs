@@ -1,13 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.RavenDb;
 using LinkDotNet.Blog.TestUtilities;
 using Raven.Client.Documents;
 using Raven.TestDriver;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Domain;
 

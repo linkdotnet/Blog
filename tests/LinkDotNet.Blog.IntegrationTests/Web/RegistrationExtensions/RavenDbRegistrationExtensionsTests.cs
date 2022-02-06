@@ -1,10 +1,8 @@
-﻿using FluentAssertions;
-using LinkDotNet.Blog.Domain;
+﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions;
 

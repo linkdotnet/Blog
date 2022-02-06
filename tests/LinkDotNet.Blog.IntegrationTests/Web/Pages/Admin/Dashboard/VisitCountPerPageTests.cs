@@ -3,12 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Bunit;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Shared.Admin.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard;
 

@@ -2,15 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Pages;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
 

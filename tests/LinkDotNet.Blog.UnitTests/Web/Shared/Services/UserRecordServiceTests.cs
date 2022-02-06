@@ -2,12 +2,9 @@
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Shared.Services;
-using Moq;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services;
 

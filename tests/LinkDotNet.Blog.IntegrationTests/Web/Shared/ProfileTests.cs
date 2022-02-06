@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Bunit;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
@@ -10,9 +9,7 @@ using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using X.PagedList;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 

@@ -1,11 +1,9 @@
 using System.Linq;
 using Bunit;
-using FluentAssertions;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;
 

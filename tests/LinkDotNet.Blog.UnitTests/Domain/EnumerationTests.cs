@@ -1,6 +1,4 @@
 ﻿using System;
-using FluentAssertions;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Domain;
 

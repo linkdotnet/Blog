@@ -1,7 +1,5 @@
 ﻿using System;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Domain
 {

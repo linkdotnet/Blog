@@ -1,10 +1,8 @@
 using System.Linq;
 using AngleSharp.Html.Dom;
 using Bunit;
-using FluentAssertions;
 using LinkDotNet.Blog.Web.Shared;
 using Microsoft.AspNetCore.Components.Web;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;
 

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using Microsoft.Extensions.Caching.Memory;
-using Moq;
 using X.PagedList;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence;
 

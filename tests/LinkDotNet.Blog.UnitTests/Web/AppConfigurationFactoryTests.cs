@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using FluentAssertions;
 using LinkDotNet.Blog.Web;
 using Microsoft.Extensions.Configuration;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web;
 

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using FluentAssertions;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests;
 

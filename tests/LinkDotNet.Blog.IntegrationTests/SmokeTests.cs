@@ -1,9 +1,7 @@
 ﻿using System.Threading.Tasks;
-using FluentAssertions;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using Bunit;
 using Bunit.TestDoubles;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
@@ -12,8 +11,6 @@ using LinkDotNet.Blog.Web.Shared.Admin.Dashboard;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin;
 

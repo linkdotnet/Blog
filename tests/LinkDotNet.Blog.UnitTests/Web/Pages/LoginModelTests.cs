@@ -1,8 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Authentication;
 using LinkDotNet.Blog.Web.Pages;
-using Moq;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages;
 

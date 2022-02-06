@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
@@ -13,9 +12,7 @@ using LinkDotNet.Blog.Web.Shared;
 using LinkDotNet.Blog.Web.Shared.Services;
 using LinkDotNet.Blog.Web.Shared.Skills;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using X.PagedList;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages;
 

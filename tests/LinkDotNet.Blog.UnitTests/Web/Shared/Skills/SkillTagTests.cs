@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using Bunit;
-using FluentAssertions;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Shared.Skills;
-using Xunit;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Skills;
 

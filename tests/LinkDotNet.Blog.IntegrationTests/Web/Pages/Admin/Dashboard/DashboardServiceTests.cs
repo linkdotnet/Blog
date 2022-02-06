@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using FluentAssertions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Pages.Admin;
-using Xunit;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard;
 
