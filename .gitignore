@@ -19,3 +19,8 @@ robots.txt
 .idea/
 *.csproj.user
 *.dotsettings.user
+
+# Coverage files and reports
+/**/TestResults/*
+/**/coverage*.xml
+/CoverageReport/
