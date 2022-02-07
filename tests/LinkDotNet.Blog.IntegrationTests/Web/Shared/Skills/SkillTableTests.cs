@@ -94,4 +94,24 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
         skillFromDb.ProficiencyLevel.Should().Be(ProficiencyLevel.Proficient);
     }
+
+    [Fact]
+    public async Task ShouldStayOnSameProficiencyWhenDroppedOnSameProficiencyLevel()
+    {
+        using var ctx = new TestContext();
+        var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
+        await DbContext.AddAsync(skill);
+        await DbContext.SaveChangesAsync();
+        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        var cut = ctx.RenderComponent<SkillTable>(p =>
+            p.Add(s => s.IsAuthenticated, true));
+        cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
+
+        cut.FindAll(".skill-tag")[0].Drag();
+        cut.FindAll(".proficiency-level")[0].Drop();
+
+        var skillFromDb = await Repository.GetByIdAsync(skill.Id);
+        skillFromDb.ProficiencyLevel.Should().Be(ProficiencyLevel.Familiar);
+    }
 }
