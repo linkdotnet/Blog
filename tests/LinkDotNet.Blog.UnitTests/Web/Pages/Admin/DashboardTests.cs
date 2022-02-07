@@ -16,15 +16,17 @@ namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin;
 
 public class DashboardTests : TestContext
 {
-    [Fact]
-    public void ShouldNotShowAboutMeStatisticsWhenDisabled()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ShouldShowAboutMeStatisticsAccordingToConfig(bool aboutMeEnabled)
     {
         var options = new DbContextOptionsBuilder()
             .UseSqlite(CreateInMemoryConnection())
             .Options;
         var dashboardService = new Mock<IDashboardService>();
         this.AddTestAuthorization().SetAuthorized("test");
-        Services.AddScoped(_ => CreateAppConfiguration(false));
+        Services.AddScoped(_ => CreateAppConfiguration(aboutMeEnabled));
         Services.AddScoped(_ => dashboardService.Object);
         Services.AddScoped(_ => Mock.Of<IRepository<BlogPost>>());
         Services.AddScoped(_ => new BlogDbContext(options));
@@ -36,7 +38,7 @@ public class DashboardTests : TestContext
         cut.FindComponents<DashboardCard>()
             .Any(c => c.Instance.Text == "About Me:")
             .Should()
-            .BeFalse();
+            .Be(aboutMeEnabled);
     }
 
     private static AppConfiguration CreateAppConfiguration(bool aboutMeEnabled)
