@@ -2,7 +2,6 @@
 using AngleSharp.Html.Dom;
 using Bunit;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Web.Shared;
 using X.PagedList;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;

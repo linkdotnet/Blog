@@ -6,9 +6,6 @@ using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Pages.Admin;
-using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Blog.Web.Shared.Admin;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

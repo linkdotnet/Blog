@@ -6,9 +6,10 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
-using LinkDotNet.Blog.Web.Pages;
-using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,7 +26,7 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
         ctx.AddTestAuthorization().SetAuthorized("s");
-        var cut = ctx.RenderComponent<BlogPostPage>(
+        var cut = ctx.RenderComponent<Index>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
         var likeComponent = cut.FindComponent<Like>();
         likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
@@ -49,7 +50,7 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx, localStorage.Object);
         ctx.AddTestAuthorization().SetAuthorized("s");
-        var cut = ctx.RenderComponent<BlogPostPage>(
+        var cut = ctx.RenderComponent<Index>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
         var likeComponent = cut.FindComponent<Like>();
         likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
@@ -69,7 +70,7 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.AddTestAuthorization();
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<BlogPostPage>(
+        var cut = ctx.RenderComponent<Index>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
 
         var ogData = cut.FindComponent<OgData>();

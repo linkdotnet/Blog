@@ -1,7 +1,6 @@
 using Bunit;
 using LinkDotNet.Blog.Web;
-using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;

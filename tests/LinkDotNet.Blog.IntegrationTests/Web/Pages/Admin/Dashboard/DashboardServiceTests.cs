@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Web.Pages.Admin;
+using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard;
 

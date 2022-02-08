@@ -4,8 +4,8 @@ using System.IO;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.Blog.Web.Shared.Services;
-using LinkDotNet.Blog.Web.Shared.Services.Sitemap;
+using LinkDotNet.Blog.Web.Features.Admin.Sitemap;
+using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Services
 {

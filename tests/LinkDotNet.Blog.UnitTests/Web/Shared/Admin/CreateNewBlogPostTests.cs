@@ -3,8 +3,6 @@ using System.Linq;
 using Bunit;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Blog.Web.Shared.Admin;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin;
 

@@ -6,7 +6,6 @@ using Bunit;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Shared.Skills;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Skills;

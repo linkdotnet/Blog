@@ -5,7 +5,6 @@ using AngleSharp.Html.Dom;
 using Bunit;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Shared.Admin.Dashboard;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin.Dashboard;

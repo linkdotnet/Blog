@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
-using LinkDotNet.Blog.Web.Pages.Admin;
-using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Blog.Web.Shared.Services.Sitemap;
+using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin;

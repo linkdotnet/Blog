@@ -5,10 +5,11 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
-using LinkDotNet.Blog.Web.Shared;
-using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.Web.Features.Home;
+using LinkDotNet.Blog.Web.Features.Home.Components;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Index = LinkDotNet.Blog.Web.Pages.Index;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
 

@@ -1,0 +1,55 @@
+﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Components
+@inject IToastService toastService
+<ModalDialog @ref="Dialog" Title="Add Skill">
+    <EditForm Model="@model" OnValidSubmit="CreateSkillItem">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="mb-3">
+            <label for="title">Skill name</label>
+            <InputText class="form-control" id="title" @bind-Value="model.Skill" />
+        </div>
+        <div class="mb-3">
+            <label for="image">Image Url</label>
+            <InputText class="form-control" id="image" @bind-Value="model.ImageUrl"/>
+            <small for="image" class="form-text text-muted">If set is used before the skill (optional). 24x24 pixel
+            optimal size</small>
+        </div>
+        <div class="mb-3">
+            <label for="capability">Capability</label>
+            <InputText class="form-control" id="capability" @bind-Value="model.Capability" />
+        </div>
+        <div class="mb-3">
+            <label for="proficiency">Proficiency</label>
+            <select class="form-select" id="proficiency" @bind="model.Proficiency">
+                @foreach (var level in ProficiencyLevel.All)
+                {
+                    <option value="@level.Key">@level.Key</option>
+                }
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </EditForm>
+</ModalDialog>
+
+@code {
+    [Parameter]
+    public EventCallback<Skill> SkillAdded { get; set; }
+
+    private AddSkillModel model = new();
+    private ModalDialog Dialog { get; set; }
+
+    public void Open()
+    {
+        Dialog.Open();
+        StateHasChanged();
+    }
+
+    private async Task CreateSkillItem()
+    {
+        var skill = Skill.Create(model.Skill, model.ImageUrl, model.Capability, model.Proficiency);
+        await SkillAdded.InvokeAsync(skill);
+        model = new AddSkillModel();
+        toastService.ShowSuccess($"Created Skill {skill.Name} in capability {skill.Capability} with level {skill.ProficiencyLevel}");
+    }
+}

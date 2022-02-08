@@ -1,5 +1,5 @@
 ﻿using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Features.Services;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services;
 

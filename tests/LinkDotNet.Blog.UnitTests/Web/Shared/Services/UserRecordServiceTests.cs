@@ -4,7 +4,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Features.Services;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Services;
 

@@ -1,0 +1,53 @@
+﻿@page "/AboutMe"
+@using LinkDotNet.Blog.Web.Features.Services
+@inject AppConfiguration appConfiguration
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject IUserRecordService userRecordService
+@inject NavigationManager navigationManager
+@if (appConfiguration.IsAboutMeEnabled)
+{
+    <OgData Title="@("About Me - " + appConfiguration.ProfileInformation.Name)"
+            Description="@("About Me," + appConfiguration.ProfileInformation.Name)"
+            Keywords="@appConfiguration.ProfileInformation.Name"
+            AbsolutePreviewImageUrl="@ImageUrl"></OgData>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <Profile IsAuthenticated="@isAuthenticated"/>
+            </div>
+            <div class="col-lg-9 col-md-8 tab-container">
+                <div class="row">
+                    <div class="col-md12 tab-content">
+                        <Card Header="Skills">
+                            <SkillTable IsAuthenticated="@isAuthenticated"></SkillTable>
+                        </Card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private bool isAuthenticated;
+
+    private string ImageUrl => appConfiguration.ProfileInformation.ProfilePictureUrl.ToAbsoluteUrl(navigationManager.BaseUri);
+
+    protected override async Task OnInitializedAsync()
+    {
+        var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
+        if (userIdentity != null)
+        {
+            isAuthenticated = userIdentity.IsAuthenticated;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
+    }
+}

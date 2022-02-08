@@ -1,5 +1,4 @@
 ﻿using Bunit;
-using LinkDotNet.Blog.Web.Shared;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 

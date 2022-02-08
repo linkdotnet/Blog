@@ -1,6 +1,8 @@
-﻿using LinkDotNet.Blog.Web.Pages.Admin;
-using LinkDotNet.Blog.Web.Shared.Services;
-using LinkDotNet.Blog.Web.Shared.Services.Sitemap;
+﻿using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
+using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
+using LinkDotNet.Blog.Web.Features.Admin.Sitemap;
+using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web;

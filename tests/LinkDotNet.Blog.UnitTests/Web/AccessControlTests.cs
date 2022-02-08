@@ -2,7 +2,6 @@
 using AngleSharpWrappers;
 using Bunit;
 using Bunit.TestDoubles;
-using LinkDotNet.Blog.Web.Shared;
 
 namespace LinkDotNet.Blog.UnitTests.Web;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using Bunit;
-using LinkDotNet.Blog.Web.Shared.Admin.Dashboard;
+using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Admin.Dashboard;
 
