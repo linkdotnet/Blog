@@ -65,5 +65,7 @@ public class Program
 
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");
+        app.MapFallbackToPage("/searchByTag/{tag}", "/_Host");
+        app.MapFallbackToPage("/search/{searchTerm}", "/_Host");
     }
 }

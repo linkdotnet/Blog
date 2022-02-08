@@ -40,4 +40,24 @@ public class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
 
         result.IsSuccessStatusCode.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task ShouldAllowDotsForTagSearch()
+    {
+        var client = factory.CreateClient();
+
+        var result = await client.GetAsync("/searchByTag/.NET5");
+
+        result.IsSuccessStatusCode.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task ShouldAllowDotsForFreeTextSearch()
+    {
+        var client = factory.CreateClient();
+
+        var result = await client.GetAsync("/searchByTag/.NET5");
+
+        result.IsSuccessStatusCode.Should().BeTrue();
+    }
 }
