@@ -1,0 +1,41 @@
+﻿@page "/dashboard"
+@using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
+@using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components
+@inject IDashboardService dashboardService
+@inject AppConfiguration appConfiguration
+@attribute [Authorize]
+
+<div class="container-fluid ms-3">
+    <h3>Dashboard</h3>
+    <div class="container-fluid">
+        <div class="d-flex flex-row flex-wrap gap-2">
+            <DashboardCard Text="Total Users:"
+                               TotalAmount="@data.TotalAmountOfUsers"
+                               AmountLast30Days="@data.AmountOfUsersLast30Days"></DashboardCard>
+            <DashboardCard Text="Total Clicks:"
+                               TotalAmount="@data.TotalPageClicks"
+                               AmountLast30Days="@data.PageClicksLast30Days"></DashboardCard>
+            @if (appConfiguration.IsAboutMeEnabled)
+            {
+                    <DashboardCard Text="About Me:"
+                                   TotalAmount="@data.TotalAboutMeClicks"
+                                   AmountLast30Days="@data.AboutMeClicksLast30Days"></DashboardCard>
+            }
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <VisitCountPerPage></VisitCountPerPage>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private DashboardData data = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        data = await dashboardService.GetDashboardDataAsync();
+    }
+}

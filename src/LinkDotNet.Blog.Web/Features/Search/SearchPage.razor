@@ -1,0 +1,37 @@
+﻿@page "/search/{searchTerm}"
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Services
+@inject IRepository<BlogPost> blogPostRepository
+@inject IUserRecordService userRecordService
+
+<h3>Results for @SearchTerm</h3>
+
+<div class="content px-4">
+    @for (var i = 0; i < blogPosts.Count; i++)
+    {
+        <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+    }
+</div>
+@code {
+    [Parameter]
+    public string SearchTerm { get; set; }
+
+    private IList<BlogPost> blogPosts = new List<BlogPost>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var term = Uri.UnescapeDataString(SearchTerm);
+        blogPosts = (await blogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
+            || t.Tags.Any(tag => tag.Content == term)),
+            b => b.UpdatedDate)).ToList();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await userRecordService.StoreUserRecordAsync();
+        }
+    }
+}

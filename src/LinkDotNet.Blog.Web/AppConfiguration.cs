@@ -1,5 +1,5 @@
 ﻿using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Web.Shared.Services;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
 namespace LinkDotNet.Blog.Web;
 

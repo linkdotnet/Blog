@@ -3,7 +3,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.Blog.Web.Shared.Admin;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 
