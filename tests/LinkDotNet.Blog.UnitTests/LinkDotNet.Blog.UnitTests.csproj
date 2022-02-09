@@ -14,9 +14,4 @@
       <ProjectReference Include="..\LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj" />
       <ProjectReference Include="..\..\src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Web\Shared" />
-    </ItemGroup>
-
 </Project>
