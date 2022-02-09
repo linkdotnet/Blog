@@ -49,7 +49,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, null));
 
-        act.Should().ThrowExactly<ArgumentNullException>();	
+        act.Should().ThrowExactly<ArgumentNullException>();
     }
 
     private static void TriggerUpdate(IRenderedFragment cut)
