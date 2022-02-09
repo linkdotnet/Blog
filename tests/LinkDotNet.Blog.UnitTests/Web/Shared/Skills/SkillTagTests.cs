@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Bunit;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared.Skills;
 

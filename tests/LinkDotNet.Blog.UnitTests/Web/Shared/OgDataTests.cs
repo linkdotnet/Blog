@@ -1,6 +1,7 @@
 using System.Linq;
 using AngleSharp.Html.Dom;
 using Bunit;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;

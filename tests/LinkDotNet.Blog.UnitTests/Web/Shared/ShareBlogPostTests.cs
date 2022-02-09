@@ -5,6 +5,7 @@ using AngleSharpWrappers;
 using Blazored.Toast.Services;
 using Bunit;
 using Bunit.TestDoubles;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;

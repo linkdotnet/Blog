@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
+using LinkDotNet.Blog.Web.Features.Admin.Sitemap;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages.Admin;
@@ -19,7 +21,7 @@ public class SitemapTests : TestContext
         var sitemap = new SitemapUrlSet();
         sitemapMock.Setup(s => s.CreateSitemapAsync())
             .ReturnsAsync(sitemap);
-        var cut = RenderComponent<Sitemap>();
+        var cut = RenderComponent<Index>();
 
         cut.Find("button").Click();
 
@@ -41,7 +43,7 @@ public class SitemapTests : TestContext
         };
         sitemapMock.Setup(s => s.CreateSitemapAsync())
             .ReturnsAsync(sitemap);
-        var cut = RenderComponent<Sitemap>();
+        var cut = RenderComponent<Index>();
 
         cut.Find("button").Click();
 
@@ -70,7 +72,7 @@ public class SitemapTests : TestContext
                 await Task.Delay(1000);
                 return sitemap;
             });
-        var cut = RenderComponent<Sitemap>();
+        var cut = RenderComponent<Index>();
 
         cut.Find("button").Click();
 

@@ -6,6 +6,8 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features.Admin.Dashboard;
+using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,7 @@ public class DashboardTests : TestContext
         dashboardService.Setup(d => d.GetDashboardDataAsync())
             .ReturnsAsync(new DashboardData());
 
-        var cut = RenderComponent<Dashboard>();
+        var cut = RenderComponent<Index>();
 
         cut.FindComponents<DashboardCard>()
             .Any(c => c.Instance.Text == "About Me:")

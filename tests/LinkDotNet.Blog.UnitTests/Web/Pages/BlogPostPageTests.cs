@@ -6,7 +6,10 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,7 +32,7 @@ public class BlogPostPageTests : TestContext
                 return new BlogPostBuilder().Build();
             });
 
-        var cut = RenderComponent<BlogPostPage>(
+        var cut = RenderComponent<Index>(
             p => p.Add(s => s.BlogPostId, blogPostId));
 
         cut.FindComponents<Loading>().Count.Should().Be(1);
@@ -51,7 +54,7 @@ public class BlogPostPageTests : TestContext
         ComponentFactories.AddStub<Like>();
         ComponentFactories.AddStub<CommentSection>();
 
-        var cut = RenderComponent<BlogPostPage>(
+        var cut = RenderComponent<Index>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         var pageTitleStub = cut.FindComponent<Stub<PageTitle>>();

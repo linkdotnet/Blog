@@ -4,6 +4,8 @@ using Bunit;
 using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +25,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => toastService.Object);
         ctx.ComponentFactories.AddStub<UploadFile>();
         ctx.Services.AddScoped(_ => Mock.Of<IFileProcessor>());
-        using var cut = ctx.RenderComponent<CreateNewBlogPostPage>();
+        using var cut = ctx.RenderComponent<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
         TriggerNewBlogPost(newBlogPost);

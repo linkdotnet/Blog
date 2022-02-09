@@ -4,6 +4,8 @@ using Bunit;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Admin.DraftBlogPost;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin;
@@ -20,7 +22,7 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
-        var cut = ctx.RenderComponent<DraftBlogPosts>();
+        var cut = ctx.RenderComponent<Index>();
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();

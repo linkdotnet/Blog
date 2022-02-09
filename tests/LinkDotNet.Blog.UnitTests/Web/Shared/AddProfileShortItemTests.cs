@@ -1,4 +1,5 @@
 ﻿using Bunit;
+using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Shared;
 
