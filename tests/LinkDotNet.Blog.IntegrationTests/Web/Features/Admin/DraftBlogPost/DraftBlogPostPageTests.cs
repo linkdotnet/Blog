@@ -8,7 +8,7 @@ using LinkDotNet.Blog.Web.Features.Admin.DraftBlogPost;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.DraftBlogPost;
 
 public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {

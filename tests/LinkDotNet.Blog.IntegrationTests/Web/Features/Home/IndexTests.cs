@@ -10,7 +10,7 @@ using LinkDotNet.Blog.Web.Features.Home;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Home;
 
 public class IndexTests : SqlDatabaseTestBase<BlogPost>
 {

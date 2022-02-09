@@ -11,7 +11,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features.SearchByTag;
 
 public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 {

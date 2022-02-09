@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost.IndexTests;
 
-public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
+public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {
     [Fact]
     public async Task ShouldAddLikeOnEvent()

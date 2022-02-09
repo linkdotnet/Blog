@@ -9,7 +9,7 @@ using LinkDotNet.Blog.Web.Features.Search;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Search;
 
 public class SearchTests : SqlDatabaseTestBase<BlogPost>
 {

@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages.Admin;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.BlogPostEditor;
 
 public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {
