@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap;
+namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 public class XmlFileWriter : IXmlFileWriter
 {

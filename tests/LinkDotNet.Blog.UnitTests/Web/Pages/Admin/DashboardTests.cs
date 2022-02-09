@@ -34,7 +34,7 @@ public class DashboardTests : TestContext
         dashboardService.Setup(d => d.GetDashboardDataAsync())
             .ReturnsAsync(new DashboardData());
 
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<DashboardPage>();
 
         cut.FindComponents<DashboardCard>()
             .Any(c => c.Instance.Text == "About Me:")

@@ -6,10 +6,10 @@ using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.SearchByTag;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
-using Index = LinkDotNet.Blog.Web.Features.SearchByTag.Index;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
 
@@ -24,7 +24,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         await AddBlogPostWithTagAsync("Tag 2");
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
-        var cut = ctx.RenderComponent<Index>(p => p.Add(s => s.Tag, "Tag 1"));
+        var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag 1"));
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
         var tags = cut.FindAll(".blog-card");
@@ -39,7 +39,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         await AddBlogPostWithTagAsync("C#");
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
-        var cut = ctx.RenderComponent<Index>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
+        var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 
         var tags = cut.FindAll(".blog-card");
@@ -55,7 +55,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         ctx.ComponentFactories.AddStub<PageTitle>();
 
-        var cut = ctx.RenderComponent<Index>(p => p.Add(s => s.Tag, "Tag"));
+        var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
 
         var pageTitleStub = cut.FindComponent<Stub<PageTitle>>();
         var pageTitle = ctx.Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent));

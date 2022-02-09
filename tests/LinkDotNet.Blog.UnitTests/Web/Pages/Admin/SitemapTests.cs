@@ -21,7 +21,7 @@ public class SitemapTests : TestContext
         var sitemap = new SitemapUrlSet();
         sitemapMock.Setup(s => s.CreateSitemapAsync())
             .ReturnsAsync(sitemap);
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<SitemapPage>();
 
         cut.Find("button").Click();
 
@@ -43,7 +43,7 @@ public class SitemapTests : TestContext
         };
         sitemapMock.Setup(s => s.CreateSitemapAsync())
             .ReturnsAsync(sitemap);
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<SitemapPage>();
 
         cut.Find("button").Click();
 
@@ -72,7 +72,7 @@ public class SitemapTests : TestContext
                 await Task.Delay(1000);
                 return sitemap;
             });
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<SitemapPage>();
 
         cut.Find("button").Click();
 

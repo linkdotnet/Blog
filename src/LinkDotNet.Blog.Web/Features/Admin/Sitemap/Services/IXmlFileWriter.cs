@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap;
+namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 public interface IXmlFileWriter
 {

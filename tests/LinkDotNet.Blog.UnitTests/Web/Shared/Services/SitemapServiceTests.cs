@@ -6,7 +6,6 @@ using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Features.Admin.Sitemap;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using X.PagedList;
 

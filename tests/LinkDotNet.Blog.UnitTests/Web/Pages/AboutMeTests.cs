@@ -7,12 +7,12 @@ using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features.AboutMe;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 using X.PagedList;
-using Index = LinkDotNet.Blog.Web.Features.AboutMe.Index;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages;
 
@@ -25,7 +25,7 @@ public class AboutMeTests : TestContext
         var config = CreateAppConfiguration(new ProfileInformation { ProfilePictureUrl = string.Empty });
         SetupMocks(config);
 
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<AboutMePage>();
 
         cut.FindComponent<Profile>().Instance.IsAuthenticated.Should().BeTrue();
         cut.FindComponent<SkillTable>().Instance.IsAuthenticated.Should().BeTrue();
@@ -38,7 +38,7 @@ public class AboutMeTests : TestContext
         var config = CreateAppConfiguration();
         SetupMocks(config);
 
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<AboutMePage>();
 
         cut.FindComponents<Profile>().Any().Should().BeFalse();
         cut.FindComponents<SkillTable>().Any().Should().BeFalse();
@@ -56,7 +56,7 @@ public class AboutMeTests : TestContext
         var config = CreateAppConfiguration(profileInformation);
         SetupMocks(config);
 
-        var cut = RenderComponent<Index>();
+        var cut = RenderComponent<AboutMePage>();
 
         var ogData = cut.FindComponent<OgData>().Instance;
         ogData.AbsolutePreviewImageUrl.Should().Be("http://localhost/someurl");

@@ -13,7 +13,7 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.IntegrationTests.Web.Pages;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost.IndexTests;
 
 public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {
@@ -26,7 +26,7 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
         ctx.AddTestAuthorization().SetAuthorized("s");
-        var cut = ctx.RenderComponent<Index>(
+        var cut = ctx.RenderComponent<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
         var likeComponent = cut.FindComponent<Like>();
         likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
@@ -50,7 +50,7 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx, localStorage.Object);
         ctx.AddTestAuthorization().SetAuthorized("s");
-        var cut = ctx.RenderComponent<Index>(
+        var cut = ctx.RenderComponent<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
         var likeComponent = cut.FindComponent<Like>();
         likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
@@ -70,7 +70,7 @@ public class BlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.AddTestAuthorization();
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<Index>(
+        var cut = ctx.RenderComponent<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
 
         var ogData = cut.FindComponent<OgData>();

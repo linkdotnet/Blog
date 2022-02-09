@@ -32,7 +32,7 @@ public class BlogPostPageTests : TestContext
                 return new BlogPostBuilder().Build();
             });
 
-        var cut = RenderComponent<Index>(
+        var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPostId));
 
         cut.FindComponents<Loading>().Count.Should().Be(1);
@@ -54,7 +54,7 @@ public class BlogPostPageTests : TestContext
         ComponentFactories.AddStub<Like>();
         ComponentFactories.AddStub<CommentSection>();
 
-        var cut = RenderComponent<Index>(
+        var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         var pageTitleStub = cut.FindComponent<Stub<PageTitle>>();

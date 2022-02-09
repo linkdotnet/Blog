@@ -24,7 +24,7 @@ public class SearchTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
 
-        var cut = ctx.RenderComponent<Index>(p => p.Add(s => s.SearchTerm, "Title 1"));
+        var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Title 1"));
 
         cut.WaitForState(() => cut.FindComponents<ShortBlogPost>().Any());
         var blogPosts = cut.FindComponents<ShortBlogPost>();
@@ -43,7 +43,7 @@ public class SearchTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
 
-        var cut = ctx.RenderComponent<Index>(p => p.Add(s => s.SearchTerm, "Cat"));
+        var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Cat"));
 
         cut.WaitForState(() => cut.FindComponents<ShortBlogPost>().Any());
         var blogPosts = cut.FindComponents<ShortBlogPost>();
@@ -60,7 +60,7 @@ public class SearchTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
 
-        var cut = ctx.RenderComponent<Index>(p => p.Add(s => s.SearchTerm, "Title%201"));
+        var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Title%201"));
 
         cut.WaitForState(() => cut.FindComponents<ShortBlogPost>().Any());
         var blogPosts = cut.FindComponents<ShortBlogPost>();
