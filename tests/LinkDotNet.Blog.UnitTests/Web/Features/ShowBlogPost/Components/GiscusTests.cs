@@ -19,7 +19,7 @@ public class GiscusTests : TestContext
             CategoryId = "GeneralId",
         };
         Services.AddScoped(_ => new AppConfiguration { GiscusConfiguration = giscusData });
-        JSInterop.SetupModule("./Shared/Giscus.razor.js");
+        JSInterop.SetupModule("./Features/ShowBlogPost/Components/Giscus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
         RenderComponent<Giscus>();

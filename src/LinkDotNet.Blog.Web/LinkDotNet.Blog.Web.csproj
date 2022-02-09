@@ -28,4 +28,13 @@
 		<InternalsVisibleTo Include="LinkDotNet.Blog.IntegrationTests" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Features\ShowBlogPost\Components\Giscus.razor.js">
+	    <DependentUpon>Giscus.razor</DependentUpon>
+	  </None>
+	  <None Update="Features\ShowBlogPost\Components\Disqus.razor.js">
+	    <DependentUpon>Disqus.razor</DependentUpon>
+	  </None>
+	</ItemGroup>
+
 </Project>

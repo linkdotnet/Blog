@@ -8,7 +8,7 @@
     {
         if (firstRender && appConfiguration.IsGiscusEnabled)
         {
-            await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Giscus.razor.js");
+            await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/Giscus.razor.js");
             await jsRuntime.InvokeVoidAsync("initGiscus", "giscus", appConfiguration.GiscusConfiguration);
         }
     }
