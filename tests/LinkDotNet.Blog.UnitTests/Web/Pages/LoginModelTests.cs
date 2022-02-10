@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Authentication;
-using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Pages;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Pages;
 
