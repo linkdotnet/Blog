@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0-release-20220113-05" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj" />
       <ProjectReference Include="..\..\src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
     </ItemGroup>
