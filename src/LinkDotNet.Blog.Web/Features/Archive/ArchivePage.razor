@@ -1,0 +1,35 @@
+@page "/archive"
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Domain
+@inject IRepository<BlogPost> repository
+<div class="ps-2">
+    <h3 class="pb-3">Archive</h3>
+
+    @if (blogPostsPerYear == null)
+    {
+        <Loading></Loading>
+    }
+    else
+    {
+        @foreach (var yearGroup in blogPostsPerYear)
+        {
+            <h2>@yearGroup.Key</h2>
+            <ul class="ps-5">
+                @foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
+                {
+                    <li class="pt-1"><a href="/blogPost/@blogPost.Id">@blogPost.Title</a></li>
+                }
+            </ul>
+        }
+    }
+</div >
+
+@code {
+    private List<IGrouping<int, BlogPost>> blogPostsPerYear;
+
+    protected override async Task OnInitializedAsync()
+    {
+        blogPostsPerYear = (await repository.GetAllAsync()).GroupBy(r => r.UpdatedDate.Year).ToList();
+    }
+
+}
