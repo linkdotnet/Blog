@@ -21,7 +21,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
 
         var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Title 1"));
@@ -40,7 +40,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
 
         var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Cat"));
@@ -57,7 +57,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPost1 = new BlogPostBuilder().WithTitle("Title 1").Build();
         await Repository.StoreAsync(blogPost1);
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
 
         var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Title%201"));

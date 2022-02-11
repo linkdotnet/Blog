@@ -29,7 +29,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        blogPostsPerYear = (await repository.GetAllAsync()).GroupBy(r => r.UpdatedDate.Year).ToList();
+        blogPostsPerYear = (await repository.GetAllAsync(p => p.IsPublished))
+            .GroupBy(r => r.UpdatedDate.Year)
+            .ToList();
     }
 
 }

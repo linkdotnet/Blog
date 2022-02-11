@@ -19,7 +19,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().WithSkillName("C#").Build();
         using var ctx = new TestContext();
         await Repository.StoreAsync(skill);
-        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));
@@ -36,7 +36,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     public async Task ShouldAddSkill()
     {
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));
@@ -65,7 +65,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         using var ctx = new TestContext();
         var skill = new SkillBuilder().Build();
         await Repository.StoreAsync(skill);
-        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
 
         var cut = ctx.RenderComponent<SkillTable>(p =>
@@ -82,7 +82,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
         await DbContext.AddAsync(skill);
         await DbContext.SaveChangesAsync();
-        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));
@@ -102,7 +102,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
         await DbContext.AddAsync(skill);
         await DbContext.SaveChangesAsync();
-        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.IsAuthenticated, true));

@@ -21,7 +21,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         var toastService = new Mock<IToastService>();
         ctx.AddTestAuthorization().SetAuthorized("some username");
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
         ctx.ComponentFactories.AddStub<UploadFile>();
         ctx.Services.AddScoped(_ => Mock.Of<IFileProcessor>());
@@ -42,7 +42,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         const string contentFromFile = "content";
         ctx.AddTestAuthorization().SetAuthorized("some username");
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var args = SetupUploadFile(contentFromFile, ctx);
         var cut = ctx.RenderComponent<CreateNewBlogPost>();

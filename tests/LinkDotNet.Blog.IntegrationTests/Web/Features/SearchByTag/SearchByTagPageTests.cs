@@ -22,7 +22,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         await AddBlogPostWithTagAsync("Tag 1");
         await AddBlogPostWithTagAsync("Tag 1");
         await AddBlogPostWithTagAsync("Tag 2");
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag 1"));
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
@@ -37,7 +37,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         await AddBlogPostWithTagAsync("C#");
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
@@ -51,7 +51,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     public void ShouldSetTitleToTag()
     {
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         ctx.ComponentFactories.AddStub<PageTitle>();
 

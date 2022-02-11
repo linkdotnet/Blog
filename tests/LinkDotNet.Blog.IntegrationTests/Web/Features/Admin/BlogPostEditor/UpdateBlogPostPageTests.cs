@@ -23,7 +23,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);
         ctx.AddTestAuthorization().SetAuthorized("some username");
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
         ctx.ComponentFactories.AddStub<UploadFile>();
         using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
@@ -43,7 +43,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("some username");
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
 
         Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(

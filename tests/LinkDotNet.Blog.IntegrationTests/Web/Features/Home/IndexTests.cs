@@ -167,7 +167,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
     private void RegisterComponents(TestContextBase ctx)
     {
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
     }

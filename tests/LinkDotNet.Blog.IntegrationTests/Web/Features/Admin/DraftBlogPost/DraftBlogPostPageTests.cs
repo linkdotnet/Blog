@@ -21,7 +21,7 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(unpublishedPost);
         using var ctx = new TestContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         var cut = ctx.RenderComponent<DraftBlogPostPage>();
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 

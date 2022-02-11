@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDispo
         Repository = new Repository<TEntity>(new BlogDbContext(options));
     }
 
-    protected Repository<TEntity> Repository { get; }
+    protected IRepository<TEntity> Repository { get; }
 
     protected BlogDbContext DbContext { get; }
 

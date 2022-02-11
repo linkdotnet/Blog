@@ -80,7 +80,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
     private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
     {
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => Repository);
+        ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => localStorageService ?? Mock.Of<ILocalStorageService>());
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
