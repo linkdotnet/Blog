@@ -1,0 +1,22 @@
+.clap-btn {
+    display: inline-block;
+    Cursor: pointer;
+    width: 50px;
+    height: 50px;
+    background: url('assets/ClapAnimation.png') no-repeat 0 50%;
+    background-size: 900%;
+}
+
+.clap-active {
+    animation-name: animate;
+    animation-duration: .8s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-timing-function: steps(8);
+}
+
+@keyframes animate {
+     0%   { background-position: left;  }
+     50%  { background-position: right; }
+     100% { background-position: right; }
+ }

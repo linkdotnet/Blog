@@ -1,8 +1,8 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Web.Features.Services
 @inject ILocalStorageService localStorage
-<div class="like-container">
-    <button class="btn @BtnClass" @onclick="LikeBlogPost"><i class="far fa-thumbs-up"></i> @BlogPost.Likes @LikeText</button>
+<div class="d-flex align-items-center">
+    <span class="clap-btn @BtnClass" @onclick="LikeBlogPost"></span> @BlogPost.Likes
 </div>
 
 @code {
@@ -14,10 +14,8 @@
     
     private bool HasLiked { get; set; }
 
-    private string BtnClass => HasLiked ? "btn-secondary" : "btn-primary";
+    private string BtnClass => HasLiked ? "clap-active" : string.Empty;
 
-    private string LikeText => BlogPost.Likes == 1 ? "Like" : "Likes";
-    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)

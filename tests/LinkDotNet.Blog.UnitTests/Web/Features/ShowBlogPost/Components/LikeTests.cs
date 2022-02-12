@@ -8,20 +8,17 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
 public class LikeTests : TestContext
 {
-    [Theory]
-    [InlineData(0, "0 Likes")]
-    [InlineData(1, "1 Like")]
-    [InlineData(2, "2 Likes")]
-    public void ShouldDisplayLikes(int likes, string expectedText)
+    [Fact]
+    public void ShouldDisplayLikes()
     {
         Services.AddScoped(_ => Mock.Of<ILocalStorageService>());
-        var blogPost = new BlogPostBuilder().WithLikes(likes).Build();
+        var blogPost = new BlogPostBuilder().WithLikes(1).Build();
         var cut = RenderComponent<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
-        var label = cut.Find("button").TextContent;
+        var label = cut.Find("div").TextContent;
 
-        label.Should().Contain(expectedText);
+        label.Should().Contain("1");
     }
 
     [Fact]
@@ -39,7 +36,7 @@ public class LikeTests : TestContext
                     wasLike = b;
                 }));
 
-        cut.Find("button").Click();
+        cut.Find("span").Click();
 
         wasClicked.Should().BeTrue();
         wasLike.Should().BeTrue();
@@ -55,7 +52,7 @@ public class LikeTests : TestContext
         var cut = RenderComponent<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
-        cut.Find("button").Click();
+        cut.Find("span").Click();
 
         localStorage.Verify(l => l.SetItemAsync("hasLiked/id", true), Times.Once);
     }
@@ -74,7 +71,7 @@ public class LikeTests : TestContext
             p => p.Add(l => l.BlogPost, blogPost)
                 .Add(l => l.OnBlogPostLiked, b => wasLike = b));
 
-        cut.Find("button").Click();
+        cut.Find("span").Click();
 
         wasLike.Should().BeFalse();
     }
@@ -93,7 +90,7 @@ public class LikeTests : TestContext
         localStorage.Setup(l => l.ContainKeyAsync("hasLiked/id")).ReturnsAsync(true);
         localStorage.Setup(l => l.GetItemAsync<bool>("hasLiked/id")).ReturnsAsync(true);
 
-        cut.Find("button").Click();
+        cut.Find("span").Click();
 
         wasClicked.Should().BeFalse();
     }
