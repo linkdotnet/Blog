@@ -21,7 +21,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<ArchivePage>();
 
-        cut.WaitForState(() => cut.FindAll("h2").Count == 2);
+        cut.WaitForElements("h2");
         var yearHeader = cut.FindAll("h2");
         yearHeader.Should().HaveCount(2);
         yearHeader[0].TextContent.Should().Be("2022");

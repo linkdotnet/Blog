@@ -31,6 +31,7 @@
     {
         blogPostsPerYear = (await repository.GetAllAsync(p => p.IsPublished))
             .GroupBy(r => r.UpdatedDate.Year)
+            .OrderByDescending(r => r.Key)
             .ToList();
     }
 
