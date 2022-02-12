@@ -31,7 +31,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var likeComponent = cut.FindComponent<Like>();
         likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
 
-        likeComponent.Find("button").Click();
+        likeComponent.Find("span").Click();
 
         var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
         fromDb.Likes.Should().Be(3);
@@ -55,7 +55,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var likeComponent = cut.FindComponent<Like>();
         likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
 
-        likeComponent.Find("button").Click();
+        likeComponent.Find("span").Click();
 
         var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
         fromDb.Likes.Should().Be(1);
