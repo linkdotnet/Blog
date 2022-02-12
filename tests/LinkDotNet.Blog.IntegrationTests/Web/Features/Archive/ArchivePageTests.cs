@@ -45,6 +45,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<ArchivePage>();
 
+        cut.WaitForElements("h2");
         cut.FindAll("h2").Should().HaveCount(1);
     }
 
