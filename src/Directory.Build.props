@@ -18,4 +18,9 @@
         <CodeAnalysisRuleSet>$(SolutionDir)\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <WarningLevel>5</WarningLevel>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
 </Project>
