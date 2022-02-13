@@ -56,7 +56,7 @@ public class SitemapServiceTests : TestContext
 
         sitemap.Urls.Should().HaveCount(6);
         sitemap.Urls[0].Location.Should().Be($"{fakeNavigationManager.BaseUri}");
-        sitemap.Urls[1].Location.Should().Be($"{fakeNavigationManager.BaseUri}/archive");
+        sitemap.Urls[1].Location.Should().Be($"{fakeNavigationManager.BaseUri}archive");
         sitemap.Urls[2].Location.Should().Be($"{fakeNavigationManager.BaseUri}blogPost/id1");
         sitemap.Urls[3].Location.Should().Be($"{fakeNavigationManager.BaseUri}blogPost/id2");
         sitemap.Urls[4].Location.Should().Be($"{fakeNavigationManager.BaseUri}searchByTag/tag1");
