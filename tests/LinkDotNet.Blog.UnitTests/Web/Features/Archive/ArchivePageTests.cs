@@ -34,4 +34,23 @@ public class ArchivePageTests : TestContext
 
         cut.FindComponents<Loading>().Count.Should().Be(1);
     }
+
+    [Fact]
+    public void ShouldSetOgData()
+    {
+        var repository = new Mock<IRepository<BlogPost>>();
+        Services.AddScoped(_ => repository.Object);
+        repository.Setup(r => r.GetAllAsync(
+            It.IsAny<Expression<Func<BlogPost, bool>>>(),
+            It.IsAny<Expression<Func<BlogPost, object>>>(),
+            It.IsAny<bool>(),
+            It.IsAny<int>(),
+            It.IsAny<int>()))
+            .ReturnsAsync(new PagedList<BlogPost>(Array.Empty<BlogPost>(), 1, 1));
+
+        var cut = RenderComponent<ArchivePage>();
+
+        var ogData = cut.FindComponent<OgData>().Instance;
+        ogData.Title.Should().Contain("Archive");
+    }
 }

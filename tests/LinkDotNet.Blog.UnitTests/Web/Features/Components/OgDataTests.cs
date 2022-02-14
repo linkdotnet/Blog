@@ -25,6 +25,19 @@ public class OgDataTests : TestContext
         AssertMetaTagExistsWithValue(cut, "description", "Description", "og:description");
     }
 
+    [Fact]
+    public void ShouldNotSetMetaInformationWhenNotProvided()
+    {
+        ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
+
+        var cut = RenderComponent<OgData>(p => p
+            .Add(s => s.Title, "Title"));
+
+        GetMetaTagExists(cut, "image").Should().BeFalse();
+        GetMetaTagExists(cut, "keywords").Should().BeFalse();
+        GetMetaTagExists(cut, "description").Should().BeFalse();
+    }
+
     private static void AssertMetaTagExistsWithValue(
         IRenderedFragment cut,
         string metaTag,
@@ -40,5 +53,13 @@ public class OgDataTests : TestContext
         {
             titleMetaTag.Attributes.Any(a => a.Value == ogPropertyName).Should().BeTrue();
         }
+    }
+
+    private static bool GetMetaTagExists(
+        IRenderedFragment cut,
+        string metaTag)
+    {
+        var metaTags = cut.FindAll("meta");
+        return metaTags.Any(m => m.Attributes.Any(a => a.Value == metaTag));
     }
 }

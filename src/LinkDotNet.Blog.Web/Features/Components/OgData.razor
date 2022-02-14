@@ -2,7 +2,10 @@
 
 <HeadContent>
     <meta name="title" property="og:title" content="@Title" />
-    <meta name="image" property="og:image" content="@AbsolutePreviewImageUrl" />
+    @if (AbsolutePreviewImageUrl != null)
+    {
+        <meta name="image" property="og:image" content="@AbsolutePreviewImageUrl"/>
+    }
     <meta property="og:type" content="article" />
     <meta property="og:url" content="@navigationManager.Uri" />
     @if (Keywords != null)
