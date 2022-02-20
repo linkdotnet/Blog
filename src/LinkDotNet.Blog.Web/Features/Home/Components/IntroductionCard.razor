@@ -1,20 +1,32 @@
 ﻿@using LinkDotNet.Blog.Domain
+@inject AppConfiguration configuration
 @inherits LinkDotNet.Blog.Web.Features.MarkdownComponentBase
 
-<div style="--profile-background: url(@Introduction.BackgroundUrl)" class="@IntroductionClass">
+<div style="--profile-background: url(@configuration.Introduction.BackgroundUrl)" class="@IntroductionClass">
     <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@Introduction.ProfilePictureUrl)">
+        <div class="profile-picture" style="--profile-image: url(@configuration.Introduction.ProfilePictureUrl)">
         </div>
-        <div class="profile-text">
-            @RenderMarkupString(Introduction.Description)
+        <div class="profile-text d-flex flex-column">
+            <div>@RenderMarkupString(configuration.Introduction.Description)</div>
+            <div class="d-flex flex-row justify-content-center">
+                @if (configuration.HasLinkedinAccount)
+                {
+                        <a id="linkedin" class="nav-link" target="_blank" href="@configuration.LinkedinAccountUrl">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                }
+                @if (configuration.HasGithubAccount)
+                {
+                    <a id="github" class="nav-link" target="_blank" href="@configuration.GithubAccountUrl">
+                        <i class="fab fa-github"></i>
+                    </a>
+                }
+            </div>
         </div>
     </div>
 </div>
 @code {
-    [Parameter]
-    public Introduction Introduction { get; set; }
-
-    private string IntroductionClass => !string.IsNullOrEmpty(Introduction.BackgroundUrl)
+    private string IntroductionClass => !string.IsNullOrEmpty(configuration.Introduction.BackgroundUrl)
         ? "introduction-background"
         : string.Empty;
 }

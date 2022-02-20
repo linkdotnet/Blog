@@ -28,30 +28,6 @@ public class NavMenuTests : TestContext
         navigationManager.Uri.Should().EndWith("search/Text");
     }
 
-    [Theory]
-    [InlineData(null, null, false, false)]
-    [InlineData(null, "linkedin", false, true)]
-    [InlineData("github", null, true, false)]
-    public void ShouldDisplayGithubAndLinkedInPageWhenOnlyWhenSet(
-        string github,
-        string linkedin,
-        bool githubAvailable,
-        bool linkedinAvailable)
-    {
-        var config = new AppConfiguration
-        {
-            GithubAccountUrl = github,
-            LinkedinAccountUrl = linkedin,
-        };
-        Services.AddScoped(_ => config);
-        this.AddTestAuthorization();
-
-        var cut = RenderComponent<NavMenu>();
-
-        cut.FindAll("li").Any(l => l.TextContent.Contains("Github")).Should().Be(githubAvailable);
-        cut.FindAll("li").Any(l => l.TextContent.Contains("LinkedIn")).Should().Be(linkedinAvailable);
-    }
-
     [Fact]
     public void ShouldDisplayAboutMePage()
     {
