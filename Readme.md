@@ -154,7 +154,7 @@ The following tags are set depending on the page:
 | -------------- | --------------------------------------------------------- | -------------------------------------------- |
 | og:title       | Title of the blog (defined in Introduction)               | Title of the Blog Post                       |
 | og:url         | Url to the index page                                     | Url of the page                              |
-| og:image       | Background image (defined in Introduction)                | Yes                                          |
+| og:image       | Profile image (defined in Introduction)                   | Yes                                          |
 | og:type        | article                                                   | article                                      |
 | og:description | Short description in plain text (defined in Introduction) | Short Description of Blog Post in plain text |
 
