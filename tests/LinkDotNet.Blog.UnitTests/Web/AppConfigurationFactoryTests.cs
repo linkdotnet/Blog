@@ -13,9 +13,9 @@ public class AppConfigurationFactoryTests
             {
                 { "BlogName", "UnitTest" },
                 { "BlogBrandUrl", "http://localhost" },
-                { "GithubAccountUrl", "github" },
-                { "LinkedInAccountUrl", "linkedIn" },
-                { "LinkedInAccountUrl", "twitter" },
+                { "Social:GithubAccountUrl", "github" },
+                { "Social:LinkedInAccountUrl", "linkedIn" },
+                { "Social:TwitterAccountUrl", "twitter" },
                 { "ConnectionString", "cs" },
                 { "DatabaseName", "db" },
                 { "Introduction:BackgroundUrl", "someurl" },
@@ -39,12 +39,12 @@ public class AppConfigurationFactoryTests
 
         appConfiguration.BlogName.Should().Be("UnitTest");
         appConfiguration.BlogBrandUrl.Should().Be("http://localhost");
-        appConfiguration.GithubAccountUrl.Should().Be("github");
-        appConfiguration.HasGithubAccount.Should().BeTrue();
-        appConfiguration.LinkedinAccountUrl.Should().Be("linkedIn");
-        appConfiguration.HasLinkedinAccount.Should().BeTrue();
-        appConfiguration.TwitterAccountUrl.Should().Be("twitter");
-        appConfiguration.HasTwitterAccount.Should().BeTrue();
+        appConfiguration.Social.GithubAccountUrl.Should().Be("github");
+        appConfiguration.Social.HasGithubAccount.Should().BeTrue();
+        appConfiguration.Social.LinkedinAccountUrl.Should().Be("linkedIn");
+        appConfiguration.Social.HasLinkedinAccount.Should().BeTrue();
+        appConfiguration.Social.TwitterAccountUrl.Should().Be("twitter");
+        appConfiguration.Social.HasTwitterAccount.Should().BeTrue();
         appConfiguration.ConnectionString.Should().Be("cs");
         appConfiguration.DatabaseName.Should().Be("db");
         appConfiguration.Introduction.BackgroundUrl.Should().Be("someurl");
@@ -63,22 +63,26 @@ public class AppConfigurationFactoryTests
     }
 
     [Theory]
-    [InlineData(null, null, false, false)]
-    [InlineData(null, "linkedin", false, true)]
-    [InlineData("github", null, true, false)]
+    [InlineData(null, null, null, false, false, false)]
+    [InlineData(null, "linkedin", null, false, true, false)]
+    [InlineData("github", null, null, true, false, false)]
+    [InlineData(null, null, "twitter", false, false, true)]
     public void ShouldSetGithubLinkedAccountAccordingToValueSet(
         string githubUrl,
         string linkedInUrl,
+        string twitterUrl,
         bool githubAvailable,
-        bool linkedInAvailable)
+        bool linkedInAvailable,
+        bool twitterAvailable)
     {
         var inMemorySettings = new Dictionary<string, string>
             {
                 { "Introduction:BackgroundUrl", "someurl" },
                 { "Introduction:ProfilePictureUrl", "anotherurl" },
                 { "Introduction:Description", "desc" },
-                { "GithubAccountUrl", githubUrl },
-                { "LinkedInAccountUrl", linkedInUrl },
+                { "Social:GithubAccountUrl", githubUrl },
+                { "Social:LinkedInAccountUrl", linkedInUrl },
+                { "Social:TwitterAccountUrl", twitterUrl },
                 { "BlogPostsPerPage", "2" },
             };
         var configuration = new ConfigurationBuilder()
@@ -87,8 +91,9 @@ public class AppConfigurationFactoryTests
 
         var appConfiguration = AppConfigurationFactory.Create(configuration);
 
-        appConfiguration.HasGithubAccount.Should().Be(githubAvailable);
-        appConfiguration.HasLinkedinAccount.Should().Be(linkedInAvailable);
+        appConfiguration.Social.HasGithubAccount.Should().Be(githubAvailable);
+        appConfiguration.Social.HasLinkedinAccount.Should().Be(linkedInAvailable);
+        appConfiguration.Social.HasTwitterAccount.Should().Be(twitterAvailable);
     }
 
     [Fact]

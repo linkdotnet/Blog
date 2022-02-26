@@ -150,6 +150,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
                 BackgroundUrl = string.Empty,
                 ProfilePictureUrl = profilePictureUri ?? string.Empty,
             },
+            Social = new Social(),
             BlogPostsPerPage = 10,
         };
     }

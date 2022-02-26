@@ -9,19 +9,9 @@ public record AppConfiguration
 
     public string BlogBrandUrl { get; init; }
 
-    public string LinkedinAccountUrl { get; init; }
-
-    public bool HasLinkedinAccount => !string.IsNullOrEmpty(LinkedinAccountUrl);
-
-    public string GithubAccountUrl { get; init; }
-
-    public bool HasGithubAccount => !string.IsNullOrEmpty(GithubAccountUrl);
-
-    public string TwitterAccountUrl { get; init; }
-
-    public bool HasTwitterAccount => !string.IsNullOrEmpty(TwitterAccountUrl);
-
     public Introduction Introduction { get; init; }
+
+    public Social Social { get; init; }
 
     public string ConnectionString { get; init; }
 

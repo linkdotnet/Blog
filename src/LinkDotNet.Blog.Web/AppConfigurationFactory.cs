@@ -8,6 +8,8 @@ public static class AppConfigurationFactory
 {
     public static AppConfiguration Create(IConfiguration config)
     {
+        var social = config.GetSection("Social").Get<Social>();
+        var introduction = config.GetSection("Introduction").Get<Introduction>();
         var profileInformation = config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
         var giscus = config.GetSection("Giscus").Get<GiscusConfiguration>();
         var disqus = config.GetSection("Disqus").Get<DisqusConfiguration>();
@@ -15,10 +17,8 @@ public static class AppConfigurationFactory
         {
             BlogName = config["BlogName"],
             BlogBrandUrl = config["BlogBrandUrl"],
-            GithubAccountUrl = config["GithubAccountUrl"],
-            LinkedinAccountUrl = config["LinkedInAccountUrl"],
-            TwitterAccountUrl = config["TwitterAccountUrl"],
-            Introduction = config.GetSection("Introduction").Get<Introduction>(),
+            Social = social,
+            Introduction = introduction,
             ConnectionString = config["ConnectionString"],
             DatabaseName = config["DatabaseName"],
             BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
