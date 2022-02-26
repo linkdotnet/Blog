@@ -1,10 +1,10 @@
 ﻿namespace LinkDotNet.Blog.Domain;
 
-public class Introduction
+public record Introduction
 {
-    public string BackgroundUrl { get; set; }
+    public string BackgroundUrl { get; init; }
 
-    public string ProfilePictureUrl { get; set; }
+    public string ProfilePictureUrl { get; init; }
 
-    public string Description { get; set; }
+    public string Description { get; init; }
 }

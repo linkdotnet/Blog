@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Bunit;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -114,8 +113,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     public void ShouldSetAbsoluteUriForOgData(string givenUri, string expectedUri)
     {
         using var ctx = new TestContext();
-        RegisterComponents(ctx);
-        ctx.Services.GetService<AppConfiguration>()!.Introduction.ProfilePictureUrl = givenUri;
+        RegisterComponents(ctx, givenUri);
 
         var cut = ctx.RenderComponent<Index>();
 
@@ -141,7 +139,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 
-    private static AppConfiguration CreateSampleAppConfiguration()
+    private static AppConfiguration CreateSampleAppConfiguration(string profilePictureUri = null)
     {
         return new()
         {
@@ -150,7 +148,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
             {
                 Description = string.Empty,
                 BackgroundUrl = string.Empty,
-                ProfilePictureUrl = string.Empty,
+                ProfilePictureUrl = profilePictureUri ?? string.Empty,
             },
             BlogPostsPerPage = 10,
         };
@@ -165,10 +163,10 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         }
     }
 
-    private void RegisterComponents(TestContextBase ctx)
+    private void RegisterComponents(TestContextBase ctx, string profilePictureUri = null)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => CreateSampleAppConfiguration());
+        ctx.Services.AddScoped(_ => CreateSampleAppConfiguration(profilePictureUri));
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
     }
 }
