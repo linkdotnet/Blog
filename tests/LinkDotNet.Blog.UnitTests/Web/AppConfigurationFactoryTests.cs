@@ -15,6 +15,7 @@ public class AppConfigurationFactoryTests
                 { "BlogBrandUrl", "http://localhost" },
                 { "GithubAccountUrl", "github" },
                 { "LinkedInAccountUrl", "linkedIn" },
+                { "LinkedInAccountUrl", "twitter" },
                 { "ConnectionString", "cs" },
                 { "DatabaseName", "db" },
                 { "Introduction:BackgroundUrl", "someurl" },
@@ -42,6 +43,8 @@ public class AppConfigurationFactoryTests
         appConfiguration.HasGithubAccount.Should().BeTrue();
         appConfiguration.LinkedinAccountUrl.Should().Be("linkedIn");
         appConfiguration.HasLinkedinAccount.Should().BeTrue();
+        appConfiguration.TwitterAccountUrl.Should().Be("twitter");
+        appConfiguration.HasTwitterAccount.Should().BeTrue();
         appConfiguration.ConnectionString.Should().Be("cs");
         appConfiguration.DatabaseName.Should().Be("db");
         appConfiguration.Introduction.BackgroundUrl.Should().Be("someurl");

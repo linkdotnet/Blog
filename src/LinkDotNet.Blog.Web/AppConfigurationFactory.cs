@@ -17,6 +17,7 @@ public static class AppConfigurationFactory
             BlogBrandUrl = config["BlogBrandUrl"],
             GithubAccountUrl = config["GithubAccountUrl"],
             LinkedinAccountUrl = config["LinkedInAccountUrl"],
+            TwitterAccountUrl = config["TwitterAccountUrl"],
             Introduction = config.GetSection("Introduction").Get<Introduction>(),
             ConnectionString = config["ConnectionString"],
             DatabaseName = config["DatabaseName"],

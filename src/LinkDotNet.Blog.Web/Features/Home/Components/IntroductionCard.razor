@@ -21,6 +21,12 @@
                         <i class="fab fa-github"></i>
                     </a>
                 }
+                @if (configuration.HasTwitterAccount)
+                {
+                    <a id="twitter" class="nav-link" target="_blank" href="@configuration.TwitterAccountUrl">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                }
             </div>
         </div>
     </div>

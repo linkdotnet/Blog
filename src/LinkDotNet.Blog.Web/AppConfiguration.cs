@@ -17,6 +17,10 @@ public record AppConfiguration
 
     public bool HasGithubAccount => !string.IsNullOrEmpty(GithubAccountUrl);
 
+    public string TwitterAccountUrl { get; init; }
+
+    public bool HasTwitterAccount => !string.IsNullOrEmpty(TwitterAccountUrl);
+
     public Introduction Introduction { get; init; }
 
     public string ConnectionString { get; init; }
