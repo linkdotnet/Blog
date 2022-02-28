@@ -28,7 +28,7 @@ The appsettings.json file has a lot of options to customize the content of the b
   "Social": {
     "GithubAccountUrl": "",
     "LinkedInAccountUrl": "",
-    "TwitterAccountUrl":  "",
+    "TwitterAccountUrl":  ""
   },
   "Introduction": {
     "Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
