@@ -8,7 +8,6 @@
     width: clamp(60%, 2vw, 90%);    
     box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    font-size: 125%;
     padding: 20px;
 }
 
