@@ -22,10 +22,14 @@
     --active-link: var(--big-stone);
     --disabled-link: var(--pewter);
     --link-hover: var(--tana);
+    --active-link-inverted: var(--ceramic);
+    --link-hover-inverted: var(--tana);
 
     --header1: var(--william);
+    --header1-inverted: var(--ceramic);
     --header2: var(--pewter);
     --text-color: var(--big-stone);
+    --text-color-inverted: var(--ceramic);
 
     --navbar-background: #f4f4f4d0;
 
@@ -77,6 +81,23 @@ a:hover {
 .disabled a {
     font-weight: 400;
     color: var(--disabled-link) !important;
+}
+
+.inverted-colors a {
+    font-weight: 400;
+    color: var(--active-link-inverted) !important;
+}
+
+.inverted-colors a:hover {
+    color: var(--link-hover-inverted) !important;
+}
+
+.inverted-colors p {
+    color: var(--text-color-inverted) !important;
+}
+
+.inverted-colors button {
+    color: var(--white) !important;
 }
 
 h1 {
