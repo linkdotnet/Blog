@@ -25,7 +25,7 @@ public class CreateNewModel
     public bool IsPublished { get; set; } = true;
 
     [Required]
-    public bool ShouldUpdateDate { get; set; } = true;
+    public bool ShouldUpdateDate { get; set; } = false;
 
     public string Tags { get; set; }
 
