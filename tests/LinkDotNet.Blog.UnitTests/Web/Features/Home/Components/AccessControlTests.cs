@@ -2,9 +2,9 @@
 using AngleSharpWrappers;
 using Bunit;
 using Bunit.TestDoubles;
-using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.Web.Features.Home.Components;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
+namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
 public class AccessControlTests : TestContext
 {
