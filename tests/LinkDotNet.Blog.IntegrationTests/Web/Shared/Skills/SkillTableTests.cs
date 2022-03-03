@@ -22,7 +22,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
-            p.Add(s => s.IsAuthenticated, true));
+            p.Add(s => s.ShowAdminActions, true));
         cut.WaitForState(() => cut.HasComponent<SkillTag>());
 
         cut.FindComponent<SkillTag>().Find("button").Click();
@@ -39,7 +39,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
-            p.Add(s => s.IsAuthenticated, true));
+            p.Add(s => s.ShowAdminActions, true));
         cut.Find("button").Click();
         var dialog = cut.FindComponent<AddSkillDialog>();
         dialog.Find("#title").Change("C#");
@@ -69,10 +69,10 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
 
         var cut = ctx.RenderComponent<SkillTable>(p =>
-            p.Add(s => s.IsAuthenticated, false));
+            p.Add(s => s.ShowAdminActions, false));
 
         cut.WaitForState(() => cut.FindComponents<SkillTag>().Any());
-        cut.FindComponent<SkillTag>().Instance.IsAuthenticated.Should().BeFalse();
+        cut.FindComponent<SkillTag>().Instance.ShowAdminActions.Should().BeFalse();
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
-            p.Add(s => s.IsAuthenticated, true));
+            p.Add(s => s.ShowAdminActions, true));
         cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
 
         cut.FindAll(".skill-tag")[0].Drag();
@@ -105,7 +105,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
-            p.Add(s => s.IsAuthenticated, true));
+            p.Add(s => s.ShowAdminActions, true));
         cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
 
         cut.FindAll(".skill-tag")[0].Drag();

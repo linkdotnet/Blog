@@ -27,8 +27,8 @@ public class AboutMePageTests : TestContext
 
         var cut = RenderComponent<AboutMePage>();
 
-        cut.FindComponent<Profile>().Instance.IsAuthenticated.Should().BeTrue();
-        cut.FindComponent<SkillTable>().Instance.IsAuthenticated.Should().BeTrue();
+        cut.FindComponent<Profile>().Instance.ShowAdminActions.Should().BeTrue();
+        cut.FindComponent<SkillTable>().Instance.ShowAdminActions.Should().BeTrue();
     }
 
     [Fact]

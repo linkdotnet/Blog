@@ -20,7 +20,7 @@
         ondragover="event.preventDefault();">
         @foreach (var entry in profileInformationEntries)
         {
-            @if (IsAuthenticated)
+            @if (ShowAdminActions)
             {
                 <li
                     class="item-draggable"
@@ -39,7 +39,7 @@
                 <li>@RenderMarkupString(entry.Content)</li>
             }
         }
-        @if (IsAuthenticated)
+        @if (ShowAdminActions)
         {
             <AddProfileShortItem ValueAdded="@AddValue"></AddProfileShortItem>
         }
@@ -51,7 +51,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
 @code {
     [Parameter]
-    public bool IsAuthenticated { get; set; }
+    public bool ShowAdminActions { get; set; }
 
     private List<ProfileInformationEntry> profileInformationEntries = new();
     private ConfirmDialog Dialog { get; set; }

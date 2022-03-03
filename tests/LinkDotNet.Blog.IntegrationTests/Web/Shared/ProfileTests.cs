@@ -43,7 +43,7 @@ public class ProfileTests : TestContext
     public void ShouldShowAdminActionsWhenLoggedIn()
     {
         RegisterServices();
-        RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true))
+        RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true))
             .FindComponents<AddProfileShortItem>().Should().HaveCount(1);
     }
 
@@ -54,7 +54,7 @@ public class ProfileTests : TestContext
         ProfileInformationEntry entryToDb = null;
         repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
             .Callback<ProfileInformationEntry>(p => entryToDb = p);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
         addShortItemComponent.Find("input").Change("key");
 
@@ -72,7 +72,7 @@ public class ProfileTests : TestContext
         entryToDelete.Id = "SomeId";
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entryToDelete);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         cut.Find(".profile-keypoints li button").Click();
 
         cut.FindComponent<ConfirmDialog>().Find("#ok").Click();
@@ -87,7 +87,7 @@ public class ProfileTests : TestContext
         entryToDelete.Id = "SomeId";
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entryToDelete);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         cut.Find(".profile-keypoints li button").Click();
 
         cut.FindComponent<ConfirmDialog>().Find("#cancel").Click();
@@ -104,7 +104,7 @@ public class ProfileTests : TestContext
         ProfileInformationEntry entryToDb = null;
         repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
             .Callback<ProfileInformationEntry>(p => entryToDb = p);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
         addShortItemComponent.Find("input").Change("key");
 
@@ -126,7 +126,7 @@ public class ProfileTests : TestContext
         ProfileInformationEntry entryToDb = null;
         repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
             .Callback<ProfileInformationEntry>(p => entryToDb = p);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         calculator.Setup(s => s.GetSortOrder(target, profileInformationEntries)).Returns(150);
 
         cut.FindAll("li")[1].Drag();
@@ -142,7 +142,7 @@ public class ProfileTests : TestContext
         var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
         var (repo, _) = RegisterServices();
         SetupGetAll(repo, source);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.IsAuthenticated, true));
+        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
 
         cut.FindAll("li")[0].Drag();
         cut.FindAll("li")[0].Drop();

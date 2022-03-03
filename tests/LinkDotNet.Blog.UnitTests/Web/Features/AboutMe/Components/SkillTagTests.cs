@@ -39,7 +39,7 @@ public class SkillTagTests : TestContext
         var cut = RenderComponent<SkillTag>(p => p
             .Add(
             s => s.Skill, skill)
-            .Add(s => s.IsAuthenticated, true)
+            .Add(s => s.ShowAdminActions, true)
             .Add(s => s.DeleteSkill, () => wasInvoked = true));
 
         cut.Find("button").Click();

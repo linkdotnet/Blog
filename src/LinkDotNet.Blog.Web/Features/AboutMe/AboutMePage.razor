@@ -15,13 +15,13 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-4">
-                <Profile IsAuthenticated="@isAuthenticated"/>
+                <Profile ShowAdminActions="@isAuthenticated"/>
             </div>
             <div class="col-lg-9 col-md-8 tab-container">
                 <div class="row">
                     <div class="col-md12 tab-content">
                         <Card Header="Skills">
-                            <SkillTable IsAuthenticated="@isAuthenticated"></SkillTable>
+                            <SkillTable ShowAdminActions="@isAuthenticated"></SkillTable>
                         </Card>
                     </div>
                 </div>

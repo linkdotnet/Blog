@@ -2,7 +2,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<Skill> repository
 <div>
-        @if (IsAuthenticated)
+        @if (ShowAdminActions)
         {
             <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()"><i class="fas
             fa-plus-square"></i>
@@ -28,12 +28,12 @@
                     <td @ondrop="@(() => HandleDrop(skillLevel))" class="proficiency-level">
                         @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
                         {
-                            @if (IsAuthenticated)
+                            @if (ShowAdminActions)
                             {
                                 <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab"
                                  class="skill-tag">
                                     <SkillTag Skill="@skill"
-                                              IsAuthenticated="@true"
+                                              ShowAdminActions="@true"
                                               DeleteSkill="@(() => DeleteSkill(skill))"/>
                                 </div>
                             }
@@ -50,14 +50,14 @@
         }
         </tbody>
     </table>
-    @if (IsAuthenticated)
+    @if (ShowAdminActions)
     {
         <small for="skill-table">You can drag and drop your skills from one proficency to another</small>
     }
 </div>
 @code {
     [Parameter]
-    public bool IsAuthenticated { get; set; }
+    public bool ShowAdminActions { get; set; }
 
     private AddSkillDialog AddSkillDialog { get; set; }
 

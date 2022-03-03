@@ -6,7 +6,7 @@
     }
     @Skill.Name
 
-    @if (IsAuthenticated)
+    @if (ShowAdminActions)
     {
         <button type="button" class="btn btn-default" aria-label="Delete Skill" @onclick="() => DeleteSkill.InvokeAsync()">
             <i class="fas fa-trash-alt" aria-hidden="true"></i>
@@ -19,7 +19,7 @@
     public Skill Skill { get; set; }
 
     [Parameter]
-    public bool IsAuthenticated { get; set; }
+    public bool ShowAdminActions { get; set; }
 
     [Parameter]
     public EventCallback DeleteSkill { get; set; }
