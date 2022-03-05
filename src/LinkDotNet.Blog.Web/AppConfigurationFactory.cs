@@ -25,6 +25,7 @@ public static class AppConfigurationFactory
             ProfileInformation = profileInformation,
             GiscusConfiguration = giscus,
             DisqusConfiguration = disqus,
+            KofiToken = config["KofiToken"],
         };
 
         return configuration;

@@ -57,7 +57,8 @@ The appsettings.json file has a lot of options to customize the content of the b
   },
  "Disqus": {
   "Shortname": "blog"
- }
+ },
+ "KofiToken": "ABC123"
 }
 
 ```
@@ -88,6 +89,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ProfilePictureUrl         | string         | Displayed profile picture                                                                                                                                       |
 | Giscus                    | node           | Enables the comment section via giscus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below |
 | Disqus                    | node           | Enables the comment section via disqus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below |
+| KofiToken                 | string         | Enables the "Buy me a Coffee" button of Kofi. To aquire the token head down to the "Kofi" section                                                               |
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:
@@ -143,6 +145,13 @@ There is only one real mechanism enabled via Auth0. For more information go to: 
 The main advantage of Auth0 is the easy configurable dashboard on their website.
 
 For testing purposes you can use `services.UseDummyAuthentication();`. This allows every user, who presses Login, to be logged in.
+
+## Donations
+The blog software allows you to integrate via different micro-transaction services. The following chapter will show you how to setup donations.
+
+### Ko-fi
+You can use [Ko-fi](https://Ko-fi.com/) as payment service to receive donations. To aquire the `KofiToken` as seen in the config above, head to [wdigets page](https://Ko-fi.com/manage/widgets), click on "Ko-fi Button".
+Now choose "Image" as type. In the field below under `Copy & Paste Code` you see an `<a href='https://ko-fi.com/XYZ'` tag. Just take the `XYZ` part and put it into `KofiToken`.
 
 ## Search Engine Optimization (SEO)
 The blog includes some of the most important tags to get indexed by a crawler. Furthermore some aspects of the Open Graph specification are implemented.

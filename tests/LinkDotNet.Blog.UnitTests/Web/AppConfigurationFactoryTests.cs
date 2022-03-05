@@ -30,6 +30,7 @@ public class AppConfigurationFactoryTests
                 { "Giscus:Category", "general" },
                 { "Giscus:CategoryId", "generalid" },
                 { "Disqus:Shortname", "blog" },
+                { "KofiToken", "ABC" },
             };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
@@ -60,6 +61,7 @@ public class AppConfigurationFactoryTests
         appConfiguration.GiscusConfiguration.Category.Should().Be("general");
         appConfiguration.GiscusConfiguration.CategoryId.Should().Be("generalid");
         appConfiguration.DisqusConfiguration.Shortname.Should().Be("blog");
+        appConfiguration.KofiToken.Should().Be("ABC");
     }
 
     [Theory]
