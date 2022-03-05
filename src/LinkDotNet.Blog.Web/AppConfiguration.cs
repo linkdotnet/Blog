@@ -31,7 +31,7 @@ public record AppConfiguration
 
     public bool IsDisqusEnabled => DisqusConfiguration != null;
 
-    public string KofiToken { get; set; }
+    public string KofiToken { get; init; }
 
     public bool IsKofiEnabled => !string.IsNullOrEmpty(KofiToken);
 }
