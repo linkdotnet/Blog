@@ -49,7 +49,9 @@ public class CreateNewModel
     public BlogPost ToBlogPost()
     {
         var tags = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
-        DateTime? updatedDate = ShouldUpdateDate ? null : OriginalUpdatedDate;
+        DateTime? updatedDate = ShouldUpdateDate || OriginalUpdatedDate == default
+            ? null
+            : OriginalUpdatedDate;
 
         var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tags);
         blogPost.Id = Id;
