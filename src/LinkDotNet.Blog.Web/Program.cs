@@ -25,6 +25,10 @@ public class Program
     {
         builder.Services.AddRazorPages();
         builder.Services.AddServerSideBlazor();
+        builder.Services.AddSignalR(options =>
+        {
+            options.MaximumReceiveMessageSize = 1024 * 1024;
+        });
         builder.Services.AddSingleton(_ => AppConfigurationFactory.Create(builder.Configuration));
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
