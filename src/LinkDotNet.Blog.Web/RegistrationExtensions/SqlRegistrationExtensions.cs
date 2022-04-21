@@ -2,7 +2,6 @@
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web.RegistrationExtensions;
@@ -13,16 +12,15 @@ public static class SqlRegistrationExtensions
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddTransient(s =>
+        services.AddDbContextFactory<BlogDbContext>(
+        (s, builder) =>
         {
             var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
             var connectionString = configuration.ConnectionString;
-            var dbOptions = new DbContextOptionsBuilder<BlogDbContext>()
-                .UseSqlServer(connectionString, options => options.EnableRetryOnFailure(3, TimeSpan.FromSeconds(30), null))
-                .Options;
+            builder.UseSqlServer(connectionString);
+        },
+        ServiceLifetime.Transient);
 
-            return new PooledDbContextFactory<BlogDbContext>(dbOptions).CreateDbContext();
-        });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 
@@ -30,16 +28,14 @@ public static class SqlRegistrationExtensions
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddTransient(s =>
+        services.AddDbContextFactory<BlogDbContext>(
+        (s, builder) =>
         {
             var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
             var connectionString = configuration.ConnectionString;
-            var dbOptions = new DbContextOptionsBuilder<BlogDbContext>()
-                .UseSqlite(connectionString)
-                .Options;
-
-            return new PooledDbContextFactory<BlogDbContext>(dbOptions).CreateDbContext();
-        });
+            builder.UseSqlite(connectionString);
+        },
+        ServiceLifetime.Transient);
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 }
