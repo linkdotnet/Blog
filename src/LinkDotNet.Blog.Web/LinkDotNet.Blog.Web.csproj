@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <UserSecretsId>aspnet-LinkDotNet.Blog.Web-31CD57F3-BF63-48F3-96A7-22DFD9D6A7F0</UserSecretsId>
     </PropertyGroup>
 
@@ -9,10 +9,10 @@
         <PackageReference Include="Blazored.Toast" Version="3.2.2" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
         <PackageReference Include="Markdig" Version="0.30.2" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.5" />
-        <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.0-preview.4.22251.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.0-preview.4.22229.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-preview.4.22229.2" />
+        <PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0-preview.4.22229.4" />
     </ItemGroup>
 
     <ItemGroup>

@@ -9,6 +9,7 @@
     private const string SelectedMarker = "#selection#";
     private const string CursorMarker = "#cursor#";
 
+#pragma warning disable BL0007
     [Parameter]
     public string Value
     {
@@ -22,6 +23,7 @@
             }
         }
     }
+#pragma warning restore
 
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
