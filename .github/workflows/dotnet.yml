@@ -1,10 +1,14 @@
-name: .NET
+name: dotnet
 
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  
+concurrency:
+  group: dotnet-${{ github.ref }}-1
+  cancel-in-progress: true  
 
 jobs:
   build:
@@ -14,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 7.0.x
         include-prerelease: true
