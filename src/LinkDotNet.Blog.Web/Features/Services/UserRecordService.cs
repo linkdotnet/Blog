@@ -26,7 +26,7 @@ public class UserRecordService : IUserRecordService
         this.localStorageService = localStorageService;
     }
 
-    public async Task StoreUserRecordAsync()
+    public async ValueTask StoreUserRecordAsync()
     {
         try
         {
@@ -38,7 +38,7 @@ public class UserRecordService : IUserRecordService
         }
     }
 
-    private async Task GetAndStoreUserRecordAsync()
+    private async ValueTask GetAndStoreUserRecordAsync()
     {
         var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
         if (userIdentity == null || userIdentity.IsAuthenticated)
@@ -60,7 +60,7 @@ public class UserRecordService : IUserRecordService
         await userRecordRepository.StoreAsync(record);
     }
 
-    private async Task<int> GetIdentifierHashAsync()
+    private async ValueTask<int> GetIdentifierHashAsync()
     {
         var hasKey = await TryGetKey();
         if (hasKey)

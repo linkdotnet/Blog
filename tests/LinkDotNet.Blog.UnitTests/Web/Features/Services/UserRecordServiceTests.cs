@@ -76,13 +76,13 @@ public class UserRecordServiceTests : TestContext
     }
 
     [Fact]
-    public async Task ShouldNotThrowExceptionToOutsideWorld()
+    public void ShouldNotThrowExceptionToOutsideWorld()
     {
         localStorageService.Setup(l => l.SetItemAsync("user", It.IsAny<Guid>())).Throws<Exception>();
 
-        Func<Task> act = () => sut.StoreUserRecordAsync();
+        var act = () => sut.StoreUserRecordAsync();
 
-        await act.Should().NotThrowAsync<Exception>();
+        act.Should().NotThrow<Exception>();
     }
 
     [Fact]

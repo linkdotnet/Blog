@@ -15,8 +15,5 @@ public static class UrlExtensions
         return successful ? uri.ToString() : url;
     }
 
-    private static bool IsAbsoluteUrl(string url)
-    {
-        return Uri.TryCreate(url, UriKind.Absolute, out _);
-    }
+    private static bool IsAbsoluteUrl(string url) => Uri.TryCreate(url, UriKind.Absolute, out _);
 }
