@@ -5,6 +5,7 @@ using System.ServiceModel.Syndication;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -62,6 +63,7 @@ public class RssFeedController : ControllerBase
             {
                 PublishDate = blogPost.UpdatedDate,
                 LastUpdatedTime = blogPost.UpdatedDate,
+                ElementExtensions = { new XElement("image", blogPost.PreviewImageUrl) },
             };
             blogPostItems.Add(item);
         }

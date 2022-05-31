@@ -37,12 +37,14 @@ public class RssFeedControllerTests
         var blogPost1 = new BlogPostBuilder()
             .WithTitle("1")
             .WithShortDescription("Short 1")
+            .WithPreviewImageUrl("preview1")
             .WithUpdatedDate(new DateTime(2022, 5, 1))
             .Build();
         blogPost1.Id = "1";
         var blogPost2 = new BlogPostBuilder()
             .WithTitle("2")
             .WithShortDescription("Short 2")
+            .WithPreviewImageUrl("preview2")
             .WithUpdatedDate(new DateTime(2022, 6, 1))
             .Build();
         blogPost2.Id = "2";
@@ -57,6 +59,6 @@ public class RssFeedControllerTests
 
         xml.Should().NotBeNull();
         var content = Encoding.UTF8.GetString(xml.FileContents);
-        content.Should().Contain("<rss\r\n  version=\"2.0\">\r\n  <channel>\r\n    <title>Test</title>\r\n    <link>http://localhost/</link>\r\n    <description>Description</description>\r\n    <item>\r\n      <guid\r\n        isPermaLink=\"false\">2</guid>\r\n      <link>http://localhost//blogPost/2</link>\r\n      <title>2</title>\r\n      <description>Short 2</description>\r\n      <pubDate>Wed, 01 Jun 2022 00:00:00 +0200</pubDate>\r\n    </item>\r\n    <item>\r\n      <guid\r\n        isPermaLink=\"false\">1</guid>\r\n      <link>http://localhost//blogPost/1</link>\r\n      <title>1</title>\r\n      <description>Short 1</description>\r\n      <pubDate>Sun, 01 May 2022 00:00:00 +0200</pubDate>\r\n    </item>\r\n  </channel>\r\n</rss>");
+        content.Should().Contain("<rss\r\n  version=\"2.0\">\r\n  <channel>\r\n    <title>Test</title>\r\n    <link>http://localhost/</link>\r\n    <description>Description</description>\r\n    <item>\r\n      <guid\r\n        isPermaLink=\"false\">2</guid>\r\n      <link>http://localhost//blogPost/2</link>\r\n      <title>2</title>\r\n      <description>Short 2</description>\r\n      <pubDate>Wed, 01 Jun 2022 00:00:00 +0200</pubDate>\r\n      <image>preview2</image>\r\n    </item>\r\n    <item>\r\n      <guid\r\n        isPermaLink=\"false\">1</guid>\r\n      <link>http://localhost//blogPost/1</link>\r\n      <title>1</title>\r\n      <description>Short 1</description>\r\n      <pubDate>Sun, 01 May 2022 00:00:00 +0200</pubDate>\r\n      <image>preview1</image>\r\n    </item>\r\n  </channel>\r\n</rss>");
     }
 }
