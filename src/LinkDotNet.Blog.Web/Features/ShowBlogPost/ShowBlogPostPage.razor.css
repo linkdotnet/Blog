@@ -21,7 +21,7 @@
 
 .blogpost-content {
     padding-top: 20px;
-    overflow-x: auto;
+    overflow-x: hidden;
 }
 
 .blogpost-content img {
