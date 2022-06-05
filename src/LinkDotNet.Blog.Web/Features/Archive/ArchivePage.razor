@@ -6,7 +6,7 @@
 <OgData Title="Archive"></OgData>
 
 <div class="ps-2">
-    <h3 class="pb-3">Archive</h3>
+    <h3 class="pb-3">Archive (@blogPostCount posts)</h3>
 
     @if (blogPostsPerYear == null)
     {
@@ -29,13 +29,15 @@
 
 @code {
     private List<IGrouping<int, BlogPost>> blogPostsPerYear;
+    private int blogPostCount;
 
     protected override async Task OnInitializedAsync()
     {
-        blogPostsPerYear = (await repository.GetAllAsync(p => p.IsPublished))
+        var blogPosts = await repository.GetAllAsync(p => p.IsPublished);
+        blogPostCount = blogPosts.Count;
+        blogPostsPerYear = blogPosts
             .GroupBy(r => r.UpdatedDate.Year)
             .OrderByDescending(r => r.Key)
             .ToList();
     }
-
 }

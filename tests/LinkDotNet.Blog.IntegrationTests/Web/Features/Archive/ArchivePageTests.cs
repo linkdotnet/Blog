@@ -49,6 +49,20 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll("h2").Should().HaveCount(1);
     }
 
+    [Fact]
+    public async Task ShouldShowTotalAmountOfBlogPosts()
+    {
+        using var ctx = new TestContext();
+        ctx.Services.AddScoped(_ => Repository);
+        await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 1, 1), "Blog Post 1"));
+        await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 2, 1), "Blog Post 2"));
+
+        var cut = ctx.RenderComponent<ArchivePage>();
+
+        cut.WaitForElements("h2");
+        cut.Find("h3").TextContent.Should().Be("Archive (2 posts)");
+    }
+
     private static BlogPost CreateBlogPost(DateTime date, string title)
     {
         return new BlogPostBuilder()
