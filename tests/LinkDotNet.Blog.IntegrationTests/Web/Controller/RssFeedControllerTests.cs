@@ -43,7 +43,7 @@ public class RssFeedControllerTests
         blogPost1.Id = "1";
         var blogPost2 = new BlogPostBuilder()
             .WithTitle("2")
-            .WithShortDescription("Short 2")
+            .WithShortDescription("**Short 2**")
             .WithPreviewImageUrl("preview2")
             .WithUpdatedDate(new DateTime(2022, 6, 1))
             .Build();

@@ -7,7 +7,6 @@
 @inject IRepository<BlogPost> blogPostRepository
 @inject IJSRuntime jsRuntime
 @inject IUserRecordService userRecordService
-@inherits MarkdownComponentBase
 
 @if (BlogPost == null)
 {
@@ -34,7 +33,7 @@ else
                 </div>
 
                 <div class="blogpost-content">
-                    @(RenderMarkupString(BlogPost.Content))
+                    @(MarkdownConverter.RenderMarkupString(BlogPost.Content))
                 </div>
             </div>
             <div class="d-flex justify-content-between py-2">

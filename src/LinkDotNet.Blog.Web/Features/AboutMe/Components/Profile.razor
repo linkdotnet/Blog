@@ -2,7 +2,6 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Components
 @using LinkDotNet.Blog.Web.Features.Services
-@inherits LinkDotNet.Blog.Web.Features.MarkdownComponentBase
 
 @inject AppConfiguration appConfiguration
 @inject IRepository<ProfileInformationEntry> repository
@@ -31,12 +30,12 @@
                     <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
-                    @RenderMarkupString(entry.Content)
+                    @MarkdownConverter.RenderMarkupString(entry.Content)
                 </li>
             }
             else
             {
-                <li>@RenderMarkupString(entry.Content)</li>
+                <li>@MarkdownConverter.RenderMarkupString(entry.Content)</li>
             }
         }
         @if (ShowAdminActions)

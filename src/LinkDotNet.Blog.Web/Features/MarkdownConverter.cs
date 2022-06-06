@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public abstract class MarkdownComponentBase : ComponentBase
+public static class MarkdownConverter
 {
     private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
@@ -14,7 +14,7 @@ public abstract class MarkdownComponentBase : ComponentBase
         .UseBootstrap()
         .Build();
 
-    protected static MarkupString RenderMarkupString(string content)
+    public static MarkupString RenderMarkupString(string content)
     {
         if (string.IsNullOrEmpty(content))
         {
@@ -22,5 +22,15 @@ public abstract class MarkdownComponentBase : ComponentBase
         }
 
         return (MarkupString)Markdown.ToHtml(content, MarkdownPipeline);
+    }
+
+    public static string RenderPlanString(string markdown)
+    {
+        if (string.IsNullOrEmpty(markdown))
+        {
+            return default;
+        }
+
+        return Markdown.ToPlainText(markdown, MarkdownPipeline);
     }
 }

@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LinkDotNet.Blog.Web.Controller;
@@ -59,7 +60,8 @@ public class RssFeedController : ControllerBase
         foreach (var blogPost in blogPosts)
         {
             var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-            var item = new SyndicationItem(blogPost.Title, blogPost.ShortDescription, new Uri(blogPostUrl), blogPost.Id, blogPost.UpdatedDate)
+            var shortDescription = MarkdownConverter.RenderPlanString(blogPost.ShortDescription).Trim();
+            var item = new SyndicationItem(blogPost.Title, shortDescription, new Uri(blogPostUrl), blogPost.Id, blogPost.UpdatedDate)
             {
                 PublishDate = blogPost.UpdatedDate,
                 LastUpdatedTime = blogPost.UpdatedDate,

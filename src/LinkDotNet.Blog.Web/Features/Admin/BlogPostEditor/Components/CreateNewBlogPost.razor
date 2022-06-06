@@ -1,5 +1,4 @@
 ﻿@using LinkDotNet.Blog.Domain
-@inherits MarkdownComponentBase
 
 <h3>@Title</h3>
 
@@ -59,10 +58,10 @@
                 <h1>@model.Title</h1>
             </header>
             <div>
-                @(RenderMarkupString(model.ShortDescription))
+                @(MarkdownConverter.RenderMarkupString(model.ShortDescription))
             </div>
             <div>
-                @(RenderMarkupString(model.Content))
+                @(MarkdownConverter.RenderMarkupString(model.Content))
             </div>
         </div>
     </div>

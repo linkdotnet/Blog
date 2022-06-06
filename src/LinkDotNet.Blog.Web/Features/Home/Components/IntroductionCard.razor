@@ -1,13 +1,12 @@
 ﻿@using LinkDotNet.Blog.Domain
 @inject AppConfiguration configuration
-@inherits LinkDotNet.Blog.Web.Features.MarkdownComponentBase
 
 <div style="--profile-background: url(@configuration.Introduction.BackgroundUrl)" class="@IntroductionClass">
     <div class="introduction-container">
         <div class="profile-picture" style="--profile-image: url(@configuration.Introduction.ProfilePictureUrl)">
         </div>
         <div class="profile-text d-flex flex-column">
-            <div>@RenderMarkupString(configuration.Introduction.Description)</div>
+            <div>@MarkdownConverter.RenderMarkupString(configuration.Introduction.Description)</div>
             <SocialAccounts Social="@configuration.Social"></SocialAccounts>
         </div>
     </div>
