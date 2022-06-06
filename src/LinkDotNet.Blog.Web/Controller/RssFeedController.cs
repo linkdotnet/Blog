@@ -79,12 +79,9 @@ public class RssFeedController : ControllerBase
         return item;
     }
 
-    private async Task<List<SyndicationItem>> GetBlogPostItems(string url)
+    private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
     {
-        var blogPostItems = new List<SyndicationItem>();
         var blogPosts = await blogPostRepository.GetAllAsync(f => f.IsPublished, orderBy: post => post.UpdatedDate);
-        blogPostItems.AddRange(blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp)));
-
-        return blogPostItems;
+        return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
     }
 }
