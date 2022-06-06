@@ -16,21 +16,15 @@ public static class MarkdownConverter
 
     public static MarkupString ToMarkupString(string markdown)
     {
-        if (string.IsNullOrEmpty(markdown))
-        {
-            return default;
-        }
-
-        return (MarkupString)Markdown.ToHtml(markdown, MarkdownPipeline);
+        return string.IsNullOrEmpty(markdown)
+            ? default
+            : (MarkupString)Markdown.ToHtml(markdown, MarkdownPipeline);
     }
 
     public static string ToPlainString(string markdown)
     {
-        if (string.IsNullOrEmpty(markdown))
-        {
-            return default;
-        }
-
-        return Markdown.ToPlainText(markdown, MarkdownPipeline);
+        return string.IsNullOrEmpty(markdown)
+            ? default
+            : Markdown.ToPlainText(markdown, MarkdownPipeline);
     }
 }
