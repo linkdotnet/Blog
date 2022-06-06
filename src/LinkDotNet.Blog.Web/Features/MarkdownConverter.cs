@@ -24,7 +24,7 @@ public static class MarkdownConverter
         return (MarkupString)Markdown.ToHtml(content, MarkdownPipeline);
     }
 
-    public static string RenderPlanString(string markdown)
+    public static string ToPlainString(string markdown)
     {
         if (string.IsNullOrEmpty(markdown))
         {

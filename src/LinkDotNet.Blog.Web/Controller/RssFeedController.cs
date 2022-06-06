@@ -30,7 +30,8 @@ public class RssFeedController : ControllerBase
     public async Task<IActionResult> GetRssFeed()
     {
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-        var feed = new SyndicationFeed(appConfiguration.BlogName, appConfiguration.Introduction?.Description, new Uri(url))
+        var introductionDescription = MarkdownConverter.ToPlainString(appConfiguration.Introduction?.Description);
+        var feed = new SyndicationFeed(appConfiguration.BlogName, introductionDescription, new Uri(url))
         {
             Items = await GetBlogPostItems(url),
         };
@@ -60,7 +61,7 @@ public class RssFeedController : ControllerBase
         foreach (var blogPost in blogPosts)
         {
             var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-            var shortDescription = MarkdownConverter.RenderPlanString(blogPost.ShortDescription).Trim();
+            var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription).Trim();
             var item = new SyndicationItem(blogPost.Title, shortDescription, new Uri(blogPostUrl), blogPost.Id, blogPost.UpdatedDate)
             {
                 PublishDate = blogPost.UpdatedDate,
