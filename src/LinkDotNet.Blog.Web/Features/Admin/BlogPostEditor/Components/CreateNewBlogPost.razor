@@ -58,10 +58,10 @@
                 <h1>@model.Title</h1>
             </header>
             <div>
-                @(MarkdownConverter.RenderMarkupString(model.ShortDescription))
+                @(MarkdownConverter.ToMarkupString(model.ShortDescription))
             </div>
             <div>
-                @(MarkdownConverter.RenderMarkupString(model.Content))
+                @(MarkdownConverter.ToMarkupString(model.Content))
             </div>
         </div>
     </div>

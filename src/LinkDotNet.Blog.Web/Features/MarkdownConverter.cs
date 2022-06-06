@@ -14,14 +14,14 @@ public static class MarkdownConverter
         .UseBootstrap()
         .Build();
 
-    public static MarkupString RenderMarkupString(string content)
+    public static MarkupString ToMarkupString(string markdown)
     {
-        if (string.IsNullOrEmpty(content))
+        if (string.IsNullOrEmpty(markdown))
         {
             return default;
         }
 
-        return (MarkupString)Markdown.ToHtml(content, MarkdownPipeline);
+        return (MarkupString)Markdown.ToHtml(markdown, MarkdownPipeline);
     }
 
     public static string ToPlainString(string markdown)

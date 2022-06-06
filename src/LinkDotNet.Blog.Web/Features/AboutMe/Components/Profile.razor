@@ -30,12 +30,12 @@
                     <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
                         <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </button>
-                    @MarkdownConverter.RenderMarkupString(entry.Content)
+                    @MarkdownConverter.ToMarkupString(entry.Content)
                 </li>
             }
             else
             {
-                <li>@MarkdownConverter.RenderMarkupString(entry.Content)</li>
+                <li>@MarkdownConverter.ToMarkupString(entry.Content)</li>
             }
         }
         @if (ShowAdminActions)

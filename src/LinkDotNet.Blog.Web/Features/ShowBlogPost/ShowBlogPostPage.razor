@@ -33,7 +33,7 @@ else
                 </div>
 
                 <div class="blogpost-content">
-                    @(MarkdownConverter.RenderMarkupString(BlogPost.Content))
+                    @(MarkdownConverter.ToMarkupString(BlogPost.Content))
                 </div>
             </div>
             <div class="d-flex justify-content-between py-2">

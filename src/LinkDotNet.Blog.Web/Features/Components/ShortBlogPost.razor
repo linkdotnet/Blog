@@ -25,7 +25,7 @@
     <div class="description">
       <h1>@BlogPost.Title</h1>
       <h2></h2>
-      <p>@MarkdownConverter.RenderMarkupString(BlogPost.ShortDescription)</p>
+      <p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
       <p class="read-more">
         <a href="/blogPost/@BlogPost.Id">Read More</a>
       </p>
@@ -46,7 +46,7 @@
 
     protected override void OnInitialized()
     {
-      var images = GetAllOccurrences(MarkdownConverter.RenderMarkupString(BlogPost.Content).Value, "<img");
+      var images = GetAllOccurrences(MarkdownConverter.ToMarkupString(BlogPost.Content).Value, "<img");
       var words = BlogPost.Content.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries).Length;
 
         var readTimeInPrecision = images * 15 + words / 3.333;
