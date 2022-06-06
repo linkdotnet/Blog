@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,14 +37,7 @@ public class RssFeedController : ControllerBase
             Items = await GetBlogPostItems(url),
         };
 
-        var settings = new XmlWriterSettings
-        {
-            Encoding = Encoding.UTF8,
-            NewLineHandling = NewLineHandling.Entitize,
-            NewLineOnAttributes = true,
-            Indent = true,
-            Async = true,
-        };
+        var settings = CreateXmlWriterSettings();
 
         using var stream = new MemoryStream();
         await using var xmlWriter = XmlWriter.Create(stream, settings);
@@ -54,22 +48,42 @@ public class RssFeedController : ControllerBase
         return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
     }
 
+    private static XmlWriterSettings CreateXmlWriterSettings()
+    {
+        var settings = new XmlWriterSettings
+        {
+            Encoding = Encoding.UTF8,
+            NewLineHandling = NewLineHandling.Entitize,
+            NewLineOnAttributes = true,
+            Indent = true,
+            Async = true,
+        };
+        return settings;
+    }
+
+    private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPost blogPost)
+    {
+        var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
+        var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription).Trim();
+        var item = new SyndicationItem(
+            blogPost.Title,
+            shortDescription,
+            new Uri(blogPostUrl),
+            blogPost.Id,
+            blogPost.UpdatedDate)
+        {
+            PublishDate = blogPost.UpdatedDate,
+            LastUpdatedTime = blogPost.UpdatedDate,
+            ElementExtensions = { new XElement("image", blogPost.PreviewImageUrl) },
+        };
+        return item;
+    }
+
     private async Task<List<SyndicationItem>> GetBlogPostItems(string url)
     {
         var blogPostItems = new List<SyndicationItem>();
         var blogPosts = await blogPostRepository.GetAllAsync(f => f.IsPublished, orderBy: post => post.UpdatedDate);
-        foreach (var blogPost in blogPosts)
-        {
-            var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-            var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription).Trim();
-            var item = new SyndicationItem(blogPost.Title, shortDescription, new Uri(blogPostUrl), blogPost.Id, blogPost.UpdatedDate)
-            {
-                PublishDate = blogPost.UpdatedDate,
-                LastUpdatedTime = blogPost.UpdatedDate,
-                ElementExtensions = { new XElement("image", blogPost.PreviewImageUrl) },
-            };
-            blogPostItems.Add(item);
-        }
+        blogPostItems.AddRange(blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp)));
 
         return blogPostItems;
     }
