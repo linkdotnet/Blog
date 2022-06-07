@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <UserSecretsId>aspnet-LinkDotNet.Blog.Web-31CD57F3-BF63-48F3-96A7-22DFD9D6A7F0</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
