@@ -39,6 +39,7 @@ public class RssFeedControllerTests
             .WithShortDescription("Short 1")
             .WithPreviewImageUrl("preview1")
             .WithUpdatedDate(new DateTime(2022, 5, 1))
+            .WithTags("C#", ".NET")
             .Build();
         blogPost1.Id = "1";
         var blogPost2 = new BlogPostBuilder()
@@ -59,6 +60,31 @@ public class RssFeedControllerTests
 
         xml.Should().NotBeNull();
         var content = Encoding.UTF8.GetString(xml.FileContents);
-        content.Should().Contain("<rss\r\n  version=\"2.0\">\r\n  <channel>\r\n    <title>Test</title>\r\n    <link>http://localhost/</link>\r\n    <description>Description</description>\r\n    <item>\r\n      <guid\r\n        isPermaLink=\"false\">2</guid>\r\n      <link>http://localhost//blogPost/2</link>\r\n      <title>2</title>\r\n      <description>Short 2</description>\r\n      <pubDate>Wed, 01 Jun 2022 00:00:00 +0200</pubDate>\r\n      <image>preview2</image>\r\n    </item>\r\n    <item>\r\n      <guid\r\n        isPermaLink=\"false\">1</guid>\r\n      <link>http://localhost//blogPost/1</link>\r\n      <title>1</title>\r\n      <description>Short 1</description>\r\n      <pubDate>Sun, 01 May 2022 00:00:00 +0200</pubDate>\r\n      <image>preview1</image>\r\n    </item>\r\n  </channel>\r\n</rss>");
+        content.Should().Contain(
+@"<rss version=""2.0"">
+  <channel>
+    <title>Test</title>
+    <link>http://localhost/</link>
+    <description>Description</description>
+    <item>
+      <guid isPermaLink=""false"">2</guid>
+      <link>http://localhost//blogPost/2</link>
+      <title>2</title>
+      <description>Short 2</description>
+      <pubDate>Wed, 01 Jun 2022 00:00:00 +0200</pubDate>
+      <image>preview2</image>
+    </item>
+    <item>
+      <guid isPermaLink=""false"">1</guid>
+      <link>http://localhost//blogPost/1</link>
+      <category>C#</category>
+      <category>.NET</category>
+      <title>1</title>
+      <description>Short 1</description>
+      <pubDate>Sun, 01 May 2022 00:00:00 +0200</pubDate>
+      <image>preview1</image>
+    </item>
+  </channel>
+</rss>");
     }
 }

@@ -25,6 +25,6 @@ public static class MarkdownConverter
     {
         return string.IsNullOrEmpty(markdown)
             ? default
-            : Markdown.ToPlainText(markdown, MarkdownPipeline);
+            : Markdown.ToPlainText(markdown, MarkdownPipeline).TrimEnd('\r', '\n');
     }
 }

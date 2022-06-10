@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
@@ -37,15 +38,19 @@ public class RssFeedController : ControllerBase
             Items = await GetBlogPostItems(url),
         };
 
-        var settings = CreateXmlWriterSettings();
-
         using var stream = new MemoryStream();
+        await WriteRssInfoToStreamAsync(stream, feed);
+
+        return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
+    }
+
+    private static async Task WriteRssInfoToStreamAsync(Stream stream, SyndicationFeed feed)
+    {
+        var settings = CreateXmlWriterSettings();
         await using var xmlWriter = XmlWriter.Create(stream, settings);
         var rssFormatter = new Rss20FeedFormatter(feed, false);
         rssFormatter.WriteTo(xmlWriter);
         await xmlWriter.FlushAsync();
-
-        return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
     }
 
     private static XmlWriterSettings CreateXmlWriterSettings()
@@ -54,7 +59,6 @@ public class RssFeedController : ControllerBase
         {
             Encoding = Encoding.UTF8,
             NewLineHandling = NewLineHandling.Entitize,
-            NewLineOnAttributes = true,
             Indent = true,
             Async = true,
         };
@@ -64,7 +68,7 @@ public class RssFeedController : ControllerBase
     private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPost blogPost)
     {
         var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-        var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription).Trim();
+        var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription);
         var item = new SyndicationItem(
             blogPost.Title,
             shortDescription,
@@ -76,7 +80,17 @@ public class RssFeedController : ControllerBase
             LastUpdatedTime = blogPost.UpdatedDate,
             ElementExtensions = { new XElement("image", blogPost.PreviewImageUrl) },
         };
+
+        AddCategories(item.Categories, blogPost);
         return item;
+    }
+
+    private static void AddCategories(ICollection<SyndicationCategory> categories, BlogPost blogPost)
+    {
+        foreach (var tag in blogPost.Tags ?? Array.Empty<Tag>())
+        {
+            categories.Add(new SyndicationCategory(tag.Content));
+        }
     }
 
     private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
