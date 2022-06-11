@@ -60,8 +60,8 @@ public class RssFeedControllerTests
 
         xml.Should().NotBeNull();
         var content = Encoding.UTF8.GetString(xml.FileContents);
-        content.Should().Contain(
-@"<rss version=""2.0"">
+        content.Should().Match(
+@"*<rss version=""2.0"">
   <channel>
     <title>Test</title>
     <link>http://localhost/</link>
@@ -71,7 +71,7 @@ public class RssFeedControllerTests
       <link>http://localhost//blogPost/2</link>
       <title>2</title>
       <description>Short 2</description>
-      <pubDate>Wed, 01 Jun 2022 00:00:00 +0200</pubDate>
+      <pubDate>Wed, 01 Jun 2022 00:00:00*</pubDate>
       <image>preview2</image>
     </item>
     <item>
@@ -81,7 +81,7 @@ public class RssFeedControllerTests
       <category>.NET</category>
       <title>1</title>
       <description>Short 1</description>
-      <pubDate>Sun, 01 May 2022 00:00:00 +0200</pubDate>
+      <pubDate>Sun, 01 May 2022 00:00:00*</pubDate>
       <image>preview1</image>
     </item>
   </channel>

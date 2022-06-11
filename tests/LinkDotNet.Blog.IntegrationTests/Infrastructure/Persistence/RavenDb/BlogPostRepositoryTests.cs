@@ -162,6 +162,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
             ConfigureServer(new TestServerOptions
             {
                 DataDirectory = "./RavenDbTest/",
+                FrameworkVersion = null,
             });
         }
     }
