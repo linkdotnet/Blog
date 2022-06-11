@@ -1,4 +1,5 @@
 ﻿@page "/dashboard"
+@using Blazorise;
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components
 @inject IDashboardService dashboardService
@@ -24,15 +25,29 @@
         </div>
         <div class="row mt-3">
             <div class="col-12">
-                <VisitCountPerPage></VisitCountPerPage>
+                <Tabs SelectedTab="@selectedTab" SelectedTabChanged="@(s => selectedTab = s)" RenderMode="TabsRenderMode.LazyLoad">
+                    <Items>
+                        <Tab Name="blogpost">Visit counter per post</Tab>
+                        <Tab Name="visitors">Visitors per day</Tab>
+                    </Items>
+                    <Content>
+                        <TabPanel Name="blogpost">
+                            <VisitCountPerPage></VisitCountPerPage>
+                        </TabPanel>
+                        <TabPanel Name="visitors">
+                            <ClicksPerDay></ClicksPerDay>
+                        </TabPanel>
+                    </Content>
+                </Tabs>
+                
             </div>
         </div>
     </div>
 </div>
 
 @code {
-
     private DashboardData data = new();
+    private string selectedTab = "blogpost";
 
     protected override async Task OnInitializedAsync()
     {

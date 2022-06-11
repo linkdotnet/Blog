@@ -1,0 +1,53 @@
+@using Blazorise.Charts
+@using LinkDotNet.Blog.Infrastructure.Persistence.Sql
+@using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
+@using Microsoft.EntityFrameworkCore
+@inject BlogDbContext blogDbContext
+
+<div class="card">
+    <div class="card-header">Visits per days</div>
+    <div class="card-body">
+        <div class="row">
+            <DateRangeSelector FilterChanged="RefreshCount"></DateRangeSelector>
+            <LineChart TItem="int" @ref="lineChart"></LineChart>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Filter filter = new();
+    private LineChart<int> lineChart;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadClicksPerDayAsync();
+    }
+    
+    private async Task RefreshCount(Filter newBeginning)
+    {
+        filter = newBeginning;
+        await lineChart.Clear();
+        await LoadClicksPerDayAsync();
+    }
+
+    private async Task LoadClicksPerDayAsync()
+    {
+        var dateToClicks = (await blogDbContext.UserRecords
+            .Where(ur => !filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
+            .Where(ur => !filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate)
+            .OrderBy(ur => ur.DateTimeUtcClicked)
+            .ToListAsync())
+            .GroupBy(ur => ur.DateTimeUtcClicked.Date)
+            .ToDictionary(k => k.Key.ToShortDateString(), v => v.Count());
+
+        await lineChart.AddLabelsDatasetsAndUpdate(dateToClicks.Keys.ToList(), new LineChartDataset<int>
+        {
+            Label = "Clicks per day",
+            Data = dateToClicks.Values.ToList(),
+            Fill = true,
+            PointRadius = 3,
+            CubicInterpolationMode = "monotone",
+        });
+    }
+
+}

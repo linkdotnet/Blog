@@ -6,6 +6,8 @@
 
     <ItemGroup>
         <PackageReference Include="Blazored.Toast" Version="3.2.2" />
+        <PackageReference Include="Blazorise.Bootstrap5" Version="1.0.5" />
+        <PackageReference Include="Blazorise.Charts" Version="1.0.5" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" />
         <PackageReference Include="Markdig" Version="0.30.2" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.0-preview.4.22251.1" />

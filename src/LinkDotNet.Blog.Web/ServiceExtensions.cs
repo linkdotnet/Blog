@@ -1,4 +1,6 @@
-﻿using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
+﻿using Blazorise;
+using Blazorise.Bootstrap5;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Services;
@@ -17,5 +19,7 @@ public static class ServiceExtensions
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlFileWriter, XmlFileWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
+
+        services.AddBlazorise().AddBootstrap5Providers();
     }
 }
