@@ -147,10 +147,6 @@ section {
     color: var(--white);
 }
 
-body::-webkit-scrollbar {
-    display: none;
-}
-
 code {
     font-family: var(--code-font), cursive;
 }
