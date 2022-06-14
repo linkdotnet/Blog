@@ -68,15 +68,15 @@
     display: inline-block;
 }
 .blog-card .details .date:before {
-    font-family: "Font Awesome 5 Free";
+    font-family: 'icons';
     font-weight: 900;
     margin-right: 10px;
-    content: "\f133";
+    content: "\e953";
 }
 .blog-card .details .tags ul:before {
-    font-family: "Font Awesome 5 Free";
+    font-family: 'icons';
     font-weight: 900;
-    content: "\f02b";
+    content: "\e936";
     margin-right: 10px;
 }
 .blog-card .details .tags li {
@@ -103,8 +103,8 @@
     position: relative;
 }
 .blog-card .description .read-more a:after {
-    content: '\f0a9';
-    font-family: "Font Awesome 5 Free";
+    font-family: 'icons';
+    content: '\ea42';
     font-weight: 900;
     text-decoration: none;
     margin-left: -10px;
@@ -117,10 +117,10 @@
 }
 
 .blog-card .read-time:before {
-    font-family: "Font Awesome 5 Free";
+    font-family: 'icons';
     font-weight: 900;
     margin-right: 10px;
-    content: "\f017";
+    content: "\e94f";
 }
 
 .blog-card p {

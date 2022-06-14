@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.ttf?34nbgi') format('truetype'),
-    url('fonts/icons.woff?34nbgi') format('woff'),
-    url('fonts/icons.svg?34nbgi#icons') format('svg');
+    url('fonts/icons.ttf?ons2jr') format('truetype'),
+    url('fonts/icons.woff?ons2jr') format('woff'),
+    url('fonts/icons.svg?ons2jr#icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -52,6 +52,12 @@ i, .icomoon-liga {
 .price-tags:before {
   content: "\e936";
 }
+.clock2:before {
+  content: "\e94f";
+}
+.calendar:before {
+  content: "\e953";
+}
 .user-tie:before {
   content: "\e976";
 }
@@ -72,6 +78,9 @@ i, .icomoon-liga {
 }
 .plus:before {
   content: "\ea0a";
+}
+.circle-right:before {
+  content: "\ea42";
 }
 .twitter:before {
   content: "\ea96";
