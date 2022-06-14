@@ -2,11 +2,11 @@
 @inherits LayoutComponentBase
 
 <BlazoredToasts Position="ToastPosition.BottomRight" />
-<div class="position-relative">
+<div class="position-relative min-vh-100">
     <NavMenu/>
 
-    <main>
+    <main class="py-4">
         @Body
     </main>
+    <Footer></Footer>
 </div>
-<Footer></Footer>

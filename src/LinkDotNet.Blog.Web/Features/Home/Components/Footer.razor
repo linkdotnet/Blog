@@ -1,10 +1,8 @@
 @inject AppConfiguration appConfiguration
 
-<div class="py-4">
-    <footer class="text-center container">
-        <span class="py-2 mb-0 text-muted">© @DateTime.Now.Year @CopyrightName</span>
-    </footer>
-</div>
+<footer id="footer" class="text-center">
+    <span class="py-2 mb-0 text-muted">© @DateTime.Now.Year @CopyrightName</span>
+</footer>
 @code {
     private string CopyrightName => appConfiguration.IsAboutMeEnabled
         ? appConfiguration.ProfileInformation.Name
