@@ -4,9 +4,8 @@
 <div>
         @if (ShowAdminActions)
         {
-            <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()"><i class="fas
-            fa-plus-square"></i>
-                Add skill</button>
+            <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()">
+                <i class="plus"></i>Add skill</button>
             <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
         }
     </div>
