@@ -51,21 +51,22 @@
 
     private async Task LoadBlogPostInformationAsync()
     {
-        visitData = await (from ur in blogDbContext.UserRecords
-                           where (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
-                           && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate)
-                           join bp in blogDbContext.BlogPosts
-                               on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
-                           group new { ur, bp } by new { ur.UrlClicked }
-            into gp
-                           orderby gp.Count() descending
-                           select new VisitCountPageData
+        var query = from ur in blogDbContext.UserRecords
+            where (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
+                  && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate)
+            join bp in blogDbContext.BlogPosts
+                on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
+            group new { ur, bp } by new { ur.UrlClicked } into gp
+            orderby gp.Count() descending
+            select new VisitCountPageData
             {
                 Id = gp.FirstOrDefault().bp.Id,
                 Title = gp.FirstOrDefault().bp.Title,
                 Likes = gp.FirstOrDefault().bp.Likes,
                 ClickCount = gp.Count()
-            }).ToListAsync();
+            };
+        var sql = query.ToQueryString();
+        visitData = await query.ToListAsync();
     }
 
     private async Task RefreshVisitCount(Filter newBeginning)
