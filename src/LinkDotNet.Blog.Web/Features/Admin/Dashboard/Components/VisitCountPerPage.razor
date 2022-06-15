@@ -65,7 +65,6 @@
                 Likes = gp.FirstOrDefault().bp.Likes,
                 ClickCount = gp.Count()
             };
-        var sql = query.ToQueryString();
         visitData = await query.ToListAsync();
     }
 
