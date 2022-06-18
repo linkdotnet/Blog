@@ -3,8 +3,8 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
-@inject IRepository<BlogPost> blogPostRepository
-@inject IToastService toastService
+@inject IRepository<BlogPost> BlogPostRepository
+@inject IToastService ToastService
 
 @if (blogPostFromDb != null)
 {
@@ -32,13 +32,13 @@ else
             throw new ArgumentNullException(nameof(BlogPostId), "You have to provide an id");
         }
 
-        blogPostFromDb = await blogPostRepository.GetByIdAsync(BlogPostId);
+        blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
     }
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
         blogPostFromDb.Update(blogPost);
-        await blogPostRepository.StoreAsync(blogPostFromDb);
-        toastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
+        await BlogPostRepository.StoreAsync(blogPostFromDb);
+        ToastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
     }
 }

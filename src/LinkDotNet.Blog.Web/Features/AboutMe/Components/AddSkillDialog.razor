@@ -1,6 +1,6 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Web.Features.Components
-@inject IToastService toastService
+@inject IToastService ToastService
 <ModalDialog @ref="Dialog" Title="Add Skill">
     <EditForm Model="@model" OnValidSubmit="CreateSkillItem">
         <DataAnnotationsValidator />
@@ -50,6 +50,6 @@
         var skill = Skill.Create(model.Skill, model.ImageUrl, model.Capability, model.Proficiency);
         await SkillAdded.InvokeAsync(skill);
         model = new AddSkillModel();
-        toastService.ShowSuccess($"Created Skill {skill.Name} in capability {skill.Capability} with level {skill.ProficiencyLevel}");
+        ToastService.ShowSuccess($"Created Skill {skill.Name} in capability {skill.Capability} with level {skill.ProficiencyLevel}");
     }
 }

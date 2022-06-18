@@ -1,6 +1,6 @@
 ﻿@page "/Sitemap"
 @using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services
-@inject ISitemapService sitemapService
+@inject ISitemapService SitemapService
 @attribute [Authorize]
 <h3 xmlns="http://www.w3.org/1999/html">Sitemap</h3>
 <div class="row px-2">
@@ -43,8 +43,8 @@
     private async Task CreateSitemap()
     {
         isGenerating = true;
-        sitemapUrlSet = await sitemapService.CreateSitemapAsync();
+        sitemapUrlSet = await SitemapService.CreateSitemapAsync();
         isGenerating = false;
-        await sitemapService.SaveSitemapToFileAsync(sitemapUrlSet);
+        await SitemapService.SaveSitemapToFileAsync(sitemapUrlSet);
     }
 }

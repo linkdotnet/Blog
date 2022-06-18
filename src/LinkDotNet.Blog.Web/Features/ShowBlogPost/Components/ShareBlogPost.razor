@@ -1,24 +1,24 @@
-﻿@inject NavigationManager navigationManager
-@inject IJSRuntime jsRuntime
-@inject IToastService toastService
+﻿@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+@inject IToastService ToastService
 
 <div class="flex-row" style="font-size: 1.5em">
     <a class="text-decoration-none" id="share-linkedin" href="@LinkedInShare" target="_blank"><i class="linkedin"></i></a>
     <a class="text-decoration-none" id="share-clipboard" href="javascript:void(0)" @onclick="CopyToClipboard"><i class="copy"></i></a>
 </div>
 @code {
-    private string LinkedInShare => $"https://www.linkedin.com/shareArticle?mini=true&url={navigationManager.Uri}";
+    private string LinkedInShare => $"https://www.linkedin.com/shareArticle?mini=true&url={NavigationManager.Uri}";
 
     private async Task CopyToClipboard()
     {
         try
         {
-            await jsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", navigationManager.Uri);
-            toastService.ShowSuccess("Copied link to clipboard");
+            await JsRuntime.InvokeVoidAsync("navigator.clipboard.writeText", NavigationManager.Uri);
+            ToastService.ShowSuccess("Copied link to clipboard");
         }
         catch
         {
-            toastService.ShowError("There was an error copying the link. Please copy the link from your address bar instead.");
+            ToastService.ShowError("There was an error copying the link. Please copy the link from your address bar instead.");
         }
     }
 }

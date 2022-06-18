@@ -1,4 +1,4 @@
-@inject IJSRuntime jsRuntime
+@inject IJSRuntime JsRuntime
 
 <textarea class="@Class" id="@Id" rows="@Rows"
     @onkeyup="MarkShortDescription"
@@ -62,7 +62,7 @@
         string content,
         string fence)
     {
-        var selectionRange = await jsRuntime.InvokeAsync<SelectionRange>("getSelectionFromElement", elementId);
+        var selectionRange = await JsRuntime.InvokeAsync<SelectionRange>("getSelectionFromElement", elementId);
 
         var beforeMarker = selectionRange.Start > 0 ? content[..selectionRange.Start] : string.Empty;
         var selectedContent = content[selectionRange.Start..selectionRange.End];
@@ -71,7 +71,7 @@
         var shift = selectionRange.Start + fencedContent.IndexOf(CursorMarker, StringComparison.Ordinal);
         var removedCursor = fencedContent.Replace(CursorMarker, string.Empty);
 
-        await jsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift, removedCursor);
+        await JsRuntime.InvokeVoidAsync("setSelectionFromElement", elementId, shift, removedCursor);
         return beforeMarker + removedCursor + afterMarker;
     }
 }

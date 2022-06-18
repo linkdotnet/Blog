@@ -3,17 +3,17 @@
 @using LinkDotNet.Blog.Web.Features.Components
 @using LinkDotNet.Blog.Web.Features.Services
 
-@inject AppConfiguration appConfiguration
-@inject IRepository<ProfileInformationEntry> repository
-@inject ISortOrderCalculator sortOrderCalculator
+@inject AppConfiguration AppConfiguration
+@inject IRepository<ProfileInformationEntry> Repository
+@inject ISortOrderCalculator SortOrderCalculator
 <div class="profile-card">
     <div class="profile-name">
-        <span>@appConfiguration.ProfileInformation.Name</span>
+        <span>@AppConfiguration.ProfileInformation.Name</span>
         <br/>
-        <span>@appConfiguration.ProfileInformation.Heading</span>
+        <span>@AppConfiguration.ProfileInformation.Heading</span>
     </div>
     <div class="profile-image">
-        <img src="@appConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
+        <img src="@AppConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
     </div>
     <ul class="profile-keypoints inverted-colors"
         ondragover="event.preventDefault();">
@@ -59,7 +59,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     protected override async Task OnInitializedAsync()
     {
-        profileInformationEntries = (await repository.GetAllAsync()).OrderBy(d => d.SortOrder).ToList();
+        profileInformationEntries = (await Repository.GetAllAsync()).OrderBy(d => d.SortOrder).ToList();
     }
 
     private void ShowDeleteDialog(string key)
@@ -72,7 +72,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
     {
         var entryToDelete = profileInformationEntries.Single(p => p.Content == currentDeleteKey);
         profileInformationEntries.Remove(entryToDelete);
-        await repository.DeleteAsync(entryToDelete.Id);
+        await Repository.DeleteAsync(entryToDelete.Id);
     }
 
     private async Task AddValue(string toAdd)
@@ -81,7 +81,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
         var newEntry = ProfileInformationEntry.Create(toAdd, sortOrder);
 
         profileInformationEntries.Add(newEntry);
-        await repository.StoreAsync(newEntry);
+        await Repository.StoreAsync(newEntry);
     }
 
     private int GetSortOrder()
@@ -101,9 +101,9 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
             return;
         }
 
-        var newSortOrder = sortOrderCalculator.GetSortOrder(dropTarget, profileInformationEntries);
+        var newSortOrder = SortOrderCalculator.GetSortOrder(dropTarget, profileInformationEntries);
         currentDragItem.SortOrder = newSortOrder;
-        await repository.StoreAsync(currentDragItem);
+        await Repository.StoreAsync(currentDragItem);
         currentDragItem = null;
         profileInformationEntries.Sort((a, b) => a.SortOrder.CompareTo(b.SortOrder));
         StateHasChanged();

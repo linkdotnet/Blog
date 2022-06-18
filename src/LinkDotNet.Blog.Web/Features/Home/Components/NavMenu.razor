@@ -1,20 +1,20 @@
-﻿@inject AppConfiguration configuration
-@inject NavigationManager navigationManager
+﻿@inject AppConfiguration Configuration
+@inject NavigationManager NavigationManager
 @implements IDisposable
 
 <nav class="navbar navbar-expand-lg navbar-light w-100">
     <div class="container-fluid">
-        @if (!string.IsNullOrEmpty(configuration.BlogBrandUrl))
+        @if (!string.IsNullOrEmpty(Configuration.BlogBrandUrl))
         {
             <a class="nav-brand ms-5" href="/">
                 <img style="max-height: 70px;"
-                     src="@configuration.BlogBrandUrl.ToAbsoluteUrl(navigationManager.BaseUri)"
+                     src="@Configuration.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
                      alt="brand" />
             </a>
         }
         else
         {
-            <a class="nav-brand barcode ms-5" href="/">@configuration.BlogName</a>
+            <a class="nav-brand barcode ms-5" href="/">@Configuration.BlogName</a>
         }
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -23,7 +23,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
                 <li class="nav-item active"><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
                 <li class="nav-item active"><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
-                @if (configuration.IsAboutMeEnabled)
+                @if (Configuration.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="AboutMe"><i class="profile"></i> About
@@ -44,19 +44,19 @@
 
     protected override void OnInitialized()
     {
-        navigationManager.LocationChanged += UpdateUri;
-        currentUri = navigationManager.Uri;
+        NavigationManager.LocationChanged += UpdateUri;
+        currentUri = NavigationManager.Uri;
     }
 
     private void NavigateToSearchPage(string searchTerm)
     {
         var escapeDataString = Uri.EscapeDataString(searchTerm);
-        navigationManager.NavigateTo($"search/{escapeDataString}");
+        NavigationManager.NavigateTo($"search/{escapeDataString}");
     }
 
     public void Dispose()
     {
-        navigationManager.LocationChanged -= UpdateUri;
+        NavigationManager.LocationChanged -= UpdateUri;
     }
 
     private void UpdateUri(object sender, LocationChangedEventArgs e)

@@ -2,8 +2,8 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
-@inject IRepository<BlogPost> blogPostRepository
-@inject IUserRecordService userRecordService
+@inject IRepository<BlogPost> BlogPostRepository
+@inject IUserRecordService UserRecordService
 
 <PageTitle>Search for tag: @Tag</PageTitle>
 
@@ -21,7 +21,7 @@
     protected override async Task OnParametersSetAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);
-        blogPosts = (await blogPostRepository.GetAllAsync(
+        blogPosts = (await BlogPostRepository.GetAllAsync(
             b => b.Tags.Any(t => t.Content == Tag), 
             b => b.UpdatedDate))
             .ToList();
@@ -31,7 +31,7 @@
     {
         if (firstRender)
         {
-            await userRecordService.StoreUserRecordAsync();
+            await UserRecordService.StoreUserRecordAsync();
         }
     }
 }

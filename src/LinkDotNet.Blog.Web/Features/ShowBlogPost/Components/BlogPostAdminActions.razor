@@ -1,8 +1,8 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@inject NavigationManager navigationManager
-@inject IToastService toastService
-@inject IRepository<BlogPost> blogPostRepository
+@inject NavigationManager NavigationManager
+@inject IToastService ToastService
+@inject IRepository<BlogPost> BlogPostRepository
 
 <AuthorizeView>
     <div class="blogpost-admin">
@@ -23,9 +23,9 @@
 
     private async Task DeleteBlogPostAsync()
     {
-        await blogPostRepository.DeleteAsync(BlogPostId);
-        toastService.ShowSuccess("The Blog Post was successfully deleted");
-        navigationManager.NavigateTo("/");
+        await BlogPostRepository.DeleteAsync(BlogPostId);
+        ToastService.ShowSuccess("The Blog Post was successfully deleted");
+        NavigationManager.NavigateTo("/");
     }
     
     private void ShowConfirmDialog()
@@ -35,6 +35,6 @@
 
     private void EditBlogPost()
     {
-        navigationManager.NavigateTo($"update/{BlogPostId}");
+        NavigationManager.NavigateTo($"update/{BlogPostId}");
     }
 }

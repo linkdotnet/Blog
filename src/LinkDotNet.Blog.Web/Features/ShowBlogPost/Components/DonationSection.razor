@@ -1,6 +1,6 @@
-@inject AppConfiguration appConfiguration
+@inject AppConfiguration AppConfiguration
 
-@if (appConfiguration.IsKofiEnabled)
+@if (AppConfiguration.IsKofiEnabled)
 {
-    <Kofi KofiToken="@appConfiguration.KofiToken"></Kofi>
+    <Kofi KofiToken="@AppConfiguration.KofiToken"></Kofi>
 }

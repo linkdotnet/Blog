@@ -2,8 +2,8 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
-@inject IRepository<BlogPost> blogPostRepository
-@inject IUserRecordService userRecordService
+@inject IRepository<BlogPost> BlogPostRepository
+@inject IUserRecordService UserRecordService
 
 <h3>Results for @SearchTerm</h3>
 
@@ -22,7 +22,7 @@
     protected override async Task OnInitializedAsync()
     {
         var term = Uri.UnescapeDataString(SearchTerm);
-        blogPosts = (await blogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
+        blogPosts = (await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
             || t.Tags.Any(tag => tag.Content == term)),
             b => b.UpdatedDate)).ToList();
     }
@@ -31,7 +31,7 @@
     {
         if (firstRender)
         {
-            await userRecordService.StoreUserRecordAsync();
+            await UserRecordService.StoreUserRecordAsync();
         }
     }
 }

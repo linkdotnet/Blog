@@ -2,7 +2,7 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @attribute [Authorize]
-@inject IRepository<BlogPost> blogPostRepository
+@inject IRepository<BlogPost> BlogPostRepository
 
 <h3>Draft Blog Posts</h3>
 
@@ -18,7 +18,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        blogPosts = (await blogPostRepository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate)).ToList();
+        blogPosts = (await BlogPostRepository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate)).ToList();
     }
 
 }

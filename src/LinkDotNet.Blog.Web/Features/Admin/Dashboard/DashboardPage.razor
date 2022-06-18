@@ -1,8 +1,8 @@
 ﻿@page "/dashboard"
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components
-@inject IDashboardService dashboardService
-@inject AppConfiguration appConfiguration
+@inject IDashboardService DashboardService
+@inject AppConfiguration AppConfiguration
 @attribute [Authorize]
 
 <div class="container-fluid ms-3">
@@ -15,7 +15,7 @@
             <DashboardCard Text="Total Clicks:"
                                TotalAmount="@data.TotalPageClicks"
                                AmountLast30Days="@data.PageClicksLast30Days"></DashboardCard>
-            @if (appConfiguration.IsAboutMeEnabled)
+            @if (AppConfiguration.IsAboutMeEnabled)
             {
                     <DashboardCard Text="About Me:"
                                    TotalAmount="@data.TotalAboutMeClicks"
@@ -36,6 +36,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        data = await dashboardService.GetDashboardDataAsync();
+        data = await DashboardService.GetDashboardDataAsync();
     }
 }

@@ -1,6 +1,6 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Web.Features.Services
-@inject ILocalStorageService localStorage
+@inject ILocalStorageService LocalStorage
 <div class="d-flex align-items-center">
     <span class="clap-btn @BtnClass" @onclick="LikeBlogPost"></span> @BlogPost.Likes
 </div>
@@ -36,14 +36,14 @@
         
         HasLiked = !HasLiked;
         await OnBlogPostLiked.InvokeAsync(HasLiked);
-        await localStorage.SetItemAsync($"hasLiked/{BlogPost.Id}", HasLiked);
+        await LocalStorage.SetItemAsync($"hasLiked/{BlogPost.Id}", HasLiked);
     }
 
     private async Task<bool> GetHasLiked()
     {
-        if (await localStorage.ContainKeyAsync($"hasLiked/{BlogPost.Id}"))
+        if (await LocalStorage.ContainKeyAsync($"hasLiked/{BlogPost.Id}"))
         {
-            return await localStorage.GetItemAsync<bool>($"hasLiked/{BlogPost.Id}");
+            return await LocalStorage.GetItemAsync<bool>($"hasLiked/{BlogPost.Id}");
         }
 
         return false;

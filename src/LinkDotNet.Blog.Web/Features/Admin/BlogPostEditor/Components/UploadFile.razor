@@ -1,6 +1,6 @@
 @using System.IO
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
-@inject IFileProcessor fileProcessor
+@inject IFileProcessor FileProcessor
 
 <div>
     <InputFile
@@ -38,7 +38,7 @@
 
     private async Task HandleFileUpload(InputFileChangeEventArgs args)
     {
-        var content = await fileProcessor.GetContent(args.File);
+        var content = await FileProcessor.GetContent(args.File);
         await OnFileUploaded.InvokeAsync(content);
     }
 }

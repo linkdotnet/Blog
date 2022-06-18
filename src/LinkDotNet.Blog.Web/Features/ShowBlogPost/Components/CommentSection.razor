@@ -1,4 +1,4 @@
-@inject AppConfiguration appConfiguration
+@inject AppConfiguration AppConfiguration
 
 @if (MultipleCommentPlugins)
 {
@@ -7,16 +7,16 @@
     </div>
 }
 
-@if (appConfiguration.IsDisqusEnabled)
+@if (AppConfiguration.IsDisqusEnabled)
 {
     <Disqus></Disqus>
 }
-@if (appConfiguration.IsGiscusEnabled)
+@if (AppConfiguration.IsGiscusEnabled)
 {
     <Giscus></Giscus>
 }
 
 @code {
-    private bool MultipleCommentPlugins => appConfiguration.IsDisqusEnabled && appConfiguration.IsGiscusEnabled;
+    private bool MultipleCommentPlugins => AppConfiguration.IsDisqusEnabled && AppConfiguration.IsGiscusEnabled;
 
 }

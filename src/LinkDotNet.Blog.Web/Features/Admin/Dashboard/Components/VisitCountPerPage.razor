@@ -4,7 +4,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Infrastructure.Persistence.Sql
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
-@inject BlogDbContext blogDbContext
+@inject BlogDbContext BlogDbContext
 
 <div class="card">
     <div class="card-header">Blog Post Visit Counts</div>
@@ -51,10 +51,10 @@
 
     private async Task LoadBlogPostInformationAsync()
     {
-        var query = from ur in blogDbContext.UserRecords
+        var query = from ur in BlogDbContext.UserRecords
             where (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
                   && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate)
-            join bp in blogDbContext.BlogPosts
+            join bp in BlogDbContext.BlogPosts
                 on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
             group new { ur, bp } by new { ur.UrlClicked } into gp
             orderby gp.Count() descending

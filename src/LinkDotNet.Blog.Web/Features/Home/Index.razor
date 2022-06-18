@@ -6,14 +6,14 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
 @using LinkDotNet.Blog.Web.Features.Home.Components
-@inject IRepository<BlogPost> blogPostRepository
-@inject AppConfiguration appConfiguration
-@inject NavigationManager navigationManager
-@inject IUserRecordService userRecordService
+@inject IRepository<BlogPost> BlogPostRepository
+@inject AppConfiguration AppConfiguration
+@inject NavigationManager NavigationManager
+@inject IUserRecordService UserRecordService
 
-<OgData Title="@(Markdown.ToPlainText(appConfiguration.BlogName))" 
+<OgData Title="@(Markdown.ToPlainText(AppConfiguration.BlogName))" 
         AbsolutePreviewImageUrl="@ImageUrl"
-        Description="@(Markdown.ToPlainText(appConfiguration.Introduction.Description))"></OgData>
+        Description="@(Markdown.ToPlainText(AppConfiguration.Introduction.Description))"></OgData>
 <section class="introduction">
     <IntroductionCard></IntroductionCard>
 </section>
@@ -39,7 +39,7 @@
 
     private IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
 
-    private string ImageUrl => appConfiguration.Introduction.ProfilePictureUrl.ToAbsoluteUrl(navigationManager.BaseUri);
+    private string ImageUrl => AppConfiguration.Introduction.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 
     protected override async Task OnParametersSetAsync()
     {
@@ -48,10 +48,10 @@
             Page = 1;
         }
 
-        currentPage = await blogPostRepository.GetAllAsync(
+        currentPage = await BlogPostRepository.GetAllAsync(
             p => p.IsPublished,
             b => b.UpdatedDate,
-            pageSize: appConfiguration.BlogPostsPerPage,
+            pageSize: AppConfiguration.BlogPostsPerPage,
             page: Page.Value);
     }
 
@@ -59,7 +59,7 @@
     {
         if (firstRender)
         {
-            await userRecordService.StoreUserRecordAsync();
+            await UserRecordService.StoreUserRecordAsync();
         }
     }
 }

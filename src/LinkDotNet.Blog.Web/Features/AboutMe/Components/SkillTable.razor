@@ -1,6 +1,6 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@inject IRepository<Skill> repository
+@inject IRepository<Skill> Repository
 <div>
         @if (ShowAdminActions)
         {
@@ -66,19 +66,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        skills = (await repository.GetAllAsync()).ToList();
+        skills = (await Repository.GetAllAsync()).ToList();
     }
 
     private async Task AddSkill(Skill skillToAdd)
     {
         skills.Add(skillToAdd);
-        await repository.StoreAsync(skillToAdd);
+        await Repository.StoreAsync(skillToAdd);
     }
 
     private async Task DeleteSkill(Skill skill)
     {
         skills.Remove(skill);
-        await repository.DeleteAsync(skill.Id);
+        await Repository.DeleteAsync(skill.Id);
     }
 
     private async Task HandleDrop(ProficiencyLevel proficiencyLevel)
@@ -89,7 +89,7 @@
         }
 
         currentDragItem.SetProficiencyLevel(proficiencyLevel);
-        await repository.StoreAsync(currentDragItem);
+        await Repository.StoreAsync(currentDragItem);
         currentDragItem = null;
     }
 

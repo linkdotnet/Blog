@@ -1,18 +1,18 @@
 ﻿@using LinkDotNet.Blog.Domain
-@inject AppConfiguration configuration
+@inject AppConfiguration Configuration
 
-<div style="--profile-background: url(@configuration.Introduction.BackgroundUrl)" class="@IntroductionClass">
+<div style="--profile-background: url(@Configuration.Introduction.BackgroundUrl)" class="@IntroductionClass">
     <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@configuration.Introduction.ProfilePictureUrl)">
+        <div class="profile-picture" style="--profile-image: url(@Configuration.Introduction.ProfilePictureUrl)">
         </div>
         <div class="profile-text d-flex flex-column">
-            <div>@MarkdownConverter.ToMarkupString(configuration.Introduction.Description)</div>
-            <SocialAccounts Social="@configuration.Social"></SocialAccounts>
+            <div>@MarkdownConverter.ToMarkupString(Configuration.Introduction.Description)</div>
+            <SocialAccounts Social="@Configuration.Social"></SocialAccounts>
         </div>
     </div>
 </div>
 @code {
-    private string IntroductionClass => !string.IsNullOrEmpty(configuration.Introduction.BackgroundUrl)
+    private string IntroductionClass => !string.IsNullOrEmpty(Configuration.Introduction.BackgroundUrl)
         ? "introduction-background"
         : string.Empty;
 }
