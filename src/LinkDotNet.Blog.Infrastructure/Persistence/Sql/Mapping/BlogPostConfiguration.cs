@@ -15,7 +15,9 @@ public class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
         builder.Navigation(x => x.Tags).AutoInclude();
-        builder.Property(x => x.Title).HasMaxLength(256);
-        builder.Property(x => x.PreviewImageUrl).HasMaxLength(1024);
+        builder.Property(x => x.Title).HasMaxLength(256).IsRequired();
+        builder.Property(x => x.PreviewImageUrl).HasMaxLength(1024).IsRequired();
+        builder.Property(x => x.Content).IsRequired();
+        builder.Property(x => x.ShortDescription).IsRequired();
     }
 }

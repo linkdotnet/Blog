@@ -10,6 +10,6 @@ public class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
     {
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id).ValueGeneratedOnAdd();
-        builder.Property(s => s.UrlClicked).HasMaxLength(256);
+        builder.Property(s => s.UrlClicked).HasMaxLength(256).IsRequired();
     }
 }

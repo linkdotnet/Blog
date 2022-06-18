@@ -10,6 +10,6 @@ public class ProfileInformationEntryConfiguration : IEntityTypeConfiguration<Pro
     {
         builder.HasKey(c => c.Id);
         builder.Property(c => c.Id).ValueGeneratedOnAdd();
-        builder.Property(c => c.Content).HasMaxLength(512);
+        builder.Property(c => c.Content).HasMaxLength(512).IsRequired();
     }
 }

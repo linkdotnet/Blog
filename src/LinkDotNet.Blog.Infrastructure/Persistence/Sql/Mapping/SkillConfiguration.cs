@@ -12,9 +12,10 @@ public class SkillConfiguration : IEntityTypeConfiguration<Skill>
         builder.Property(s => s.Id).ValueGeneratedOnAdd();
         builder.Property(s => s.ProficiencyLevel)
             .HasConversion(to => to.Key, from => ProficiencyLevel.Create(from))
-            .HasMaxLength(32);
-        builder.Property(s => s.Name).HasMaxLength(128);
+            .HasMaxLength(32)
+            .IsRequired();
+        builder.Property(s => s.Name).HasMaxLength(128).IsRequired();
         builder.Property(s => s.IconUrl).HasMaxLength(1024);
-        builder.Property(s => s.Capability).HasMaxLength(128);
+        builder.Property(s => s.Capability).HasMaxLength(128).IsRequired();
     }
 }

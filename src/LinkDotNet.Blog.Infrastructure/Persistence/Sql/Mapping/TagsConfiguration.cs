@@ -9,6 +9,6 @@ public class TagsConfiguration : IEntityTypeConfiguration<Tag>
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.Property(c => c.Id).ValueGeneratedOnAdd();
-        builder.Property(c => c.Content).HasMaxLength(64);
+        builder.Property(c => c.Content).HasMaxLength(64).IsRequired();
     }
 }
