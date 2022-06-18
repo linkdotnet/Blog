@@ -19,5 +19,7 @@ public class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
         builder.Property(x => x.PreviewImageUrl).HasMaxLength(1024).IsRequired();
         builder.Property(x => x.Content).IsRequired();
         builder.Property(x => x.ShortDescription).IsRequired();
+        builder.Property(x => x.Likes).IsRequired();
+        builder.Property(x => x.IsPublished).IsRequired();
     }
 }
