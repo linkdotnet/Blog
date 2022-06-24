@@ -1,8 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300&display=swap');
-
-:root {
+﻿:root {
     /* Color definitions */
     --ceramic: #FCFFF5;
     --tana: #D1DBBD;
@@ -15,8 +11,8 @@
     --silver: #DADADA;
 
     /* Fonts */
-    --default-font: 'Quicksand';
-    --code-font: 'JetBrains Mono';
+    --default-font: 'Calibri';
+    --code-font: 'Lucida Console';
 
     /* Usages - this colors have to be defined in every theme */
     --active-link: var(--big-stone);
@@ -51,6 +47,7 @@
 
 html {
     height: 100%;
+    font-size: 1.1rem;
 }
 
 html:focus-within {
