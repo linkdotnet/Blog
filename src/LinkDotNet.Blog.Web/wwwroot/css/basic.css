@@ -12,7 +12,7 @@
 
     /* Fonts */
     --default-font: 'Calibri';
-    --code-font: 'Lucida Console';
+    --code-font: 'Lucida Console', 'Courier New';
 
     /* Usages - this colors have to be defined in every theme */
     --active-link: var(--big-stone);
