@@ -1,0 +1,18 @@
+@if (string.IsNullOrEmpty(Href))
+{
+    <a class="@CssClass">@ChildContent</a>
+}
+else
+{
+    <a class="@CssClass" href="@Href">@ChildContent</a>
+}
+@code {
+    [Parameter]
+    public string CssClass { get; set; }
+    
+    [Parameter]
+    public string Href { get; set; }
+    
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } 
+}
