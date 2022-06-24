@@ -19,7 +19,7 @@
 
     private IList<BlogPost> blogPosts = new List<BlogPost>();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         var term = Uri.UnescapeDataString(SearchTerm);
         blogPosts = (await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
