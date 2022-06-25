@@ -20,6 +20,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         await AddBlogPostWithTagAsync("Tag 1");
         await AddBlogPostWithTagAsync("Tag 1");
+        await AddBlogPostWithTagAsync("Tag 1", isPublished: false);
         await AddBlogPostWithTagAsync("Tag 2");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
@@ -61,9 +62,9 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         pageTitle.Markup.Should().Be("Search for tag: Tag");
     }
 
-    private async Task AddBlogPostWithTagAsync(string tag)
+    private async Task AddBlogPostWithTagAsync(string tag, bool isPublished = true)
     {
-        var blogPost = new BlogPostBuilder().WithTags(tag).Build();
+        var blogPost = new BlogPostBuilder().WithTags(tag).IsPublished(isPublished).Build();
         await DbContext.AddAsync(blogPost);
         await DbContext.SaveChangesAsync();
     }
