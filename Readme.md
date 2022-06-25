@@ -8,7 +8,7 @@ This is a blog software completely written in C# / Blazor. The aim is to have it
 ## How does it work
 The basic idea is that the content creator writes his posts in markdown language (like this readme file). 
 The markdown will then be translated into HTML and displayed to the client. This gives an easy entry to writing posts with all the flexibility markdown has.
-This also includes source code snippets. Right now only C# is highlighted properly but other languages can be extended easily as the highlighting is done via highlight.js.
+This also includes source code snippets. Highlighting is done via [highlight.js](https://highlightjs.org/) with the monokai theme.
 
 ## In Action
 ![overview](assets/overview.gif)
@@ -35,7 +35,7 @@ The appsettings.json file has a lot of options to customize the content of the b
     "BackgroundUrl": "assets/profile-background.webp",
     "ProfilePictureUrl": "assets/profile-picture.webp"
   },
-  "PersistenceProvider": "SqlServer",
+  "PersistenceProvider": "InMemory",
   "ConnectionString": "",
   "DatabaseName": "",
   "Auth0": {
@@ -98,6 +98,8 @@ Currently there are 4 Storage-Provider:
  * Sqlite - Based on EF Core, so it can be easily adapted for other Sql Dialects
  * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects
 
+The default (when you clone the repository) is the `InMemory` option. That means everytime you restart the service, all posts and related objects are gone.
+
 ## Comment Section
 For comments the blog is using [giscus](https://giscus.app/) or [disqus](https://disqus.com/). 
 
@@ -158,7 +160,7 @@ The blog includes some of the most important tags to get indexed by a crawler. F
 
 ### Robots.txt
 In the wwwroot/ you can find a default robots.txt. It allows that the site gets completely indexed. If you want to tweak that behavior feel free.
-Also you can provide a sitemap.xml to get a better ranking. The blog can create a sitemap.xml on its own. For that login and click on the `Admin` button in the navigation bar and afterwards on `Sitemap`. There you can let the blog create a new one for you. This is especially helpful after you created a new blog post to make easier for indexer like Google.  
+Also you can provide a sitemap.xml to get a better ranking. The blog can create a sitemap.xml on its own. For that login and click on the `Admin` button in the navigation bar and afterwards on `Sitemap`. There you can let the blog create a new one for you. This is especially helpful after you created a new blog post to make easier for indexer like Google. 
 
 ### Open Graph Tags
 To get better results when for example shared via LinkedIn some of the `<meta property="og:tag">` tags are implemented.
@@ -179,3 +181,6 @@ Furthermore the following tags are set:
 | ---------------------------------------- | ------------------------------------ | ----------------------------- |
 | Title of the web page                    | Defined in AppConfiguration.BlogName | Title of the blogpost         |
 | &lt;meta name="keyword" content="" /&gt; | not set                              | Tags defined in the Blog Post |
+
+## RSS Feed
+This blog also offers a RSS feed ([RSS 2.0 specification](https://validator.w3.org/feed/docs/rss2.html)), which can be consumed by your users or programs like feedly. Just append `feed.rss` to your url or click on the RSS feed icon in the navigation bar to get the feed. The RSS feed does not expose the whole content of a given blog post but it's title and short description including some other tags like preview image, publishing date and so on.
