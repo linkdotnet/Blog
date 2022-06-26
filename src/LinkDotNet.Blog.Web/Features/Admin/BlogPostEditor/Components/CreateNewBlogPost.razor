@@ -30,11 +30,13 @@
             <div class="mb-3">
                 <label for="preview">Preview-Url</label>
                 <InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
+                <small for="preview" class="form-text text-muted">The primary image which will be used.</small>
             </div>
             <div class="mb-3">
-                <label for="preview">Fallback preview-Url</label>
+                <label for="preview">Fallback Preview-Url</label>
                 <InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
-                <small for="allback-preview" class="form-text text-muted">Optional: Used as a fallback if the preview image can't be used by the browser.</small>
+                <small for="fallback-preview" class="form-text text-muted">Optional: Used as a fallback if the preview image can't be used by the browser.
+                    <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />

@@ -167,13 +167,13 @@ To get better results when for example shared via LinkedIn some of the `<meta pr
 
 The following tags are set depending on the page:
 
-| Open Graph Tag | Index                                                     | Display Blog Post                            |
-| -------------- | --------------------------------------------------------- | -------------------------------------------- |
-| og:title       | Title of the blog (defined in Introduction)               | Title of the Blog Post                       |
-| og:url         | Url to the index page                                     | Url of the page                              |
-| og:image       | Profile image (defined in Introduction)                   | Yes                                          |
-| og:type        | article                                                   | article                                      |
-| og:description | Short description in plain text (defined in Introduction) | Short Description of Blog Post in plain text |
+| Open Graph Tag | Index                                                     | Display Blog Post                                                           |
+| -------------- | --------------------------------------------------------- |-----------------------------------------------------------------------------|
+| og:title       | Title of the blog (defined in Introduction)               | Title of the Blog Post                                                      |
+| og:url         | Url to the index page                                     | Url of the page                                                             |
+| og:image       | Profile image (defined in Introduction)                   | Uses the preview image. If a fallback is defined this will be used instead. |
+| og:type        | article                                                   | article                                                                     |
+| og:description | Short description in plain text (defined in Introduction) | Short Description of Blog Post in plain text                                |
 
 Furthermore the following tags are set:
 
