@@ -31,6 +31,8 @@ public class CreateNewModel
 
     public DateTime OriginalUpdatedDate { get; set; }
 
+    public string PreviewImageUrlFallback { get; set; }
+
     public static CreateNewModel FromBlogPost(BlogPost blogPost)
     {
         return new CreateNewModel
@@ -43,6 +45,7 @@ public class CreateNewModel
             IsPublished = blogPost.IsPublished,
             PreviewImageUrl = blogPost.PreviewImageUrl,
             OriginalUpdatedDate = blogPost.UpdatedDate,
+            PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback,
         };
     }
 
@@ -53,7 +56,7 @@ public class CreateNewModel
             ? null
             : OriginalUpdatedDate;
 
-        var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tags);
+        var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tags, PreviewImageUrlFallback);
         blogPost.Id = Id;
         return blogPost;
     }

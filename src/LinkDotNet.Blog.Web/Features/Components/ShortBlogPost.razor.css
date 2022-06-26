@@ -23,23 +23,10 @@
 .blog-card a:hover {
     color: #5ad67d;
 }
-.blog-card:hover .photo {
-    transform: scale(1.3) rotate(3deg);
-}
 .blog-card .meta {
     position: relative;
     z-index: 0;
     height: 200px;
-}
-.blog-card .photo {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.5s;
 }
 .blog-card .details,
 .blog-card .details ul {

@@ -12,7 +12,7 @@ public class BlogPostTests
     {
         var blogPostToUpdate = new BlogPostBuilder().Build();
         blogPostToUpdate.Id = "random-id";
-        var blogPost = BlogPost.Create("Title", "Desc", "Content", "Url", true);
+        var blogPost = BlogPost.Create("Title", "Desc", "Content", "Url", true, previewImageUrlFallback: "Url2");
         blogPost.Id = "something else";
 
         blogPostToUpdate.Update(blogPost);
@@ -21,6 +21,7 @@ public class BlogPostTests
         blogPostToUpdate.ShortDescription.Should().Be("Desc");
         blogPostToUpdate.Content.Should().Be("Content");
         blogPostToUpdate.PreviewImageUrl.Should().Be("Url");
+        blogPostToUpdate.PreviewImageUrlFallback.Should().Be("Url2");
         blogPostToUpdate.IsPublished.Should().BeTrue();
         blogPostToUpdate.Tags.Should().BeNullOrEmpty();
     }

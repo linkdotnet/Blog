@@ -17,6 +17,7 @@ public class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
         builder.Navigation(x => x.Tags).AutoInclude();
         builder.Property(x => x.Title).HasMaxLength(256).IsRequired();
         builder.Property(x => x.PreviewImageUrl).HasMaxLength(1024).IsRequired();
+        builder.Property(x => x.PreviewImageUrlFallback).HasMaxLength(1024);
         builder.Property(x => x.Content).IsRequired();
         builder.Property(x => x.ShortDescription).IsRequired();
         builder.Property(x => x.Likes).IsRequired();

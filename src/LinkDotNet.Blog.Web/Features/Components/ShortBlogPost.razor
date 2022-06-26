@@ -5,7 +5,11 @@
 <article>
   <div class="blog-card @AltCssClass">
     <div class="meta">
-      <div class="photo" style="background-image: url(@BlogPost.PreviewImageUrl)"></div>
+      <div class="photo">
+        <PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl" 
+                      PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
+                      LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
+      </div>
       <ul class="details">
         <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
         @if (BlogPost.Tags != null)
@@ -39,6 +43,9 @@
   
     [Parameter]
     public bool UseAlternativeStyle { get; set; }
+  
+    [Parameter]
+    public bool LazyLoadPreviewImage { get; set; }
 
     private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
 

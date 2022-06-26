@@ -16,7 +16,7 @@ else
 {
     <PageTitle>@BlogPost.Title</PageTitle>
     <OgData Title="@BlogPost.Title"
-            AbsolutePreviewImageUrl="@BlogPost.PreviewImageUrl"
+            AbsolutePreviewImageUrl="@OgDataImage"
             Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
             Keywords="@Tags"></OgData>
     <div class="blog-outer-box">
@@ -53,6 +53,8 @@ else
     private string Tags => BlogPost?.Tags != null
         ? string.Join(",", BlogPost.Tags.Select(b => b.Content))
         : null;
+
+    private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
     
     private BlogPost BlogPost { get; set; }
 

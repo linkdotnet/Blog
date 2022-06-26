@@ -27,7 +27,7 @@
     <div class="content px-4 my-2">
     @for (var i = 0; i < currentPage.Count; i++)
     {
-        <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+        <ShortBlogPost BlogPost="currentPage[i]" UseAlternativeStyle="@(i % 2 != 0)" LazyLoadPreviewImage="i > 2"></ShortBlogPost>
     }
     </div>
     <BlogPostNavigation PageList="@currentPage"></BlogPostNavigation>

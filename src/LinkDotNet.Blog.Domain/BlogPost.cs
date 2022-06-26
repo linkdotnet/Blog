@@ -18,6 +18,8 @@ public class BlogPost : Entity
 
     public string PreviewImageUrl { get; private set; }
 
+    public string PreviewImageUrlFallback { get; private set; }
+
     public DateTime UpdatedDate { get; private set; }
 
     public virtual ICollection<Tag> Tags { get; private set; }
@@ -33,7 +35,8 @@ public class BlogPost : Entity
         string previewImageUrl,
         bool isPublished,
         DateTime? updatedDate = null,
-        IEnumerable<string> tags = null)
+        IEnumerable<string> tags = null,
+        string previewImageUrlFallback = null)
     {
         var blogPost = new BlogPost
         {
@@ -42,6 +45,7 @@ public class BlogPost : Entity
             Content = content,
             UpdatedDate = updatedDate ?? DateTime.Now,
             PreviewImageUrl = previewImageUrl,
+            PreviewImageUrlFallback = previewImageUrlFallback,
             IsPublished = isPublished,
             Tags = tags?.Select(Tag.Create).ToList(),
         };
@@ -61,6 +65,7 @@ public class BlogPost : Entity
         Content = from.Content;
         UpdatedDate = from.UpdatedDate;
         PreviewImageUrl = from.PreviewImageUrl;
+        PreviewImageUrlFallback = from.PreviewImageUrlFallback;
         IsPublished = from.IsPublished;
         ReplaceTags(from.Tags);
     }
