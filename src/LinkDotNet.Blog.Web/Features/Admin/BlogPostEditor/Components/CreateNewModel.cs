@@ -56,7 +56,7 @@ public class CreateNewModel
             ? null
             : OriginalUpdatedDate;
 
-        var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tags);
+        var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tags, PreviewImageUrlFallback);
         blogPost.Id = Id;
         return blogPost;
     }
