@@ -61,4 +61,31 @@ public class ShowBlogPostPageTests : TestContext
         var pageTitle = Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent));
         pageTitle.Markup.Should().Be("Title");
     }
+
+    [Theory]
+    [InlineData("url1", null, "url1")]
+    [InlineData("url1", "url2", "url2")]
+    public void ShouldUseFallbackAsOgDataIfAvailable(string preview, string fallback, string expected)
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .WithPreviewImageUrl(preview)
+            .WithPreviewImageUrlFallback(fallback)
+            .Build();
+        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
+        Services.AddScoped(_ => repositoryMock.Object);
+        Services.AddScoped(_ => Mock.Of<IUserRecordService>());
+        Services.AddScoped(_ => Mock.Of<IToastService>());
+        Services.AddScoped(_ => Mock.Of<AppConfiguration>());
+        this.AddTestAuthorization();
+        ComponentFactories.AddStub<PageTitle>();
+        ComponentFactories.AddStub<Like>();
+        ComponentFactories.AddStub<CommentSection>();
+
+        var cut = RenderComponent<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expected);
+    }
 }
