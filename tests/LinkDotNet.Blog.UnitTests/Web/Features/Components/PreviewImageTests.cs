@@ -68,4 +68,20 @@ public class PreviewImageTests : TestContext
 
         image.Attributes.FirstOrDefault(a => a.Name == "loading").Value.Should().Be(expectedLazy);
     }
+
+    [Theory]
+    [InlineData("http://localhost/image.png", "image/png")]
+    [InlineData("http://localhost/image.webp", "image/webp")]
+    [InlineData("http://localhost/image.avif", "image/avif")]
+    public void ShouldDetectFileTypes(string fileName, string mimeType)
+    {
+        var cut = RenderComponent<PreviewImage>(ps => ps
+            .Add(p => p.PreviewImageUrl, fileName)
+            .Add(p => p.PreviewImageUrlFallback, "not empty"));
+
+        var picture = cut.Find("picture");
+
+        var source = picture.Children[0] as IHtmlSourceElement;
+        source.Type.Should().Be(mimeType);
+    }
 }

@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.StaticFiles
 @if (string.IsNullOrEmpty(PreviewImageUrlFallback))
 {
     <img src="@PreviewImageUrl" alt="Preview image blogpost" loading="@LazyLoadTag"/>
@@ -5,7 +6,7 @@
 else
 {
     <picture>
-        <source srcset="@PreviewImageUrl" />
+        <source srcset="@PreviewImageUrl" type="@GetMimeType()"/>
         <img src="@PreviewImageUrlFallback" alt="Preview image blogpost" loading="@LazyLoadTag"/>
     </picture>
 }
@@ -21,4 +22,20 @@ else
     public bool LazyLoadImage { get; set; }
 
     private string LazyLoadTag => LazyLoadImage ? "lazy" : "eager";
+
+    private static readonly FileExtensionContentTypeProvider Provider = new();
+
+    static PreviewImage()
+    {
+        if (!Provider.Mappings.Keys.Contains(".avif"))
+        {
+            Provider.Mappings.Add(".avif", "image/avif");
+        }
+    }
+
+    private string GetMimeType()
+    {
+        Provider.TryGetContentType(PreviewImageUrl, out var contentType);
+        return contentType;
+    }
 }
