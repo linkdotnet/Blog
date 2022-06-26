@@ -8,7 +8,8 @@ public class BlogPostBuilder
     private string title = "BlogPost";
     private string shortDescription = "Some Text";
     private string content = "Some Content";
-    private string url = "localhost";
+    private string previewImageUrl = "localhost";
+    private string previewImageUrlFallback = null;
     private bool isPublished = true;
     private string[] tags;
     private int likes;
@@ -34,7 +35,13 @@ public class BlogPostBuilder
 
     public BlogPostBuilder WithPreviewImageUrl(string url)
     {
-        this.url = url;
+        previewImageUrl = url;
+        return this;
+    }
+
+    public BlogPostBuilder WithPreviewImageUrlFallback(string url)
+    {
+        previewImageUrlFallback = url;
         return this;
     }
 
@@ -64,7 +71,7 @@ public class BlogPostBuilder
 
     public BlogPost Build()
     {
-        var blogPost = BlogPost.Create(title, shortDescription, content, url, isPublished, updateDate, tags);
+        var blogPost = BlogPost.Create(title, shortDescription, content, previewImageUrl, isPublished, updateDate, tags, previewImageUrlFallback);
         blogPost.Likes = likes;
         return blogPost;
     }

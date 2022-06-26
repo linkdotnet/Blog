@@ -24,6 +24,7 @@ public class CreateNewBlogPostTests : TestContext
         cut.Find("#short").Input("My short Description");
         cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
+        cut.Find("#fallback-preview").Change("My fallback preview url");
         cut.Find("#published").Change(false);
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
 
@@ -35,6 +36,7 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.ShortDescription.Should().Be("My short Description");
         blogPost.Content.Should().Be("My content");
         blogPost.PreviewImageUrl.Should().Be("My preview url");
+        blogPost.PreviewImageUrlFallback.Should().Be("My fallback preview url");
         blogPost.IsPublished.Should().BeFalse();
         blogPost.UpdatedDate.Should().NotBe(default);
         blogPost.Tags.Should().HaveCount(3);

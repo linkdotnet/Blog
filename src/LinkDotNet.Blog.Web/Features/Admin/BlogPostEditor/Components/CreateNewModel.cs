@@ -31,6 +31,8 @@ public class CreateNewModel
 
     public DateTime OriginalUpdatedDate { get; set; }
 
+    public string PreviewImageUrlFallback { get; set; }
+
     public static CreateNewModel FromBlogPost(BlogPost blogPost)
     {
         return new CreateNewModel
@@ -43,6 +45,7 @@ public class CreateNewModel
             IsPublished = blogPost.IsPublished,
             PreviewImageUrl = blogPost.PreviewImageUrl,
             OriginalUpdatedDate = blogPost.UpdatedDate,
+            PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback,
         };
     }
 

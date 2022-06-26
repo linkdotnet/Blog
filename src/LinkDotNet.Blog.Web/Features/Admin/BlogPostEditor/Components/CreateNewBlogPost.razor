@@ -31,6 +31,11 @@
                 <label for="preview">Preview-Url</label>
                 <InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
             </div>
+            <div class="mb-3">
+                <label for="preview">Fallback preview-Url</label>
+                <InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
+                <small for="allback-preview" class="form-text text-muted">Optional: Used as a fallback if the preview image can't be used by the browser.</small>
+            </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />
                 <label class="form-check-label" for="published">Publish</label><br/>
