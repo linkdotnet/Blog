@@ -3,7 +3,7 @@
 @inject IToastService ToastService
 
 <div class="flex-row" style="font-size: 1.5em">
-    <a class="text-decoration-none" id="share-linkedin" href="@LinkedInShare" target="_blank"><i class="linkedin"></i></a>
+    <a class="text-decoration-none" id="share-linkedin" href="@LinkedInShare" target="_blank" rel="noreferrer"><i class="linkedin"></i></a>
     <a class="text-decoration-none" id="share-clipboard" href="javascript:void(0)" @onclick="CopyToClipboard"><i class="copy"></i></a>
 </div>
 @code {

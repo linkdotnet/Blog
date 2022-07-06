@@ -2,19 +2,19 @@
 <div class="d-flex flex-row justify-content-center" style="font-size: 1.25em;">
     @if (Social.HasLinkedinAccount)
     {
-        <a id="linkedin" class="nav-link" target="_blank" href="@Social.LinkedinAccountUrl" aria-label="LinkedIn">
+        <a id="linkedin" class="nav-link" target="_blank" href="@Social.LinkedinAccountUrl" aria-label="LinkedIn" rel="noreferrer">
             <i class="linkedin"></i>
         </a>
     }
     @if (Social.HasGithubAccount)
     {
-        <a id="github" class="nav-link" target="_blank" href="@Social.GithubAccountUrl" aria-label="Github">
+        <a id="github" class="nav-link" target="_blank" href="@Social.GithubAccountUrl" aria-label="Github" rel="noreferrer">
             <i class="github"></i>
         </a>
     }
     @if (Social.HasTwitterAccount)
     {
-        <a id="twitter" class="nav-link" target="_blank" href="@Social.TwitterAccountUrl" aria-label="Twitter">
+        <a id="twitter" class="nav-link" target="_blank" href="@Social.TwitterAccountUrl" aria-label="Twitter" rel="noreferrer">
             <i class="twitter"></i>
         </a>
     }
