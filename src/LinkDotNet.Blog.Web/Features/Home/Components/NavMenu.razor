@@ -7,7 +7,7 @@
         @if (!string.IsNullOrEmpty(Configuration.BlogBrandUrl))
         {
             <a class="nav-brand ms-5" href="/">
-                <img style="max-height: 70px;"
+                <img style="max-height: 70px; width: 70px; height: 70px;"
                      src="@Configuration.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
                      alt="brand" />
             </a>
