@@ -19,6 +19,7 @@ robots.txt
 .idea/
 *.csproj.user
 *.dotsettings.user
+bundle.min.css
 
 # Coverage files and reports
 /**/TestResults/*
