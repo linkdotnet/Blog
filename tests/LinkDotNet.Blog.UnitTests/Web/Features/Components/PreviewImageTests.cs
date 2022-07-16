@@ -84,4 +84,35 @@ public class PreviewImageTests : TestContext
         var source = picture.Children[0] as IHtmlSourceElement;
         source.Type.Should().Be(mimeType);
     }
+
+    [Theory]
+    [InlineData(true, "async")]
+    [InlineData(false, "auto")]
+    public void ShouldSetDecodingBehavior(bool lazyLoad, string expectedBehaviour)
+    {
+        var cut = RenderComponent<PreviewImage>(ps => ps
+            .Add(p => p.PreviewImageUrl, "http://image.png/")
+            .Add(p => p.PreviewImageUrlFallback, "http://fallback.png/")
+            .Add(p => p.LazyLoadImage, lazyLoad));
+
+        var picture = cut.Find("picture");
+
+        var img = picture.Children[1] as IHtmlImageElement;
+        img.Should().NotBeNull();
+        img.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.Should().Be(expectedBehaviour);
+    }
+
+    [Theory]
+    [InlineData(true, "async")]
+    [InlineData(false, "auto")]
+    public void ShouldSetDecodingBehaviorNoFallback(bool lazyLoad, string expectedBehaviour)
+    {
+        var cut = RenderComponent<PreviewImage>(ps => ps
+            .Add(p => p.PreviewImageUrl, "http://image.png/")
+            .Add(p => p.LazyLoadImage, lazyLoad));
+
+        var image = cut.Find("img").Unwrap() as IHtmlImageElement;
+
+        image.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.Should().Be(expectedBehaviour);
+    }
 }
