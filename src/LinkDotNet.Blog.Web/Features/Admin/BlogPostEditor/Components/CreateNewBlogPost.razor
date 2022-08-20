@@ -75,6 +75,7 @@
 </div>
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
 
+<NavigationLock ConfirmExternalNavigation="@model.IsDirty" OnBeforeInternalNavigation="PreventNavigationWhenDirty"></NavigationLock>
 @code {
     [Parameter]
     public BlogPost BlogPost { get; set; }
@@ -119,5 +120,11 @@
     private void SetContentFromFile(string content)
     {
         model.Content = content;
+    }
+
+    private void PreventNavigationWhenDirty(LocationChangingContext context)
+    {
+        if (model.IsDirty)
+            context.PreventNavigation();
     }
 }

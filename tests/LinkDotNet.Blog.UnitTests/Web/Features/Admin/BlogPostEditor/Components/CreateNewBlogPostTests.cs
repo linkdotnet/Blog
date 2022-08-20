@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq;
+using Bunit;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components;
 
@@ -164,5 +167,27 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.IsPublished.Should().BeFalse();
         blogPost.Tags.Should().HaveCount(3);
         blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
+    }
+
+    [Fact(Skip = "Need bUnit > 1.9.8")]
+    public void ShouldStopExternalNavigationWhenDirty()
+    {
+        var cut = RenderComponent<CreateNewBlogPost>();
+
+        cut.Find("#title").Change("Hey");
+
+        cut.FindComponent<NavigationLock>().Instance.ConfirmExternalNavigation.Should().BeTrue();
+    }
+
+    [Fact(Skip = "Need bUnit > 1.9.8")]
+    public void ShouldStopInternalNavigationWhenDirty()
+    {
+        var cut = RenderComponent<CreateNewBlogPost>();
+        cut.Find("#tags").Change("Hey");
+        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
+
+        fakeNavigationManager.NavigateTo("/internal");
+
+        fakeNavigationManager.History.Count.Should().Be(1);
     }
 }
