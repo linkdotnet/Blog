@@ -1,4 +1,5 @@
 ﻿@using LinkDotNet.Blog.Domain
+@inject IToastService ToastService
 
 <h3>@Title</h3>
 
@@ -93,6 +94,8 @@
 
     private CreateNewModel model = new();
 
+    private bool ignoreIsDirty;
+
     protected override void OnParametersSet()
     {
         if (BlogPost == null)
@@ -124,7 +127,12 @@
 
     private void PreventNavigationWhenDirty(LocationChangingContext context)
     {
-        if (model.IsDirty)
+        if (model.IsDirty && !ignoreIsDirty)
+        {
             context.PreventNavigation();
+            ToastService.ShowWarning(
+                "You have unsaved changes. Click on this message to ignore this warning the next time",
+                onClick: () => ignoreIsDirty = true);
+        }
     }
 }
