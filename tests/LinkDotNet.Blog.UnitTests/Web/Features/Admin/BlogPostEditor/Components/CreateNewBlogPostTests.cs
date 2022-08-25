@@ -192,4 +192,21 @@ public class CreateNewBlogPostTests : TestContext
 
         fakeNavigationManager.History.Count.Should().Be(1);
     }
+
+    [Fact(Skip = "Need bUnit > 1.9.8")]
+    public void ShouldNotPreventWhenToastIsClicked()
+    {
+        var toastMock = new Mock<IToastService>();
+        Services.AddScoped(_ => toastMock.Object);
+        toastMock.Setup(t => t.ShowWarning(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Action>()))
+            .Callback<string, string, Action>((_, _, onClick) => onClick());
+        var cut = RenderComponent<CreateNewBlogPost>();
+        cut.Find("#tags").Change("Hey");
+        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
+        fakeNavigationManager.NavigateTo("/internal");
+
+        fakeNavigationManager.NavigateTo("/internal");
+
+        fakeNavigationManager.History.Count.Should().Be(2);
+    }
 }

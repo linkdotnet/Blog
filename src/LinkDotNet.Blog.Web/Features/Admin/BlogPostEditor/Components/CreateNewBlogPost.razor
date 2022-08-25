@@ -127,12 +127,12 @@
 
     private void PreventNavigationWhenDirty(LocationChangingContext context)
     {
-        if (model.IsDirty && !ignoreIsDirty)
-        {
-            context.PreventNavigation();
-            ToastService.ShowWarning(
-                "You have unsaved changes. Click on this message to ignore this warning the next time",
-                onClick: () => ignoreIsDirty = true);
-        }
+        if (!model.IsDirty || ignoreIsDirty)
+            return;
+
+        context.PreventNavigation();
+        ToastService.ShowWarning(
+            "You have unsaved changes. Click on this message to ignore this warning the next time",
+            onClick: () => ignoreIsDirty = true);
     }
 }
