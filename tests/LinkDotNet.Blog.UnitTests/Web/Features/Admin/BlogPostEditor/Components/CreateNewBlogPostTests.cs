@@ -116,8 +116,8 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldNotUpdateUpdatedDateWhenCheckboxSet()
     {
-        var somewhen = new DateTime(1991, 5, 17);
-        var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(somewhen).Build();
+        var someWhen = new DateTime(1991, 5, 17);
+        var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(someWhen).Build();
         BlogPost blogPostFromComponent = null;
         var cut = RenderComponent<CreateNewBlogPost>(
             p =>
@@ -132,7 +132,7 @@ public class CreateNewBlogPostTests : TestContext
         cut.Find("#updatedate").Change(false);
         cut.Find("form").Submit();
 
-        blogPostFromComponent.UpdatedDate.Should().Be(somewhen);
+        blogPostFromComponent.UpdatedDate.Should().Be(someWhen);
     }
 
     [Fact]
@@ -171,7 +171,7 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
     }
 
-    [Fact(Skip = "Need bUnit > 1.9.8")]
+    [Fact]
     public void ShouldStopExternalNavigationWhenDirty()
     {
         var cut = RenderComponent<CreateNewBlogPost>();
@@ -181,7 +181,7 @@ public class CreateNewBlogPostTests : TestContext
         cut.FindComponent<NavigationLock>().Instance.ConfirmExternalNavigation.Should().BeTrue();
     }
 
-    [Fact(Skip = "Need bUnit > 1.9.8")]
+    [Fact]
     public void ShouldStopInternalNavigationWhenDirty()
     {
         var cut = RenderComponent<CreateNewBlogPost>();
@@ -193,7 +193,7 @@ public class CreateNewBlogPostTests : TestContext
         fakeNavigationManager.History.Count.Should().Be(1);
     }
 
-    [Fact(Skip = "Need bUnit > 1.9.8")]
+    [Fact]
     public void ShouldNotPreventWhenToastIsClicked()
     {
         var toastMock = new Mock<IToastService>();
