@@ -36,6 +36,8 @@
     <Using Include="FluentAssertions" />
     <Using Include="Moq" />
     <Using Include="Xunit" />
+    <Using Include="Bunit" />
+    <Using Include="Bunit.TestDoubles" />
   </ItemGroup>
 
   <ItemGroup>

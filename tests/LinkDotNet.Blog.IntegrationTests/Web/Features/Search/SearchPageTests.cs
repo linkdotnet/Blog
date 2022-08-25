@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Bunit;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Search;
