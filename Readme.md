@@ -91,7 +91,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Giscus                    | node           | Enables the comment section via giscus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below |
 | Disqus                    | node           | Enables the comment section via disqus. If left empty the comment secion will not be shown. For more information checkout the section about comments down below |
 | KofiToken                 | string         | Enables the "Buy me a Coffee" button of Kofi. To aquire the token head down to the "Kofi" section                                                               |
-| GithubSponsorName | string | Enables the "Github Sponsor" button which redirects to GitHub. Only pass in the user name instead of the url.|
+| GithubSponsorName         | string         | Enables the "Github Sponsor" button which redirects to GitHub. Only pass in the user name instead of the url.                                                   |
 
 ## Storage Provider
 Currently there are 4 Storage-Provider:
@@ -173,7 +173,7 @@ To get better results when for example shared via LinkedIn some of the `<meta pr
 The following tags are set depending on the page:
 
 | Open Graph Tag | Index                                                     | Display Blog Post                                                           |
-| -------------- | --------------------------------------------------------- |-----------------------------------------------------------------------------|
+| -------------- | --------------------------------------------------------- | --------------------------------------------------------------------------- |
 | og:title       | Title of the blog (defined in Introduction)               | Title of the Blog Post                                                      |
 | og:url         | Url to the index page                                     | Url of the page                                                             |
 | og:image       | Profile image (defined in Introduction)                   | Uses the preview image. If a fallback is defined this will be used instead. |
