@@ -34,4 +34,8 @@ public record AppConfiguration
     public string KofiToken { get; init; }
 
     public bool IsKofiEnabled => !string.IsNullOrEmpty(KofiToken);
+
+    public string GithubSponsorName { get; init; }
+
+    public bool IsGithubSponsorAvailable => !string.IsNullOrEmpty(GithubSponsorName);
 }

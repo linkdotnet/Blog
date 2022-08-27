@@ -4,3 +4,8 @@
 {
     <Kofi KofiToken="@AppConfiguration.KofiToken"></Kofi>
 }
+
+@if (AppConfiguration.IsGithubSponsorAvailable)
+{
+    <GithubSponsor Name="@AppConfiguration.GithubSponsorName"></GithubSponsor>
+}

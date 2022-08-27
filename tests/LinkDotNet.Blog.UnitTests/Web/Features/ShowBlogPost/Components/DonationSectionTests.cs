@@ -6,28 +6,37 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
 public class DonationSectionTests : TestContext
 {
-    [Fact]
-    public void ShouldShowKofiWhenTokenIsSet()
+    [Theory]
+    [InlineData("linkdotnet", true)]
+    [InlineData(null, false)]
+
+    public void ShouldShowKofiIfSet(string token, bool hasComponent)
     {
         var appConfig = new AppConfiguration
         {
-            KofiToken = "set",
+            KofiToken = token,
         };
         Services.AddScoped(_ => appConfig);
 
         var cut = RenderComponent<DonationSection>();
 
-        cut.FindComponents<Kofi>().Should().HaveCount(1);
+        cut.HasComponent<Kofi>().Should().Be(hasComponent);
     }
 
-    [Fact]
-    public void ShouldHideKofiWhenTokenNotSet()
+    [Theory]
+    [InlineData("linkdotnet", true)]
+    [InlineData(null, false)]
+
+    public void ShouldShowGithubSponsorIfSet(string account, bool hasComponent)
     {
-        var appConfig = new AppConfiguration();
+        var appConfig = new AppConfiguration
+        {
+            GithubSponsorName = account,
+        };
         Services.AddScoped(_ => appConfig);
 
         var cut = RenderComponent<DonationSection>();
 
-        cut.FindComponents<Kofi>().Should().HaveCount(0);
+        cut.HasComponent<GithubSponsor>().Should().Be(hasComponent);
     }
 }

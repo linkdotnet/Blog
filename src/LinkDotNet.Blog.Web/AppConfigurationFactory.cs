@@ -26,6 +26,7 @@ public static class AppConfigurationFactory
             GiscusConfiguration = giscus,
             DisqusConfiguration = disqus,
             KofiToken = config["KofiToken"],
+            GithubSponsorName = config["GithubSponsorName"],
         };
 
         return configuration;
