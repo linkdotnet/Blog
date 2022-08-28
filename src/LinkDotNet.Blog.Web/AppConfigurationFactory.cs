@@ -8,27 +8,33 @@ public static class AppConfigurationFactory
 {
     public static AppConfiguration Create(IConfiguration config)
     {
-        var social = config.GetSection("Social").Get<Social>();
-        var introduction = config.GetSection("Introduction").Get<Introduction>();
+        var social = config.GetSection(nameof(Social)).Get<Social>();
+        var introduction = config.GetSection(nameof(Introduction)).Get<Introduction>();
         var profileInformation = config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();
         var giscus = config.GetSection("Giscus").Get<GiscusConfiguration>();
         var disqus = config.GetSection("Disqus").Get<DisqusConfiguration>();
+        var blogPostPerPage = GetBlogPostPerPage(config[nameof(AppConfiguration.BlogPostsPerPage)]);
         var configuration = new AppConfiguration
         {
-            BlogName = config["BlogName"],
-            BlogBrandUrl = config["BlogBrandUrl"],
+            BlogName = config[nameof(AppConfiguration.BlogName)],
+            BlogBrandUrl = config[nameof(AppConfiguration.BlogBrandUrl)],
             Social = social,
             Introduction = introduction,
-            ConnectionString = config["ConnectionString"],
-            DatabaseName = config["DatabaseName"],
-            BlogPostsPerPage = int.Parse(config["BlogPostsPerPage"]),
+            ConnectionString = config[nameof(AppConfiguration.ConnectionString)],
+            DatabaseName = config[nameof(AppConfiguration.DatabaseName)],
+            BlogPostsPerPage = blogPostPerPage,
             ProfileInformation = profileInformation,
             GiscusConfiguration = giscus,
             DisqusConfiguration = disqus,
-            KofiToken = config["KofiToken"],
-            GithubSponsorName = config["GithubSponsorName"],
+            KofiToken = config[nameof(AppConfiguration.KofiToken)],
+            GithubSponsorName = config[nameof(AppConfiguration.GithubSponsorName)],
         };
 
         return configuration;
+    }
+
+    private static int GetBlogPostPerPage(string configValue)
+    {
+        return int.TryParse(configValue, out var blogPostPerPage) ? blogPostPerPage : 10;
     }
 }

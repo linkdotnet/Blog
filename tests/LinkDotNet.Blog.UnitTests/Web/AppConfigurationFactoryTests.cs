@@ -10,29 +10,29 @@ public class AppConfigurationFactoryTests
     public void ShouldMapFromAppConfiguration()
     {
         var inMemorySettings = new Dictionary<string, string>
-            {
-                { "BlogName", "UnitTest" },
-                { "BlogBrandUrl", "http://localhost" },
-                { "Social:GithubAccountUrl", "github" },
-                { "Social:LinkedInAccountUrl", "linkedIn" },
-                { "Social:TwitterAccountUrl", "twitter" },
-                { "ConnectionString", "cs" },
-                { "DatabaseName", "db" },
-                { "Introduction:BackgroundUrl", "someurl" },
-                { "Introduction:ProfilePictureUrl", "anotherurl" },
-                { "Introduction:Description", "desc" },
-                { "BlogPostsPerPage", "5" },
-                { "AboutMeProfileInformation:Name", "Steven" },
-                { "AboutMeProfileInformation:Heading", "Dev" },
-                { "AboutMeProfileInformation:ProfilePictureUrl", "Url" },
-                { "Giscus:Repository", "repo" },
-                { "Giscus:RepositoryId", "repoid" },
-                { "Giscus:Category", "general" },
-                { "Giscus:CategoryId", "generalid" },
-                { "Disqus:Shortname", "blog" },
-                { "KofiToken", "ABC" },
-                { "GithubSponsorName", "linkdotnet" },
-            };
+        {
+            { "BlogName", "UnitTest" },
+            { "BlogBrandUrl", "http://localhost" },
+            { "Social:GithubAccountUrl", "github" },
+            { "Social:LinkedInAccountUrl", "linkedIn" },
+            { "Social:TwitterAccountUrl", "twitter" },
+            { "ConnectionString", "cs" },
+            { "DatabaseName", "db" },
+            { "Introduction:BackgroundUrl", "someurl" },
+            { "Introduction:ProfilePictureUrl", "anotherurl" },
+            { "Introduction:Description", "desc" },
+            { "BlogPostsPerPage", "5" },
+            { "AboutMeProfileInformation:Name", "Steven" },
+            { "AboutMeProfileInformation:Heading", "Dev" },
+            { "AboutMeProfileInformation:ProfilePictureUrl", "Url" },
+            { "Giscus:Repository", "repo" },
+            { "Giscus:RepositoryId", "repoid" },
+            { "Giscus:Category", "general" },
+            { "Giscus:CategoryId", "generalid" },
+            { "Disqus:Shortname", "blog" },
+            { "KofiToken", "ABC" },
+            { "GithubSponsorName", "linkdotnet" },
+        };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
@@ -80,15 +80,14 @@ public class AppConfigurationFactoryTests
         bool twitterAvailable)
     {
         var inMemorySettings = new Dictionary<string, string>
-            {
-                { "Introduction:BackgroundUrl", "someurl" },
-                { "Introduction:ProfilePictureUrl", "anotherurl" },
-                { "Introduction:Description", "desc" },
-                { "Social:GithubAccountUrl", githubUrl },
-                { "Social:LinkedInAccountUrl", linkedInUrl },
-                { "Social:TwitterAccountUrl", twitterUrl },
-                { "BlogPostsPerPage", "2" },
-            };
+        {
+            { "Introduction:BackgroundUrl", "someurl" },
+            { "Introduction:ProfilePictureUrl", "anotherurl" },
+            { "Introduction:Description", "desc" },
+            { "Social:GithubAccountUrl", githubUrl },
+            { "Social:LinkedInAccountUrl", linkedInUrl },
+            { "Social:TwitterAccountUrl", twitterUrl },
+        };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
@@ -104,12 +103,11 @@ public class AppConfigurationFactoryTests
     public void ShouldSetIsAboutMeEnabledToFalseWhenNoInformation()
     {
         var inMemorySettings = new Dictionary<string, string>
-            {
-                { "Introduction:BackgroundUrl", "someurl" },
-                { "Introduction:ProfilePictureUrl", "anotherurl" },
-                { "Introduction:Description", "desc" },
-                { "BlogPostsPerPage", "2" },
-            };
+        {
+            { "Introduction:BackgroundUrl", "someurl" },
+            { "Introduction:ProfilePictureUrl", "anotherurl" },
+            { "Introduction:Description", "desc" },
+        };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
@@ -123,12 +121,11 @@ public class AppConfigurationFactoryTests
     public void ShouldSetCommentPluginsToFalseWhenNoInformation()
     {
         var inMemorySettings = new Dictionary<string, string>
-            {
-                { "Introduction:BackgroundUrl", "someurl" },
-                { "Introduction:ProfilePictureUrl", "anotherurl" },
-                { "Introduction:Description", "desc" },
-                { "BlogPostsPerPage", "2" },
-            };
+        {
+            { "Introduction:BackgroundUrl", "someurl" },
+            { "Introduction:ProfilePictureUrl", "anotherurl" },
+            { "Introduction:Description", "desc" },
+        };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
@@ -137,5 +134,17 @@ public class AppConfigurationFactoryTests
 
         appConfiguration.IsGiscusEnabled.Should().BeFalse();
         appConfiguration.IsDisqusEnabled.Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldSetDefaultBlogPostPerPageIfNotSet()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>())
+            .Build();
+
+        var appConfiguration = AppConfigurationFactory.Create(configuration);
+
+        appConfiguration.BlogPostsPerPage.Should().Be(10);
     }
 }
