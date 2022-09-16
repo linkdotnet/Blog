@@ -176,7 +176,7 @@ public class CreateNewBlogPostTests : TestContext
     {
         var cut = RenderComponent<CreateNewBlogPost>();
 
-        cut.Find("#title").Change("Hey");
+        cut.Find("#title").Input("Hey");
 
         cut.FindComponent<NavigationLock>().Instance.ConfirmExternalNavigation.Should().BeTrue();
     }
