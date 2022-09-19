@@ -3,10 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using AngleSharpWrappers;
-using Bunit;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
+using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.Dashboard.Components;
@@ -19,7 +22,8 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPost = new BlogPostBuilder().WithTitle("I was clicked").WithLikes(2).Build();
         await Repository.StoreAsync(blogPost);
         using var ctx = new TestContext();
-        ctx.Services.AddScoped(_ => DbContext);
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContext));
+        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContext));
         await SaveBlogPostArticleClicked(blogPost.Id, 10);
 
         var cut = ctx.RenderComponent<VisitCountPerPage>();
@@ -53,20 +57,22 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
-        ctx.Services.AddScoped(_ => DbContext);
+        ctx.ComponentFactories.Add<DateRangeSelector, FilterStubComponent>();
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContext));
+        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContext));
         var cut = ctx.RenderComponent<VisitCountPerPage>();
+        var filter = new Filter { StartDate = new DateTime(2019, 1, 1), EndDate = new DateTime(2020, 12, 31) };
 
-        cut.FindComponent<DateRangeSelector>().Find("#startDate").Change(new DateTime(2019, 1, 1));
-        cut.FindComponent<DateRangeSelector>().Find("#endDate").Change(new DateTime(2020, 12, 31));
+        await cut.InvokeAsync(() => cut.FindComponent<FilterStubComponent>().Instance.FireFilterChanged(filter));
 
-        cut.WaitForState(() => cut.FindAll("td").Any());
+        cut.WaitForState(() => cut.FindAll("td").Count == 3);
         var elements = cut.FindAll("td").ToList();
         elements.Count.Should().Be(3);
         var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
         titleData.Should().NotBeNull();
         titleData.InnerHtml.Should().Be(blogPost1.Title);
         titleData.Href.Should().Contain($"blogPost/{blogPost1.Id}");
-        elements[1].InnerHtml.Should().Be("1");
+        cut.WaitForAssertion(() => elements[1].InnerHtml.Should().Be("1"));
     }
 
     [Fact]
@@ -87,7 +93,8 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
-        ctx.Services.AddScoped(_ => DbContext);
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContext));
+        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContext));
 
         var cut = ctx.RenderComponent<VisitCountPerPage>();
 
@@ -108,5 +115,13 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         }
 
         await DbContext.SaveChangesAsync();
+    }
+
+    private class FilterStubComponent : ComponentBase
+    {
+        [Parameter]
+        public EventCallback<Filter> FilterChanged { get; set; }
+
+        public void FireFilterChanged(Filter filter) => FilterChanged.InvokeAsync(filter);
     }
 }

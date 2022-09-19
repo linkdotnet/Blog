@@ -4,7 +4,9 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Infrastructure.Persistence.Sql
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
-@inject BlogDbContext BlogDbContext
+@using X.PagedList
+@inject IRepository<BlogPost> BlogPostRepository
+@inject IRepository<UserRecord> UserRecordRepository
 
 <div class="card">
     <div class="card-header">Blog Post Visit Counts</div>
@@ -54,32 +56,35 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadBlogPostInformationAsync();
+        visitData = await LoadBlogPostInformationAsync();
     }
 
-    private async Task LoadBlogPostInformationAsync()
+    private async Task<List<VisitCountPageData>> LoadBlogPostInformationAsync()
     {
-        var query = from ur in BlogDbContext.UserRecords
-            where (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
-                  && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate)
-            join bp in BlogDbContext.BlogPosts
+        var blogPosts = (await BlogPostRepository.GetAllAsync()).ToList();
+        var userRecords = (await UserRecordRepository.GetAllAsync(
+            ur => (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
+                  && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate)))
+            .ToList();
+
+        var visitCountPage = (from ur in userRecords
+            join bp in blogPosts
                 on ur.UrlClicked.Replace("blogPost/", string.Empty) equals bp.Id
             group new { ur, bp } by new { ur.UrlClicked } into gp
             orderby gp.Count() descending
             select new VisitCountPageData
             {
-                Id = gp.FirstOrDefault().bp.Id,
-                Title = gp.FirstOrDefault().bp.Title,
-                Likes = gp.FirstOrDefault().bp.Likes,
+                Id = gp.First().bp.Id,
+                Title = gp.First().bp.Title,
+                Likes = gp.First().bp.Likes,
                 ClickCount = gp.Count()
-            };
-        visitData = await query.ToListAsync();
+            }).ToList();
+        return visitCountPage;
     }
 
     private async Task RefreshVisitCount(Filter newBeginning)
     {
         filter = newBeginning;
-        visitData = null;
-        await LoadBlogPostInformationAsync();
+        visitData = await LoadBlogPostInformationAsync();
     }
 }
