@@ -11,15 +11,16 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 public class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
-    private readonly BlogDbContext blogDbContext;
+    private readonly IDbContextFactory<BlogDbContext> dbContextFactory;
 
-    public Repository(BlogDbContext blogDbContext)
+    public Repository(IDbContextFactory<BlogDbContext> dbContextFactory)
     {
-        this.blogDbContext = blogDbContext;
+        this.dbContextFactory = dbContextFactory;
     }
 
     public async ValueTask<TEntity> GetByIdAsync(string id)
     {
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
     }
 
@@ -30,6 +31,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         int page = 1,
         int pageSize = int.MaxValue)
     {
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
 
         if (filter != null)
@@ -49,6 +51,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreAsync(TEntity entity)
     {
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         if (string.IsNullOrEmpty(entity.Id))
         {
             await blogDbContext.Set<TEntity>().AddAsync(entity);
@@ -63,6 +66,7 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask DeleteAsync(string id)
     {
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entityToDelete = await GetByIdAsync(id);
         if (entityToDelete != null)
         {

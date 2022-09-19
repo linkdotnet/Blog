@@ -10,6 +10,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.Dashboard.Components;
@@ -22,8 +23,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPost = new BlogPostBuilder().WithTitle("I was clicked").WithLikes(2).Build();
         await Repository.StoreAsync(blogPost);
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContext));
-        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContext));
+        RegisterRepositories(ctx);
         await SaveBlogPostArticleClicked(blogPost.Id, 10);
 
         var cut = ctx.RenderComponent<VisitCountPerPage>();
@@ -58,8 +58,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         ctx.ComponentFactories.Add<DateRangeSelector, FilterStubComponent>();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContext));
-        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContext));
+        RegisterRepositories(ctx);
         var cut = ctx.RenderComponent<VisitCountPerPage>();
         var filter = new Filter { StartDate = new DateTime(2019, 1, 1), EndDate = new DateTime(2020, 12, 31) };
 
@@ -93,13 +92,18 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContext));
-        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContext));
+        RegisterRepositories(ctx);
 
         var cut = ctx.RenderComponent<VisitCountPerPage>();
 
         cut.WaitForState(() => cut.FindAll("td").Any());
         cut.Find("#total-clicks").Unwrap().TextContent.Should().Be("4 clicks in total");
+    }
+
+    private void RegisterRepositories(TestContextBase ctx)
+    {
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContextFactory));
+        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContextFactory));
     }
 
     private async Task SaveBlogPostArticleClicked(string blogPostId, int count)

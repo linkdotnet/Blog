@@ -12,18 +12,25 @@ namespace LinkDotNet.Blog.IntegrationTests;
 public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDisposable
     where TEntity : Entity
 {
+    private readonly Mock<IDbContextFactory<BlogDbContext>> dbContextFactory;
+
     protected SqlDatabaseTestBase()
     {
         var options = new DbContextOptionsBuilder()
             .UseSqlite(CreateInMemoryConnection())
             .Options;
         DbContext = new BlogDbContext(options);
-        Repository = new Repository<TEntity>(new BlogDbContext(options));
+        dbContextFactory = new Mock<IDbContextFactory<BlogDbContext>>();
+        dbContextFactory.Setup(d => d.CreateDbContextAsync(default))
+            .ReturnsAsync(() => new BlogDbContext(options));
+        Repository = new Repository<TEntity>(dbContextFactory.Object);
     }
 
     protected IRepository<TEntity> Repository { get; }
 
     protected BlogDbContext DbContext { get; }
+
+    protected IDbContextFactory<BlogDbContext> DbContextFactory => dbContextFactory.Object;
 
     public Task InitializeAsync()
     {
