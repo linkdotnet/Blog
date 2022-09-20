@@ -191,6 +191,7 @@ public class CreateNewBlogPostTests : TestContext
         fakeNavigationManager.NavigateTo("/internal");
 
         fakeNavigationManager.History.Count.Should().Be(1);
+        fakeNavigationManager.History.Single().State.Should().Be(NavigationState.Prevented);
     }
 
     [Fact]
@@ -208,5 +209,22 @@ public class CreateNewBlogPostTests : TestContext
         fakeNavigationManager.NavigateTo("/internal");
 
         fakeNavigationManager.History.Count.Should().Be(2);
+        fakeNavigationManager.History.First().State.Should().Be(NavigationState.Succeeded);
+        fakeNavigationManager.History.Last().State.Should().Be(NavigationState.Prevented);
+    }
+
+    [Fact]
+    public void ShouldNotBlogNavigationOnInitialLoad()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+        Services.AddScoped(_ => Mock.Of<IToastService>());
+        RenderComponent<CreateNewBlogPost>(
+            p => p.Add(s => s.BlogPost, blogPost));
+        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
+
+        fakeNavigationManager.NavigateTo("/internal");
+
+        fakeNavigationManager.History.Count.Should().Be(1);
+        fakeNavigationManager.History.Single().State.Should().Be(NavigationState.Succeeded);
     }
 }

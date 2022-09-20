@@ -119,6 +119,7 @@ public class CreateNewModel
             PreviewImageUrl = blogPost.PreviewImageUrl,
             originalUpdatedDate = blogPost.UpdatedDate,
             PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback,
+            IsDirty = false,
         };
     }
 
