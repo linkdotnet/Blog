@@ -28,16 +28,20 @@
 </div >
 
 @code {
-    private List<IGrouping<int, BlogPost>> blogPostsPerYear;
+    private List<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
     private int blogPostCount;
 
     protected override async Task OnInitializedAsync()
     {
-        var blogPosts = await Repository.GetAllAsync(p => p.IsPublished);
+        var blogPosts = await Repository.GetAllByProjectionAsync(
+            p => new BlogPostPerYear(p.Id, p.Title, p.UpdatedDate),
+            p => p.IsPublished);
         blogPostCount = blogPosts.Count;
         blogPostsPerYear = blogPosts
             .GroupBy(r => r.UpdatedDate.Year)
             .OrderByDescending(r => r.Key)
             .ToList();
     }
+
+    private sealed record BlogPostPerYear(string Id, string Title, DateTime UpdatedDate);
 }

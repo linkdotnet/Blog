@@ -64,7 +64,7 @@ public class RssFeedController : ControllerBase
         return settings;
     }
 
-    private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPost blogPost)
+    private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPostRssInfo blogPost)
     {
         var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
         var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription);
@@ -84,7 +84,7 @@ public class RssFeedController : ControllerBase
         return item;
     }
 
-    private static void AddCategories(ICollection<SyndicationCategory> categories, BlogPost blogPost)
+    private static void AddCategories(ICollection<SyndicationCategory> categories, BlogPostRssInfo blogPost)
     {
         foreach (var tag in blogPost.Tags ?? Array.Empty<Tag>())
         {
@@ -94,7 +94,18 @@ public class RssFeedController : ControllerBase
 
     private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
     {
-        var blogPosts = await blogPostRepository.GetAllAsync(f => f.IsPublished, orderBy: post => post.UpdatedDate);
+        var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
+            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            f => f.IsPublished,
+            orderBy: post => post.UpdatedDate);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
     }
+
+    private sealed record BlogPostRssInfo(
+        string Id,
+        string Title,
+        string ShortDescription,
+        DateTime UpdatedDate,
+        string PreviewImageUrl,
+        ICollection<Tag> Tags);
 }

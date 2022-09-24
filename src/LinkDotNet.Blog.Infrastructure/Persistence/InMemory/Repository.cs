@@ -26,6 +26,18 @@ public class Repository<TEntity> : IRepository<TEntity>
         int page = 1,
         int pageSize = int.MaxValue)
     {
+        return GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
+    }
+
+    public ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+        Expression<Func<TEntity, TProjection>> selector,
+        Expression<Func<TEntity, bool>> filter = null,
+        Expression<Func<TEntity, object>> orderBy = null,
+        bool descending = true,
+        int page = 1,
+        int pageSize = int.MaxValue)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
         var result = entities.AsEnumerable();
         if (filter != null)
         {
@@ -39,7 +51,7 @@ public class Repository<TEntity> : IRepository<TEntity>
                 : result.OrderBy(orderBy.Compile());
         }
 
-        return new ValueTask<IPagedList<TEntity>>(result.ToPagedList(page, pageSize));
+        return new ValueTask<IPagedList<TProjection>>(result.Select(selector.Compile()).ToPagedList(page, pageSize));
     }
 
     public ValueTask StoreAsync(TEntity entity)

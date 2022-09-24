@@ -1,10 +1,13 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Bunit;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Archive;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
+using X.PagedList;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Archive;
 
@@ -63,11 +66,62 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find("h3").TextContent.Should().Be("Archive (2 posts)");
     }
 
+    [Fact]
+    public void ShouldShowLoading()
+    {
+        using var ctx = new TestContext();
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new SlowRepository());
+
+        var cut = ctx.RenderComponent<ArchivePage>();
+
+        cut.FindComponents<Loading>().Count.Should().Be(1);
+    }
+
+    [Fact]
+    public void ShouldSetOgData()
+    {
+        using var ctx = new TestContext();
+        ctx.Services.AddScoped(_ => Repository);
+
+        var cut = ctx.RenderComponent<ArchivePage>();
+
+        var ogData = cut.FindComponent<OgData>().Instance;
+        ogData.Title.Should().Contain("Archive");
+    }
+
     private static BlogPost CreateBlogPost(DateTime date, string title)
     {
         return new BlogPostBuilder()
             .WithTitle(title)
             .WithUpdatedDate(date)
             .Build();
+    }
+
+    private sealed class SlowRepository : IRepository<BlogPost>
+    {
+        public ValueTask<BlogPost> GetByIdAsync(string id) => throw new NotImplementedException();
+
+        public ValueTask<IPagedList<BlogPost>> GetAllAsync(
+            Expression<Func<BlogPost, bool>> filter = null,
+            Expression<Func<BlogPost, object>> orderBy = null,
+            bool descending = true,
+            int page = 1,
+            int pageSize = int.MaxValue) => throw new NotImplementedException();
+
+        public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+            Expression<Func<BlogPost, TProjection>> selector,
+            Expression<Func<BlogPost, bool>> filter = null,
+            Expression<Func<BlogPost, object>> orderBy = null,
+            bool descending = true,
+            int page = 1,
+            int pageSize = int.MaxValue)
+        {
+            await Task.Delay(250);
+            return new StaticPagedList<TProjection>(Array.Empty<TProjection>(), 1, 1, 1);
+        }
+
+        public ValueTask StoreAsync(BlogPost entity) => throw new NotImplementedException();
+
+        public ValueTask DeleteAsync(string id) => throw new NotImplementedException();
     }
 }

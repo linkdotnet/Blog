@@ -31,6 +31,18 @@ public class Repository<TEntity> : IRepository<TEntity>
         int page = 1,
         int pageSize = int.MaxValue)
     {
+        return await GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
+    }
+
+    public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+        Expression<Func<TEntity, TProjection>> selector,
+        Expression<Func<TEntity, bool>> filter = null,
+        Expression<Func<TEntity, object>> orderBy = null,
+        bool descending = true,
+        int page = 1,
+        int pageSize = int.MaxValue)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
         await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
 
@@ -46,7 +58,7 @@ public class Repository<TEntity> : IRepository<TEntity>
                 : entity.OrderBy(orderBy);
         }
 
-        return await entity.ToPagedListAsync(page, pageSize);
+        return await entity.Select(selector).ToPagedListAsync(page, pageSize);
     }
 
     public async ValueTask StoreAsync(TEntity entity)
