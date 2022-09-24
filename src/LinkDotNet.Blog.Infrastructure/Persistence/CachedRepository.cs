@@ -49,6 +49,18 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         return await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
     }
 
+    public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+        Expression<Func<T, TProjection>> selector,
+        Expression<Func<T, bool>> filter = null,
+        Expression<Func<T, object>> orderBy = null,
+        bool descending = true,
+        int page = 1,
+        int pageSize = int.MaxValue)
+    {
+        ArgumentNullException.ThrowIfNull(selector);
+        return await repository.GetAllByProjectionAsync(selector, filter, orderBy, descending, page, pageSize);
+    }
+
     public async ValueTask StoreAsync(T entity)
     {
         await repository.StoreAsync(entity);

@@ -7,7 +7,7 @@ using X.PagedList;
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
 public interface IRepository<TEntity>
-where TEntity : Entity
+    where TEntity : Entity
 {
     ValueTask<TEntity> GetByIdAsync(string id);
 
@@ -15,6 +15,14 @@ where TEntity : Entity
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity,
             object>> orderBy = null,
+        bool descending = true,
+        int page = 1,
+        int pageSize = int.MaxValue);
+
+    ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+        Expression<Func<TEntity, TProjection>> selector,
+        Expression<Func<TEntity, bool>> filter = null,
+        Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue);
