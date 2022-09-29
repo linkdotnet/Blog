@@ -44,10 +44,8 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         Expression<Func<T, object>> orderBy = null,
         bool descending = true,
         int page = 1,
-        int pageSize = int.MaxValue)
-    {
-        return await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
-    }
+        int pageSize = int.MaxValue) =>
+        await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<T, TProjection>> selector,
@@ -55,11 +53,8 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         Expression<Func<T, object>> orderBy = null,
         bool descending = true,
         int page = 1,
-        int pageSize = int.MaxValue)
-    {
-        ArgumentNullException.ThrowIfNull(selector);
-        return await repository.GetAllByProjectionAsync(selector, filter, orderBy, descending, page, pageSize);
-    }
+        int pageSize = int.MaxValue) =>
+        await repository.GetAllByProjectionAsync(selector, filter, orderBy, descending, page, pageSize);
 
     public async ValueTask StoreAsync(T entity)
     {
@@ -74,14 +69,11 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         await repository.DeleteAsync(id);
     }
 
-    public void Dispose()
-    {
-        resetToken?.Dispose();
-    }
+    public void Dispose() => resetToken?.Dispose();
 
     private void ResetCache()
     {
-        if (resetToken is { IsCancellationRequested: false, Token: { CanBeCanceled: true } })
+        if (resetToken is { IsCancellationRequested: false, Token.CanBeCanceled: true })
         {
             resetToken.Cancel();
             resetToken.Dispose();

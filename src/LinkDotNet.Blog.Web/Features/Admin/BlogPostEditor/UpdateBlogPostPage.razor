@@ -24,13 +24,10 @@ else
     public string BlogPostId { get; set; }
 
     private BlogPost blogPostFromDb;
-    
+
     protected override async Task OnParametersSetAsync()
     {
-        if (string.IsNullOrEmpty(BlogPostId))
-        {
-            throw new ArgumentNullException(nameof(BlogPostId), "You have to provide an id");
-        }
+        ArgumentException.ThrowIfNullOrEmpty(BlogPostId, nameof(BlogPostId));
 
         blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
     }
