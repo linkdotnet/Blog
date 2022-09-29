@@ -120,10 +120,7 @@
         }
     }
 
-    private void SetContentFromFile(string content)
-    {
-        model.Content = content;
-    }
+    private void SetContentFromFile(string content) => model.Content = content;
 
     private void PreventNavigationWhenDirty(LocationChangingContext context)
     {

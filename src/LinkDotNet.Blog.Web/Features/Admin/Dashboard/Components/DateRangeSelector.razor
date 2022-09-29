@@ -15,10 +15,7 @@
 
     private Filter filter = new();
 
-    private async Task ApplyFilters()
-    {
-        await FilterChanged.InvokeAsync(filter);
-    }
+    private async Task ApplyFilters() => await FilterChanged.InvokeAsync(filter);
 
     private async Task StartDateChanged(ChangeEventArgs args)
     {

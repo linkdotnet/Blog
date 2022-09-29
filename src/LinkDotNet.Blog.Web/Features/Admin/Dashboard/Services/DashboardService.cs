@@ -20,15 +20,16 @@ public class DashboardService : IDashboardService
     {
         var records = (await userRecordRepository.GetAllAsync()).ToList();
         var users = records.GroupBy(r => r.UserIdentifierHash).Count();
+        var thirdyDaysAgo = DateTime.UtcNow.AddDays(-30).Date;
         var users30Days = records
-            .Where(r => r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30))
+            .Where(r => r.DateTimeUtcClicked >= thirdyDaysAgo)
             .GroupBy(r => r.UserIdentifierHash).Count();
 
         var clicks = records.Count;
-        var clicks30Days = records.Count(r => r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30));
+        var clicks30Days = records.Count(r => r.DateTimeUtcClicked >= thirdyDaysAgo);
 
         var aboutMeClicks = records.Count(r => r.UrlClicked.Contains("AboutMe"));
-        var aboutMeClicksLast30Days = records.Count(r => r.UrlClicked.Contains("AboutMe") && r.DateTimeUtcClicked >= DateTime.UtcNow.AddDays(-30));
+        var aboutMeClicksLast30Days = records.Count(r => r.UrlClicked.Contains("AboutMe") && r.DateTimeUtcClicked >= thirdyDaysAgo);
 
         return new DashboardData
         {
