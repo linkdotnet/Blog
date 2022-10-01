@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Blazored.Toast.Services;
-using Bunit;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
@@ -15,7 +13,6 @@ public class CreateNewBlogPostTests : TestContext
     public CreateNewBlogPostTests()
     {
         ComponentFactories.AddStub<UploadFile>();
-        Services.AddScoped(_ => Mock.Of<IToastService>());
     }
 
     [Fact]
