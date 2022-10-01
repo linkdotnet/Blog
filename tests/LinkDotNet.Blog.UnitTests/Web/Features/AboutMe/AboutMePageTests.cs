@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.AboutMe;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components;
+using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;

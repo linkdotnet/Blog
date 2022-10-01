@@ -1,0 +1,12 @@
+@using LinkDotNet.Blog.Domain
+
+@code {
+    [Parameter]
+    public bool ShowAdminActions { get; set; }
+
+    [Parameter]
+    public EventCallback<Talk> TalkDeleted { get; set; }
+
+    [Parameter]
+    public Talk Talk { get; set; }
+}

@@ -1,0 +1,12 @@
+<ModalDialog @ref="Dialog" Title="Add Talk">
+</ModalDialog>
+
+@code {
+    private ModalDialog Dialog { get; set; }
+
+    public void Open()
+    {
+        Dialog.Open();
+        StateHasChanged();
+    }
+}

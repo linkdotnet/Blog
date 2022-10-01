@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web.Features.AboutMe.Components;
+using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe.Components;
 
