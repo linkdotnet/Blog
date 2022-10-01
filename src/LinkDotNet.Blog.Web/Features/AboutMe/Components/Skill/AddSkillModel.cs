@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using LinkDotNet.Blog.Domain;
 
-namespace LinkDotNet.Blog.Web.Features.AboutMe.Components;
+namespace LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 
 public class AddSkillModel
 {

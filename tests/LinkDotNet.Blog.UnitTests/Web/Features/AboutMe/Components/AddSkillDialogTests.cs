@@ -1,6 +1,6 @@
 ﻿using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Web.Features.AboutMe.Components;
+using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe.Components;

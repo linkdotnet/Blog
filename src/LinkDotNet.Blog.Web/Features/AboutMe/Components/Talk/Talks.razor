@@ -1,0 +1,39 @@
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@inject IRepository<Talk> Repository
+
+@if (talks.Any() || ShowAdminActions)
+{
+    <Card Header="Talks">
+        @if (ShowAdminActions)
+        {
+            <button type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
+                <i class="plus"></i>Add skill</button>
+            <AddTalkEntryDialog @ref="AddTalkEntryDialog"></AddTalkEntryDialog>
+        }
+        <ul>
+            @foreach (var talk in talks)
+            {
+                <TalkEntry Talk="talk" ShowAdminActions="ShowAdminActions" TalkDeleted="DeleteTalk"></TalkEntry>
+            }
+        </ul>
+    </Card>
+}
+@code {
+    [Parameter]
+    public bool ShowAdminActions { get; set; }
+
+    private IList<Talk> talks = Array.Empty<Talk>();
+    private AddTalkEntryDialog AddTalkEntryDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        talks = (await Repository.GetAllAsync(orderBy: t => t.PublishedDate)).ToList();
+    }
+
+    private async Task DeleteTalk(Talk talk)
+    {
+        await Repository.DeleteAsync(talk.Id);
+        talks.Remove(talk);
+    }
+}
