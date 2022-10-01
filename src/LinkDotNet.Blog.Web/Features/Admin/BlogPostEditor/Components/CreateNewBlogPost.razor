@@ -1,5 +1,5 @@
 ﻿@using LinkDotNet.Blog.Domain
-@inject IToastService ToastService
+@inject IJSRuntime JSRuntime
 
 <h3>@Title</h3>
 
@@ -94,8 +94,6 @@
 
     private CreateNewModel model = new();
 
-    private bool ignoreIsDirty;
-
     protected override void OnParametersSet()
     {
         if (BlogPost == null)
@@ -122,14 +120,16 @@
 
     private void SetContentFromFile(string content) => model.Content = content;
 
-    private void PreventNavigationWhenDirty(LocationChangingContext context)
+    private async Task PreventNavigationWhenDirty(LocationChangingContext context)
     {
-        if (!model.IsDirty || ignoreIsDirty)
+        if (!model.IsDirty)
             return;
 
-        context.PreventNavigation();
-        ToastService.ShowWarning(
-            "You have unsaved changes. Click on this message to ignore this warning the next time",
-            onClick: () => ignoreIsDirty = true);
+        var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "You have unsaved changes. Are you sure you want to continue?");
+
+        if (isConfirmed)
+        {
+            context.PreventNavigation();
+        }
     }
 }

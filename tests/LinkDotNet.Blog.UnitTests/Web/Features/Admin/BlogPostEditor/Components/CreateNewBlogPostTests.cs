@@ -184,6 +184,8 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldStopInternalNavigationWhenDirty()
     {
+        JSInterop.Setup<bool>("confirm", "You have unsaved changes. Are you sure you want to continue?")
+            .SetResult(true);
         var cut = RenderComponent<CreateNewBlogPost>();
         cut.Find("#tags").Change("Hey");
         var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
@@ -195,29 +197,9 @@ public class CreateNewBlogPostTests : TestContext
     }
 
     [Fact]
-    public void ShouldNotPreventWhenToastIsClicked()
-    {
-        var toastMock = new Mock<IToastService>();
-        Services.AddScoped(_ => toastMock.Object);
-        toastMock.Setup(t => t.ShowWarning(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Action>()))
-            .Callback<string, string, Action>((_, _, onClick) => onClick());
-        var cut = RenderComponent<CreateNewBlogPost>();
-        cut.Find("#tags").Change("Hey");
-        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
-        fakeNavigationManager.NavigateTo("/internal");
-
-        fakeNavigationManager.NavigateTo("/internal");
-
-        fakeNavigationManager.History.Count.Should().Be(2);
-        fakeNavigationManager.History.First().State.Should().Be(NavigationState.Succeeded);
-        fakeNavigationManager.History.Last().State.Should().Be(NavigationState.Prevented);
-    }
-
-    [Fact]
     public void ShouldNotBlogNavigationOnInitialLoad()
     {
         var blogPost = new BlogPostBuilder().Build();
-        Services.AddScoped(_ => Mock.Of<IToastService>());
         RenderComponent<CreateNewBlogPost>(
             p => p.Add(s => s.BlogPost, blogPost));
         var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
