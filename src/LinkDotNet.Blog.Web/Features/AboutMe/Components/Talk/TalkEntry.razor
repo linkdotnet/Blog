@@ -13,7 +13,7 @@
         <div class="col-2">
             @if (ShowAdminActions)
             {
-                <button type="button" class="btn btn-default" aria-label="Delete Skill" @onclick="() => TalkDeleted.InvokeAsync()">
+                <button id="talk-delete" type="button" class="btn btn-default" aria-label="Delete Skill" @onclick="() => TalkDeleted.InvokeAsync()">
                     <i class="bin2" aria-hidden="true"></i>
                 </button>
             }
