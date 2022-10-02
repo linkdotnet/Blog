@@ -20,6 +20,8 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<Skill> Skills { get; set; }
 
+    public DbSet<Talk> Talks { get; set; }
+
     public DbSet<UserRecord> UserRecords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,5 +31,6 @@ public sealed class BlogDbContext : DbContext
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
         modelBuilder.ApplyConfiguration(new SkillConfiguration());
         modelBuilder.ApplyConfiguration(new UserRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new TalkConfiguration());
     }
 }

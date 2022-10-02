@@ -1,11 +1,30 @@
 @using LinkDotNet.Blog.Domain
 
+<li class="pb-1">
+    <div class="row">
+        <div class="col-10">
+            <strong>@Talk.PresentationTitle - @Talk.Place - @Talk.PublishedDate.ToString("dd/MM/yyyy")</strong>
+            <p class="ps-2">
+                @MarkdownConverter.ToMarkupString(Talk.Description)
+            </p>
+        </div>
+        <div class="col-2">
+            @if (ShowAdminActions)
+            {
+                <button type="button" class="btn btn-default" aria-label="Delete Skill" @onclick="() => TalkDeleted.InvokeAsync()">
+                    <i class="bin2" aria-hidden="true"></i>
+                </button>
+            }
+        </div>
+    </div>
+</li>
+
 @code {
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
     [Parameter]
-    public EventCallback<Talk> TalkDeleted { get; set; }
+    public EventCallback TalkDeleted { get; set; }
 
     [Parameter]
     public Talk Talk { get; set; }

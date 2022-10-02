@@ -8,28 +8,36 @@
         @if (ShowAdminActions)
         {
             <button type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
-                <i class="plus"></i>Add skill</button>
+                <i class="plus"></i>Add talk</button>
             <AddTalkEntryDialog @ref="AddTalkEntryDialog"></AddTalkEntryDialog>
         }
-        <ul>
+        <ul class="list-unstyled">
             @foreach (var talk in talks)
             {
-                <TalkEntry Talk="talk" ShowAdminActions="ShowAdminActions" TalkDeleted="DeleteTalk"></TalkEntry>
+                <TalkEntry Talk="talk" ShowAdminActions="ShowAdminActions" TalkDeleted="@(() => DeleteTalk(talk))"></TalkEntry>
             }
         </ul>
+         @if (ShowAdminActions)
+        {
+            <small for="skill-table">If there is no entry, only you see this section.</small>
+        }
     </Card>
 }
 @code {
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
-    private IList<Talk> talks = Array.Empty<Talk>();
-    private AddTalkEntryDialog AddTalkEntryDialog { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    private IList<Talk> talks = new List<Talk>
     {
-        talks = (await Repository.GetAllAsync(orderBy: t => t.PublishedDate)).ToList();
-    }
+        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: Here<br/>Youtube: Slides", DateTime.Now),
+        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
+        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
+        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
+        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
+        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
+    };
+
+    private AddTalkEntryDialog AddTalkEntryDialog { get; set; }
 
     private async Task DeleteTalk(Talk talk)
     {
