@@ -9,7 +9,7 @@
         {
             <button type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
                 <i class="plus"></i>Add talk</button>
-            <AddTalkEntryDialog @ref="AddTalkEntryDialog"></AddTalkEntryDialog>
+            <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
         }
         <ul class="list-unstyled">
             @foreach (var talk in talks)
@@ -18,7 +18,7 @@
             }
         </ul>
          @if (ShowAdminActions)
-        {
+          {
             <small for="skill-table">If there is no entry, only you see this section.</small>
         }
     </Card>
@@ -27,21 +27,20 @@
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
-    private IList<Talk> talks = new List<Talk>
-    {
-        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: Here<br/>Youtube: Slides", DateTime.Now),
-        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
-        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
-        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
-        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
-        Talk.Create("Blazor Unit Testing", ".NET Day Switzerland 2022", "Slide: ##", DateTime.Now),
-    };
+    private List<Talk> talks = new();
 
     private AddTalkEntryDialog AddTalkEntryDialog { get; set; }
 
     private async Task DeleteTalk(Talk talk)
     {
-        await Repository.DeleteAsync(talk.Id);
         talks.Remove(talk);
+        await Repository.DeleteAsync(talk.Id);
     }
+
+    private async Task StoreTalk(Talk talk)
+    {
+        talks.Add(talk);
+        await Repository.StoreAsync(talk);
+    }
+
 }
