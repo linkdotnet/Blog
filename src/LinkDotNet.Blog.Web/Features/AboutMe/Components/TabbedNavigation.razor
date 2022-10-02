@@ -1,0 +1,28 @@
+@using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill
+@using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk
+
+<div class="col-lg-9 col-md-8 tab-container">
+    <ul class="nav nav-tabs mb-3" id="pills-tab" role="presentation">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active btn-primary btn-light" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Skills</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link btn-light" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Talks</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <SkillTable ShowAdminActions="@IsAuthenticated"></SkillTable>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <Talks ShowAdminActions="@IsAuthenticated"></Talks>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public bool IsAuthenticated { get; set; }
+
+}

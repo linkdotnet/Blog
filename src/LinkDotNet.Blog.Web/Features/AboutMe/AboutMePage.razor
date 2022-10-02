@@ -1,8 +1,6 @@
 ﻿@page "/AboutMe"
 @using LinkDotNet.Blog.Web.Features.Services
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components
-@using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill
-@using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk
 @inject AppConfiguration AppConfiguration
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IUserRecordService UserRecordService
@@ -19,20 +17,7 @@
             <div class="col-lg-3 col-md-4">
                 <Profile ShowAdminActions="@isAuthenticated"/>
             </div>
-            <div class="col-lg-9 col-md-8 tab-container">
-                <div class="row">
-                    <div class="col-md12 tab-content">
-                        <Talks ShowAdminActions="@isAuthenticated"></Talks>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md12 tab-content">
-                        <Card Header="Skills">
-                            <SkillTable ShowAdminActions="@isAuthenticated"></SkillTable>
-                        </Card>
-                    </div>
-                </div>
-            </div>
+            <TabbedNavigation IsAuthenticated="isAuthenticated"></TabbedNavigation>
         </div>
     </div>
 }

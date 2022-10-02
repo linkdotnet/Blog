@@ -4,24 +4,18 @@
 
 @if (talks.Any() || ShowAdminActions)
 {
-    <Card Header="Talks">
-        @if (ShowAdminActions)
+    @if (ShowAdminActions)
+    {
+        <button id="add-talk" type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
+            <i class="plus"></i>Add talk</button>
+        <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
+    }
+    <ul class="list-unstyled">
+        @foreach (var talk in talks)
         {
-            <button id="add-talk" type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
-                <i class="plus"></i>Add talk</button>
-            <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
+            <TalkEntry Talk="talk" ShowAdminActions="ShowAdminActions" TalkDeleted="@(() => DeleteTalk(talk))"></TalkEntry>
         }
-        <ul class="list-unstyled">
-            @foreach (var talk in talks)
-            {
-                <TalkEntry Talk="talk" ShowAdminActions="ShowAdminActions" TalkDeleted="@(() => DeleteTalk(talk))"></TalkEntry>
-            }
-        </ul>
-         @if (ShowAdminActions)
-          {
-            <small for="skill-table">If there is no entry, only you see this section.</small>
-        }
-    </Card>
+    </ul>
 }
 @code {
     [Parameter]
