@@ -1,6 +1,9 @@
 using System;
+using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.AboutMe.Components;
@@ -15,7 +18,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     }
 
     [Fact]
-    public void WhenAddingATalkThenDisplayedToUser()
+    public void WhenAddingTalkThenDisplayedToUser()
     {
         var cut = ctx.RenderComponent<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
@@ -32,6 +35,33 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         entry.Find("#talk-display-content strong").TextContent.Should().Be("title");
         entry.Find("#talk-place").TextContent.Should().Be("Zurich");
         entry.Find("#talk-description").TextContent.Should().Be("text");
+    }
+
+    [Fact]
+    public async Task LoadEarlierSavedTalks()
+    {
+        await Repository.StoreAsync(new TalkBuilder().Build());
+        await Repository.StoreAsync(new TalkBuilder().Build());
+
+        var cut = ctx.RenderComponent<Talks>();
+
+        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
+        cut.FindComponents<TalkEntry>().Count.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task WhenUserClickDeleteButtonThenDeleted()
+    {
+        await Repository.StoreAsync(new TalkBuilder().Build());
+        var cut = ctx.RenderComponent<Talks>(
+            p => p.Add(s => s.ShowAdminActions, true));
+        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
+
+        cut.FindComponent<TalkEntry>().Find("#talk-delete").Click();
+
+        cut.WaitForState(() => !cut.HasComponent<TalkEntry>());
+        cut.HasComponent<TalkEntry>().Should().BeFalse();
+        (await DbContext.Talks.AnyAsync()).Should().BeFalse();
     }
 
     public void Dispose()
