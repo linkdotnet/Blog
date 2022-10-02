@@ -34,7 +34,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         var entry = cut.FindComponent<TalkEntry>();
         entry.Find("#talk-display-content strong").TextContent.Should().Be("title");
         entry.Find("#talk-place").TextContent.Should().Be("Zurich");
-        entry.Find("#talk-description").TextContent.Should().Be("text");
+        entry.Find("#talk-description p").TextContent.Should().Be("text");
     }
 
     [Fact]

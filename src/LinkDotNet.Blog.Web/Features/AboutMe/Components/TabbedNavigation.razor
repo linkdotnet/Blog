@@ -2,7 +2,7 @@
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk
 
 <div class="col-lg-9 col-md-8 tab-container">
-    <ul class="nav nav-tabs mb-3" id="pills-tab" role="presentation">
+    <ul class="nav nav-tabs nav-justified mb-3" id="pills-tab" role="presentation">
         <li class="nav-item" role="presentation">
             <button class="nav-link active btn-primary btn-light" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Skills</button>
         </li>
@@ -21,8 +21,6 @@
 </div>
 
 @code {
-
     [Parameter]
     public bool IsAuthenticated { get; set; }
-
 }
