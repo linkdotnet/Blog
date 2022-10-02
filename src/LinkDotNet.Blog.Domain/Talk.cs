@@ -18,6 +18,9 @@ public class Talk : Entity
 
     public static Talk Create(string presentationTitle, string place, string description, DateTime publishedDate)
     {
+        presentationTitle = presentationTitle.Trim();
+        place = place.Trim();
+        description = description.Trim();
         ArgumentException.ThrowIfNullOrEmpty(presentationTitle);
         ArgumentException.ThrowIfNullOrEmpty(place);
         ArgumentException.ThrowIfNullOrEmpty(description);

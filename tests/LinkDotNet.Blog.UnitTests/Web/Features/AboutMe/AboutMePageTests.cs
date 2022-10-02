@@ -1,17 +1,14 @@
-﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.AboutMe;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
+using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe;
 
@@ -28,6 +25,7 @@ public class AboutMePageTests : TestContext
 
         cut.FindComponent<Profile>().Instance.ShowAdminActions.Should().BeTrue();
         cut.FindComponent<SkillTable>().Instance.ShowAdminActions.Should().BeTrue();
+        cut.FindComponent<Talks>().Instance.ShowAdminActions.Should().BeTrue();
     }
 
     [Fact]
@@ -74,28 +72,12 @@ public class AboutMePageTests : TestContext
 
     private void SetupMocks(AppConfiguration config)
     {
-        var skillRepo = new Mock<IRepository<Skill>>();
-        skillRepo.Setup(s => s.GetAllAsync(
-                It.IsAny<Expression<Func<Skill, bool>>>(),
-                It.IsAny<Expression<Func<Skill, object>>>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<Skill>(Array.Empty<Skill>(), 1, 1));
-        var profileRepo = new Mock<IRepository<ProfileInformationEntry>>();
-        profileRepo.Setup(s => s.GetAllAsync(
-                It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
-                It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<ProfileInformationEntry>(Array.Empty<ProfileInformationEntry>(), 1, 1));
-
         Services.AddScoped(_ => config);
         Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         Services.AddScoped(_ => Mock.Of<ISortOrderCalculator>());
-        Services.AddScoped(_ => skillRepo.Object);
-        Services.AddScoped(_ => profileRepo.Object);
+        Services.RegisterRepositoryWithEmptyReturn<ProfileInformationEntry>();
+        Services.RegisterRepositoryWithEmptyReturn<Skill>();
+        Services.RegisterRepositoryWithEmptyReturn<Talk>();
         Services.AddScoped(_ => Mock.Of<IToastService>());
     }
 }
