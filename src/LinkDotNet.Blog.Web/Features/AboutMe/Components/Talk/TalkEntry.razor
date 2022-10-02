@@ -6,9 +6,9 @@
             <p class="text-muted mb-0">@Talk.PublishedDate.ToString("dd/MM/yyyy")</p>
             <strong>@Talk.PresentationTitle</strong>
             <p id="talk-place" class="text-muted">@Talk.Place</p>
-            <p id="talk-description">
+            <div id="talk-description">
                 @MarkdownConverter.ToMarkupString(Talk.Description)
-            </p>
+            </div>
         </div>
         <div class="col-2">
             @if (ShowAdminActions)

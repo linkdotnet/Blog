@@ -12,7 +12,7 @@ public class TalkTests
 
         talk.PresentationTitle.Should().Be("title");
         talk.Place.Should().Be("place");
-        talk.Description.Should().Be(" desc ");
+        talk.Description.Should().Be("desc");
         talk.PublishedDate.Should().Be(new DateTime(2022, 10, 2));
     }
 
