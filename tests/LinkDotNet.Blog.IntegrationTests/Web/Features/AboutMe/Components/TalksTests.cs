@@ -15,7 +15,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     }
 
     [Fact]
-    public void WhenAdminstratorAndAddingATalkThenDisplayedToUser()
+    public void WhenAddingATalkThenDisplayedToUser()
     {
         var cut = ctx.RenderComponent<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
@@ -29,7 +29,9 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 
         cut.WaitForState(() => cut.HasComponent<TalkEntry>());
         var entry = cut.FindComponent<TalkEntry>();
-        entry.Find("#talk-display-content strong").Should().Be("title - Zurich - 02/10/2022");
+        entry.Find("#talk-display-content strong").TextContent.Should().Be("title");
+        entry.Find("#talk-place").TextContent.Should().Be("Zurich");
+        entry.Find("#talk-description").TextContent.Should().Be("text");
     }
 
     public void Dispose()

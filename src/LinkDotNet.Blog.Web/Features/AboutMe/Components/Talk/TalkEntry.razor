@@ -3,8 +3,10 @@
 <li class="pb-1">
     <div class="row">
         <div class="col-10" id="talk-display-content">
-            <strong>@Talk.PresentationTitle - @Talk.Place - @Talk.PublishedDate.ToString("dd/MM/yyyy")</strong>
-            <p class="ps-2">
+            <p class="text-muted mb-0">@Talk.PublishedDate.ToString("dd/MM/yyyy")</p>
+            <strong>@Talk.PresentationTitle</strong>
+            <p id="talk-place" class="text-muted">@Talk.Place</p>
+            <p id="talk-description">
                 @MarkdownConverter.ToMarkupString(Talk.Description)
             </p>
         </div>
@@ -18,6 +20,7 @@
         </div>
     </div>
 </li>
+<hr/>
 
 @code {
     [Parameter]
