@@ -5,24 +5,24 @@
         <ValidationSummary />
 
         <div class="mb-3">
-            <label for="title">Presentation title</label>
-            <InputText class="form-control" id="title" @bind-Value="model.PresentationTitle" />
+            <label for="talk-title">Presentation title</label>
+            <InputText class="form-control" id="talk-title" @bind-Value="model.PresentationTitle" />
         </div>
         <div class="mb-3">
-            <label for="title">Presentation place</label>
-            <InputText class="form-control" id="place" @bind-Value="model.Place" />
+            <label for="talk-title">Presentation place</label>
+            <InputText class="form-control" id="talk-place" @bind-Value="model.Place" />
         </div>
         <div class="mb-3">
-            <label for="title">Date</label>
-            <InputDate class="form-control" id="date" @bind-Value="model.PublishedDate" />
+            <label for="talk-title">Date</label>
+            <InputDate class="form-control" id="talk-date" @bind-Value="model.PublishedDate" />
         </div>
         <div class="mb-3">
-            <label for="content">Description</label>
-            <InputTextArea Id="content" Class="form-control" Rows="10"
+            <label for="talk-content">Description</label>
+            <InputTextArea Id="talk-content" Class="form-control" Rows="10"
                            @bind-Value="@model.Description"></InputTextArea>
             <small for="content" class="form-text text-muted">You can use markdown to style your component.</small>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button id="talk-submit" class="btn btn-primary" type="submit">Submit</button>
     </EditForm>
 </ModalDialog>
 

@@ -7,7 +7,7 @@
     <Card Header="Talks">
         @if (ShowAdminActions)
         {
-            <button type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
+            <button id="add-talk" type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
                 <i class="plus"></i>Add talk</button>
             <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
         }
@@ -30,6 +30,11 @@
     private List<Talk> talks = new();
 
     private AddTalkEntryDialog AddTalkEntryDialog { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        talks = (await Repository.GetAllAsync()).ToList();
+    }
 
     private async Task DeleteTalk(Talk talk)
     {
