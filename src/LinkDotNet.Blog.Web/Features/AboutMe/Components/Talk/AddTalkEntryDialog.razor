@@ -9,11 +9,12 @@
             <InputText class="form-control" id="talk-title" @bind-Value="model.PresentationTitle" />
         </div>
         <div class="mb-3">
-            <label for="talk-title">Presentation place</label>
+            <label for="talk-place">Presentation place</label>
             <InputText class="form-control" id="talk-place" @bind-Value="model.Place" />
+            <small for="talk-place" class="form-text text-muted">The place / event where you hold the presentation / talk.</small>
         </div>
         <div class="mb-3">
-            <label for="talk-title">Date</label>
+            <label for="talk-date">Date</label>
             <InputDate class="form-control" id="talk-date" @bind-Value="model.PublishedDate" />
         </div>
         <div class="mb-3">
