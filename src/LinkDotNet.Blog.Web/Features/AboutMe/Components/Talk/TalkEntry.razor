@@ -3,8 +3,8 @@
 <li class="pb-1">
     <div class="row">
         <div class="col-10" id="talk-display-content">
-            <p class="text-muted mb-0">@Talk.PublishedDate.ToString("dd/MM/yyyy")</p>
-            <strong>@Talk.PresentationTitle</strong>
+            <p class="text-muted mb-0 small">@Talk.PublishedDate.ToString("dd/MM/yyyy")</p>
+            <strong class="fs-5">@Talk.PresentationTitle</strong>
             <p id="talk-place" class="text-muted">@Talk.Place</p>
             <div id="talk-description">
                 @MarkdownConverter.ToMarkupString(Talk.Description)
