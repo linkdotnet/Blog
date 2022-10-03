@@ -64,6 +64,22 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         (await DbContext.Talks.AnyAsync()).Should().BeFalse();
     }
 
+    [Fact]
+    public async Task TalksAreOrderFromNewestToLatest()
+    {
+        await Repository.StoreAsync(new TalkBuilder().WithPublishedDate(new DateTime(2021, 1, 1)).Build());
+        await Repository.StoreAsync(new TalkBuilder().WithPublishedDate(new DateTime(2022, 1, 1)).Build());
+
+        var cut = ctx.RenderComponent<Talks>(
+            p => p.Add(s => s.ShowAdminActions, true));
+
+        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
+        var talks = cut.FindComponents<TalkEntry>();
+        talks.Count.Should().Be(2);
+        talks[0].Instance.Talk.PublishedDate.Should().Be(new DateTime(2022, 1, 1));
+        talks[1].Instance.Talk.PublishedDate.Should().Be(new DateTime(2021, 1, 1));
+    }
+
     public void Dispose()
     {
         ctx?.Dispose();

@@ -27,7 +27,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        talks = (await Repository.GetAllAsync()).ToList();
+        talks = (await Repository.GetAllAsync(orderBy: t => t.PublishedDate, descending: true)).ToList();
     }
 
     private async Task DeleteTalk(Talk talk)
