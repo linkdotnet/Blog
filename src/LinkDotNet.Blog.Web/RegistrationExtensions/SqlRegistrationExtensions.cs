@@ -15,7 +15,7 @@ public static class SqlRegistrationExtensions
         services.AddDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
-            var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
+            var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
             builder.UseSqlServer(connectionString);
         },
@@ -31,7 +31,7 @@ public static class SqlRegistrationExtensions
         services.AddDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
-            var configuration = s.GetService<AppConfiguration>() ?? throw new NullReferenceException(nameof(AppConfiguration));
+            var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
             builder.UseSqlite(connectionString);
         },
