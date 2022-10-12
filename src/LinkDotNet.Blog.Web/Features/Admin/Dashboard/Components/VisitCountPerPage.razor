@@ -65,7 +65,7 @@
             s => new { s.Id, s.Title, s.Likes });
 
         var userRecordsTask = UserRecordRepository.GetAllByProjectionAsync(
-            s => new { UrlClicked = s.UrlClicked.Replace("blogPost/", string.Empty) },
+            s => s.UrlClicked,
             ur => (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
                   && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate));
 
@@ -73,8 +73,8 @@
         var userRecords = (await userRecordsTask).ToList();
 
         var visitCountPage = (from ur in userRecords
-            join bp in blogPosts on ur.UrlClicked equals bp.Id
-            group new { ur, bp } by new { ur.UrlClicked } into gp
+            join bp in blogPosts on ur.Replace("blogPost/", string.Empty) equals bp.Id
+            group new { ur, bp } by new { ur } into gp
             orderby gp.Count() descending
             select new VisitCountPageData
             {
