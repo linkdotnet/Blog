@@ -69,8 +69,8 @@
             ur => (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
                   && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate));
 
-        var blogPosts = (await blogPostsTask).ToList();
-        var userRecords = (await userRecordsTask).ToList();
+        var blogPosts = await blogPostsTask;
+        var userRecords = await userRecordsTask;
 
         var visitCountPage = (from ur in userRecords
             join bp in blogPosts on ur.Replace("blogPost/", string.Empty) equals bp.Id

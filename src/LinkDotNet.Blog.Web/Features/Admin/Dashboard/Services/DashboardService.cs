@@ -18,18 +18,18 @@ public class DashboardService : IDashboardService
 
     public async Task<DashboardData> GetDashboardDataAsync()
     {
-        var records = (await userRecordRepository.GetAllAsync()).ToList();
+        var records = await userRecordRepository.GetAllAsync();
         var users = records.GroupBy(r => r.UserIdentifierHash).Count();
-        var thirdyDaysAgo = DateTime.UtcNow.AddDays(-30).Date;
+        var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30).Date;
         var users30Days = records
-            .Where(r => r.DateTimeUtcClicked >= thirdyDaysAgo)
+            .Where(r => r.DateTimeUtcClicked >= thirtyDaysAgo)
             .GroupBy(r => r.UserIdentifierHash).Count();
 
         var clicks = records.Count;
-        var clicks30Days = records.Count(r => r.DateTimeUtcClicked >= thirdyDaysAgo);
+        var clicks30Days = records.Count(r => r.DateTimeUtcClicked >= thirtyDaysAgo);
 
         var aboutMeClicks = records.Count(r => r.UrlClicked.Contains("AboutMe"));
-        var aboutMeClicksLast30Days = records.Count(r => r.UrlClicked.Contains("AboutMe") && r.DateTimeUtcClicked >= thirdyDaysAgo);
+        var aboutMeClicksLast30Days = records.Count(r => r.UrlClicked.Contains("AboutMe") && r.DateTimeUtcClicked >= thirtyDaysAgo);
 
         return new DashboardData
         {
