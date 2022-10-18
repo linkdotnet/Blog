@@ -75,7 +75,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Description               | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text                |
 | BackgroundUrl             | string         | Url or path to the background image. (Optional)                                                                                                                 |
 | ProfilePictureUrl         | string         | Url or path to your profile picture                                                                                                                             |
-| PersistenceProvider       | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `SqliteServer`, `RavenDb`, `InMemory`). More in-depth explanation down below      |
+| PersistenceProvider       | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `Sqlite`, `RavenDb`, `InMemory`). More in-depth explanation down below            |
 | ConnectionString          | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                                           |
 | DatabaseName              | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                                   |
 | Auth0                     |                | Configuration for setting up Auth0                                                                                                                              |
