@@ -183,7 +183,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldStopInternalNavigationWhenDirty()
     {
         JSInterop.Setup<bool>("confirm", "You have unsaved changes. Are you sure you want to continue?")
-            .SetResult(true);
+            .SetResult(false);
         var cut = RenderComponent<CreateNewBlogPost>();
         cut.Find("#tags").Change("Hey");
         var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();

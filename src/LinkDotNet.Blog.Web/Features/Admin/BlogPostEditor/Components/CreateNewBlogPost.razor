@@ -136,7 +136,7 @@
 
         var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm", "You have unsaved changes. Are you sure you want to continue?");
 
-        if (isConfirmed)
+        if (!isConfirmed)
         {
             context.PreventNavigation();
         }
