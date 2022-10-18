@@ -5,7 +5,7 @@
 }
 .blog-container {
     background: white;
-    width: clamp(60%, 2vw, 90%);    
+    width: clamp(60%, 2vw, 90%);
     box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     padding: 20px;
@@ -15,8 +15,10 @@
     color: lightgrey;
 }
 
-.blog-content header {
-    text-align: center;
+.blogpost-tag:before {
+    font-family: 'icons';
+    font-weight: 900;
+    content: "\e936";
 }
 
 .blogpost-content {

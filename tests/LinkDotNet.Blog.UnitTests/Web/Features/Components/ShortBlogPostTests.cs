@@ -43,4 +43,15 @@ public class ShortBlogPostTests : TestContext
 
         readTime.TextContent.Should().Be("5 min");
     }
+
+    [Fact]
+    public void WhenNoTagsAreGivenThenTagsAreNotShown()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+
+        var cut = RenderComponent<ShortBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.FindAll(".goto-tag").Should().BeEmpty();
+    }
 }

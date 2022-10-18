@@ -54,20 +54,23 @@
 .blog-card .details ul li {
     display: inline-block;
 }
-.blog-card .details .date:before {
-    font-family: 'icons';
-    font-weight: 900;
+
+.blog-card .details li:before {
     margin-right: 10px;
-    content: "\e953";
 }
+
+.blog-card .details li ul:before {
+    margin-right: 10px;
+}
+
+.blog-card .details .tags li {
+    margin-right: 2px;
+}
+
 .blog-card .details .tags ul:before {
     font-family: 'icons';
     font-weight: 900;
     content: "\e936";
-    margin-right: 10px;
-}
-.blog-card .details .tags li {
-    margin-right: 2px;
 }
 
 .blog-card .description {
@@ -106,7 +109,6 @@
 .blog-card .read-time:before {
     font-family: 'icons';
     font-weight: 900;
-    margin-right: 10px;
     content: "\e94f";
 }
 

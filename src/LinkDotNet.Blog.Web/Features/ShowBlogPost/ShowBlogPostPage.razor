@@ -21,11 +21,20 @@ else
             Keywords="@Tags"></OgData>
     <div class="blog-outer-box">
         <div class="content blog-container">
-            <div class="blog-content">
-                <header>
+            <div>
+                <header class="text-center">
                     <h1>@BlogPost.Title</h1></header>
                 <div class="blogpost-date">
-                    @BlogPost.UpdatedDate.ToString("dd/MM/yyyy")
+                    <span class="date me-1"></span><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span>
+                     @if (BlogPost.Tags != null && BlogPost.Tags.Any())
+                     {
+                         <span class="blogpost-tag ms-3">
+                             @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
+                             {
+                                 <a class="goto-tag ms-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+                             }
+                         </span>
+                     }
                 </div>
 
                 <div class="admin-action">
@@ -55,7 +64,7 @@ else
         : null;
 
     private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
-    
+
     private BlogPost BlogPost { get; set; }
 
     protected override async Task OnParametersSetAsync()

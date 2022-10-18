@@ -4,7 +4,7 @@
     --tana: #D1DBBD;
     --pewter: #91AA9D;
     --william: #3E606F;
-    --big-stone: #193441;  
+    --big-stone: #193441;
 
     --white: #ffffff;
     --wild-sand: #f4f4f4;
@@ -31,7 +31,7 @@
 
     --blockquote-background: var(--wild-sand);
     --blockquote-border: var(--william);
-    
+
     --button-text-color: var(--wild-sand);
     --button-primary-color: var(--william);
     --button-primary-border-color: var(--big-stone);
@@ -146,6 +146,12 @@ section {
 
 code {
     font-family: var(--code-font), cursive;
+}
+
+.date:before {
+    font-family: 'icons';
+    font-weight: 900;
+    content: "\e953";
 }
 
 /* Template defined css */

@@ -1,4 +1,6 @@
 using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
+using AngleSharpWrappers;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -73,6 +75,53 @@ public class ShowBlogPostPageTests : TestContext
             .Build();
         repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
         Services.AddScoped(_ => repositoryMock.Object);
+        SetupMocks();
+
+        var cut = RenderComponent<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expected);
+    }
+
+    [Fact]
+    public void ShowTagWithLinksWhenAvailable()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .WithTags("tag1")
+            .Build();
+        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
+        Services.AddScoped(_ => repositoryMock.Object);
+        SetupMocks();
+
+        var cut = RenderComponent<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        var aElement = cut.Find(".goto-tag").Unwrap() as IHtmlAnchorElement;
+        aElement.Should().NotBeNull();
+        aElement.Href.Should().Contain("/searchByTag/tag1");
+    }
+
+    [Fact]
+    public void ShowNotShowTagsWhenNotSet()
+    {
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .Build();
+        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
+        Services.AddScoped(_ => repositoryMock.Object);
+        SetupMocks();
+
+        var cut = RenderComponent<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindAll(".goto-tag").Should().BeEmpty();
+    }
+
+    private void SetupMocks()
+    {
         Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         Services.AddScoped(_ => Mock.Of<IToastService>());
         Services.AddScoped(_ => Mock.Of<AppConfiguration>());
@@ -80,10 +129,5 @@ public class ShowBlogPostPageTests : TestContext
         ComponentFactories.AddStub<PageTitle>();
         ComponentFactories.AddStub<Like>();
         ComponentFactories.AddStub<CommentSection>();
-
-        var cut = RenderComponent<ShowBlogPostPage>(
-            p => p.Add(s => s.BlogPostId, "1"));
-
-        cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expected);
     }
 }

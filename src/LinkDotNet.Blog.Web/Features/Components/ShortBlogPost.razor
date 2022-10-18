@@ -6,15 +6,15 @@
   <div class="blog-card @AltCssClass">
     <div class="meta">
       <div class="photo">
-        <PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl" 
+        <PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl"
                       PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
                       LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
       </div>
       <ul class="details">
-        <li class="date">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</li>
-        @if (BlogPost.Tags != null)
+        <li class="date me-4"><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></li>
+        @if (BlogPost.Tags != null && BlogPost.Tags.Any())
         {
-          <li class="tags inverted-colors">
+          <li class="tags inverted-colors me-4">
             <ul>
               @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
               {
@@ -23,7 +23,7 @@
             </ul>
           </li>
         }
-        <li class="read-time">@readTime min</li>
+        <li class="read-time me-4">@readTime min</li>
       </ul>
     </div>
     <div class="description">
@@ -40,10 +40,10 @@
 @code {
     [Parameter]
     public BlogPost BlogPost { get; set; }
-  
+
     [Parameter]
     public bool UseAlternativeStyle { get; set; }
-  
+
     [Parameter]
     public bool LazyLoadPreviewImage { get; set; }
 
@@ -65,7 +65,7 @@
         var currentPosition = 0;
         int lastPosition;
         var count = 0;
-      
+
         while ((lastPosition = text[currentPosition..].IndexOf(lookup, StringComparison.Ordinal)) != -1)
         {
           count++;
