@@ -24,7 +24,7 @@ public static class StorageProviderExtensions
             services.UseRavenDbAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
         }
-        else if (persistenceProvider == PersistenceProvider.SqliteServer)
+        else if (persistenceProvider == PersistenceProvider.Sqlite)
         {
             services.UseSqliteAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();

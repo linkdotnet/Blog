@@ -32,7 +32,7 @@ public class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
     {
         var client = factory.WithWebHostBuilder(builder =>
         {
-            builder.UseSetting("PersistenceProvider", PersistenceProvider.SqliteServer.Key);
+            builder.UseSetting("PersistenceProvider", PersistenceProvider.Sqlite.Key);
             builder.UseSetting("ConnectionString", "DataSource=file::memory:?cache=shared");
         }).CreateClient();
 

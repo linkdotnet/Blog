@@ -95,9 +95,9 @@ The appsettings.json file has a lot of options to customize the content of the b
 ## Storage Provider
 Currently there are 4 Storage-Provider:
  * InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
- * RavenDb - As the name suggests for RavenDb
- * Sqlite - Based on EF Core, so it can be easily adapted for other Sql Dialects
- * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects
+ * RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
+ * Sqlite - Based on EF Core, so it can be easily adapted for other Sql Dialects. The tables are automatically created.
+ * SqlServer - Based on EF Core, so it can be easily adapted for other Sql Dialects. The tables are automatically created.
 
 The default (when you clone the repository) is the `InMemory` option. That means everytime you restart the service, all posts and related objects are gone.
 
