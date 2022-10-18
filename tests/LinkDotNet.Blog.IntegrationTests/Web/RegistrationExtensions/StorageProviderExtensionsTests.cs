@@ -48,7 +48,7 @@ public class StorageProviderExtensionsTests
         var collection = new ServiceCollection();
         var config = new Mock<IConfiguration>();
         config.Setup(c => c["PersistenceProvider"])
-            .Returns("SqliteServer");
+            .Returns("Sqlite");
         collection.AddScoped(_ => new AppConfiguration { ConnectionString = "Filename=:memory:" });
 
         collection.AddStorageProvider(config.Object);

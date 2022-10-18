@@ -13,6 +13,7 @@ public class CreateNewBlogPostTests : TestContext
     public CreateNewBlogPostTests()
     {
         ComponentFactories.AddStub<UploadFile>();
+        JSInterop.SetupVoid("hljs.highlightAll");
     }
 
     [Fact]

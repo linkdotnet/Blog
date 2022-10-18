@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
-using Bunit;
-using Bunit.TestDoubles;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
@@ -18,6 +16,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldSaveBlogPostOnSave()
     {
         using var ctx = new TestContext();
+        ctx.JSInterop.SetupVoid("hljs.highlightAll");
         var toastService = new Mock<IToastService>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);

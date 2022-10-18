@@ -104,6 +104,15 @@
         model = CreateNewModel.FromBlogPost(BlogPost);
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("hljs.highlightAll");
+            StateHasChanged();
+        }
+    }
+
     private async Task OnValidBlogPostCreatedAsync()
     {
         await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());

@@ -19,6 +19,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         var toastService = new Mock<IToastService>();
+        ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService.Object);
@@ -40,6 +41,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         const string contentFromFile = "content";
+        ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
