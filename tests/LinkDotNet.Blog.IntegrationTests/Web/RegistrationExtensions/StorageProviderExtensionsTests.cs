@@ -13,7 +13,7 @@ public class StorageProviderExtensionsTests
 {
     [Theory]
     [InlineData("SqlServer")]
-    [InlineData("SqliteServer")]
+    [InlineData("Sqlite")]
     [InlineData("RavenDb")]
     [InlineData("InMemory")]
     public void ShouldRegisterPersistenceProvider(string persistenceKey)
