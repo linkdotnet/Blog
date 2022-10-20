@@ -106,7 +106,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
         await SaveBlogPostAsync(blogPost);
 
-        var blogPostsFromRepo = (await sut.GetAllAsync()).ToList();
+        var blogPostsFromRepo = await sut.GetAllAsync();
 
         blogPostsFromRepo.Should().NotBeNull();
         blogPostsFromRepo.Should().HaveCount(1);

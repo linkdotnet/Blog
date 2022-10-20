@@ -17,14 +17,14 @@
     [Parameter]
     public string SearchTerm { get; set; }
 
-    private IList<BlogPost> blogPosts = new List<BlogPost>();
+    private IReadOnlyList<BlogPost> blogPosts = new List<BlogPost>();
 
     protected override async Task OnParametersSetAsync()
     {
         var term = Uri.UnescapeDataString(SearchTerm);
-        blogPosts = (await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
-            || t.Tags.Any(tag => tag.Content == term)),
-            b => b.UpdatedDate)).ToList();
+        blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
+                                                                                 || t.Tags.Any(tag => tag.Content == term)),
+            b => b.UpdatedDate);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

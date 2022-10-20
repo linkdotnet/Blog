@@ -28,7 +28,7 @@ public class SitemapService : ISitemapService
     {
         var urlSet = new SitemapUrlSet();
 
-        var blogPosts = (await repository.GetAllAsync(f => f.IsPublished, b => b.UpdatedDate)).ToList();
+        var blogPosts = await repository.GetAllAsync(f => f.IsPublished, b => b.UpdatedDate);
 
         urlSet.Urls.Add(new SitemapUrl { Location = navigationManager.BaseUri });
         urlSet.Urls.Add(new SitemapUrl { Location = $"{navigationManager.BaseUri}archive" });

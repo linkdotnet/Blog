@@ -13,7 +13,7 @@
         <span>@AppConfiguration.ProfileInformation.Heading</span>
     </div>
     <div class="profile-image">
-        <img src="@AppConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" /> 
+        <img src="@AppConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
     </div>
     <ul class="profile-keypoints inverted-colors"
         ondragover="event.preventDefault();">
@@ -59,7 +59,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     protected override async Task OnInitializedAsync()
     {
-        profileInformationEntries = (await Repository.GetAllAsync()).OrderBy(d => d.SortOrder).ToList();
+        profileInformationEntries = (await Repository.GetAllAsync(orderBy: d => d.SortOrder, descending: false)).ToList();
     }
 
     private void ShowDeleteDialog(string key)

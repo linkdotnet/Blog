@@ -25,7 +25,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
 
         cut.FindComponent<SkillTag>().Find("button").Click();
 
-        var items = (await Repository.GetAllAsync()).ToList();
+        var items = await Repository.GetAllAsync();
         items.Should().HaveCount(0);
         cut.FindAll("td").Any(s => s.TextContent == "C#").Should().BeFalse();
     }

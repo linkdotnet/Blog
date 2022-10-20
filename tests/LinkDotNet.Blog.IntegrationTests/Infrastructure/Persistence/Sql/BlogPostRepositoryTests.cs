@@ -54,7 +54,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.BlogPosts.AddAsync(blogPost);
         await DbContext.SaveChangesAsync();
 
-        var blogPostsFromRepo = (await Repository.GetAllAsync()).ToList();
+        var blogPostsFromRepo = await Repository.GetAllAsync();
 
         blogPostsFromRepo.Should().NotBeNull();
         blogPostsFromRepo.Should().HaveCount(1);

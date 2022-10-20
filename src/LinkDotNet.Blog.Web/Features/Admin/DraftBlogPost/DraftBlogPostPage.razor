@@ -14,11 +14,11 @@
 </div>
 
 @code {
-    private IList<BlogPost> blogPosts = new List<BlogPost>();
+    private IReadOnlyList<BlogPost> blogPosts = new List<BlogPost>();
 
     protected override async Task OnInitializedAsync()
     {
-        blogPosts = (await BlogPostRepository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate)).ToList();
+        blogPosts = await BlogPostRepository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate);
     }
 
 }
