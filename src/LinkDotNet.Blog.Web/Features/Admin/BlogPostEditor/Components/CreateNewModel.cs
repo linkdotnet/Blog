@@ -19,6 +19,7 @@ public class CreateNewModel
     private string previewImageUrlFallback;
 
     [Required]
+    [MaxLength(256)]
     public string Title
     {
         get => title;
@@ -52,6 +53,7 @@ public class CreateNewModel
     }
 
     [Required]
+    [MaxLength(1024)]
     public string PreviewImageUrl
     {
         get => previewImageUrl;
@@ -94,6 +96,7 @@ public class CreateNewModel
         }
     }
 
+    [MaxLength(256)]
     public string PreviewImageUrlFallback
     {
         get => previewImageUrlFallback;
