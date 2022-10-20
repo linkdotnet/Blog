@@ -12,14 +12,13 @@ public static class SqlRegistrationExtensions
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddDbContextFactory<BlogDbContext>(
+        services.AddPooledDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
             var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
             builder.UseSqlServer(connectionString);
-        },
-        ServiceLifetime.Transient);
+        });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
@@ -28,14 +27,13 @@ public static class SqlRegistrationExtensions
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddDbContextFactory<BlogDbContext>(
+        services.AddPooledDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
             var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
             builder.UseSqlite(connectionString);
-        },
-        ServiceLifetime.Transient);
+        });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 }
