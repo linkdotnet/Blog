@@ -11,7 +11,7 @@ public static class ServiceExtensions
     public static void RegisterServices(this IServiceCollection services)
     {
         services.AddScoped<ILocalStorageService, LocalStorageService>();
-        services.AddSingleton<ISortOrderCalculator, SortOrderCalculator>();
+        services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
         services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<ISitemapService, SitemapService>();

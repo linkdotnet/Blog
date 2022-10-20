@@ -16,15 +16,14 @@
 @code {
     [Parameter]
     public string Tag { get; set; }
-    
-    IList<BlogPost> blogPosts = new List<BlogPost>();
+
+    IReadOnlyList<BlogPost> blogPosts = new List<BlogPost>();
     protected override async Task OnParametersSetAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);
-        blogPosts = (await BlogPostRepository.GetAllAsync(
-            b => b.IsPublished && b.Tags.Any(t => t.Content == Tag), 
-            b => b.UpdatedDate))
-            .ToList();
+        blogPosts = await BlogPostRepository.GetAllAsync(
+            b => b.IsPublished && b.Tags.Any(t => t.Content == Tag),
+            b => b.UpdatedDate);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

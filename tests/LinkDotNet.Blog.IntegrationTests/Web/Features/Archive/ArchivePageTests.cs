@@ -117,7 +117,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
             int pageSize = int.MaxValue)
         {
             await Task.Delay(250);
-            return new StaticPagedList<TProjection>(Array.Empty<TProjection>(), 1, 1, 1);
+            return Array.Empty<TProjection>().ToPagedList();
         }
 
         public ValueTask StoreAsync(BlogPost entity) => throw new NotImplementedException();

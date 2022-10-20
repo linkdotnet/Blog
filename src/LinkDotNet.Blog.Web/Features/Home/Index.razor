@@ -11,7 +11,7 @@
 @inject NavigationManager NavigationManager
 @inject IUserRecordService UserRecordService
 
-<OgData Title="@(Markdown.ToPlainText(AppConfiguration.BlogName))" 
+<OgData Title="@(Markdown.ToPlainText(AppConfiguration.BlogName))"
         AbsolutePreviewImageUrl="@ImageUrl"
         Description="@(Markdown.ToPlainText(AppConfiguration.Introduction.Description))"></OgData>
 <section class="introduction">
@@ -37,7 +37,7 @@
     [Parameter]
     public int? Page { get; set; }
 
-    private IPagedList<BlogPost> currentPage = new PagedList<BlogPost>(null, 1, 1);
+    private IPagedList<BlogPost> currentPage = Array.Empty<BlogPost>().ToPagedList();
 
     private string ImageUrl => AppConfiguration.Introduction.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 
