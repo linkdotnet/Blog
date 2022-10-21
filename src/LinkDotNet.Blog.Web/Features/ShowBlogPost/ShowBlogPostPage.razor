@@ -19,16 +19,16 @@ else
             AbsolutePreviewImageUrl="@OgDataImage"
             Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
             Keywords="@Tags"></OgData>
-    <div class="blog-outer-box">
+    <div class="d-flex justify-content-center pt-2">
         <div class="content blog-container">
             <div>
                 <header class="text-center">
                     <h1>@BlogPost.Title</h1></header>
-                <div class="blogpost-date">
-                    <span class="date me-1"></span><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span>
+                <div class="blogpost-metainformation d-flex flex-row flex-wrap gap-2">
+                    <div><span class="date"></span><span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></div>
                      @if (BlogPost.Tags != null && BlogPost.Tags.Any())
                      {
-                         <span class="blogpost-tag ms-3">
+                         <span class="blogpost-tag d-inline-block">
                              @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
                              {
                                  <a class="goto-tag ms-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
