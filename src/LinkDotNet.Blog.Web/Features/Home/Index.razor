@@ -14,14 +14,14 @@
 <OgData Title="@(Markdown.ToPlainText(AppConfiguration.BlogName))"
         AbsolutePreviewImageUrl="@ImageUrl"
         Description="@(Markdown.ToPlainText(AppConfiguration.Introduction.Description))"></OgData>
-<section class="introduction">
+<section>
     <IntroductionCard></IntroductionCard>
 </section>
 
 <section>
     <header>
-        <div class="recent-posts">
-            <h1>Recent Posts</h1>
+        <div class="text-center pt-2">
+            <h1 class="m-auto align-middle pt-4 pb-3">Recent Posts</h1>
         </div>
     </header>
     <div class="content px-4 my-2">
