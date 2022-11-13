@@ -1,7 +1,9 @@
 using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Web.Features.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
@@ -35,6 +37,19 @@ public class OgDataTests : TestContext
         GetMetaTagExists(cut, "image").Should().BeFalse();
         GetMetaTagExists(cut, "keywords").Should().BeFalse();
         GetMetaTagExists(cut, "description").Should().BeFalse();
+    }
+
+    [Fact]
+    public void ShouldSetCanoncialLink()
+    {
+        ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
+
+        var cut = RenderComponent<OgData>(p => p
+            .Add(s => s.Title, "Title"));
+
+        var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
+        var expectedUri = Services.GetRequiredService<NavigationManager>().Uri;
+        link.Href.Should().Be(expectedUri);
     }
 
     private static void AssertMetaTagExistsWithValue(
