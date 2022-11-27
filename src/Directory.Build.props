@@ -18,8 +18,15 @@
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
     </PropertyGroup>
 
+    <PropertyGroup Label="Analyzer settings">
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisLevel>preview</AnalysisLevel>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
     <PropertyGroup>
-        <WarningLevel>5</WarningLevel>
+        <WarningLevel>99</WarningLevel>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
