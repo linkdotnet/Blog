@@ -2,7 +2,7 @@
 
 <HeadContent>
     <meta name="title" property="og:title" content="@Title" />
-    <link rel="canonical" href="@NavigationManager.Uri" />
+    <link rel="canonical" href="@GetCanoncialUri()" />
     @if (AbsolutePreviewImageUrl != null)
     {
         <meta name="image" property="og:image" content="@AbsolutePreviewImageUrl"/>
@@ -25,10 +25,17 @@
 
     [Parameter]
     public string AbsolutePreviewImageUrl { get; set; }
-    
+
     [Parameter]
     public string Description { get; set; }
-    
+
     [Parameter]
     public string Keywords { get; set; }
+
+    private string GetCanoncialUri()
+    {
+        var uri = new Uri(NavigationManager.Uri);
+        return uri.GetLeftPart(UriPartial.Path);
+    }
+
 }

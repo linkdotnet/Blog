@@ -42,14 +42,29 @@ public class OgDataTests : TestContext
     [Fact]
     public void ShouldSetCanoncialLink()
     {
+        const string expectedUri = "https://steven.com/test";
+        Services.GetRequiredService<NavigationManager>().NavigateTo(expectedUri);
         ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
 
         var cut = RenderComponent<OgData>(p => p
             .Add(s => s.Title, "Title"));
 
         var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
-        var expectedUri = Services.GetRequiredService<NavigationManager>().Uri;
+
         link.Href.Should().Be(expectedUri);
+    }
+
+    [Fact]
+    public void ShouldSetCanoncialLinkWithoutQueryParameter()
+    {
+        ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
+        Services.GetRequiredService<NavigationManager>().NavigateTo("https://localhost.com/site?query=2");
+
+        var cut = RenderComponent<OgData>(p => p
+            .Add(s => s.Title, "Title"));
+
+        var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
+        link.Href.Should().Be("https://localhost.com/site");
     }
 
     private static void AssertMetaTagExistsWithValue(
