@@ -99,6 +99,7 @@ a:hover {
 
 h1 {
     color: var(--header1);
+    word-wrap: break-word;
 }
 
 h2 {

@@ -131,6 +131,11 @@
 .blog-card:hover .details {
     left: 0;
 }
+@media (max-width: 400px) {
+    .blog-card .description h1 {
+        font-size: 1.25rem;
+    }
+}
 @media (min-width: 640px) {
     .blog-card {
         flex-direction: row;
