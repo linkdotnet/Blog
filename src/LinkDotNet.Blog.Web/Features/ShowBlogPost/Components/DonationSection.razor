@@ -1,11 +1,12 @@
 @inject AppConfiguration AppConfiguration
+<div class="d-inline-flex gap-2 align-items-center">
+    @if (AppConfiguration.IsKofiEnabled)
+    {
+        <Kofi KofiToken="@AppConfiguration.KofiToken"></Kofi>
+    }
 
-@if (AppConfiguration.IsKofiEnabled)
-{
-    <Kofi KofiToken="@AppConfiguration.KofiToken"></Kofi>
-}
-
-@if (AppConfiguration.IsGithubSponsorAvailable)
-{
-    <GithubSponsor Name="@AppConfiguration.GithubSponsorName"></GithubSponsor>
-}
+    @if (AppConfiguration.IsGithubSponsorAvailable)
+    {
+        <GithubSponsor Name="@AppConfiguration.GithubSponsorName"></GithubSponsor>
+    }
+</div>
