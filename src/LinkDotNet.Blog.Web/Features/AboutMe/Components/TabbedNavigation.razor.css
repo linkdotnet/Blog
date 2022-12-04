@@ -3,7 +3,3 @@
     background: transparent !important;
     color: var(--bs-body-color) !important;
 }
-
-.nav>.nav-item>button.active {
-    border-bottom: 2px solid var(--active-link);
-}

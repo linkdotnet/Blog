@@ -74,10 +74,11 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
+
         if (firstRender)
         {
             var userRecordTask = UserRecordService.StoreUserRecordAsync();
-            await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
             StateHasChanged();
             await userRecordTask;
         }
