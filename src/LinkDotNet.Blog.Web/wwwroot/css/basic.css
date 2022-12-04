@@ -25,7 +25,7 @@ body {
     background-image: linear-gradient(to bottom, var(--background-gradient-start) 40%, var(--background-gradient-end));
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: var(--default-font), sans-serif;
+    font-family: var(--default-font), sans-serif !important;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
