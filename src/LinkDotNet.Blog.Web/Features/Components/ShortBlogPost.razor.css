@@ -20,9 +20,7 @@
 .blog-card a {
     color: inherit;
 }
-.blog-card a:hover {
-    color: #5ad67d;
-}
+
 .blog-card .meta {
     position: relative;
     z-index: 0;
@@ -75,11 +73,11 @@
 
 .blog-card .description {
     padding: 1rem;
-    background: #fff;
+    background: var(--background-gradient-start);
     position: relative;
     z-index: 1;
 }
-.blog-card .description h1,
+
 .blog-card .description h1 {
     line-height: 1;
     margin: 0 0 5px 0;
@@ -123,7 +121,6 @@
     content: "";
     position: absolute;
     height: 5px;
-    background: var(--active-link);
     width: 35px;
     top: -0.75rem;
     border-radius: 3px;
@@ -151,7 +148,7 @@
     .blog-card .description:before {
         transform: skewX(-3deg);
         content: "";
-        background: #fff;
+        background: var(--background-gradient-start);
         width: 30px;
         position: absolute;
         left: -10px;

@@ -1,7 +1,0 @@
-﻿.original a {
-    color: var(--active-link) !important;
-}
-
-.original a:hover {
-    /*color: var(--link-hover) !important;*/
-}

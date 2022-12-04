@@ -13,17 +13,12 @@
 }
 
 .profile-name:first-child {
-    color: var(--header1);
-    background: var(--white);
-}
-
-.profile-name:last-child {
-    color: var(--header2);
+    background: var(--background-gradient-end);
 }
 
 .profile-image {
     padding: 30px;
-    background: linear-gradient(to bottom , white 50%, var(--header1) 50.1%, var(--header1) 100%);
+    background: var(--background-gradient-end);
 }
 
 .profile-image img {
@@ -34,7 +29,7 @@
 }
 
 .profile-keypoints {
-    background-color: var(--header1);
+    background-color: var(--background-gradient-end);
     padding-top: 10px;
     padding-left: 2.5em;
     padding-right: 1.5em;
@@ -44,7 +39,6 @@
 
 .profile-keypoints li {
     padding-bottom: 0.6em;
-    color: var(--white);
     letter-spacing: 0.05em;
 }
 

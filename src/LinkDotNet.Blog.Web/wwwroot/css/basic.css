@@ -1,53 +1,18 @@
 ﻿:root {
     /* Color definitions */
-    --ceramic: #FCFFF5;
-    --tana: #D1DBBD;
-    --pewter: #91AA9D;
-    --william: #3E606F;
-    --big-stone: #193441;
-
-    --white: #ffffff;
-    --wild-sand: #f4f4f4;
-    --silver: #DADADA;
+    --jaguar: #07011A;
+    --shark: #28282f;
 
     /* Fonts */
     --default-font: 'Calibri';
     --code-font: 'Lucida Console', 'Courier New';
 
-    /* Usages - this colors have to be defined in every theme */
-    --active-link: var(--big-stone);
-    --disabled-link: var(--pewter);
-    --link-hover: var(--tana);
-    --active-link-inverted: var(--ceramic);
-    --link-hover-inverted: var(--tana);
-
-    --header1: var(--william);
-    --header1-inverted: var(--ceramic);
-    --header2: var(--pewter);
-    --text-color: var(--big-stone);
-    --text-color-inverted: var(--ceramic);
-
-    --navbar-background: #f4f4f4d0;
-
-    --blockquote-background: var(--wild-sand);
-    --blockquote-border: var(--william);
-
-    --button-text-color: var(--wild-sand);
-    --button-primary-color: var(--william);
-    --button-primary-border-color: var(--big-stone);
-    --button-primary-hover-color: var(--big-stone);
-    --button-secondary-color: var(--big-stone);
-    --button-secondary-border-color: var(--big-stone);
-
-    --blog-post-background-color: var(--big-stone);
-
-    --background-gradient-start: var(--wild-sand);
-    --background-gradient-end: var(--silver);
+    --background-gradient-start: var(--jaguar);
+    --background-gradient-end: var(--shark);
 }
 
 html {
     height: 100%;
-    font-size: 1.1rem;
 }
 
 html:focus-within {
@@ -68,47 +33,23 @@ body {
 a {
     transition: 0.3s ease-in-out !important;
     font-weight: 500;
-    color: var(--active-link) !important;
-}
-
-a:hover {
-    color: var(--link-hover) !important;
 }
 
 .disabled a {
     font-weight: 400;
-    color: var(--disabled-link) !important;
+    /*color: var(--disabled-link) !important;*/
 }
 
 .inverted-colors a {
     font-weight: 400;
-    color: var(--active-link-inverted) !important;
-}
-
-.inverted-colors a:hover {
-    color: var(--link-hover-inverted) !important;
-}
-
-.inverted-colors p {
-    color: var(--text-color-inverted) !important;
-}
-
-.inverted-colors button {
-    color: var(--white) !important;
 }
 
 h1 {
-    color: var(--header1);
     word-wrap: break-word;
 }
 
-h2 {
-    color: var(--header2);
-}
-
 blockquote {
-    border-left: 2px solid var(--header2);
-    background: var(--blockquote-background);
+    background: var(--shark);
     padding-left: 0.5em;
 }
 
@@ -132,17 +73,8 @@ blockquote p {
     display: inline;
 }
 
-p {
-    color: var(--text-color);
-}
-
 section {
     padding-bottom: 10px;
-}
-
-.table th {
-    background: var(--button-primary-color);
-    color: var(--white);
 }
 
 code {
