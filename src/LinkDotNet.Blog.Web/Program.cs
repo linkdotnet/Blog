@@ -36,7 +36,7 @@ public class Program
         builder.Services.AddResponseCompression();
 
         if (builder.Environment.IsDevelopment())
-        {
+        {   
             builder.Services.UseDummyAuthentication();
         }
         else
