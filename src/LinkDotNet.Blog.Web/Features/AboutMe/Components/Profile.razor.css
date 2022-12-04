@@ -2,7 +2,6 @@
     display: inline-block;
     box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
     width: 100%;
-    background: var(--background-gradient-start);
     border-radius: 8px;
 }
 
@@ -13,12 +12,12 @@
 }
 
 .profile-name:first-child {
-    background: var(--background-gradient-end);
+    background: var(--trout);
 }
 
 .profile-image {
     padding: 30px;
-    background: var(--background-gradient-end);
+    background: var(--trout);
 }
 
 .profile-image img {
@@ -29,7 +28,7 @@
 }
 
 .profile-keypoints {
-    background-color: var(--background-gradient-end);
+    background-color: var(--trout);
     padding-top: 10px;
     padding-left: 2.5em;
     padding-right: 1.5em;

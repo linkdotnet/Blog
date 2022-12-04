@@ -2,6 +2,7 @@
     /* Color definitions */
     --jaguar: #07011A;
     --shark: #28282f;
+    --trout: rgba(78, 78, 93, 0.5);
 
     /* Fonts */
     --default-font: 'Calibri';
@@ -55,7 +56,6 @@ blockquote {
 
 blockquote::before {
     content: open-quote;
-    color: var(--blockquote-border);
     vertical-align: -0.4em;
     line-height: 0.1em;
     font-size: 2.5em;
@@ -63,7 +63,6 @@ blockquote::before {
 
 blockquote::after {
     content: close-quote;
-    color: var(--blockquote-border);
     vertical-align: -0.4em;
     line-height: 0.1em;
     font-size: 2.5em;
