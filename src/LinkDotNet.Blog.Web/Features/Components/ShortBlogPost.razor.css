@@ -39,7 +39,7 @@
     margin: auto;
     transition: left 0.5s;
     background: rgba(0, 0, 0, 0.6);
-    color: #fff;
+    color: var(--bs-white);
     padding: 10px;
     width: 100%;
     font-size: 0.9rem;
