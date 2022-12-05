@@ -9,6 +9,8 @@
     z-index: 0;
     transform: scale(1.0);
     transition: transform 0.35s;
+    content-visibility: auto;
+    contain-intrinsic-size: 300px;
 }
 
 .blog-card:hover {
@@ -72,7 +74,7 @@
 
 .blog-card .description {
     padding: 1rem;
-    background: var(--background-gradient-start);
+    background: var(--background);
     position: relative;
     z-index: 1;
 }
@@ -147,7 +149,7 @@
     .blog-card .description:before {
         transform: skewX(-3deg);
         content: "";
-        background: var(--background-gradient-start);
+        background: var(--background);
         width: 30px;
         position: absolute;
         left: -10px;
