@@ -1,12 +1,15 @@
 ﻿:root {
     /* Color definitions */
-    --jaguar: #111013;
-    --shark: #28282f;
+    --jaguar: rgb(17, 16, 19);
+    --shark: rgb(40, 40, 47);
     --trout: rgba(78, 78, 93, 0.5);
 
     /* Fonts */
     --default-font: 'Calibri';
     --code-font: 'Lucida Console', 'Courier New';
+
+    /* Usages */
+    --background: var(--jaguar);
 
     --background-gradient-start: var(--jaguar);
     --background-gradient-end: var(--shark);
@@ -22,7 +25,7 @@ html:focus-within {
 
 body {
     margin: 0;
-    background-image: linear-gradient(to bottom, var(--background-gradient-start) 40%, var(--background-gradient-end));
+    background-image: linear-gradient(to bottom, var(--background-gradient-start) 20%, var(--background-gradient-end));
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: var(--default-font), sans-serif !important;
