@@ -1,0 +1,95 @@
+@font-face {
+  font-family: 'icons';
+  src: 
+    url('fonts/icons.woff2') format('woff2'),
+    url('fonts/icons.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+i, .icomoon-liga {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icons' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.home:before {
+  content: "\e900";
+}
+.pencil:before {
+  content: "\e905";
+}
+.books:before {
+  content: "\e920";
+}
+.profile:before {
+  content: "\e923";
+}
+.copy:before {
+  content: "\e92c";
+}
+.price-tags:before {
+  content: "\e936";
+}
+.clock2:before {
+  content: "\e94f";
+}
+.calendar:before {
+  content: "\e953";
+}
+.user-tie:before {
+  content: "\e976";
+}
+.search:before {
+  content: "\e986";
+}
+.lock:before {
+  content: "\e98f";
+}
+.unlocked:before {
+  content: "\e990";
+}
+.lab:before {
+  content: "\e9aa";
+}
+.bin2:before {
+  content: "\e9ad";
+}
+.plus:before {
+  content: "\ea0a";
+}
+.circle-right:before {
+  content: "\ea42";
+}
+.twitter:before {
+  content: "\ea96";
+}
+.rss2:before {
+  content: "\ea9c";
+}
+.github:before {
+  content: "\eab0";
+}
+.linkedin:before {
+  content: "\eac9";
+}
