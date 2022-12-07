@@ -16,7 +16,7 @@
           "Microsoft.AspNetCore.Authentication.OpenIdConnect": "7.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.0",
           "Microsoft.EntityFrameworkCore.Sqlite": "7.0.0",
-          "SonarAnalyzer.CSharp": "8.49.0.57237",
+          "SonarAnalyzer.CSharp": "8.50.0.58025",
           "StyleCop.Analyzers": "1.2.0-beta.435",
           "System.ServiceModel.Syndication": "7.0.0"
         },
@@ -588,7 +588,7 @@
           }
         }
       },
-      "SonarAnalyzer.CSharp/8.49.0.57237": {},
+      "SonarAnalyzer.CSharp/8.50.0.58025": {},
       "SQLitePCLRaw.bundle_e_sqlite3/2.1.2": {
         "dependencies": {
           "SQLitePCLRaw.lib.e_sqlite3": "2.1.2",
@@ -1404,12 +1404,12 @@
       "path": "ravendb.client/5.4.5",
       "hashPath": "ravendb.client.5.4.5.nupkg.sha512"
     },
-    "SonarAnalyzer.CSharp/8.49.0.57237": {
+    "SonarAnalyzer.CSharp/8.50.0.58025": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-wVHGCxl56DTTFof+szvLRS8Cvn28uZGTzDXLttFO7CNIf+n4KubsV1s7nfixW4zJFUT90IxUoSQA6zxikMiHbg==",
-      "path": "sonaranalyzer.csharp/8.49.0.57237",
-      "hashPath": "sonaranalyzer.csharp.8.49.0.57237.nupkg.sha512"
+      "sha512": "sha512-mL8bFUXsCeMYKmG9dT8VKLEEZccvscL9XQcvlzUCP+aBn+PHRskoWGjjC1BevquCYB++OM7mHwLAaQFOuuOPIw==",
+      "path": "sonaranalyzer.csharp/8.50.0.58025",
+      "hashPath": "sonaranalyzer.csharp.8.50.0.58025.nupkg.sha512"
     },
     "SQLitePCLRaw.bundle_e_sqlite3/2.1.2": {
       "type": "package",

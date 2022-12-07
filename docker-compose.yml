@@ -1,0 +1,15 @@
+services:
+  dotnet:
+    image: mcr.microsoft.com/dotnet/aspnet:7.0
+    container_name: dotnetBlog
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /home/HHH/Project/Blog/Publish:/App
+      - /root/.aspnet/DataProtection-Keys
+      - /home/HHH/Project/Blog/Blog.db
+    working_dir: /App
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    entrypoint: dotnet ./LinkDotNet.Blog.Web.dll  

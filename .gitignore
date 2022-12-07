@@ -1,6 +1,7 @@
 bin/
 obj/
-Pulish/
+*.db
+Publish/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
