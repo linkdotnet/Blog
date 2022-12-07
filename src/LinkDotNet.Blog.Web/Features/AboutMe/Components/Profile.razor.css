@@ -2,7 +2,6 @@
     display: inline-block;
     box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
     width: 100%;
-    background: var(--background-gradient-start);
     border-radius: 8px;
 }
 
@@ -13,17 +12,12 @@
 }
 
 .profile-name:first-child {
-    color: var(--header1);
-    background: var(--white);
-}
-
-.profile-name:last-child {
-    color: var(--header2);
+    background: var(--trout);
 }
 
 .profile-image {
     padding: 30px;
-    background: linear-gradient(to bottom , white 50%, var(--header1) 50.1%, var(--header1) 100%);
+    background: var(--trout);
 }
 
 .profile-image img {
@@ -34,7 +28,7 @@
 }
 
 .profile-keypoints {
-    background-color: var(--header1);
+    background-color: var(--trout);
     padding-top: 10px;
     padding-left: 2.5em;
     padding-right: 1.5em;
@@ -44,7 +38,6 @@
 
 .profile-keypoints li {
     padding-bottom: 0.6em;
-    color: var(--white);
     letter-spacing: 0.05em;
 }
 
