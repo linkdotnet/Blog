@@ -206,3 +206,4 @@ volumes:
 ```
 After modifying the settings, you can use the docker command`docker compose up -d`
 Deploy the web.
+If you don't use HTTPS, you can remove the related options.
