@@ -188,3 +188,22 @@ Furthermore, the following tags are set:
 
 ## RSS Feed
 This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.org/feed/docs/rss2.html)), which can be consumed by your users or programs like Feedly. Just append `feed.rss` to your URL or click on the RSS feed icon in the navigation bar to get the feed. The RSS feed does not expose the whole content of a given blog post but its title and short description including some other tags like preview image, publishing date and so on.
+
+## Host Web in Docker containers
+
+To deploy with docker, you need to modify the variables in the docker-compose.yml file.
+```yml
+volumes:
+      - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+      - ./Blog.db:/app/Blog.db #SQlite datebase consistent with appsettings.json
+      - /root/aspnetapp.pfx:/app/aspnetapp.pfx #ssl certificate
+    environment:
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_HTTPS_PORT=80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password= #your certificate password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
+      - ASPNETCORE_ENVIRONMENT=Production
+```
+After modifying the settings, you can use the docker command`docker compose up -d`
+Deploy the web.
+If you don't use HTTPS, you can remove the related options.

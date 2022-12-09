@@ -1,0 +1,18 @@
+services:
+  dotnet:
+    image: linkdotnet.blog.web
+    build: ./
+    container_name: dotnetBlog
+    ports:
+      - 80:80 #You can modify the port you want
+      - 443:443
+    volumes:
+      - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
+      - ./Blog.db:/app/Blog.db #SQlite datebase
+      - /root/aspnetapp.pfx:/app/aspnetapp.pfx #ssl certificate
+    environment:
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+      - ASPNETCORE_HTTPS_PORT=80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password= #your certificate password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
+      - ASPNETCORE_ENVIRONMENT=Production
