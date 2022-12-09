@@ -3,13 +3,14 @@
     flex-direction: column;
     box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
     margin: 1rem auto 1.6%;
-    background: #ccc;
     line-height: 1.4;
     border-radius: 5px;
     overflow: hidden;
     z-index: 0;
     transform: scale(1.0);
     transition: transform 0.35s;
+    content-visibility: auto;
+    contain-intrinsic-size: 300px;
 }
 
 .blog-card:hover {
@@ -20,9 +21,7 @@
 .blog-card a {
     color: inherit;
 }
-.blog-card a:hover {
-    color: #5ad67d;
-}
+
 .blog-card .meta {
     position: relative;
     z-index: 0;
@@ -42,7 +41,7 @@
     margin: auto;
     transition: left 0.5s;
     background: rgba(0, 0, 0, 0.6);
-    color: #fff;
+    color: var(--bs-white);
     padding: 10px;
     width: 100%;
     font-size: 0.9rem;
@@ -75,11 +74,11 @@
 
 .blog-card .description {
     padding: 1rem;
-    background: #fff;
+    background: var(--background);
     position: relative;
     z-index: 1;
 }
-.blog-card .description h1,
+
 .blog-card .description h1 {
     line-height: 1;
     margin: 0 0 5px 0;
@@ -123,7 +122,6 @@
     content: "";
     position: absolute;
     height: 5px;
-    background: var(--active-link);
     width: 35px;
     top: -0.75rem;
     border-radius: 3px;
@@ -151,7 +149,7 @@
     .blog-card .description:before {
         transform: skewX(-3deg);
         content: "";
-        background: #fff;
+        background: var(--background);
         width: 30px;
         position: absolute;
         left: -10px;

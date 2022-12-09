@@ -1,5 +1,5 @@
 ﻿.search-bar {
-    border: 2px solid var(--active-link);
+    border: 2px solid;
     display: flex;
     border-radius: 100vh;
     overflow: hidden;
@@ -22,21 +22,18 @@
     left: 0;
     z-index: 2;
     cursor: pointer;
-    color:var(--active-link);
     font-weight: 600;
 }
 
 .search-bar-input:focus {
     outline: 0;
 }
-
 .search-bar-button {
-    color:var(--active-link);
     border: 0;
     border-radius: 100vh;
     margin-left: auto;
-    width: calc(40px - 10px);
-    height: calc(40px - 10px);
+    width: 30px;
+    height: 30px;
     cursor: pointer;
     background: transparent;
 }

@@ -37,7 +37,6 @@ templateSlideshowContainer.innerHTML = `
 }
 
 .text {
-  color: var(--white);
   font-size: 15px;
   padding: 8px 12px;
   position: absolute;
@@ -47,7 +46,6 @@ templateSlideshowContainer.innerHTML = `
 }
 
 .numbertext {
-  color: var(--white);
   font-size: 12px;
   padding: 8px 12px;
   position: absolute;
