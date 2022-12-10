@@ -6,10 +6,11 @@ services:
     ports:
       - 80:80 #You can modify the port you want
       - 443:443
+    restart: always
     volumes:
-      - /root/Project/Blog/src/LinkDotNet.Blog.Web/appsettings.json:/app/appsettings.json
+      - ./src/LinkDotNet.Blog.Web/appsettings.json:/app/appsettings.json
       - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
-      - ./Blog.db:/app/Blog.db #SQlite datebase
+      - ./Blog.db:/app/Blog.db #SQlite datebase if you use sqlite
       - /root/aspnetapp.pfx:/app/aspnetapp.pfx #ssl certificate in PFX format
     environment:
       - ASPNETCORE_URLS=http://+:80;https://+:443 #Modified according to ports
@@ -19,17 +20,24 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     networks:
       - web_net
+######################################
     depends_on:
       - sql
-  sql:
+  sql: # if you use SqlServer 
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql
     expose: 
       - 1433
+    restart: always
+    volumes:
+      - sqlvolume:/var/opt/mssql
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Hzs686868
+      - MSSQL_SA_PASSWORD=Hzs686868 #your sql password
     networks:
       - web_net
+volumes: # creates a shared data volume named sqlvolume if you use sqlserver 
+  sqlvolume:  
+###########################################
 networks:
   web_net:
