@@ -4,15 +4,32 @@ services:
     build: ./
     container_name: dotnetBlog
     ports:
-      - 1234:1234 #You can modify the port you want
-      - 1235:1235
+      - 80:80 #You can modify the port you want
+      - 443:443
     volumes:
+      - /root/Project/Blog/src/LinkDotNet.Blog.Web/appsettings.json:/app/appsettings.json
       - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
-      - ./Blog.db:/App/Blog.db #SQlite datebase
-      - /root/Project/BlazorBlog/aspnetapp.pfx:/App/aspnetapp.pfx #ssl certificate in PFX format
+      - ./Blog.db:/app/Blog.db #SQlite datebase
+      - /root/aspnetapp.pfx:/app/aspnetapp.pfx #ssl certificate in PFX format
     environment:
-      - ASPNETCORE_URLS=http://+:1234;https://+:1235  #Modified according to ports
-      - ASPNETCORE_HTTPS_PORT=1235
-      - ASPNETCORE_Kestrel__Certificates__Default__Password= #your certificate password 
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/App/aspnetapp.pfx
+      - ASPNETCORE_URLS=http://+:80;https://+:443 #Modified according to ports
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123456 #your certificate password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
       - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - web_net
+    depends_on:
+      - sql
+  sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql
+    expose: 
+      - 1433
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Hzs686868
+    networks:
+      - web_net
+networks:
+  web_net:
