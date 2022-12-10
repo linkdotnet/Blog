@@ -10,6 +10,7 @@
 
     /* Usages */
     --background: var(--jaguar);
+    --tag-background: var(--trout);
 
     --background-gradient-start: var(--jaguar);
     --background-gradient-end: var(--shark);

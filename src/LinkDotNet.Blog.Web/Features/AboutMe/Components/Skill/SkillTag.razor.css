@@ -1,7 +1,7 @@
 .skill-tag {
     padding: 8px;
     border-radius: 5px;
-    background-color: var(--trout);
+    background-color: var(--tag-background);
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
