@@ -31,7 +31,6 @@ body {
     font-family: var(--default-font), sans-serif !important;
     min-height: 100vh;
     text-rendering: optimizeSpeed;
-    line-height: 1.5;
 }
 
 a {
@@ -41,7 +40,6 @@ a {
 
 .disabled a {
     font-weight: 400;
-    /*color: var(--disabled-link) !important;*/
 }
 
 .inverted-colors a {
