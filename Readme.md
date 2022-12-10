@@ -229,4 +229,6 @@ volumes: # creates a shared data volume named sqlvolume if you use sqlserver
   sqlvolume: 
 ```
 Note the ConnectionString format of Sql Server needs to be consistent:
-`"ConnectionString": "Data Source=sql;Initial Catalog =master;User ID =sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"`
+```
+"ConnectionString": "Data Source=sql;Initial Catalog =master;User ID =sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"
+```
