@@ -78,10 +78,10 @@ public class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask DeleteAsync(string id)
     {
-        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entityToDelete = await GetByIdAsync(id);
         if (entityToDelete != null)
         {
+            await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
             blogDbContext.Remove(entityToDelete);
             await blogDbContext.SaveChangesAsync();
         }

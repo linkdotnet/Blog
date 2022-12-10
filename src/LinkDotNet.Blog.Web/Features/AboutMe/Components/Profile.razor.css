@@ -12,12 +12,12 @@
 }
 
 .profile-name:first-child {
-    background: var(--trout);
+    background: var(--tag-background);
 }
 
 .profile-image {
     padding: 30px;
-    background: var(--trout);
+    background: var(--tag-background);
 }
 
 .profile-image img {
@@ -28,7 +28,7 @@
 }
 
 .profile-keypoints {
-    background-color: var(--trout);
+    background-color: var(--tag-background);
     padding-top: 10px;
     padding-left: 2.5em;
     padding-right: 1.5em;

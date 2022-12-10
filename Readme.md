@@ -146,15 +146,14 @@ For disqus you only need the short name (site-name) which you can find for examp
 There is only one real mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
 
 The main advantage of Auth0 is the easily configurable dashboard on their website.
-
-For testing purposes you can use `services.UseDummyAuthentication();`. This allows every user, who presses Login, to be logged in.
+For testing purposes, you can use `services.UseDummyAuthentication();`. This allows every user, who presses Login, to be logged in.
 
 ## Donations
 The blog software allows you to integrate via different micro-transaction services. The following chapter will show you how to set up donations.
 
 ### Ko-fi
 You can use [Ko-fi](https://Ko-fi.com/) as a payment service to receive donations. To acquire the `KofiToken` as seen in the config above, head to [widgets page](https://Ko-fi.com/manage/widgets), click on "Ko-fi Button".
-Now choose "Image" as type. In the field below under `Copy & Paste Code` you see an `<a href='https://ko-fi.com/XYZ'` tag. Just take the `XYZ` part and put it into `KofiToken`.
+Now choose "Image" as the type. In the field below under `Copy & Paste Code` you see an `<a href='https://ko-fi.com/XYZ'` tag. Just take the `XYZ` part and put it into `KofiToken`.
 
 ### GitHub Sponsor
 Enables the usage of [GitHub Sponsors](https://github.com/sponsors) as a payment service to receive donations. Only pass in your username. The button will use the following url: `https://github.com/sponsors/{your-user-name}`.
@@ -195,15 +194,13 @@ To deploy with docker, you need to modify the variables in the docker-compose.ym
 ```yml
 volumes:
       - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
-      - ./Blog.db:/app/Blog.db #SQlite datebase consistent with appsettings.json
-      - /root/aspnetapp.pfx:/app/aspnetapp.pfx #ssl certificate
+      - ./Blog.db:/app/Blog.db # Sqlite datebase consistent with appsettings.json
+      - /root/aspnetapp.pfx:/app/aspnetapp.pfx # ssl certificate
     environment:
       - ASPNETCORE_URLS=http://+:80;https://+:443
       - ASPNETCORE_HTTPS_PORT=80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password= #your certificate password
+      - ASPNETCORE_Kestrel__Certificates__Default__Password= # Your certificate password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
       - ASPNETCORE_ENVIRONMENT=Production
 ```
-After modifying the settings, you can use the docker command`docker compose up -d`
-Deploy the web.
-If you don't use HTTPS, you can remove the related options.
+After modifying the settings, you can use the docker command `docker compose up -d`.
