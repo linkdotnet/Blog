@@ -12,8 +12,6 @@ services:
       - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
       - ./Blog.db:/app/Blog.db # Sqlite datebase
       - /root/aspnetapp.pfx:/app/aspnetapp.pfx # ssl certificate
-      - ./Blog.db:/app/Blog.db #SQlite datebase if you use sqlite
-      - /root/aspnetapp.pfx:/app/aspnetapp.pfx #ssl certificate in PFX format
     environment:
       - ASPNETCORE_URLS=http://+:80;https://+:443
       - ASPNETCORE_HTTPS_PORT=443
