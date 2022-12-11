@@ -190,7 +190,7 @@ This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.
 
 ## Host Web in Docker containers
 
-### https http port and  CA certificate
+### Server configuration
 
 To deploy with docker, you need to modify the variables in the docker-compose.yml file.
 ```yml
@@ -208,27 +208,26 @@ volumes:
 After modifying the settings, you can use the docker command `docker compose up -d`
 Deploy the web.
 If you don't use HTTPS, you can remove the related options.
+SQL Server
 
-### Sql Server
-
-If you use Sql Server, you can add a sql server in `docker-compose.yml`.
+If you use SQL Server, you can add an instance in `docker-compose.yml`.
 ``` yml
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql
     expose: 
-      - 1433 #you can use other ports
+      - 1433
     volumes:
       - sqlvolume:/var/opt/mssql
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=  #your sql password
+      - MSSQL_SA_PASSWORD=  # Your sql password
     networks:
       - web_net
 volumes: # creates a shared data volume named sqlvolume if you use sqlserver 
   sqlvolume: 
 ```
-Note the ConnectionString format of Sql Server needs to be consistent:
+Note the ConnectionString format of SQL Server needs to be consistent:
 ```
-"ConnectionString": "Data Source=sql;Initial Catalog =master;User ID =sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"
+"ConnectionString": "Data Source=sql;Initial Catalog=master;User ID=sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"
 ```
