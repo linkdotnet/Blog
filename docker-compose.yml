@@ -6,13 +6,38 @@ services:
     ports:
       - 80:80
       - 443:443
+    restart: always
     volumes:
+      - ./src/LinkDotNet.Blog.Web/appsettings.json:/app/appsettings.json
       - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
       - ./Blog.db:/app/Blog.db # Sqlite datebase
       - /root/aspnetapp.pfx:/app/aspnetapp.pfx # ssl certificate
     environment:
       - ASPNETCORE_URLS=http://+:80;https://+:443
-      - ASPNETCORE_HTTPS_PORT=80
+      - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password= # Your certificate password
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
       - ASPNETCORE_ENVIRONMENT=Production
+    networks:
+      - web_net
+######################################
+    depends_on:
+      - sql
+  sql: # if you use SqlServer 
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql
+    expose: 
+      - 1433
+    restart: always
+    volumes:
+      - sqlvolume:/var/opt/mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD= #your sql password
+    networks:
+      - web_net
+volumes: # creates a shared data volume named sqlvolume if you use sqlserver 
+  sqlvolume:  
+###########################################
+networks:
+  web_net:
