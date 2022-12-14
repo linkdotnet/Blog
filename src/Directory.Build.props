@@ -26,7 +26,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <WarningLevel>99</WarningLevel>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
