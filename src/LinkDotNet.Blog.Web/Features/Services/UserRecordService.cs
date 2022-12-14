@@ -62,8 +62,7 @@ public class UserRecordService : IUserRecordService
 
     private async ValueTask<int> GetIdentifierHashAsync()
     {
-        var hasKey = await TryGetKey();
-        if (hasKey)
+        if (await TryGetKey())
         {
             var key = await localStorageService.GetItemAsync<Guid>("user");
             return key.GetHashCode();
@@ -74,12 +73,11 @@ public class UserRecordService : IUserRecordService
         return id.GetHashCode();
     }
 
-    private async Task<bool> TryGetKey()
+    private async ValueTask<bool> TryGetKey()
     {
         try
         {
-            var hasKey = await localStorageService.ContainKeyAsync("user");
-            return hasKey;
+            return await localStorageService.ContainKeyAsync("user");
         }
         catch (Exception e)
         {
