@@ -20,3 +20,9 @@
      50%  { background-position: right; }
      100% { background-position: right; }
  }
+
+@media (prefers-color-scheme: light) {
+	.clap-btn {
+		filter: invert(100%);
+	}
+}

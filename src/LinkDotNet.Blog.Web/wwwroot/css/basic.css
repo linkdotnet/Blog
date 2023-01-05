@@ -1,19 +1,55 @@
 ﻿:root {
-    /* Color definitions */
-    --jaguar: rgb(17, 16, 19);
-    --shark: rgb(40, 40, 47);
-    --trout: rgba(78, 78, 93, 0.5);
-
     /* Fonts */
     --default-font: 'Calibri';
     --code-font: 'Lucida Console', 'Courier New';
+}
 
-    /* Usages */
-    --background: var(--jaguar);
-    --tag-background: var(--trout);
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* Color definitions */
+		--jaguar: rgb(17, 16, 19);
+		--shark: rgb(40, 40, 47);
+		--trout: rgba(78, 78, 93, 0.5);
 
-    --background-gradient-start: var(--jaguar);
-    --background-gradient-end: var(--shark);
+		/* Usages */
+		--background: var(--jaguar);
+		--tag-background: var(--trout);
+
+		--background-gradient-start: var(--jaguar);
+		--background-gradient-end: var(--shark);
+	}
+
+	a {
+		color: #9e9e9e !important;
+	}
+
+	a:hover {
+		color: #7e7e7e !important;
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		/* Color definitions */
+		--wild-sand: #f4f4f4;
+		--silver: #dadada;
+		--waterloo: rgba(124, 124, 148, 0.5);
+
+		/* Usages */
+		--background: var(--wild-sand);
+		--tag-background: var(--waterloo);
+
+		--background-gradient-start: var(--wild-sand);
+		--background-gradient-end: var(--silver);
+	}
+
+	a {
+		color: #525252 !important;
+	}
+
+	a:hover {
+		color: darkgray !important;
+	}
 }
 
 html {
