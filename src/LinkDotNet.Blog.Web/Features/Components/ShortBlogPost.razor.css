@@ -129,6 +129,15 @@
 .blog-card:hover .details {
     left: 0;
 }
+
+.goto-tag {
+	color: white !important;
+}
+
+.goto-tag:hover {
+	color: #D7D7D7 !important;
+}
+
 @media (max-width: 400px) {
     .blog-card .description h1 {
         font-size: 1.25rem;
