@@ -29,7 +29,6 @@ public class AddSkillDialogTests : TestContext
         addedSkill.ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
         toastServiceMock.Verify(t => t.ShowSuccess(
             "Created Skill C# in capability capability with level Expert",
-            string.Empty,
             null));
     }
 }

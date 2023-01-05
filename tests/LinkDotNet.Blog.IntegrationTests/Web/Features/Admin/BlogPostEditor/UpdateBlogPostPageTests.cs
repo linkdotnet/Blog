@@ -33,7 +33,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
         blogPostFromDb.Should().NotBeNull();
         blogPostFromDb.ShortDescription.Should().Be("My new Description");
-        toastService.Verify(t => t.ShowInfo("Updated BlogPost Title", string.Empty, null), Times.Once);
+        toastService.Verify(t => t.ShowInfo("Updated BlogPost Title",  null), Times.Once);
     }
 
     [Fact]
