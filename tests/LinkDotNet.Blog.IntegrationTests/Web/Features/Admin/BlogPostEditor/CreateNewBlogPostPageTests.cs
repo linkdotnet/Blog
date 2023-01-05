@@ -33,7 +33,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Title == "My Title");
         blogPostFromDb.Should().NotBeNull();
         blogPostFromDb.ShortDescription.Should().Be("My short Description");
-        toastService.Verify(t => t.ShowInfo("Created BlogPost My Title", string.Empty, null), Times.Once);
+        toastService.Verify(t => t.ShowInfo("Created BlogPost My Title", null), Times.Once);
     }
 
     [Fact]
