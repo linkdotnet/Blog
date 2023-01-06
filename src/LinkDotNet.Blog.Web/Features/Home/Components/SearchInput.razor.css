@@ -36,6 +36,11 @@
     height: 30px;
     cursor: pointer;
     background: transparent;
+	/*
+		TODO: That is really ugly
+		The problem is that every other button is behind nav-
+	 */
+	color: var(--bs-navbar-color);
 }
 
 .search-bar:focus-within {

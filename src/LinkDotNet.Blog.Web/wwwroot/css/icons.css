@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'icons';
-  src: 
+  src:
     url('fonts/icons.woff2') format('woff2'),
     url('fonts/icons.woff') format('woff');
   font-weight: normal;
@@ -17,7 +17,7 @@ i, .icomoon-liga {
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  
+
   /* Enable Ligatures ================ */
   letter-spacing: 0;
   -webkit-font-feature-settings: "liga";
@@ -93,3 +93,6 @@ i, .icomoon-liga {
 .linkedin:before {
   content: "\eac9";
 }
+.contrast:before {
+  content: "\e9d5";
+ }
