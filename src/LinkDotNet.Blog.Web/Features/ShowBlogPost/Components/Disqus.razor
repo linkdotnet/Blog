@@ -8,7 +8,7 @@
     {
         if (firstRender && AppConfiguration.IsDisqusEnabled)
         {
-            await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/Disqus.razor.js");
+            await using var _ = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/Disqus.razor.js");
             await JsRuntime.InvokeVoidAsync("initDisqus", AppConfiguration.DisqusConfiguration);
         }
     }

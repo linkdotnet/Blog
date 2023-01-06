@@ -31,16 +31,11 @@ a {
     font-weight: 400;
 }
 
-.inverted-colors a {
-    font-weight: 400;
-}
-
 h1 {
     word-wrap: break-word;
 }
 
 blockquote {
-    background: var(--shark);
     padding-left: 0.5em;
 }
 
