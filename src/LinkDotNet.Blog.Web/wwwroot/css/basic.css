@@ -4,54 +4,6 @@
     --code-font: 'Lucida Console', 'Courier New';
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		/* Color definitions */
-		--jaguar: rgb(17, 16, 19);
-		--shark: rgb(40, 40, 47);
-		--trout: rgba(78, 78, 93, 0.5);
-
-		/* Usages */
-		--background: var(--jaguar);
-		--tag-background: var(--trout);
-
-		--background-gradient-start: var(--jaguar);
-		--background-gradient-end: var(--shark);
-	}
-
-	a {
-		color: #bebebe !important;
-	}
-
-	a:hover {
-		color: #8a8a8a !important;
-	}
-}
-
-@media (prefers-color-scheme: light) {
-	:root {
-		/* Color definitions */
-		--wild-sand: #f4f4f4;
-		--silver: #dadada;
-		--waterloo: rgba(124, 124, 148, 0.5);
-
-		/* Usages */
-		--background: var(--wild-sand);
-		--tag-background: var(--waterloo);
-
-		--background-gradient-start: var(--wild-sand);
-		--background-gradient-end: var(--silver);
-	}
-
-	a {
-		color: #525252 !important;
-	}
-
-	a:hover {
-		color: darkgray !important;
-	}
-}
-
 html {
     height: 100%;
 }
@@ -62,7 +14,7 @@ html:focus-within {
 
 body {
     margin: 0;
-    background-image: linear-gradient(to bottom, var(--background-gradient-start) 20%, var(--background-gradient-end));
+    /*background-image: linear-gradient(to bottom, var(--background-gradient-start) 20%, var(--background-gradient-end));*/
     background-repeat: no-repeat;
     background-attachment: fixed;
     font-family: var(--default-font), sans-serif !important;
