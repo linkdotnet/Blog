@@ -11,6 +11,11 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
 public class NavMenuTests : TestContext
 {
+    public NavMenuTests()
+    {
+        ComponentFactories.AddStub<ThemeToggler>();
+    }
+
     [Fact]
     public void ShouldNavigateToSearchPage()
     {
