@@ -7,6 +7,11 @@
     background-size: 900%;
 }
 
+html[data-bs-theme='light'] .clap-btn {
+	filter: invert(100%);
+}
+
+
 .clap-active {
     animation-name: animate;
     animation-duration: .8s;
@@ -20,9 +25,3 @@
      50%  { background-position: right; }
      100% { background-position: right; }
  }
-
-@media (prefers-color-scheme: light) {
-	.clap-btn {
-		filter: invert(100%);
-	}
-}
