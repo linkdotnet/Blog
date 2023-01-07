@@ -50,7 +50,7 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDispo
 
     private static DbConnection CreateInMemoryConnection()
     {
-        var connection = new SqliteConnection("Filename=:memory:");
+        var connection = new SqliteConnection(string.Empty);
 
         connection.Open();
 

@@ -1,11 +1,9 @@
-﻿using System.Data.Common;
-using System.Linq;
+﻿using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
-using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Dashboard;
@@ -39,14 +37,5 @@ public class DashboardPageTests : TestContext
         {
             ProfileInformation = aboutMeEnabled ? new ProfileInformation() : null,
         };
-    }
-
-    private static DbConnection CreateInMemoryConnection()
-    {
-        var connection = new SqliteConnection("Filename=:memory:");
-
-        connection.Open();
-
-        return connection;
     }
 }
