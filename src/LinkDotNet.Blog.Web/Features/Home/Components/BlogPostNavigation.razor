@@ -1,5 +1,5 @@
-﻿@using X.PagedList
-@using LinkDotNet.Blog.Domain
+﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             <li class="page-item @(!PageList.IsFirstPage && PageList.Count > 0 ? string.Empty : "disabled")">
@@ -13,7 +13,7 @@
 
 @code {
     [Parameter]
-    public IPagedList<BlogPost> PageList { get; set; }
+    public IPaginatedList<BlogPost> PageList { get; set; }
 
     private string PreviousPageLink => PageList.IsFirstPage ? string.Empty : $"/{PageList.PageNumber - 1}";
     private string NextPageLink => PageList.IsLastPage ? string.Empty : $"/{PageList.PageNumber + 1}";

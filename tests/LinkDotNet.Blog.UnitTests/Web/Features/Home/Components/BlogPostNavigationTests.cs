@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Web.Features.Home.Components;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
@@ -61,11 +61,10 @@ public class BlogPostNavigationTests : TestContext
         cut.Find("li:last-child").ClassList.Should().Contain("disabled");
     }
 
-    private static Mock<IPagedList<BlogPost>> CreatePagedList(int currentPage, int pageCount)
+    private static Mock<IPaginatedList<BlogPost>> CreatePagedList(int currentPage, int pageCount)
     {
-        var page = new Mock<IPagedList<BlogPost>>();
+        var page = new Mock<IPaginatedList<BlogPost>>();
         page.Setup(p => p.PageNumber).Returns(currentPage);
-        page.Setup(p => p.PageCount).Returns(pageCount);
         page.Setup(p => p.IsFirstPage).Returns(currentPage == 1);
         page.Setup(p => p.IsLastPage).Returns(currentPage == pageCount);
 
