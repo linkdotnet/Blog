@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,13 +7,19 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
 public static class PaginatedListQueryExtensions
 {
-    public static async Task<IPaginatedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int pageIndex, int pageSize)
+    public static async Task<IPaginatedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int page, int pageSize, CancellationToken token = default)
     {
-        var count = await source.CountAsync();
+        var count = await source.CountAsync(token);
         if (count > 0)
         {
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new PaginatedList<T>(items, count, pageIndex, pageSize);
+            // I tried ToListAsync and it performed just poorly!
+            // Mainly because we have a VARCHAR(max) column
+            // See here: https://stackoverflow.com/questions/28543293/entity-framework-async-operation-takes-ten-times-as-long-to-complete/28619983
+            var items = source
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+            return new PaginatedList<T>(items, count, page, pageSize);
         }
 
         return PaginatedList<T>.Empty;
