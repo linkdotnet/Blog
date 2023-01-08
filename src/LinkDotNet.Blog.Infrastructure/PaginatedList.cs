@@ -21,14 +21,7 @@ public class PaginatedList<T> : IPaginatedList<T>
     {
         PageNumber = pageNumber;
         totalPages = (int)Math.Ceiling(count / (double)pageSize);
-        if (items is IList<T> list)
-        {
-            subset = list;
-        }
-        else
-        {
-            subset = new List<T>(items);
-        }
+        subset = items as IList<T> ?? new List<T>(items);
     }
 
     public int PageNumber { get; }
