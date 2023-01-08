@@ -2,10 +2,10 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using Microsoft.Extensions.Caching.Memory;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence;
 
@@ -124,6 +124,6 @@ public sealed class CachedRepositoryTests : IDisposable
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<BlogPost>(new[] { blogPost }, 1, 1));
+            .ReturnsAsync(new PaginatedList<BlogPost>(new[] { blogPost }, 1, 1));
     }
 }

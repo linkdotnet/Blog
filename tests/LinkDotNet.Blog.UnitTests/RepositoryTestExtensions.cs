@@ -1,9 +1,9 @@
 using System;
 using System.Linq.Expressions;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.UnitTests;
 
@@ -20,7 +20,7 @@ public static class RepositoryTestExtensions
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<TEntity>(Array.Empty<TEntity>(), 1, 1));
+            .ReturnsAsync(new PaginatedList<TEntity>(Array.Empty<TEntity>(), 1, 1));
 
         collection.AddScoped(_ => repositoryMock.Object);
     }

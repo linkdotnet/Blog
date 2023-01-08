@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
@@ -39,7 +38,7 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         return value;
     }
 
-    public async ValueTask<IPagedList<T>> GetAllAsync(
+    public async ValueTask<IPaginatedList<T>> GetAllAsync(
         Expression<Func<T, bool>> filter = null,
         Expression<Func<T, object>> orderBy = null,
         bool descending = true,
@@ -47,7 +46,7 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         int pageSize = int.MaxValue) =>
         await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
 
-    public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+    public async ValueTask<IPaginatedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<T, TProjection>> selector,
         Expression<Func<T, bool>> filter = null,
         Expression<Func<T, object>> orderBy = null,

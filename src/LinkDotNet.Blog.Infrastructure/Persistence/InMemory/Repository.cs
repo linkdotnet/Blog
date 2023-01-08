@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.InMemory;
 
@@ -19,7 +18,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return new ValueTask<TEntity>(entity);
     }
 
-    public ValueTask<IPagedList<TEntity>> GetAllAsync(
+    public ValueTask<IPaginatedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
@@ -29,7 +28,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
     }
 
-    public ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+    public ValueTask<IPaginatedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<TEntity, TProjection>> selector,
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
@@ -51,7 +50,7 @@ public class Repository<TEntity> : IRepository<TEntity>
                 : result.OrderBy(orderBy.Compile());
         }
 
-        return new ValueTask<IPagedList<TProjection>>(result.Select(selector.Compile()).ToPagedList(page, pageSize));
+        return new ValueTask<IPaginatedList<TProjection>>(result.Select(selector.Compile()).ToPagedList(page, pageSize));
     }
 
     public ValueTask StoreAsync(TEntity entity)

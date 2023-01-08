@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
@@ -9,7 +10,6 @@ using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
@@ -167,7 +167,7 @@ public class ProfileTests : TestContext
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(entries.ToPagedList);
+            .ReturnsAsync(new PaginatedList<ProfileInformationEntry>(entries, 1, 100));
     }
 
     private (Mock<IRepository<ProfileInformationEntry>> repoMock, Mock<ISortOrderCalculator> calcMock) RegisterServices()
@@ -182,7 +182,7 @@ public class ProfileTests : TestContext
             It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
             It.IsAny<bool>(),
             It.IsAny<int>(),
-            It.IsAny<int>())).ReturnsAsync(new List<ProfileInformationEntry>().ToPagedList());
+            It.IsAny<int>())).ReturnsAsync(PaginatedList<ProfileInformationEntry>.Empty);
         return (repoMock, calcMock);
     }
 }

@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
@@ -24,7 +23,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
     }
 
-    public async ValueTask<IPagedList<TEntity>> GetAllAsync(
+    public async ValueTask<IPaginatedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
@@ -34,7 +33,7 @@ public class Repository<TEntity> : IRepository<TEntity>
         return await GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
     }
 
-    public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+    public async ValueTask<IPaginatedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<TEntity, TProjection>> selector,
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,

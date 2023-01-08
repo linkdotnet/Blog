@@ -2,10 +2,10 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
-using X.PagedList;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Sitemap.Services;
 
@@ -48,7 +48,7 @@ public class SitemapServiceTests : TestContext
                 true,
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<BlogPost>(blogPosts, 1, 10));
+            .ReturnsAsync(new PaginatedList<BlogPost>(blogPosts, 1, 10));
 
         var sitemap = await sut.CreateSitemapAsync();
 

@@ -9,7 +9,6 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
       <PackageReference Include="RavenDB.Client" Version="5.4.5" />
-      <PackageReference Include="X.PagedList" Version="8.4.3" />
     </ItemGroup>
 
     <ItemGroup>
