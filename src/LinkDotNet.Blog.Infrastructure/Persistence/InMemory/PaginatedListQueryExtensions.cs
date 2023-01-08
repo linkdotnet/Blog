@@ -11,7 +11,10 @@ public static class PaginatedListQueryExtensions
         var count = source.Count();
         if (count > 0)
         {
-            var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
+            var items = source
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
             return Task.FromResult<IPaginatedList<T>>(new PaginatedList<T>(items, count, pageIndex, pageSize));
         }
 
