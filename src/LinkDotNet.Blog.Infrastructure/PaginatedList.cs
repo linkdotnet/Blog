@@ -10,6 +10,7 @@ public class PaginatedList<T> : IPaginatedList<T>
     public static readonly PaginatedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);
 
     private readonly IList<T> subset;
+    private readonly int totalPages;
 
     public PaginatedList(IEnumerable<T> items, int pageNumber, int pageSize)
         : this(items, items.Count(), pageNumber, pageSize)
@@ -19,9 +20,7 @@ public class PaginatedList<T> : IPaginatedList<T>
     public PaginatedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
     {
         PageNumber = pageNumber;
-        PageSize = pageSize;
-        TotalCount = count;
-        TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+        totalPages = (int)Math.Ceiling(count / (double)pageSize);
         if (items is IList<T> list)
         {
             subset = list;
@@ -34,19 +33,9 @@ public class PaginatedList<T> : IPaginatedList<T>
 
     public int PageNumber { get; }
 
-    public int PageSize { get; }
-
-    public int TotalCount { get; }
-
-    public int TotalPages { get; }
-
-    public bool HasPreviousPage => PageNumber > 1;
-
-    public bool HasNextPage => PageNumber < TotalPages;
-
     public bool IsFirstPage => PageNumber == 1;
 
-    public bool IsLastPage => PageNumber == TotalPages;
+    public bool IsLastPage => PageNumber == totalPages;
 
     public int Count => subset.Count;
 
