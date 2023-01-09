@@ -124,6 +124,6 @@ public sealed class CachedRepositoryTests : IDisposable
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PaginatedList<BlogPost>(new[] { blogPost }, 1, 1));
+            .ReturnsAsync(new PagedList<BlogPost>(new[] { blogPost }, 1, 1));
     }
 }

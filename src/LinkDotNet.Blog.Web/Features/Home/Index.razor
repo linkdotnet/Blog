@@ -37,7 +37,7 @@
     [Parameter]
     public int? Page { get; set; }
 
-    private IPaginatedList<BlogPost> currentPage = PaginatedList<BlogPost>.Empty;
+    private IPagedList<BlogPost> currentPage = PagedList<BlogPost>.Empty;
 
     private string ImageUrl => AppConfiguration.Introduction.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 

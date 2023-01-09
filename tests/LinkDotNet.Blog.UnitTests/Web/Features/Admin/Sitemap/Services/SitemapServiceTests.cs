@@ -48,7 +48,7 @@ public class SitemapServiceTests : TestContext
                 true,
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PaginatedList<BlogPost>(blogPosts, 1, 10));
+            .ReturnsAsync(new PagedList<BlogPost>(blogPosts, 1, 10));
 
         var sitemap = await sut.CreateSitemapAsync();
 

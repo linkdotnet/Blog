@@ -61,9 +61,9 @@ public class BlogPostNavigationTests : TestContext
         cut.Find("li:last-child").ClassList.Should().Contain("disabled");
     }
 
-    private static Mock<IPaginatedList<BlogPost>> CreatePagedList(int currentPage, int pageCount)
+    private static Mock<IPagedList<BlogPost>> CreatePagedList(int currentPage, int pageCount)
     {
-        var page = new Mock<IPaginatedList<BlogPost>>();
+        var page = new Mock<IPagedList<BlogPost>>();
         page.Setup(p => p.PageNumber).Returns(currentPage);
         page.Setup(p => p.IsFirstPage).Returns(currentPage == 1);
         page.Setup(p => p.IsLastPage).Returns(currentPage == pageCount);

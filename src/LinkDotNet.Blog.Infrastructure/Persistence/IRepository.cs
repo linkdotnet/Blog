@@ -10,7 +10,7 @@ public interface IRepository<TEntity>
 {
     ValueTask<TEntity> GetByIdAsync(string id);
 
-    ValueTask<IPaginatedList<TEntity>> GetAllAsync(
+    ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity,
             object>> orderBy = null,
@@ -18,7 +18,7 @@ public interface IRepository<TEntity>
         int page = 1,
         int pageSize = int.MaxValue);
 
-    ValueTask<IPaginatedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+    ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<TEntity, TProjection>> selector,
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,

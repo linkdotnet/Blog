@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace LinkDotNet.Blog.Infrastructure;
 
-public interface IPaginatedList<out T> : IReadOnlyList<T>
+public interface IPagedList<out T> : IReadOnlyList<T>
 {
     int PageNumber { get; }
 

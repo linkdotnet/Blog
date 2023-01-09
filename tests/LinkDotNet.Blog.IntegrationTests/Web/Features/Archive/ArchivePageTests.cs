@@ -101,14 +101,14 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     {
         public ValueTask<BlogPost> GetByIdAsync(string id) => throw new NotImplementedException();
 
-        public ValueTask<IPaginatedList<BlogPost>> GetAllAsync(
+        public ValueTask<IPagedList<BlogPost>> GetAllAsync(
             Expression<Func<BlogPost, bool>> filter = null,
             Expression<Func<BlogPost, object>> orderBy = null,
             bool descending = true,
             int page = 1,
             int pageSize = int.MaxValue) => throw new NotImplementedException();
 
-        public async ValueTask<IPaginatedList<TProjection>> GetAllByProjectionAsync<TProjection>(
+        public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
             Expression<Func<BlogPost, TProjection>> selector,
             Expression<Func<BlogPost, bool>> filter = null,
             Expression<Func<BlogPost, object>> orderBy = null,
@@ -117,7 +117,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
             int pageSize = int.MaxValue)
         {
             await Task.Delay(250);
-            return PaginatedList<TProjection>.Empty;
+            return PagedList<TProjection>.Empty;
         }
 
         public ValueTask StoreAsync(BlogPost entity) => throw new NotImplementedException();

@@ -5,19 +5,19 @@ using System.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure;
 
-public class PaginatedList<T> : IPaginatedList<T>
+public class PagedList<T> : IPagedList<T>
 {
-    public static readonly PaginatedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);
+    public static readonly PagedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);
 
     private readonly IList<T> subset;
     private readonly int totalPages;
 
-    public PaginatedList(IEnumerable<T> items, int pageNumber, int pageSize)
+    public PagedList(IEnumerable<T> items, int pageNumber, int pageSize)
         : this(items, items.Count(), pageNumber, pageSize)
     {
     }
 
-    public PaginatedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
+    public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
     {
         PageNumber = pageNumber;
         totalPages = (int)Math.Ceiling(count / (double)pageSize);

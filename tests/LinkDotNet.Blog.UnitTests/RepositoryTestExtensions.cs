@@ -20,7 +20,7 @@ public static class RepositoryTestExtensions
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PaginatedList<TEntity>(Array.Empty<TEntity>(), 1, 1));
+            .ReturnsAsync(new PagedList<TEntity>(Array.Empty<TEntity>(), 1, 1));
 
         collection.AddScoped(_ => repositoryMock.Object);
     }

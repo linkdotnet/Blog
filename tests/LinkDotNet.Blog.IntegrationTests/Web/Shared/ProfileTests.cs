@@ -167,7 +167,7 @@ public class ProfileTests : TestContext
                 It.IsAny<bool>(),
                 It.IsAny<int>(),
                 It.IsAny<int>()))
-            .ReturnsAsync(new PaginatedList<ProfileInformationEntry>(entries, 1, 100));
+            .ReturnsAsync(new PagedList<ProfileInformationEntry>(entries, 1, 100));
     }
 
     private (Mock<IRepository<ProfileInformationEntry>> repoMock, Mock<ISortOrderCalculator> calcMock) RegisterServices()
@@ -182,7 +182,7 @@ public class ProfileTests : TestContext
             It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
             It.IsAny<bool>(),
             It.IsAny<int>(),
-            It.IsAny<int>())).ReturnsAsync(PaginatedList<ProfileInformationEntry>.Empty);
+            It.IsAny<int>())).ReturnsAsync(PagedList<ProfileInformationEntry>.Empty);
         return (repoMock, calcMock);
     }
 }

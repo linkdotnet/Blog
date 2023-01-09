@@ -13,7 +13,7 @@
 
 @code {
     [Parameter]
-    public IPaginatedList<BlogPost> PageList { get; set; }
+    public IPagedList<BlogPost> PageList { get; set; }
 
     private string PreviousPageLink => PageList.IsFirstPage ? string.Empty : $"/{PageList.PageNumber - 1}";
     private string NextPageLink => PageList.IsLastPage ? string.Empty : $"/{PageList.PageNumber + 1}";

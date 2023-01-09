@@ -7,7 +7,7 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
 public static class PaginatedListQueryExtensions
 {
-    public static async Task<IPaginatedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int page, int pageSize, CancellationToken token = default)
+    public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source, int page, int pageSize, CancellationToken token = default)
     {
         var count = await source.CountAsync(token);
         if (count > 0)
@@ -19,9 +19,9 @@ public static class PaginatedListQueryExtensions
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
-            return new PaginatedList<T>(items, count, page, pageSize);
+            return new PagedList<T>(items, count, page, pageSize);
         }
 
-        return PaginatedList<T>.Empty;
+        return PagedList<T>.Empty;
     }
 }
