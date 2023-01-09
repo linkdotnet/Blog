@@ -23,7 +23,7 @@
             </ul>
           </li>
         }
-        <li class="read-time me-4">@readTime min</li>
+        <li class="read-time me-4">@readingTime min</li>
       </ul>
     </div>
     <div class="description">
@@ -36,42 +36,3 @@
     </div>
   </div>
 </article>
-
-@code {
-    [Parameter]
-    public BlogPost BlogPost { get; set; }
-
-    [Parameter]
-    public bool UseAlternativeStyle { get; set; }
-
-    [Parameter]
-    public bool LazyLoadPreviewImage { get; set; }
-
-    private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
-
-    private int readTime;
-
-    protected override void OnInitialized()
-    {
-      var images = GetAllOccurrences(MarkdownConverter.ToMarkupString(BlogPost.Content).Value, "<img");
-      var words = BlogPost.Content.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries).Length;
-
-        var readTimeInPrecision = images * 15 + words / 3.333;
-        readTime = (int)Math.Ceiling(readTimeInPrecision / 60);
-    }
-
-    private int GetAllOccurrences(ReadOnlySpan<char> text, ReadOnlySpan<char> lookup)
-    {
-        var currentPosition = 0;
-        int lastPosition;
-        var count = 0;
-
-        while ((lastPosition = text[currentPosition..].IndexOf(lookup, StringComparison.Ordinal)) != -1)
-        {
-          count++;
-          currentPosition += lastPosition + lookup.Length;
-        }
-
-        return count;
-    }
-}

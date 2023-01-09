@@ -34,7 +34,7 @@ public class ShortBlogPostTests : TestContext
     [Fact]
     public void ShouldCalculateReadTime()
     {
-        var content = string.Join(' ', Enumerable.Repeat("word", 700)) + string.Join(' ', Enumerable.Repeat("<img>", 4));
+        var content = string.Join(' ', Enumerable.Repeat("word", 750)) + string.Join(' ', Enumerable.Repeat("![image](url)", 4));
         var blogPost = new BlogPostBuilder().WithContent(content).Build();
         var cut = RenderComponent<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
