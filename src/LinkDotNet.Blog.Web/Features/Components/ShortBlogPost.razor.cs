@@ -27,11 +27,25 @@ public partial class ShortBlogPost
 
         var imageCount = ImageRegex().Matches(BlogPost.Content).Count;
 
-        var readTimeWords = BlogPost.Content.Split(' ').Length / wordsPerMinute;
+        var wordCount = GetWordCount();
+        var readTimeWords = wordCount / wordsPerMinute;
         var readTimeImages = imageCount * minutesPerImage;
         readingTime = (int)Math.Ceiling(readTimeWords + readTimeImages);
     }
 
     [GeneratedRegex(@"\!\[.*?\]\((.*?)\)")]
     private static partial Regex ImageRegex();
+
+    private int GetWordCount()
+    {
+        var wordCount = 0;
+        var index = BlogPost.Content.IndexOf(' ');
+        while (index != -1)
+        {
+            wordCount++;
+            index = BlogPost.Content.IndexOf(' ', index + 1);
+        }
+
+        return wordCount;
+    }
 }

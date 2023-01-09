@@ -32,7 +32,7 @@ public class ShortBlogPostTests : TestContext
     }
 
     [Fact]
-    public void ShouldCalculateReadTime()
+    public void ShouldCalculateReadingTime()
     {
         var content = string.Join(' ', Enumerable.Repeat("word", 750)) + string.Join(' ', Enumerable.Repeat("![image](url)", 4));
         var blogPost = new BlogPostBuilder().WithContent(content).Build();
