@@ -3,6 +3,9 @@
 @using System.Web
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Web.Features.Services
+@using Microsoft.Extensions.Caching.Memory
+
+@inject IMemoryCache MemoryCache
 <article>
 	<div class="blog-card @AltCssClass">
 		<div class="meta">
@@ -54,6 +57,11 @@
 
 	protected override void OnInitialized()
 	{
-		readingTime = ReadingTimeCalculator.CalculateReadingTime(BlogPost.Content);
+		var key = "reading-time-" + BlogPost.Id;
+		if (!MemoryCache.TryGetValue(key, out readingTime))
+		{
+			readingTime = ReadingTimeCalculator.CalculateReadingTime(BlogPost.Content);
+			MemoryCache.Set(key, readingTime, TimeSpan.FromHours(1));
+		}
 	}
 }
