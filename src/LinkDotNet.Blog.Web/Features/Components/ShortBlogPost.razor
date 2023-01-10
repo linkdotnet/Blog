@@ -2,37 +2,58 @@
 @using System.Text.RegularExpressions
 @using System.Web
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Services
 <article>
-  <div class="blog-card @AltCssClass">
-    <div class="meta">
-      <div class="photo">
-        <PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl"
-                      PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
-                      LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
-      </div>
-      <ul class="details">
-        <li class="date me-4"><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></li>
-        @if (BlogPost.Tags != null && BlogPost.Tags.Any())
-        {
-          <li class="tags me-4">
-            <ul>
-              @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
-              {
-                <li><a class="goto-tag" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
-              }
-            </ul>
-          </li>
-        }
-        <li class="read-time me-4">@readingTime min</li>
-      </ul>
-    </div>
-    <div class="description">
-      <h1>@BlogPost.Title</h1>
-      <h2></h2>
-      <p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
-      <p class="read-more">
-        <a href="/blogPost/@BlogPost.Id" aria-label="@BlogPost.Title">Read the whole article</a>
-      </p>
-    </div>
-  </div>
+	<div class="blog-card @AltCssClass">
+		<div class="meta">
+			<div class="photo">
+				<PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl"
+				              PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
+				              LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
+			</div>
+			<ul class="details">
+				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></li>
+				@if (BlogPost.Tags != null && BlogPost.Tags.Any())
+				{
+					<li class="tags me-4">
+						<ul>
+							@foreach (var tag in BlogPost.Tags.Select(t => t.Content))
+							{
+								<li><a class="goto-tag" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
+							}
+						</ul>
+					</li>
+				}
+				<li class="read-time me-4">@readingTime min</li>
+			</ul>
+		</div>
+		<div class="description">
+			<h1>@BlogPost.Title</h1>
+			<h2></h2>
+			<p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
+			<p class="read-more">
+				<a href="/blogPost/@BlogPost.Id" aria-label="@BlogPost.Title">Read the whole article</a>
+			</p>
+		</div>
+	</div>
 </article>
+
+@code {
+	private int readingTime;
+
+	[Parameter]
+	public BlogPost BlogPost { get; set; }
+
+	[Parameter]
+	public bool UseAlternativeStyle { get; set; }
+
+	[Parameter]
+	public bool LazyLoadPreviewImage { get; set; }
+
+	private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
+
+	protected override void OnInitialized()
+	{
+		readingTime = ReadingTimeCalculator.CalculateReadingTime(BlogPost.Content);
+	}
+}
