@@ -27,7 +27,7 @@
 </AuthorizeView>
 
 @code {
-	private const string _version = $"{ThisAssembly.Git.Tag} - {ThisAssembly.Git.Commit}";
+	private const string _version = $"{ThisAssembly.Git.BaseTag}  commit:{ThisAssembly.Git.Commit}";
 
     [Parameter]
     public string CurrentUri { get; set; } = string.Empty;
