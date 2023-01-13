@@ -9,7 +9,7 @@ public class PagedList<T> : IPagedList<T>
 {
     public static readonly PagedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);
 
-    private readonly IList<T> subset;
+    private readonly IReadOnlyList<T> subset;
     private readonly int totalPages;
 
     public PagedList(IEnumerable<T> items, int pageNumber, int pageSize)
@@ -21,7 +21,7 @@ public class PagedList<T> : IPagedList<T>
     {
         PageNumber = pageNumber;
         totalPages = (int)Math.Ceiling(count / (double)pageSize);
-        subset = items as IList<T> ?? new List<T>(items);
+        subset = items as IReadOnlyList<T> ?? items.ToArray();
     }
 
     public int PageNumber { get; }

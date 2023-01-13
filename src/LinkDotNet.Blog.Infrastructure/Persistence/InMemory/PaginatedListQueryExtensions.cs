@@ -14,7 +14,7 @@ public static class PaginatedListQueryExtensions
             var items = source
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
-                .ToList();
+                .ToArray();
             return Task.FromResult<IPagedList<T>>(new PagedList<T>(items, count, pageIndex, pageSize));
         }
 

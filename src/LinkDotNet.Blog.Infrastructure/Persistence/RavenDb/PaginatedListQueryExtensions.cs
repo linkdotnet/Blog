@@ -15,7 +15,7 @@ public static class PaginatedListQueryExtensions
             var items = await source
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
-                .ToListAsync(token);
+                .ToArrayAsync(token);
             return new PagedList<T>(items, count, pageIndex, pageSize);
         }
 
