@@ -16,7 +16,7 @@
                 <li><h6 class="dropdown-header">Others</h6></li>
                 <li><a class="dropdown-item" href="Sitemap">Sitemap</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Version 4.3</a></li>
+                <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">@_version</a></li>
             </ul>
         </li>
         <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
@@ -27,7 +27,8 @@
 </AuthorizeView>
 
 @code {
+	private const string _version = $"{ThisAssembly.Git.Tag} - {ThisAssembly.Git.Commit}";
+
     [Parameter]
     public string CurrentUri { get; set; } = string.Empty;
-
 }
