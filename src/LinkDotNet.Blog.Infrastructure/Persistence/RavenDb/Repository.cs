@@ -7,7 +7,7 @@ using Raven.Client.Documents.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.RavenDb;
 
-public class Repository<TEntity> : IRepository<TEntity>
+public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly IDocumentStore documentStore;

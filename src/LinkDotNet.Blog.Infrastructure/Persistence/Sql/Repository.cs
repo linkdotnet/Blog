@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
-public class Repository<TEntity> : IRepository<TEntity>
+public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly IDbContextFactory<BlogDbContext> dbContextFactory;

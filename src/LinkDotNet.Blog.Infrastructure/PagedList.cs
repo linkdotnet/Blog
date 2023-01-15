@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure;
 
-public class PagedList<T> : IPagedList<T>
+public sealed class PagedList<T> : IPagedList<T>
 {
     public static readonly PagedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);
 

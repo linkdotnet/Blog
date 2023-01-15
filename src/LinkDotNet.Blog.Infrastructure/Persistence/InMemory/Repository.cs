@@ -7,7 +7,7 @@ using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.InMemory;
 
-public class Repository<TEntity> : IRepository<TEntity>
+public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly List<TEntity> entities = new();

@@ -1,5 +1,4 @@
-﻿using System;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+﻿using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,11 @@ public static class SqlRegistrationExtensions
         {
             var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
-            builder.UseSqlServer(connectionString);
+            builder.UseSqlServer(connectionString)
+#if DEBUG
+                .EnableDetailedErrors()
+#endif
+                ;
         });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -32,7 +35,11 @@ public static class SqlRegistrationExtensions
         {
             var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
-            builder.UseSqlite(connectionString);
+            builder.UseSqlite(connectionString)
+#if DEBUG
+                .EnableDetailedErrors()
+#endif
+                ;
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
