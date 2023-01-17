@@ -1,4 +1,5 @@
 ﻿@using LinkDotNet.Blog.Domain
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @inject IJSRuntime JSRuntime
 
 <h3>@Title</h3>
@@ -7,17 +8,18 @@
     <div class="new-content">
         <EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
             <DataAnnotationsValidator />
-            <ValidationSummary />
             <div class="mb-3">
                 <label for="title">Title</label>
-                <input class="form-control" id="title"
-                           @oninput="args => model.Title = args.Value.ToString()" value="@model.Title"/>
+	            <input class="form-control" id="title"
+	                   @oninput="args => model.Title = args.Value.ToString()" value="@model.Title"/>
+	            <ValidationMessage For="() => model.Title"></ValidationMessage>
             </div>
             <div class="mb-3">
                 <label for="short">Short Description</label>
                 <TextAreaWithShortcuts Id="short" Class="form-control" Rows="4"
                                        @bind-Value="@model.ShortDescription"></TextAreaWithShortcuts>
-                <small for="short" class="form-text text-muted">You can use markdown to style your component</small>
+	            <small for="short" class="form-text text-muted">You can use markdown to style your component</small>
+	             <ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
             </div>
             <div class="mb-3">
                 <label for="content">Content</label>
@@ -25,19 +27,22 @@
                                        @bind-Value="@model.Content"></TextAreaWithShortcuts>
                 <small for="content" class="form-text text-muted">You can use markdown to style your component. Additional features and keyboard shortcuts are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
                 <UploadFile OnFileUploaded="SetContentFromFile" id="content-upload"></UploadFile>
-                <small for="content-upload" class="form-text text-muted">Drag and drop markdown files to upload and
-                insert them</small>
+	            <small for="content-upload" class="form-text text-muted">Drag and drop markdown files to upload and
+		            insert them</small>
+	            <ValidationMessage For="() => model.Content"></ValidationMessage>
             </div>
             <div class="mb-3">
                 <label for="preview">Preview-Url</label>
                 <InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
                 <small for="preview" class="form-text text-muted">The primary image which will be used.</small>
+                 <ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
             </div>
             <div class="mb-3">
                 <label for="preview">Fallback Preview-Url</label>
                 <InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
                 <small for="fallback-preview" class="form-text text-muted">Optional: Used as a fallback if the preview image can't be used by the browser.
-                    <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
+	                <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
+                 <ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
             </div>
             <div class="form-check">
                 <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />

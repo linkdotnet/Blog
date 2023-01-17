@@ -97,6 +97,7 @@ public class CreateNewModel
     }
 
     [MaxLength(256)]
+    [FallbackUrlValidation]
     public string PreviewImageUrlFallback
     {
         get => previewImageUrlFallback;
