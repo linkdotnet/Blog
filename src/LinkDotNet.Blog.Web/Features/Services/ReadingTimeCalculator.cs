@@ -24,11 +24,15 @@ public static partial class ReadingTimeCalculator
     private static int GetWordCount(ReadOnlySpan<char> content)
     {
         var wordCount = 0;
-        var index = 0;
-        while ((index = content[index..].IndexOf(' ')) != -1)
+        for (var i = 0; i < content.Length; i++)
         {
-            wordCount++;
+            if (content[i] == ' ')
+            {
+                wordCount++;
+            }
         }
+
+        return wordCount;
 
         return wordCount;
     }
