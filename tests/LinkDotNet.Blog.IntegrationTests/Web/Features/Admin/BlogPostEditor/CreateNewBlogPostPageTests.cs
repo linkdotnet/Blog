@@ -68,7 +68,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         var file = new Mock<IBrowserFile>();
         var fileProcessor = new Mock<IFileProcessor>();
-        fileProcessor.Setup(f => f.GetContent(file.Object)).ReturnsAsync(contentFromFile);
+        fileProcessor.Setup(f => f.GetContentAsync(file.Object)).ReturnsAsync(contentFromFile);
         var args = new InputFileChangeEventArgs(new[]
         {
             file.Object,

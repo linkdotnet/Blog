@@ -38,7 +38,7 @@
 
     private async Task HandleFileUpload(InputFileChangeEventArgs args)
     {
-        var content = await FileProcessor.GetContent(args.File);
+        var content = await FileProcessor.GetContentAsync(args.File);
         await OnFileUploaded.InvokeAsync(content);
     }
 }

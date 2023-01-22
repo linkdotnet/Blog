@@ -20,7 +20,7 @@ public class FileProcessorTests
         browserFile.Setup(b => b.OpenReadStream(It.IsAny<long>(), default))
             .Returns(stream);
 
-        var content = await new FileProcessor().GetContent(browserFile.Object);
+        var content = await new FileProcessor().GetContentAsync(browserFile.Object);
 
         content.Should().Be(streamString);
     }

@@ -5,5 +5,5 @@ namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 
 public interface IFileProcessor
 {
-    Task<string> GetContent(IBrowserFile file);
+    Task<string> GetContentAsync(IBrowserFile file);
 }

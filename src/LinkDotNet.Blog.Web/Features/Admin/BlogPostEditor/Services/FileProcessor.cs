@@ -6,7 +6,7 @@ namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 
 public class FileProcessor : IFileProcessor
 {
-    public async Task<string> GetContent(IBrowserFile file)
+    public async Task<string> GetContentAsync(IBrowserFile file)
     {
         await using var stream = file.OpenReadStream();
         var reader = new StreamReader(stream);

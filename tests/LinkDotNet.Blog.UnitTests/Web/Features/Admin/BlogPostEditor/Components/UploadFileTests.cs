@@ -22,7 +22,7 @@ public class UploadFileTests : TestContext
         var invokedContent = string.Empty;
         var file = new Mock<IBrowserFile>();
         var fileProcessor = new Mock<IFileProcessor>();
-        fileProcessor.Setup(f => f.GetContent(file.Object)).ReturnsAsync(content);
+        fileProcessor.Setup(f => f.GetContentAsync(file.Object)).ReturnsAsync(content);
         var args = new InputFileChangeEventArgs(new[]
         {
             file.Object,
