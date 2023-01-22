@@ -33,7 +33,5 @@ public static partial class ReadingTimeCalculator
         }
 
         return wordCount;
-
-        return wordCount;
     }
 }
