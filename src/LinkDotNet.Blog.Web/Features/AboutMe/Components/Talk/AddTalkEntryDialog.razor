@@ -19,8 +19,8 @@
         </div>
         <div class="mb-3">
             <label for="talk-content">Description</label>
-            <InputTextArea id="talk-content" class="form-control" Rows="10"
-                           @bind-Value="@model.Description"></InputTextArea>
+            <TextAreaWithShortcuts id="talk-content" class="form-control" Rows="10"
+                           @bind-Value="@model.Description"></TextAreaWithShortcuts>
             <small for="talk-content" class="form-text text-muted">You can use markdown to style your component.</small>
         </div>
         <button id="talk-submit" class="btn btn-primary" type="submit">Submit</button>

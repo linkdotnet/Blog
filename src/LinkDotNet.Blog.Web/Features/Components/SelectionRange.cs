@@ -1,4 +1,4 @@
-namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+namespace LinkDotNet.Blog.Web.Features.Components;
 
 public sealed class SelectionRange
 {

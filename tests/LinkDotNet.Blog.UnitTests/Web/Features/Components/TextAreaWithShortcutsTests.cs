@@ -1,7 +1,7 @@
 using System.Linq;
-using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+using LinkDotNet.Blog.Web.Features.Components;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components;
+namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
 public class TextAreaWithShortcutsTests : TestContext
 {
