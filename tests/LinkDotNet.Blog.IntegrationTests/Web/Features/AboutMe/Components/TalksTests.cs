@@ -26,7 +26,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         cut.Find("#talk-title").Change("title");
         cut.Find("#talk-place").Change("Zurich");
         cut.Find("#talk-date").Change(new DateTime(2022, 10, 2));
-        cut.Find("#talk-content").Change("text");
+        cut.Find("#talk-content").Input("text");
 
         cut.Find("#talk-submit").Click();
 
