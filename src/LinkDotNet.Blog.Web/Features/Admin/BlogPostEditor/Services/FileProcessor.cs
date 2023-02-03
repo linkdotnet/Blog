@@ -9,7 +9,7 @@ public class FileProcessor : IFileProcessor
     public async Task<string> GetContentAsync(IBrowserFile file)
     {
         await using var stream = file.OpenReadStream();
-        var reader = new StreamReader(stream);
+        using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();
     }
 }
