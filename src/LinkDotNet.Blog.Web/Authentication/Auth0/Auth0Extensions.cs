@@ -28,7 +28,6 @@ public static class Auth0Extensions
         .AddCookie()
         .AddOpenIdConnect("Auth0", options =>
         {
-            // Set the authority to your Auth0 domain
             var auth0 = configuration.GetSection("Auth0").Get<Auth0Information>();
             options.Authority = $"https://{auth0.Domain}";
             options.ClientId = auth0.ClientId;
@@ -48,33 +47,33 @@ public static class Auth0Extensions
 
             options.Events = new OpenIdConnectEvents
             {
-                // handle the logout redirection
-                OnRedirectToIdentityProviderForSignOut = context =>
-                {
-                    var logoutUri = $"https://{auth0.Domain}/v2/logout?client_id={auth0.ClientId}";
-
-                    var postLogoutUri = context.Properties.RedirectUri;
-                    if (!string.IsNullOrEmpty(postLogoutUri))
-                    {
-                        if (postLogoutUri.StartsWith("/"))
-                        {
-                            // transform to absolute
-                            var request = context.Request;
-                            postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
-                        }
-
-                        logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
-                    }
-
-                    context.Response.Redirect(logoutUri);
-                    context.HandleResponse();
-
-                    return Task.CompletedTask;
-                },
+                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(auth0, context),
             };
         });
 
         services.AddHttpContextAccessor();
         services.AddScoped<ILoginManager, Auth0LoginManager>();
+    }
+
+    private static Task HandleRedirect(Auth0Information auth0, RedirectContext context)
+    {
+        var logoutUri = $"https://{auth0.Domain}/v2/logout?client_id={auth0.ClientId}";
+
+        var postLogoutUri = context.Properties.RedirectUri;
+        if (!string.IsNullOrEmpty(postLogoutUri))
+        {
+            if (postLogoutUri.StartsWith("/"))
+            {
+                var request = context.Request;
+                postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
+            }
+
+            logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
+        }
+
+        context.Response.Redirect(logoutUri);
+        context.HandleResponse();
+
+        return Task.CompletedTask;
     }
 }
