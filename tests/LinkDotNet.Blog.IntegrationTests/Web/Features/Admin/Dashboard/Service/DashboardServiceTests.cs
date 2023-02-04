@@ -20,7 +20,7 @@ public class DashboardServiceTests : SqlDatabaseTestBase<UserRecord>
         var record1 = new UserRecord
         {
             UserIdentifierHash = 2,
-            DateTimeUtcClicked = DateTime.UtcNow,
+            DateClicked = DateOnly.FromDateTime(DateTime.UtcNow),
             UrlClicked = string.Empty,
         };
         var record2 = new UserRecord
@@ -48,7 +48,7 @@ public class DashboardServiceTests : SqlDatabaseTestBase<UserRecord>
     {
         var record1 = new UserRecord
         {
-            DateTimeUtcClicked = DateTime.UtcNow,
+            DateClicked = DateOnly.FromDateTime(DateTime.UtcNow),
             UrlClicked = "index",
         };
         var record2 = new UserRecord
@@ -74,7 +74,7 @@ public class DashboardServiceTests : SqlDatabaseTestBase<UserRecord>
     {
         var record1 = new UserRecord
         {
-            DateTimeUtcClicked = DateTime.UtcNow,
+            DateClicked = DateOnly.FromDateTime(DateTime.UtcNow),
             UrlClicked = "AboutMe",
         };
         var record2 = new UserRecord

@@ -46,20 +46,20 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         var clicked1 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = new DateTime(2020, 1, 1) };
+        { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2020, 1, 1) };
         var clicked2 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = DateTime.MinValue };
+        { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = DateOnly.MinValue };
         var clicked3 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost2.Id}", DateTimeUtcClicked = DateTime.MinValue };
+        { UrlClicked = $"blogPost/{blogPost2.Id}", DateClicked = DateOnly.MinValue };
         var clicked4 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = new DateTime(2021, 1, 1) };
+        { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2021, 1, 1) };
         await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         ctx.ComponentFactories.Add<DateRangeSelector, FilterStubComponent>();
         RegisterRepositories(ctx);
         var cut = ctx.RenderComponent<VisitCountPerPage>();
-        var filter = new Filter { StartDate = new DateTime(2019, 1, 1), EndDate = new DateTime(2020, 12, 31) };
+        var filter = new Filter { StartDate = new DateOnly(2019, 1, 1), EndDate = new DateOnly(2020, 12, 31) };
 
         await cut.InvokeAsync(() => cut.FindComponent<FilterStubComponent>().Instance.FireFilterChanged(filter));
 
@@ -81,13 +81,13 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         var clicked1 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = new DateTime(2020, 1, 1) };
+            { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2020, 1, 1) };
         var clicked2 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = DateTime.MinValue };
+            { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = DateOnly.MinValue };
         var clicked3 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost2.Id}", DateTimeUtcClicked = DateTime.MinValue };
+            { UrlClicked = $"blogPost/{blogPost2.Id}", DateClicked = DateOnly.MinValue };
         var clicked4 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost1.Id}", DateTimeUtcClicked = new DateTime(2021, 1, 1) };
+            { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2021, 1, 1) };
         await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();

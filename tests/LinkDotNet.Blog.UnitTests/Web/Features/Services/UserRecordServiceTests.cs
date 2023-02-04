@@ -41,7 +41,7 @@ public class UserRecordServiceTests : TestContext
         recordToDb.Should().NotBeNull();
         recordToDb.UrlClicked.Should().Be("subpart");
         recordToDb.UserIdentifierHash.Should().NotBe(0);
-        recordToDb.DateTimeUtcClicked.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        recordToDb.DateClicked.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
     }
 
     [Fact]

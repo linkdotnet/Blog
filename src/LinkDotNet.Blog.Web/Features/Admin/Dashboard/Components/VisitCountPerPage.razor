@@ -65,8 +65,8 @@
 
         var userRecordsTask = UserRecordRepository.GetAllByProjectionAsync(
             s => s.UrlClicked,
-            ur => (!filter.StartDate.HasValue || ur.DateTimeUtcClicked >= filter.StartDate)
-                  && (!filter.EndDate.HasValue || ur.DateTimeUtcClicked <= filter.EndDate));
+            ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
+                  && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate));
 
         var blogPosts = await blogPostsTask;
         var userRecords = await userRecordsTask;

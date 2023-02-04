@@ -18,7 +18,7 @@ public class DateRangeSelectorTests : TestContext
         cut.Find("#startDate").Change(new DateTime(2020, 1, 1));
 
         filter.Should().NotBeNull();
-        filter.StartDate.Should().Be(new DateTime(2020, 1, 1));
+        filter.StartDate.Should().Be(new DateOnly(2020, 1, 1));
         filter.EndDate.Should().BeNull();
     }
 
@@ -34,7 +34,7 @@ public class DateRangeSelectorTests : TestContext
         cut.Find("#endDate").Change(new DateTime(2020, 1, 1));
 
         filter.Should().NotBeNull();
-        filter.EndDate.Should().Be(new DateTime(2020, 1, 1));
+        filter.EndDate.Should().Be(new DateOnly(2020, 1, 1));
         filter.StartDate.Should().BeNull();
     }
 

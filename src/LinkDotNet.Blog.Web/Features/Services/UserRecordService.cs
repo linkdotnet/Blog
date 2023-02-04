@@ -53,7 +53,7 @@ public class UserRecordService : IUserRecordService
         var record = new UserRecord
         {
             UserIdentifierHash = identifierHash,
-            DateTimeUtcClicked = DateTime.UtcNow,
+            DateClicked = DateOnly.FromDateTime(DateTime.UtcNow),
             UrlClicked = url,
         };
 

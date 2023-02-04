@@ -4,7 +4,7 @@ namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 
 public sealed class Filter
 {
-    public DateTime? StartDate { get; set; }
+    public DateOnly? StartDate { get; set; }
 
-    public DateTime? EndDate { get; set; }
+    public DateOnly? EndDate { get; set; }
 }
