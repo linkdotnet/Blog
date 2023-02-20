@@ -53,7 +53,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         { UrlClicked = $"blogPost/{blogPost2.Id}", DateClicked = DateOnly.MinValue };
         var clicked4 = new UserRecord
         { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2021, 1, 1) };
-        await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
+        await DbContext.UserRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         ctx.ComponentFactories.Add<DateRangeSelector, FilterStubComponent>();
@@ -88,7 +88,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
             { UrlClicked = $"blogPost/{blogPost2.Id}", DateClicked = DateOnly.MinValue };
         var clicked4 = new UserRecord
             { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2021, 1, 1) };
-        await DbContext.UserRecords.AddRangeAsync(new[] { clicked1, clicked2, clicked3, clicked4 });
+        await DbContext.UserRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         RegisterRepositories(ctx);
