@@ -28,7 +28,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         cut.Find("#talk-date").Change(new DateTime(2022, 10, 2));
         cut.Find("#talk-content").Input("text");
 
-        cut.Find("#talk-submit").Click();
+        cut.Find("form").Submit();
 
         cut.WaitForState(() => cut.HasComponent<TalkEntry>());
         var entry = cut.FindComponent<TalkEntry>();
