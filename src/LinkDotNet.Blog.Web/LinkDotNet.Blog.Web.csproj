@@ -8,7 +8,7 @@
         <PackageReference Include="Blazored.Toast" Version="4.1.0" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="all" />
 		<PackageReference Include="ErikEJ.EntityFrameworkCore.SqlServer.DateOnlyTimeOnly" Version="7.0.1" />
-        <PackageReference Include="GitInfo" Version="3.0.2" PrivateAssets="all" />
+        <PackageReference Include="GitInfo" Version="3.0.4" PrivateAssets="all" />
         <PackageReference Include="Markdig" Version="0.30.4" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.3" />
