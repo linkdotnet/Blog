@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure;
 
+[DebuggerDisplay("PagedList<{typeof(T).Name}>, Count = {Count}")]
 public sealed class PagedList<T> : IPagedList<T>
 {
     public static readonly PagedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);

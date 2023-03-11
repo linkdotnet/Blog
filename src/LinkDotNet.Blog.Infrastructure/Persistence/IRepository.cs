@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -32,4 +33,8 @@ public interface IRepository<TEntity>
     ValueTask StoreAsync(TEntity entity);
 
     ValueTask DeleteAsync(string id);
+
+    ValueTask DeleteBulkAsync(IEnumerable<string> ids);
+
+    ValueTask StoreBulkAsync(IEnumerable<TEntity> records);
 }

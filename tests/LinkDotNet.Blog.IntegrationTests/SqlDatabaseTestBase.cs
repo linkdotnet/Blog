@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
@@ -21,7 +22,7 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDispo
         DbContextFactory = Substitute.For<IDbContextFactory<BlogDbContext>>();
         DbContextFactory.CreateDbContextAsync()
             .Returns(_ => new BlogDbContext(options));
-        Repository = new Repository<TEntity>(DbContextFactory);
+        Repository = new Repository<TEntity>(DbContextFactory, Substitute.For<ILogger<Repository<TEntity>>>());
     }
 
     protected IRepository<TEntity> Repository { get; }

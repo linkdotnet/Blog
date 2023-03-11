@@ -17,6 +17,7 @@ public class SqliteRegistrationExtensionsTests
             ConnectionString = "Filename=:memory:",
         };
         serviceCollection.AddScoped(_ => appConfig);
+        serviceCollection.AddLogging();
 
         serviceCollection.UseSqliteAsStorageProvider();
 

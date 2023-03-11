@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 
-public sealed class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
+public class BlogPostRecordConfiguration : IEntityTypeConfiguration<BlogPostRecord>
 {
-    public void Configure(EntityTypeBuilder<UserRecord> builder)
+    public void Configure(EntityTypeBuilder<BlogPostRecord> builder)
     {
         builder.HasKey(s => s.Id);
         builder.Property(s => s.Id).ValueGeneratedOnAdd();
-        builder.Property(s => s.UrlClicked).HasMaxLength(256).IsRequired();
+        builder.Property(s => s.BlogPostId).HasMaxLength(256).IsRequired();
     }
 }

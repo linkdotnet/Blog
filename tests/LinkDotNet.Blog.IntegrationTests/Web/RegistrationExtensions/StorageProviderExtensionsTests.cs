@@ -48,6 +48,7 @@ public class StorageProviderExtensionsTests
         var config = Substitute.For<IConfiguration>();
         config["PersistenceProvider"].Returns("Sqlite");
         collection.AddScoped(_ => new AppConfiguration { ConnectionString = "Filename=:memory:" });
+        collection.AddLogging();
 
         collection.AddStorageProvider(config);
 

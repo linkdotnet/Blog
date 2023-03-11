@@ -13,20 +13,17 @@ public sealed class UserRecordService : IUserRecordService
     private readonly IRepository<UserRecord> userRecordRepository;
     private readonly NavigationManager navigationManager;
     private readonly AuthenticationStateProvider authenticationStateProvider;
-    private readonly ILocalStorageService localStorageService;
     private readonly ILogger<UserRecordService> logger;
 
     public UserRecordService(
         IRepository<UserRecord> userRecordRepository,
         NavigationManager navigationManager,
         AuthenticationStateProvider authenticationStateProvider,
-        ILocalStorageService localStorageService,
         ILogger<UserRecordService> logger)
     {
         this.userRecordRepository = userRecordRepository;
         this.navigationManager = navigationManager;
         this.authenticationStateProvider = authenticationStateProvider;
-        this.localStorageService = localStorageService;
         this.logger = logger;
     }
 
@@ -50,44 +47,15 @@ public sealed class UserRecordService : IUserRecordService
             return;
         }
 
-        var identifierHash = await GetIdentifierHashAsync();
-
         var url = GetClickedUrl();
 
         var record = new UserRecord
         {
-            UserIdentifierHash = identifierHash,
             DateClicked = DateOnly.FromDateTime(DateTime.UtcNow),
             UrlClicked = url,
         };
 
         await userRecordRepository.StoreAsync(record);
-    }
-
-    private async ValueTask<int> GetIdentifierHashAsync()
-    {
-        if (await HasKeyAsync())
-        {
-            var key = await localStorageService.GetItemAsync<Guid>("user");
-            return key.GetHashCode();
-        }
-
-        var id = Guid.NewGuid();
-        await localStorageService.SetItemAsync("user", id);
-        return id.GetHashCode();
-    }
-
-    private async ValueTask<bool> HasKeyAsync()
-    {
-        try
-        {
-            return await localStorageService.ContainKeyAsync("user");
-        }
-        catch (Exception e)
-        {
-            logger.LogError("Couldn't obtain key for user: {Exception}", e);
-            return false;
-        }
     }
 
     private string GetClickedUrl()

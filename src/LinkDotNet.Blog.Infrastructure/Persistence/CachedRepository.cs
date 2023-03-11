@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -58,4 +59,8 @@ public sealed class CachedRepository<T> : IRepository<T>
         await repository.DeleteAsync(id);
         memoryCache.Remove(id);
     }
+
+    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids) => await repository.DeleteBulkAsync(ids);
+
+    public async ValueTask StoreBulkAsync(IEnumerable<T> records) => await repository.StoreBulkAsync(records);
 }

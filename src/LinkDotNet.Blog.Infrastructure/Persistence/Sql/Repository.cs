@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
@@ -12,10 +14,12 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly IDbContextFactory<BlogDbContext> dbContextFactory;
+    private readonly ILogger<Repository<TEntity>> logger;
 
-    public Repository(IDbContextFactory<BlogDbContext> dbContextFactory)
+    public Repository(IDbContextFactory<BlogDbContext> dbContextFactory, ILogger<Repository<TEntity>> logger)
     {
         this.dbContextFactory = dbContextFactory;
+        this.logger = logger;
     }
 
     public async ValueTask<HealthCheckResult> PerformHealthCheckAsync()
@@ -99,5 +103,32 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
             blogDbContext.Remove(entityToDelete);
             await blogDbContext.SaveChangesAsync();
         }
+    }
+
+    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    {
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await blogDbContext
+            .Set<TEntity>()
+            .Where(s => ids.Contains(s.Id))
+            .ExecuteDeleteAsync();
+    }
+
+    public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    {
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+
+        var count = 0;
+        foreach (var record in records)
+        {
+            await blogDbContext.Set<TEntity>().AddAsync(record);
+            if (++count % 1000 == 0)
+            {
+                logger.LogDebug("Saving Batch. In total {Count} elements saved", count);
+                await blogDbContext.SaveChangesAsync();
+            }
+        }
+
+        await blogDbContext.SaveChangesAsync();
     }
 }
