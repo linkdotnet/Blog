@@ -1,12 +1,12 @@
 ﻿@using System.Linq.Expressions
 @using Microsoft.EntityFrameworkCore
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Infrastructure.Persistence.Sql
-@using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
 @using System.Collections.Immutable
 @inject IRepository<BlogPost> BlogPostRepository
-@inject IRepository<UserRecord> UserRecordRepository
+@inject IRepository<BlogPostRecord> BlogPostRecordRepository
 
 <div class="card">
     <div class="card-header">Blog Post Visit Counts</div>
@@ -50,7 +50,6 @@
 </div>
 
 @code {
-
     private Filter filter = new();
     private IReadOnlyCollection<VisitCountPageData> visitData;
 
@@ -61,29 +60,24 @@
 
     private async Task<IReadOnlyCollection<VisitCountPageData>> LoadBlogPostInformationAsync()
     {
-        var blogPostsTask = BlogPostRepository.GetAllByProjectionAsync(
-            s => new { s.Id, s.Title, s.Likes });
+	    var blogPosts = await BlogPostRepository.GetAllByProjectionAsync(
+	        s => new { s.Id, s.Title, s.Likes });
+        var userRecords = await BlogPostRecordRepository.GetAllAsync(
+	        ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
+	              && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate));
 
-        var userRecordsTask = UserRecordRepository.GetAllByProjectionAsync(
-            s => s.UrlClicked,
-            ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
-                  && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate));
-
-        var blogPosts = await blogPostsTask;
-        var userRecords = await userRecordsTask;
-
-        var visitCountPage = (from ur in userRecords
-            join bp in blogPosts on ur.Replace("blogPost/", string.Empty) equals bp.Id
-            group new { ur, bp } by new { ur } into gp
-            orderby gp.Count() descending
-            select new VisitCountPageData
-            {
-                Id = gp.First().bp.Id,
-                Title = gp.First().bp.Title,
-                Likes = gp.First().bp.Likes,
-                ClickCount = gp.Count()
-            }).ToImmutableArray();
-        return visitCountPage;
+	    return userRecords
+		    .GroupBy(s => s.BlogPostId)
+		    .Select(s => new { BlogPostId = s.Key, Count = s.Sum(l => l.Clicks) })
+		    .OrderByDescending(s => s.Count)
+		    .Join(blogPosts, ur => ur.BlogPostId, bp => bp.Id, (ur, bp) => new VisitCountPageData()
+		    {
+			    Id = bp.Id,
+			    Likes = bp.Likes,
+			    Title = bp.Title,
+			    ClickCount = ur.Count,
+		    })
+		    .ToImmutableArray();
     }
 
     private async Task RefreshVisitCount(Filter newBeginning)

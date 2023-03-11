@@ -1,5 +1,4 @@
 ﻿using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
-using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +12,6 @@ public static class ServiceExtensions
         services.AddScoped<ILocalStorageService, LocalStorageService>();
         services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
-        services.AddScoped<IDashboardService, DashboardService>();
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlFileWriter, XmlFileWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();

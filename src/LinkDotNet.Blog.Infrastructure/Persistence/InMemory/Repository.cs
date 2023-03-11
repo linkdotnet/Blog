@@ -83,4 +83,21 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
         return ValueTask.CompletedTask;
     }
+
+    public ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    {
+        foreach (var id in ids)
+        {
+            var entity = entities.First(e => e.Id == id);
+            entities.Remove(entity);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    {
+        entities.AddRange(records);
+        return ValueTask.CompletedTask;
+    }
 }

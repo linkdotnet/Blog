@@ -8,9 +8,9 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
-using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.Dashboard.Components;
 
@@ -45,15 +45,15 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPost2 = new BlogPostBuilder().WithTitle("2").WithLikes(2).Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var clicked1 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2020, 1, 1) };
-        var clicked2 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = DateOnly.MinValue };
-        var clicked3 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost2.Id}", DateClicked = DateOnly.MinValue };
-        var clicked4 = new UserRecord
-        { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2021, 1, 1) };
-        await DbContext.UserRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
+        var clicked1 = new BlogPostRecord
+        { BlogPostId = blogPost1.Id, DateClicked = new DateOnly(2020, 1, 1), Clicks = 1 };
+        var clicked2 = new BlogPostRecord
+        { BlogPostId = blogPost1.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
+        var clicked3 = new BlogPostRecord
+        { BlogPostId = blogPost2.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
+        var clicked4 = new BlogPostRecord
+        { BlogPostId = blogPost1.Id, DateClicked = new DateOnly(2021, 1, 1), Clicks = 1 };
+        await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         ctx.ComponentFactories.Add<DateRangeSelector, FilterStubComponent>();
@@ -80,15 +80,13 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPost2 = new BlogPostBuilder().WithTitle("2").WithLikes(2).Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var clicked1 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2020, 1, 1) };
-        var clicked2 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = DateOnly.MinValue };
-        var clicked3 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost2.Id}", DateClicked = DateOnly.MinValue };
-        var clicked4 = new UserRecord
-            { UrlClicked = $"blogPost/{blogPost1.Id}", DateClicked = new DateOnly(2021, 1, 1) };
-        await DbContext.UserRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
+        var clicked1 = new BlogPostRecord
+            { BlogPostId = blogPost1.Id, DateClicked = new DateOnly(2020, 1, 1), Clicks = 2 };
+        var clicked2 = new BlogPostRecord
+            { BlogPostId = blogPost1.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
+        var clicked3 = new BlogPostRecord
+            { BlogPostId = blogPost2.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
+        await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3);
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
         RegisterRepositories(ctx);
@@ -101,20 +99,20 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
 
     private void RegisterRepositories(TestContextBase ctx)
     {
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContextFactory));
-        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => new Repository<UserRecord>(DbContextFactory));
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPost>>>()));
+        ctx.Services.AddScoped<IRepository<BlogPostRecord>>(_ => new Repository<BlogPostRecord>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostRecord>>>()));
     }
 
     private async Task SaveBlogPostArticleClicked(string blogPostId, int count)
     {
-        var urlClicked = $"blogPost/{blogPostId}";
         for (var i = 0; i < count; i++)
         {
-            var data = new UserRecord
+            var data = new BlogPostRecord()
             {
-                UrlClicked = urlClicked,
+                BlogPostId = blogPostId,
+                Clicks = 1,
             };
-            await DbContext.UserRecords.AddAsync(data);
+            await DbContext.BlogPostRecords.AddAsync(data);
         }
 
         await DbContext.SaveChangesAsync();

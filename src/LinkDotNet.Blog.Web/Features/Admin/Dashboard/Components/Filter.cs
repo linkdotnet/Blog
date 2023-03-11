@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
+namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 
 public sealed class Filter
 {

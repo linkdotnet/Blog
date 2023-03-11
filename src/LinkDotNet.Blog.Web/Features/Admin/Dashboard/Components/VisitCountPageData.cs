@@ -1,6 +1,6 @@
-﻿namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
+﻿namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 
-public sealed record VisitCountPageData
+public readonly record struct VisitCountPageData
 {
     public string Id { get; init; }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -86,6 +87,33 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         using var session = documentStore.OpenAsyncSession();
         session.Delete(id);
+        await session.SaveChangesAsync();
+    }
+
+    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    {
+        using var session = documentStore.OpenAsyncSession();
+        foreach (var id in ids)
+        {
+            session.Delete(id);
+        }
+
+        await session.SaveChangesAsync();
+    }
+
+    public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    {
+        using var session = documentStore.OpenAsyncSession();
+        var count = 0;
+        foreach (var record in records)
+        {
+            await session.StoreAsync(record);
+            if (++count % 1000 == 0)
+            {
+                await session.SaveChangesAsync();
+            }
+        }
+
         await session.SaveChangesAsync();
     }
 }

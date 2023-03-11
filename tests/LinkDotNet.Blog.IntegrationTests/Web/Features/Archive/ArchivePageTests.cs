@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -126,5 +127,9 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         public ValueTask StoreAsync(BlogPost entity) => throw new NotImplementedException();
 
         public ValueTask DeleteAsync(string id) => throw new NotImplementedException();
+
+        public ValueTask DeleteBulkAsync(IEnumerable<string> ids) => throw new NotImplementedException();
+
+        public ValueTask StoreBulkAsync(IEnumerable<BlogPost> records) => throw new NotImplementedException();
     }
 }

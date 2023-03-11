@@ -3,7 +3,6 @@
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components
 @inject AppConfiguration AppConfiguration
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject IUserRecordService UserRecordService
 @inject NavigationManager NavigationManager
 @if (AppConfiguration.IsAboutMeEnabled)
 {
@@ -33,14 +32,6 @@
         if (userIdentity != null)
         {
             isAuthenticated = userIdentity.IsAuthenticated;
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await UserRecordService.StoreUserRecordAsync();
         }
     }
 }
