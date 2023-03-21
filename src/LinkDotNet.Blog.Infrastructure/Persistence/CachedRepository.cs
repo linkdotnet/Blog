@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Primitives;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
-public sealed class CachedRepository<T> : IRepository<T>, IDisposable
+public sealed class CachedRepository<T> : IRepository<T>
     where T : Entity
 {
     private readonly IRepository<T> repository;
     private readonly IMemoryCache memoryCache;
-    private CancellationTokenSource resetToken = new();
 
     public CachedRepository(IRepository<T> repository, IMemoryCache memoryCache)
     {
@@ -21,21 +18,13 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
         this.memoryCache = memoryCache;
     }
 
-    private MemoryCacheEntryOptions Options => new()
-    {
-        ExpirationTokens = { new CancellationChangeToken(resetToken.Token) },
-        AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7),
-    };
-
     public async ValueTask<T> GetByIdAsync(string id)
     {
-        if (!memoryCache.TryGetValue(id, out T value))
+        return await memoryCache.GetOrCreateAsync(id, async entry =>
         {
-            value = await repository.GetByIdAsync(id);
-            memoryCache.Set(id, value, Options);
-        }
-
-        return value;
+            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7);
+            return await repository.GetByIdAsync(id);
+        });
     }
 
     public async ValueTask<IPagedList<T>> GetAllAsync(
@@ -58,26 +47,12 @@ public sealed class CachedRepository<T> : IRepository<T>, IDisposable
     public async ValueTask StoreAsync(T entity)
     {
         await repository.StoreAsync(entity);
-        ResetCache();
-        memoryCache.Set(entity.Id, entity, Options);
+        memoryCache.Remove(entity.Id);
     }
 
     public async ValueTask DeleteAsync(string id)
     {
-        ResetCache();
         await repository.DeleteAsync(id);
-    }
-
-    public void Dispose() => resetToken?.Dispose();
-
-    private void ResetCache()
-    {
-        if (resetToken is { IsCancellationRequested: false, Token.CanBeCanceled: true })
-        {
-            resetToken.Cancel();
-            resetToken.Dispose();
-        }
-
-        resetToken = new CancellationTokenSource();
+        memoryCache.Remove(id);
     }
 }

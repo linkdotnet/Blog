@@ -9,7 +9,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence;
 
-public sealed class CachedRepositoryTests : IDisposable
+public sealed class CachedRepositoryTests
 {
     private readonly Mock<IRepository<BlogPost>> repositoryMock;
     private readonly CachedRepository<BlogPost> sut;
@@ -108,11 +108,6 @@ public sealed class CachedRepositoryTests : IDisposable
             It.IsAny<int>(),
             It.IsAny<int>()),
             Times.Exactly(2));
-    }
-
-    public void Dispose()
-    {
-        sut.Dispose();
     }
 
     private void SetupRepository()
