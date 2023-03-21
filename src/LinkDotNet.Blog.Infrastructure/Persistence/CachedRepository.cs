@@ -22,7 +22,7 @@ public sealed class CachedRepository<T> : IRepository<T>
     {
         return await memoryCache.GetOrCreateAsync(id, async entry =>
         {
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(7);
+            entry.SlidingExpiration = TimeSpan.FromDays(7);
             return await repository.GetByIdAsync(id);
         });
     }
