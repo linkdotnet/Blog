@@ -14,6 +14,7 @@ public class BlogPostBuilder
     private string[] tags;
     private int likes;
     private DateTime? updateDate;
+    private DateTime? scheduledPublishDate;
 
     public BlogPostBuilder WithTitle(string title)
     {
@@ -69,9 +70,24 @@ public class BlogPostBuilder
         return this;
     }
 
+    public BlogPostBuilder WithScheduledPublishDate(DateTime scheduledPublishDate)
+    {
+        this.scheduledPublishDate = scheduledPublishDate;
+        return this;
+    }
+
     public BlogPost Build()
     {
-        var blogPost = BlogPost.Create(title, shortDescription, content, previewImageUrl, isPublished, updateDate, tags, previewImageUrlFallback);
+        var blogPost = BlogPost.Create(
+            title,
+            shortDescription,
+            content,
+            previewImageUrl,
+            isPublished,
+            updateDate,
+            scheduledPublishDate,
+            tags,
+            previewImageUrlFallback);
         blogPost.Likes = likes;
         return blogPost;
     }

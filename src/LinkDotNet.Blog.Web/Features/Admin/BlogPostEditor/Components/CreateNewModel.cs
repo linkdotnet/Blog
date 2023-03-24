@@ -17,6 +17,7 @@ public class CreateNewModel
     private bool shouldUpdateDate;
     private string tags;
     private string previewImageUrlFallback;
+    private DateTime? scheduledPublishDate;
 
     [Required]
     [MaxLength(256)]
@@ -65,6 +66,7 @@ public class CreateNewModel
     }
 
     [Required]
+    [PublishedWithScheduledDateValidation]
     public bool IsPublished
     {
         get => isPublished;
@@ -82,6 +84,16 @@ public class CreateNewModel
         set
         {
             shouldUpdateDate = value;
+            IsDirty = true;
+        }
+    }
+
+    public DateTime? ScheduledPublishDate
+    {
+        get => scheduledPublishDate;
+        set
+        {
+            scheduledPublishDate = value;
             IsDirty = true;
         }
     }
@@ -123,6 +135,7 @@ public class CreateNewModel
             PreviewImageUrl = blogPost.PreviewImageUrl,
             originalUpdatedDate = blogPost.UpdatedDate,
             PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback,
+            ScheduledPublishDate = blogPost.ScheduledPublishDate,
             IsDirty = false,
         };
     }
@@ -134,7 +147,16 @@ public class CreateNewModel
             ? null
             : originalUpdatedDate;
 
-        var blogPost = BlogPost.Create(Title, ShortDescription, Content, PreviewImageUrl, IsPublished, updatedDate, tagList, PreviewImageUrlFallback);
+        var blogPost = BlogPost.Create(
+            Title,
+            ShortDescription,
+            Content,
+            PreviewImageUrl,
+            IsPublished,
+            updatedDate,
+            scheduledPublishDate,
+            tagList,
+            PreviewImageUrlFallback);
         blogPost.Id = id;
         return blogPost;
     }

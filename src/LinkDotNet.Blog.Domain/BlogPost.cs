@@ -22,9 +22,11 @@ public class BlogPost : Entity
 
     public DateTime UpdatedDate { get; private set; }
 
+    public DateTime? ScheduledPublishDate { get; private set; }
+
     public virtual ICollection<Tag> Tags { get; private set; }
 
-    public bool IsPublished { get; set; }
+    public bool IsPublished { get; private set; }
 
     public int Likes { get; set; }
 
@@ -35,15 +37,22 @@ public class BlogPost : Entity
         string previewImageUrl,
         bool isPublished,
         DateTime? updatedDate = null,
+        DateTime? scheduledPublishDate = null,
         IEnumerable<string> tags = null,
         string previewImageUrlFallback = null)
     {
+        if (scheduledPublishDate is not null && isPublished)
+        {
+            throw new InvalidOperationException("Can't schedule publish date if the blog post is already published.");
+        }
+
         var blogPost = new BlogPost
         {
             Title = title,
             ShortDescription = shortDescription,
             Content = content,
             UpdatedDate = updatedDate ?? DateTime.Now,
+            ScheduledPublishDate = scheduledPublishDate,
             PreviewImageUrl = previewImageUrl,
             PreviewImageUrlFallback = previewImageUrlFallback,
             IsPublished = isPublished,
@@ -51,6 +60,17 @@ public class BlogPost : Entity
         };
 
         return blogPost;
+    }
+
+    public void Publish()
+    {
+        if (ScheduledPublishDate is not null)
+        {
+            UpdatedDate = ScheduledPublishDate.Value;
+            ScheduledPublishDate = null;
+        }
+
+        IsPublished = true;
     }
 
     public void Update(BlogPost from)
@@ -64,6 +84,7 @@ public class BlogPost : Entity
         ShortDescription = from.ShortDescription;
         Content = from.Content;
         UpdatedDate = from.UpdatedDate;
+        ScheduledPublishDate = from.ScheduledPublishDate;
         PreviewImageUrl = from.PreviewImageUrl;
         PreviewImageUrlFallback = from.PreviewImageUrlFallback;
         IsPublished = from.IsPublished;
