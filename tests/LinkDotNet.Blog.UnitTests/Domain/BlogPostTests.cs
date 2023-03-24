@@ -101,4 +101,14 @@ public class BlogPostTests
 
         blogPost.ScheduledPublishDate.Should().Be(new DateTime(2023, 3, 24));
     }
+
+    [Fact]
+    public void GivenScheduledPublishDate_WhenCreating_ThenUpdateDateIsScheduledPublishDate()
+    {
+        var date = new DateTime(2023, 3, 24);
+
+        var bp = BlogPost.Create("1", "2", "3", "4", false, scheduledPublishDate: date);
+
+        bp.UpdatedDate.Should().Be(date);
+    }
 }

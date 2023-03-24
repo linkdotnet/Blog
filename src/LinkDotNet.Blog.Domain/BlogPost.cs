@@ -46,12 +46,14 @@ public class BlogPost : Entity
             throw new InvalidOperationException("Can't schedule publish date if the blog post is already published.");
         }
 
+        var blogPostUpdateDate = scheduledPublishDate ?? updatedDate ?? DateTime.Now;
+
         var blogPost = new BlogPost
         {
             Title = title,
             ShortDescription = shortDescription,
             Content = content,
-            UpdatedDate = updatedDate ?? DateTime.Now,
+            UpdatedDate = blogPostUpdateDate,
             ScheduledPublishDate = scheduledPublishDate,
             PreviewImageUrl = previewImageUrl,
             PreviewImageUrlFallback = previewImageUrlFallback,
@@ -64,12 +66,7 @@ public class BlogPost : Entity
 
     public void Publish()
     {
-        if (ScheduledPublishDate is not null)
-        {
-            UpdatedDate = ScheduledPublishDate.Value;
-            ScheduledPublishDate = null;
-        }
-
+        ScheduledPublishDate = null;
         IsPublished = true;
     }
 
