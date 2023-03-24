@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using AngleSharp.Html.Dom;
+using AngleSharpWrappers;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
@@ -206,5 +208,41 @@ public class CreateNewBlogPostTests : TestContext
 
         fakeNavigationManager.History.Count.Should().Be(1);
         fakeNavigationManager.History.Single().State.Should().Be(NavigationState.Succeeded);
+    }
+
+    [Fact]
+    public void GivenBlogPostWithSchedule_ShouldSetSchedule()
+    {
+        BlogPost blogPost = null;
+        var cut = RenderComponent<CreateNewBlogPost>(
+            p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
+        cut.Find("#preview").Change("My preview url");
+        cut.Find("#published").Change(false);
+        cut.Find("#scheduled").Change("01/01/2099 00:00");
+
+        cut.Find("form").Submit();
+
+        blogPost.ScheduledPublishDate.Should().Be(new DateTime(2099, 01, 01));
+    }
+
+    [Fact]
+    public void GivenBlogPost_WhenEnteringScheduledDate_ThenIsPublishedSetToFalse()
+    {
+        BlogPost blogPost = null;
+        var cut = RenderComponent<CreateNewBlogPost>(
+            p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
+        cut.Find("#preview").Change("My preview url");
+        cut.Find("#published").Change(true);
+
+        cut.Find("#scheduled").Change("01/01/2099 00:00");
+
+        var element = cut.Find("#published").Unwrap() as IHtmlInputElement;
+        element.IsChecked.Should().BeFalse();
     }
 }

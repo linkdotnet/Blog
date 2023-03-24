@@ -35,31 +35,43 @@
                 <label for="preview">Preview-Url</label>
                 <InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
                 <small for="preview" class="form-text text-muted">The primary image which will be used.</small>
-                 <ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
+	            <ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
             </div>
             <div class="mb-3">
-                <label for="preview">Fallback Preview-Url</label>
-                <InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
-                <small for="fallback-preview" class="form-text text-muted">Optional: Used as a fallback if the preview image can't be used by the browser.
-	                <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
-                 <ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
+	            <label for="preview">Fallback Preview-Url</label>
+	            <InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
+	            <small for="fallback-preview" class="form-text text-muted">Optional: Used as a fallback if the preview image can't be used by the browser.
+		            <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
+	            <ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
+            </div>
+            <div class="mb-3">
+	            <label for="scheduled">Scheduled Publish Date</label>
+	            <InputDate Type="InputDateType.DateTimeLocal"
+	                       class="form-control"
+	                       id="scheduled"
+	                       @bind-Value="model.ScheduledPublishDate"
+	                       @bind-Value:after="@(() => model.IsPublished &= !IsScheduled)"/>
+	            <small for="scheduled" class="form-text text-muted">If set the blog post will be published at the given date.
+		            A blog post with a schedule date can't be set to published.</small>
+	            <ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
             </div>
             <div class="form-check">
-                <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />
+                <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished"/>
                 <label class="form-check-label" for="published">Publish</label><br/>
-                <small for="published" class="form-text text-muted">If this blog post is only draft uncheck the box</small>
+                <small for="published" class="form-text text-muted">If this blog post is only draft or it will be scheduled, uncheck the box.</small>
+                <ValidationMessage For="() => model.IsPublished"></ValidationMessage>
             </div>
             <div class="mb-3">
-                <label for="tags">Tags</label>
-                <InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
+	            <label for="tags">Tags</label>
+	            <InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
             </div>
-            @if (BlogPost != null)
+            @if (BlogPost != null && !IsScheduled)
             {
                 <div class="form-check">
                     <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
                     <label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
                     <small for="updatedate" class="form-text text-muted">If set the publish date is set to now,
-                    otherwise its original date</small>
+                    otherwise its original date.</small>
                 </div>
             }
             <button class="btn btn-primary" type="submit" disabled="@(!canSubmit)">Submit</button>
@@ -100,6 +112,8 @@
     private CreateNewModel model = new();
 
 	private bool canSubmit = true;
+
+	private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
     protected override void OnParametersSet()
     {
