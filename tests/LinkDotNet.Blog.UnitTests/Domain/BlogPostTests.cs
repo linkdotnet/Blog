@@ -69,4 +69,25 @@ public class BlogPostTests
         bp.Tags.Should().HaveCount(1);
         bp.Tags.Single().Content.Should().Be("tag 1");
     }
+
+    [Fact]
+    public void ShouldPublishBlogPost()
+    {
+        var date = new DateTime(2023, 3, 24);
+        var bp = new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(date).Build();
+
+        bp.Publish();
+
+        bp.IsPublished.Should().BeTrue();
+        bp.ScheduledPublishDate.Should().BeNull();
+        bp.UpdatedDate.Should().Be(date);
+    }
+
+    [Fact]
+    public void ShouldThrowErrorWhenCreatingBlogPostThatIsPublishedAndHasScheduledPublishDate()
+    {
+        Action action = () => BlogPost.Create("1", "2", "3", "4", true, scheduledPublishDate: new DateTime(2023, 3, 24));
+
+        action.Should().Throw<InvalidOperationException>();
+    }
 }

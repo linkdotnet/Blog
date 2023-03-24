@@ -1,6 +1,7 @@
 using Blazored.Toast;
 using LinkDotNet.Blog.Web.Authentication.Auth0;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
+using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,7 @@ public class Program
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
         builder.Services.AddResponseCompression();
+        builder.Services.AddHostedService<BlogPostPublisher>();
 
         if (builder.Environment.IsDevelopment())
         {
