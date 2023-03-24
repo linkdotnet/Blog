@@ -90,4 +90,15 @@ public class BlogPostTests
 
         action.Should().Throw<InvalidOperationException>();
     }
+
+    [Fact]
+    public void ShouldUpdateScheduledPublishDate()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+        var bp = new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(new DateTime(2023, 3, 24)).Build();
+
+        blogPost.Update(bp);
+
+        blogPost.ScheduledPublishDate.Should().Be(new DateTime(2023, 3, 24));
+    }
 }
