@@ -4,14 +4,17 @@ using System.ComponentModel.DataAnnotations;
 namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 
 [AttributeUsage(AttributeTargets.Property)]
-public sealed class FallbackUrlValidationAttribute : ValidationAttribute
+public sealed class FutureDateValidationAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        var model = validationContext.ObjectInstance as CreateNewModel;
+        if (value is null)
+        {
+            return ValidationResult.Success;
+        }
 
-        return model.PreviewImageUrl == model.PreviewImageUrlFallback
-            ? new ValidationResult("Preview image url and the fallback preview image url should not be the same.")
+        return (DateTime)value <= DateTime.UtcNow
+            ? new ValidationResult("The scheduled publish date must be in the future.")
             : ValidationResult.Success;
     }
 }

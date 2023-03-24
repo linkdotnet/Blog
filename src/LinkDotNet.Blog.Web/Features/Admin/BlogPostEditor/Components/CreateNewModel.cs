@@ -88,6 +88,7 @@ public class CreateNewModel
         }
     }
 
+    [FutureDateValidation]
     public DateTime? ScheduledPublishDate
     {
         get => scheduledPublishDate;
