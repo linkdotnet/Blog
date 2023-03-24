@@ -16,7 +16,7 @@ public class PublishedWithScheduledDateValidationAttributeTests
             ShortDescription = "Desc",
             Content = "Content",
             IsPublished = true,
-            ScheduledPublishDate = DateTime.Now,
+            ScheduledPublishDate = DateTime.MaxValue,
             PreviewImageUrl = "https://steven-giesel.com",
         };
         var validationContext = new ValidationContext(model);
