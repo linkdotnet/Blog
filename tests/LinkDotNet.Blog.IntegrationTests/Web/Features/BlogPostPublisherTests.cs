@@ -2,13 +2,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.IntegrationTests;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Features;
+namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
 
 public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>, IDisposable
 {

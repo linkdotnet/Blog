@@ -22,7 +22,6 @@ public class BlogPostPublisher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        // await Task.Yield();
         logger.LogInformation("BlogPostPublisher is starting.");
 
         using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
