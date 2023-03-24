@@ -43,9 +43,11 @@ public class BlogPostPublisher : BackgroundService
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
 
-        var now = DateTime.UtcNow;
+        var now = DateTime.Now;
         var scheduledBlogPosts = await repository.GetAllAsync(
             filter: b => b.ScheduledPublishDate != null && b.ScheduledPublishDate <= now);
+
+        logger.LogInformation("Found {Count} scheduled blog posts.", scheduledBlogPosts.Count);
 
         foreach (var blogPost in scheduledBlogPosts)
         {
