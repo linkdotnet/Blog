@@ -8,11 +8,8 @@ public sealed class PublishedWithScheduledDateValidationAttribute : ValidationAt
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        if (validationContext.ObjectInstance is CreateNewModel { IsPublished: true, ScheduledPublishDate: { } })
-        {
-            return new ValidationResult("Cannot have a scheduled publish date when the post is already published.");
-        }
-
-        return ValidationResult.Success;
+        return validationContext.ObjectInstance is CreateNewModel { IsPublished: true, ScheduledPublishDate: { } }
+            ? new ValidationResult("Cannot have a scheduled publish date when the post is already published.")
+            : ValidationResult.Success;
     }
 }
