@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,5 +60,28 @@ public class ShortBlogPostTests : TestContext
             p => p.Add(c => c.BlogPost, blogPost));
 
         cut.FindAll(".goto-tag").Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GivenBlogPostThatIsScheduled_ThenIndicating()
+    {
+        var blogPost = new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(new DateTime(2099, 1, 1))
+            .Build();
+
+        var cut = RenderComponent<ShortBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.Find(".schedule").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void GivenBlogPostThatIsNotPublishedAndNotScheduled_ThenIndicating()
+    {
+        var blogPost = new BlogPostBuilder().IsPublished(false).Build();
+
+        var cut = RenderComponent<ShortBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.Find(".draft").Should().NotBeNull();
     }
 }

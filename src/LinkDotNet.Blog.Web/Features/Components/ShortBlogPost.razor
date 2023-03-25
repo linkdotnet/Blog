@@ -15,6 +15,14 @@
 				              LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
 			</div>
 			<ul class="details">
+				@if (BlogPost.IsScheduled)
+				{
+					<li class="schedule">Scheduled</li>
+				}
+				else if (!BlogPost.IsPublished)
+				{
+					<li class="draft">Draft</li>
+				}
 				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></li>
 				@if (BlogPost.Tags != null && BlogPost.Tags.Any())
 				{

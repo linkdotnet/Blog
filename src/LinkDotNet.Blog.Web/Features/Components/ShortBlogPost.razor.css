@@ -138,6 +138,14 @@
 	color: #D7D7D7 !important;
 }
 
+.schedule {
+	background-color: #28a745;
+}
+
+.draft {
+	background-color: #ff8700;
+}
+
 @media (max-width: 400px) {
     .blog-card .description h1 {
         font-size: 1.25rem;

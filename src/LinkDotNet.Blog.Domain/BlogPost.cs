@@ -30,6 +30,8 @@ public class BlogPost : Entity
 
     public int Likes { get; set; }
 
+    public bool IsScheduled => ScheduledPublishDate is not null;
+
     public static BlogPost Create(
         string title,
         string shortDescription,
