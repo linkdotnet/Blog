@@ -8,7 +8,7 @@ using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions .Logging;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
