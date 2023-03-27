@@ -24,33 +24,21 @@ public class CreateNewModel
     public string Title
     {
         get => title;
-        set
-        {
-            title = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref title, value);
     }
 
     [Required]
     public string ShortDescription
     {
         get => shortDescription;
-        set
-        {
-            shortDescription = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref shortDescription, value);
     }
 
     [Required]
     public string Content
     {
         get => content;
-        set
-        {
-            content = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref content, value);
     }
 
     [Required]
@@ -58,11 +46,7 @@ public class CreateNewModel
     public string PreviewImageUrl
     {
         get => previewImageUrl;
-        set
-        {
-            previewImageUrl = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref previewImageUrl, value);
     }
 
     [Required]
@@ -70,43 +54,27 @@ public class CreateNewModel
     public bool IsPublished
     {
         get => isPublished;
-        set
-        {
-            isPublished = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref isPublished, value);
     }
 
     [Required]
     public bool ShouldUpdateDate
     {
         get => shouldUpdateDate;
-        set
-        {
-            shouldUpdateDate = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref shouldUpdateDate, value);
     }
 
     [FutureDateValidation]
     public DateTime? ScheduledPublishDate
     {
         get => scheduledPublishDate;
-        set
-        {
-            scheduledPublishDate = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref scheduledPublishDate, value);
     }
 
     public string Tags
     {
         get => tags;
-        set
-        {
-            tags = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref tags, value);
     }
 
     [MaxLength(256)]
@@ -114,11 +82,7 @@ public class CreateNewModel
     public string PreviewImageUrlFallback
     {
         get => previewImageUrlFallback;
-        set
-        {
-            previewImageUrlFallback = value;
-            IsDirty = true;
-        }
+        set => SetProperty(ref previewImageUrlFallback, value);
     }
 
     public bool IsDirty { get; private set; }
@@ -160,5 +124,11 @@ public class CreateNewModel
             PreviewImageUrlFallback);
         blogPost.Id = id;
         return blogPost;
+    }
+
+    private void SetProperty<T>(ref T backingField, T value)
+    {
+        backingField = value;
+        IsDirty = true;
     }
 }
