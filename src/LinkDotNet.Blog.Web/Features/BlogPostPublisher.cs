@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions .Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
@@ -28,7 +31,7 @@ public class BlogPostPublisher : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested)
         {
-            await PublishScheduledBlogPosts();
+            await PublishScheduledBlogPostsAsync();
 
             await timer.WaitForNextTickAsync(stoppingToken);
         }
@@ -36,19 +39,35 @@ public class BlogPostPublisher : BackgroundService
         logger.LogInformation("BlogPostPublisher is stopping.");
     }
 
-    private async Task PublishScheduledBlogPosts()
+    private async Task PublishScheduledBlogPostsAsync()
     {
         logger.LogInformation("Checking for scheduled blog posts.");
 
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
 
+        var scheduledBlogPosts = await GetScheduledBlogPostsAsync(repository);
+
+        if (!scheduledBlogPosts.Any())
+        {
+            return;
+        }
+
+        await PublishAndSaveScheduledBlogPostsAsync(scheduledBlogPosts, repository);
+    }
+
+    private async Task<IPagedList<BlogPost>> GetScheduledBlogPostsAsync(IRepository<BlogPost> repository)
+    {
         var now = DateTime.Now;
         var scheduledBlogPosts = await repository.GetAllAsync(
             filter: b => b.ScheduledPublishDate != null && b.ScheduledPublishDate <= now);
 
         logger.LogInformation("Found {Count} scheduled blog posts.", scheduledBlogPosts.Count);
+        return scheduledBlogPosts;
+    }
 
+    private async Task PublishAndSaveScheduledBlogPostsAsync(IEnumerable<BlogPost> scheduledBlogPosts, IRepository<BlogPost> repository)
+    {
         foreach (var blogPost in scheduledBlogPosts)
         {
             blogPost.Publish();
