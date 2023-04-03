@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -16,6 +16,7 @@ public class StorageProviderExtensionsTests
     [InlineData("Sqlite")]
     [InlineData("RavenDb")]
     [InlineData("InMemory")]
+    [InlineData("MySql")]
     public void ShouldRegisterPersistenceProvider(string persistenceKey)
     {
         var collection = new ServiceCollection();
