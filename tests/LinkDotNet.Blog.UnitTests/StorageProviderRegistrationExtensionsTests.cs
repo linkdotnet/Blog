@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +13,7 @@ public class StorageProviderRegistrationExtensionsTests
             new object[] { new Action<IServiceCollection>(services => services.UseSqlAsStorageProvider()) },
             new object[] { new Action<IServiceCollection>(services => services.UseInMemoryAsStorageProvider()) },
             new object[] { new Action<IServiceCollection>(services => services.UseRavenDbAsStorageProvider()) },
+            new object[] { new Action<IServiceCollection>(services => services.UseMySqlAsStorageProvider()) },
         };
 
     [Theory]

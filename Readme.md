@@ -231,3 +231,8 @@ Note the ConnectionString format of SQL Server needs to be consistent:
 ```
 "ConnectionString": "Data Source=sql;Initial Catalog=master;User ID=sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"
 ```
+For MySql Change following
+```
+"PersistenceProvider": "MySql"
+"ConnectionString": "Server=YOURSERVER;User ID=YOURUSERID;Password=YOURPASSWORD;Database=YOURDATABAS"
+```

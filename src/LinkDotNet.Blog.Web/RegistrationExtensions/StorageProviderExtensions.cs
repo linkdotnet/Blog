@@ -1,4 +1,4 @@
-﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +32,11 @@ public static class StorageProviderExtensions
         else if (persistenceProvider == PersistenceProvider.SqlServer)
         {
             services.UseSqlAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+        }
+        else if (persistenceProvider == PersistenceProvider.MySql)
+        {
+            services.UseMySqlAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
     }

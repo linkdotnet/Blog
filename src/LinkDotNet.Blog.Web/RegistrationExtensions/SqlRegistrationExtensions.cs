@@ -1,4 +1,4 @@
-﻿using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +36,24 @@ public static class SqlRegistrationExtensions
             var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
             builder.UseSqlite(connectionString)
+#if DEBUG
+                .EnableDetailedErrors()
+#endif
+                ;
+        });
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+    }
+
+    public static void UseMySqlAsStorageProvider(this IServiceCollection services)
+    {
+        services.AssertNotAlreadyRegistered(typeof(IRepository<>));
+
+        services.AddPooledDbContextFactory<BlogDbContext>(
+        (s, builder) =>
+        {
+            var configuration = s.GetRequiredService<AppConfiguration>();
+            var connectionString = configuration.ConnectionString;
+            builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 #if DEBUG
                 .EnableDetailedErrors()
 #endif
