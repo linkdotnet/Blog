@@ -25,9 +25,9 @@ public class BlogPostPublisher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("BlogPostPublisher is starting.");
+        logger.LogInformation("BlogPostPublisher is starting");
 
-        using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
+        using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -36,12 +36,12 @@ public class BlogPostPublisher : BackgroundService
             await timer.WaitForNextTickAsync(stoppingToken);
         }
 
-        logger.LogInformation("BlogPostPublisher is stopping.");
+        logger.LogInformation("BlogPostPublisher is stopping");
     }
 
     private async Task PublishScheduledBlogPostsAsync()
     {
-        logger.LogInformation("Checking for scheduled blog posts.");
+        logger.LogInformation("Checking for scheduled blog posts");
 
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
@@ -58,11 +58,11 @@ public class BlogPostPublisher : BackgroundService
 
     private async Task<IPagedList<BlogPost>> GetScheduledBlogPostsAsync(IRepository<BlogPost> repository)
     {
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         var scheduledBlogPosts = await repository.GetAllAsync(
             filter: b => b.ScheduledPublishDate != null && b.ScheduledPublishDate <= now);
 
-        logger.LogInformation("Found {Count} scheduled blog posts.", scheduledBlogPosts.Count);
+        logger.LogInformation("Found {Count} scheduled blog posts", scheduledBlogPosts.Count);
         return scheduledBlogPosts;
     }
 
