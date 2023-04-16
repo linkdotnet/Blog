@@ -16,7 +16,7 @@ public static class SqlRegistrationExtensions
         {
             var configuration = s.GetRequiredService<AppConfiguration>();
             var connectionString = configuration.ConnectionString;
-            builder.UseSqlServer(connectionString, x => x.UseDateOnlyTimeOnly())
+            builder.UseSqlServer(connectionString)
 #if DEBUG
                 .EnableDetailedErrors()
 #endif
