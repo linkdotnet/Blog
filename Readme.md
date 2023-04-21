@@ -93,7 +93,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | GithubSponsorName         | string         | Enables the "Github Sponsor" button which redirects to GitHub. Only pass in the user name instead of the url.                                                  |
 
 ## Storage Provider
-Currently, there are 4 Storage-Provider:
+Currently, there are 5 Storage-Provider:
  * InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
  * RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
  * Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
