@@ -66,10 +66,10 @@
 	protected override void OnInitialized()
 	{
 		var key = "reading-time-" + BlogPost.Id;
-		if (!MemoryCache.TryGetValue(key, out readingTime))
+		readingTime = MemoryCache.GetOrCreate(key, entry =>
 		{
-			readingTime = ReadingTimeCalculator.CalculateReadingTime(BlogPost.Content);
-			MemoryCache.Set(key, readingTime, TimeSpan.FromHours(1));
-		}
+			entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+			return ReadingTimeCalculator.CalculateReadingTime(BlogPost.Content);
+		});
 	}
 }
