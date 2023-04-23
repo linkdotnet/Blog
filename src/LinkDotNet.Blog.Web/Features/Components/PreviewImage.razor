@@ -28,10 +28,7 @@ else
 
     static PreviewImage()
     {
-        if (!Provider.Mappings.Keys.Contains(".avif"))
-        {
-            Provider.Mappings.Add(".avif", "image/avif");
-        }
+	    Provider.Mappings.TryAdd(".avif", "image/avif");
     }
 
     private string GetMimeType()
