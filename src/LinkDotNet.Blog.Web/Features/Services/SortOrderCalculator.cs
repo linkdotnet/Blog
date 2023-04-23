@@ -11,7 +11,7 @@ public class SortOrderCalculator : ISortOrderCalculator
         var targetNode = linkedEntries.Find(target);
         var next = targetNode!.Next;
 
-        if (next == null)
+        if (next is null)
         {
             var prev = targetNode.Previous;
             return (target.SortOrder + prev!.Value.SortOrder) / 2;
