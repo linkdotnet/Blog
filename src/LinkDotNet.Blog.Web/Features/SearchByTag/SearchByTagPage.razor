@@ -1,5 +1,6 @@
 ﻿@page "/searchByTag/{tag}"
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
 @inject IRepository<BlogPost> BlogPostRepository
@@ -17,7 +18,7 @@
     [Parameter]
     public string Tag { get; set; }
 
-    IReadOnlyList<BlogPost> blogPosts = new List<BlogPost>();
+    IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
     protected override async Task OnParametersSetAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);

@@ -1,5 +1,6 @@
 ﻿@page "/search/{searchTerm}"
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
 @inject IRepository<BlogPost> BlogPostRepository
@@ -17,7 +18,7 @@
     [Parameter]
     public string SearchTerm { get; set; }
 
-    private IReadOnlyList<BlogPost> blogPosts = new List<BlogPost>();
+    private IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
 
     protected override async Task OnParametersSetAsync()
     {
