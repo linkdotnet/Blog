@@ -4,6 +4,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
 
@@ -13,17 +14,20 @@ public class UserRecordService : IUserRecordService
     private readonly NavigationManager navigationManager;
     private readonly AuthenticationStateProvider authenticationStateProvider;
     private readonly ILocalStorageService localStorageService;
+    private readonly ILogger<UserRecordService> logger;
 
     public UserRecordService(
         IRepository<UserRecord> userRecordRepository,
         NavigationManager navigationManager,
         AuthenticationStateProvider authenticationStateProvider,
-        ILocalStorageService localStorageService)
+        ILocalStorageService localStorageService,
+        ILogger<UserRecordService> logger)
     {
         this.userRecordRepository = userRecordRepository;
         this.navigationManager = navigationManager;
         this.authenticationStateProvider = authenticationStateProvider;
         this.localStorageService = localStorageService;
+        this.logger = logger;
     }
 
     public async ValueTask StoreUserRecordAsync()
@@ -34,7 +38,7 @@ public class UserRecordService : IUserRecordService
         }
         catch (Exception e)
         {
-            Console.Write($"Exception: {e}");
+            logger.LogError("Error while storing user record service: {Exception}", e);
         }
     }
 
@@ -62,7 +66,7 @@ public class UserRecordService : IUserRecordService
 
     private async ValueTask<int> GetIdentifierHashAsync()
     {
-        if (await TryGetKey())
+        if (await HasKeyAsync())
         {
             var key = await localStorageService.GetItemAsync<Guid>("user");
             return key.GetHashCode();
@@ -73,7 +77,7 @@ public class UserRecordService : IUserRecordService
         return id.GetHashCode();
     }
 
-    private async ValueTask<bool> TryGetKey()
+    private async ValueTask<bool> HasKeyAsync()
     {
         try
         {

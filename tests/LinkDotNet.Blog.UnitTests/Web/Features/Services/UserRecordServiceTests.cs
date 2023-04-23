@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Services;
+using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Services;
 
@@ -24,7 +25,8 @@ public class UserRecordServiceTests : TestContext
             repositoryMock.Object,
             fakeNavigationManager,
             fakeAuthenticationStateProvider,
-            localStorageService.Object);
+            localStorageService.Object,
+            Mock.Of<ILogger<UserRecordService>>());
     }
 
     [Fact]
