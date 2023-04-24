@@ -4,6 +4,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Infrastructure.Persistence.Sql
 @using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services
+@using System.Collections.Immutable
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IRepository<UserRecord> UserRecordRepository
 
@@ -51,14 +52,14 @@
 @code {
 
     private Filter filter = new();
-    private IList<VisitCountPageData> visitData;
+    private IReadOnlyCollection<VisitCountPageData> visitData;
 
     protected override async Task OnInitializedAsync()
     {
         visitData = await LoadBlogPostInformationAsync();
     }
 
-    private async Task<List<VisitCountPageData>> LoadBlogPostInformationAsync()
+    private async Task<IReadOnlyCollection<VisitCountPageData>> LoadBlogPostInformationAsync()
     {
         var blogPostsTask = BlogPostRepository.GetAllByProjectionAsync(
             s => new { s.Id, s.Title, s.Likes });
@@ -81,7 +82,7 @@
                 Title = gp.First().bp.Title,
                 Likes = gp.First().bp.Likes,
                 ClickCount = gp.Count()
-            }).ToList();
+            }).ToImmutableArray();
         return visitCountPage;
     }
 

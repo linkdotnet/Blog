@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -49,7 +50,7 @@ public class SitemapService : ISitemapService
         {
             Location = $"{navigationManager.BaseUri}blogPost/{b.Id}",
             LastModified = b.UpdatedDate.ToString("yyyy-MM-dd"),
-        }).ToList();
+        }).ToImmutableArray();
     }
 
     private IEnumerable<SitemapUrl> CreateUrlsForTags(IEnumerable<BlogPost> blogPosts)

@@ -1,6 +1,7 @@
 @page "/archive"
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Domain
+@using System.Collections.Immutable
 @inject IRepository<BlogPost> Repository
 
 <OgData Title="Archive"></OgData>
@@ -28,7 +29,7 @@
 </div >
 
 @code {
-    private List<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
+    private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
     private int blogPostCount;
 
     protected override async Task OnInitializedAsync()
@@ -40,7 +41,7 @@
         blogPostsPerYear = blogPosts
             .GroupBy(r => r.UpdatedDate.Year)
             .OrderByDescending(r => r.Key)
-            .ToList();
+            .ToImmutableArray();
     }
 
     private sealed record BlogPostPerYear(string Id, string Title, DateTime UpdatedDate);
