@@ -85,7 +85,7 @@ public class UserRecordService : IUserRecordService
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Couldn't obtain key: \"user\": {e}");
+            logger.LogError("Couldn't obtain key for user: {Exception}", e);
             return false;
         }
     }
