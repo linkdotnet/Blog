@@ -84,4 +84,16 @@ public class ShortBlogPostTests : TestContext
 
         cut.Find(".draft").Should().NotBeNull();
     }
+
+    [Fact]
+    public void GivenBlogPostThatIsPublished_ThenNoDraft()
+    {
+        var blogPost = new BlogPostBuilder().IsPublished(true).Build();
+
+        var cut = RenderComponent<ShortBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.FindAll(".draft").Should().BeEmpty();
+        cut.FindAll(".scheduled").Should().BeEmpty();
+    }
 }
