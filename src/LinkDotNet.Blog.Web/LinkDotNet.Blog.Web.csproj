@@ -19,8 +19,4 @@
       <ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
     </ItemGroup>
 
-	<ItemGroup>
-		<InternalsVisibleTo Include="LinkDotNet.Blog.IntegrationTests" />
-	</ItemGroup>
-
 </Project>
