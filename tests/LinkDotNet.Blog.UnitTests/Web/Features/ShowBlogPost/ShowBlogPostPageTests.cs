@@ -22,9 +22,8 @@ public class ShowBlogPostPageTests : TestContext
     {
         const string blogPostId = "2";
         var repositoryMock = new Mock<IRepository<BlogPost>>();
-        JSInterop.Mode = JSRuntimeMode.Loose;
+        SetupMocks();
         Services.AddScoped(_ => repositoryMock.Object);
-        Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         repositoryMock.Setup(r => r.GetByIdAsync(blogPostId))
             .Returns(async () =>
             {
@@ -80,7 +79,6 @@ public class ShowBlogPostPageTests : TestContext
     [Fact]
     public void ShowTagWithLinksWhenAvailable()
     {
-        JSInterop.Mode = JSRuntimeMode.Loose;
         var repositoryMock = new Mock<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .WithTags("tag1")
@@ -100,7 +98,6 @@ public class ShowBlogPostPageTests : TestContext
     [Fact]
     public void ShowNotShowTagsWhenNotSet()
     {
-        JSInterop.Mode = JSRuntimeMode.Loose;
         var repositoryMock = new Mock<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .Build();
@@ -114,8 +111,32 @@ public class ShowBlogPostPageTests : TestContext
         cut.FindAll(".goto-tag").Should().BeEmpty();
     }
 
+    [Theory]
+    [InlineData(true, 1)]
+    [InlineData(false, 0)]
+    public void ShowReadingIndicatorWhenEnabled(bool isEnabled, int count)
+    {
+        var appConfiguration = new AppConfiguration
+        {
+            ShowReadingIndicator = isEnabled,
+        };
+        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .Build();
+        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
+        Services.AddScoped(_ => repositoryMock.Object);
+        SetupMocks();
+        Services.AddScoped(_ => appConfiguration);
+
+        var cut = RenderComponent<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindComponents<ReadingIndicator>().Count.Should().Be(count);
+    }
+
     private void SetupMocks()
     {
+        JSInterop.Mode = JSRuntimeMode.Loose;
         Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         Services.AddScoped(_ => Mock.Of<IToastService>());
         Services.AddScoped(_ => Mock.Of<AppConfiguration>());

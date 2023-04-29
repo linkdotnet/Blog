@@ -7,6 +7,7 @@
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IJSRuntime JsRuntime
 @inject IUserRecordService UserRecordService
+@inject AppConfiguration AppConfiguration
 
 @if (BlogPost == null)
 {
@@ -54,7 +55,10 @@ else
 		</div>
 	</div>
 
-	<ReadingIndicator ContainerCssSelector=".blog-inner-content"/>
+	@if (AppConfiguration.ShowReadingIndicator)
+	{
+		<ReadingIndicator ContainerCssSelector=".blog-inner-content"/>
+	}
 }
 
 @code {
