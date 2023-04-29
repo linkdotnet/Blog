@@ -4,7 +4,7 @@
     right: 20px;
     z-index: 1000;
     opacity: 0;
-    transition: opacity 0.5s;
+    transition: opacity 1.5s;
 }
 
 .progress-container.visible {
