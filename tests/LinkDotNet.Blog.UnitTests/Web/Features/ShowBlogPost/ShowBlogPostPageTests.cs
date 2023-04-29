@@ -112,9 +112,9 @@ public class ShowBlogPostPageTests : TestContext
     }
 
     [Theory]
-    [InlineData(true, 1)]
-    [InlineData(false, 0)]
-    public void ShowReadingIndicatorWhenEnabled(bool isEnabled, int count)
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ShowReadingIndicatorWhenEnabled(bool isEnabled)
     {
         var appConfiguration = new AppConfiguration
         {
@@ -131,7 +131,7 @@ public class ShowBlogPostPageTests : TestContext
         var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
-        cut.FindComponents<ReadingIndicator>().Count.Should().Be(count);
+        cut.HasComponent<ReadingIndicator>().Should().Be(isEnabled);
     }
 
     private void SetupMocks()
