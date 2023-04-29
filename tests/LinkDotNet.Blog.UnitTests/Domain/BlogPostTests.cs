@@ -121,4 +121,24 @@ public class BlogPostTests
 
         bp.IsScheduled.Should().BeTrue();
     }
+
+    [Fact]
+    public void GivenBlogPostWithTags_WhenCreatingStringFromTags_ThenTagsAreSeparatedByComma()
+    {
+        var bp = new BlogPostBuilder().WithTags("tag 1", "tag 2").Build();
+
+        var tags = bp.TagsAsString;
+
+        tags.Should().Be("tag 1, tag 2");
+    }
+
+    [Fact]
+    public void GivenBlogPostWithNoTags_WhenCreatingStringFromTags_ThenEmptyString()
+    {
+        var bp = new BlogPostBuilder().Build();
+
+        var tags = bp.TagsAsString;
+
+        tags.Should().BeEmpty();
+    }
 }

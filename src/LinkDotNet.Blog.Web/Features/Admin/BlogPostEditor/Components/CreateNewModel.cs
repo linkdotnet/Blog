@@ -93,7 +93,7 @@ public class CreateNewModel
         {
             id = blogPost.Id,
             Content = blogPost.Content,
-            Tags = blogPost.Tags != null ? string.Join(",", blogPost.Tags.Select(t => t.Content)) : null,
+            Tags = blogPost.TagsAsString,
             Title = blogPost.Title,
             ShortDescription = blogPost.ShortDescription,
             IsPublished = blogPost.IsPublished,

@@ -32,6 +32,8 @@ public class BlogPost : Entity
 
     public bool IsScheduled => ScheduledPublishDate is not null;
 
+    public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags.Select(t => t.Content));
+
     public static BlogPost Create(
         string title,
         string shortDescription,

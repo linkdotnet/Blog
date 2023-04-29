@@ -19,7 +19,7 @@ else
     <OgData Title="@BlogPost.Title"
             AbsolutePreviewImageUrl="@OgDataImage"
             Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
-            Keywords="@Tags"></OgData>
+            Keywords="@BlogPost.TagsAsString"></OgData>
 	<div class="d-flex justify-content-center pt-2 blog-outer-box">
 		<div class="content blog-container">
 			<div class="blog-inner-content">
@@ -65,11 +65,7 @@ else
     [Parameter]
     public string BlogPostId { get; set; }
 
-    private string Tags => BlogPost?.Tags != null
-        ? string.Join(",", BlogPost.Tags.Select(b => b.Content))
-        : null;
-
-    private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
+	private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
 
     private BlogPost BlogPost { get; set; }
 
