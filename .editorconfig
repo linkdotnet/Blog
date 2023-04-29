@@ -3,34 +3,29 @@ root = true
 [*]
 indent_style = tab
 indent_size = tab
-tab_size = 4
+tab_width = 4
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.cs]
-tab_size = 4
 indent_style = space
 
 [*.{xml,config,*proj,nuspec,props,resx,targets,yml,tasks}]
-tab_size = 2
+tab_width = 2
 
 [*.{htm,html,js,jsm,ts,tsx,css,sass,scss,less,svg,vue}]
-tab_size = 2
+tab_width = 2
 
 [*.json]
-tab_size = 2
-
-[*.{ps1,psm1}]
-tab_size = 4
+tab_width = 2
 
 [*.sh]
-tab_size = 4
 end_of_line = lf
 
 [*.{yml,yaml}]
 indent_style = space
-tab_size = 2
+tab_width = 2
 
 [*.md]
 trim_trailing_whitespace = false
