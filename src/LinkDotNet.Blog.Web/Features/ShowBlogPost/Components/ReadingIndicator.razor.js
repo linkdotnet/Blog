@@ -1,4 +1,5 @@
 let progressTimeout;
+let rafId;
 
 function getContentHeight() {
     const content = document.querySelector(".blog-inner-content");
@@ -11,18 +12,21 @@ function getContentHeight() {
 
 function showProgressIndicator(progressContainer) {
     progressContainer.classList.add("visible");
-    progressContainer.style.animation = "none";
+    progressContainer.style.animation = 'none';
 }
 
 function hideProgressIndicator(progressContainer) {
-    progressContainer.style.animation = "fadeOut 0.5s forwards";
+    progressContainer.style.animation = 'fadeOut 0.5s forwards';
+    setTimeout(() => {
+        progressContainer.classList.remove('visible');
+    }, 500);
 }
 
 window.initCircularReadingProgress = () => {
-    const progressBar = document.getElementById("progressBar");
+    const progressBar = document.getElementById('progressBar');
     const progressContainer = progressBar.closest(".progress-container");
 
-    window.addEventListener("scroll", () => {
+    const onScroll = () => {
         clearTimeout(progressTimeout);
 
         const contentHeight = getContentHeight();
@@ -37,5 +41,13 @@ window.initCircularReadingProgress = () => {
         progressTimeout = setTimeout(() => {
             hideProgressIndicator(progressContainer);
         }, 2000);
+
+        rafId = null;
+    };
+
+    window.addEventListener('scroll', () => {
+        if (!rafId) {
+            rafId = requestAnimationFrame(onScroll);
+        }
     });
 };
