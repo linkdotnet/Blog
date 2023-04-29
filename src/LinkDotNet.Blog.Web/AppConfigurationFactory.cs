@@ -28,6 +28,7 @@ public static class AppConfigurationFactory
             DisqusConfiguration = disqus,
             KofiToken = config[nameof(AppConfiguration.KofiToken)],
             GithubSponsorName = config[nameof(AppConfiguration.GithubSponsorName)],
+            ShowReadingIndicator = config.GetValue<bool>(nameof(AppConfiguration.ShowReadingIndicator)),
         };
 
         return configuration;

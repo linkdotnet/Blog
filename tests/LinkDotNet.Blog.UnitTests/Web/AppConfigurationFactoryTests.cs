@@ -32,6 +32,7 @@ public class AppConfigurationFactoryTests
             { "Disqus:Shortname", "blog" },
             { "KofiToken", "ABC" },
             { "GithubSponsorName", "linkdotnet" },
+            { "ShowReadingIndicator", "true" },
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
@@ -64,6 +65,7 @@ public class AppConfigurationFactoryTests
         appConfiguration.DisqusConfiguration.Shortname.Should().Be("blog");
         appConfiguration.KofiToken.Should().Be("ABC");
         appConfiguration.GithubSponsorName.Should().Be("linkdotnet");
+        appConfiguration.ShowReadingIndicator.Should().BeTrue();
     }
 
     [Theory]

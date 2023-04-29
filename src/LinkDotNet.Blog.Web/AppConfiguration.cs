@@ -38,4 +38,6 @@ public record AppConfiguration
     public string GithubSponsorName { get; init; }
 
     public bool IsGithubSponsorAvailable => !string.IsNullOrEmpty(GithubSponsorName);
+
+    public bool ShowReadingIndicator { get; init; }
 }
