@@ -19,40 +19,42 @@ else
             AbsolutePreviewImageUrl="@OgDataImage"
             Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
             Keywords="@Tags"></OgData>
-    <div class="d-flex justify-content-center pt-2 blog-outer-box">
-        <div class="content blog-container">
-            <div>
-                <header class="text-center">
-                    <h1>@BlogPost.Title</h1></header>
-                <div class="blogpost-metainformation d-flex flex-row flex-wrap gap-2">
-                    <div><span class="date"></span><span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></div>
-                     @if (BlogPost.Tags != null && BlogPost.Tags.Any())
-                     {
-                         <span class="blogpost-tag d-inline-block">
-                             @foreach (var tag in BlogPost.Tags.Select(t => t.Content))
-                             {
-                                 <a class="goto-tag ms-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
-                             }
-                         </span>
-                     }
-                </div>
+	<div class="d-flex justify-content-center pt-2 blog-outer-box">
+		<div class="content blog-container">
+			<div class="blog-inner-content">
+				<header class="text-center">
+					<h1>@BlogPost.Title</h1></header>
+				<div class="blogpost-metainformation d-flex flex-row flex-wrap gap-2">
+					<div><span class="date"></span><span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></div>
+					@if (BlogPost.Tags != null && BlogPost.Tags.Any())
+					{
+						<span class="blogpost-tag d-inline-block">
+							@foreach (var tag in BlogPost.Tags.Select(t => t.Content))
+							{
+								<a class="goto-tag ms-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+							}
+						</span>
+					}
+				</div>
 
-                <div class="admin-action">
-                    <BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
-                </div>
+				<div class="admin-action">
+					<BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
+				</div>
 
-                <div class="blogpost-content">
-                    @(MarkdownConverter.ToMarkupString(BlogPost.Content))
-                </div>
-            </div>
-            <div class="d-flex justify-content-between py-2">
-                <Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
-                <ShareBlogPost></ShareBlogPost>
-            </div>
-            <DonationSection></DonationSection>
-            <CommentSection></CommentSection>
-        </div>
-    </div>
+				<div class="blogpost-content">
+					@(MarkdownConverter.ToMarkupString(BlogPost.Content))
+				</div>
+			</div>
+			<div class="d-flex justify-content-between py-2">
+				<Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
+				<ShareBlogPost></ShareBlogPost>
+			</div>
+			<DonationSection></DonationSection>
+			<CommentSection></CommentSection>
+		</div>
+	</div>
+
+	<ReadingIndicator />
 }
 
 @code {
