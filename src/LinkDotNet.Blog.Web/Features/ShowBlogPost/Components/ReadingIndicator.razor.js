@@ -22,6 +22,12 @@ function hideProgressIndicator(progressContainer) {
     }, 500);
 }
 
+function onScroll(onScroll) {
+    if (!rafId) {
+        rafId = requestAnimationFrame(onScroll);
+    }
+}
+
 window.initCircularReadingProgress = (parentContainer, progressContainer) => {
     const progressBar = document.getElementById('progressBar');
 
@@ -44,9 +50,11 @@ window.initCircularReadingProgress = (parentContainer, progressContainer) => {
         rafId = null;
     };
 
-    window.addEventListener('scroll', () => {
-        if (!rafId) {
-            rafId = requestAnimationFrame(onScroll);
-        }
-    });
+    window.addEventListener('scroll', onScroll) ;
 };
+
+window.destroyCircularReadingProgress = () => {
+    window.removeEventListener('scroll', onScroll);
+    clearTimeout(progressTimeout);
+    cancelAnimationFrame(rafId);
+}
