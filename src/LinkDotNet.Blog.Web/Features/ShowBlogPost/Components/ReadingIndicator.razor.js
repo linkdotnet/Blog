@@ -1,8 +1,8 @@
 let progressTimeout;
 let rafId;
 
-function getContentHeight() {
-    const content = document.querySelector(".blog-inner-content");
+function getContentHeight(className) {
+    const content = document.querySelector(className);
     if (!content) {
         return 0;
     }
@@ -22,14 +22,13 @@ function hideProgressIndicator(progressContainer) {
     }, 500);
 }
 
-window.initCircularReadingProgress = () => {
+window.initCircularReadingProgress = (parentContainer, progressContainer) => {
     const progressBar = document.getElementById('progressBar');
-    const progressContainer = progressBar.closest(".progress-container");
 
     const onScroll = () => {
         clearTimeout(progressTimeout);
 
-        const contentHeight = getContentHeight();
+        const contentHeight = getContentHeight(parentContainer);
         const windowHeight = document.documentElement.clientHeight;
         const scrollAmount = document.documentElement.scrollTop;
         const maxScrollAmount = contentHeight - windowHeight;
