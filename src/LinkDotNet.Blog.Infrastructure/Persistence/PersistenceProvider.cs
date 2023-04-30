@@ -2,7 +2,7 @@ using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
-public class PersistenceProvider : Enumeration<PersistenceProvider>
+public sealed class PersistenceProvider : Enumeration<PersistenceProvider>
 {
     public static readonly PersistenceProvider SqlServer = new(nameof(SqlServer));
     public static readonly PersistenceProvider Sqlite = new(nameof(Sqlite));
@@ -10,7 +10,7 @@ public class PersistenceProvider : Enumeration<PersistenceProvider>
     public static readonly PersistenceProvider InMemory = new(nameof(InMemory));
     public static readonly PersistenceProvider MySql = new(nameof(MySql));
 
-    protected PersistenceProvider(string key)
+    private PersistenceProvider(string key)
         : base(key)
     {
     }

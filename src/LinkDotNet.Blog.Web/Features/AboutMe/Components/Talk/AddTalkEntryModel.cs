@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
 
-public class AddTalkEntryModel
+public sealed class AddTalkEntryModel
 {
     [Required]
     [MaxLength(256)]

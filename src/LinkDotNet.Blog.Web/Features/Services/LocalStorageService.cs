@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
 
-public class LocalStorageService : ILocalStorageService
+public sealed class LocalStorageService : ILocalStorageService
 {
     private readonly ProtectedLocalStorage localStorage;
 

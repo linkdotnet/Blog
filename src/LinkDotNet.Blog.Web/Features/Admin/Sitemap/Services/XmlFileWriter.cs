@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
-public class XmlFileWriter : IXmlFileWriter
+public sealed class XmlFileWriter : IXmlFileWriter
 {
     public async Task WriteObjectToXmlFileAsync<T>(T objectToSave, string fileName)
     {

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 
-public class FileProcessor : IFileProcessor
+public sealed class FileProcessor : IFileProcessor
 {
     public async Task<string> GetContentAsync(IBrowserFile file)
     {

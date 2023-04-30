@@ -1,6 +1,6 @@
 ﻿namespace LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
-public record GiscusConfiguration
+public sealed record GiscusConfiguration
 {
     public string Repository { get; init; }
 

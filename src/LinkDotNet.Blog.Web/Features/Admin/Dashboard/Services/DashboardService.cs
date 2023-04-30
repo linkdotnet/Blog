@@ -6,7 +6,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 
-public class DashboardService : IDashboardService
+public sealed class DashboardService : IDashboardService
 {
     private readonly IRepository<UserRecord> userRecordRepository;
 

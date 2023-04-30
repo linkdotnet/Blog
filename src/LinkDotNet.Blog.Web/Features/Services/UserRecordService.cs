@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
 
-public class UserRecordService : IUserRecordService
+public sealed class UserRecordService : IUserRecordService
 {
     private readonly IRepository<UserRecord> userRecordRepository;
     private readonly NavigationManager navigationManager;

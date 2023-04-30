@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LinkDotNet.Blog.Web.Authentication.Auth0;
 
-public class Auth0LoginManager : ILoginManager
+public sealed class Auth0LoginManager : ILoginManager
 {
     private readonly HttpContext httpContext;
 

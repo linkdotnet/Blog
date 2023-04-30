@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace LinkDotNet.Blog.Domain;
 
 [DebuggerDisplay("{Content} with sort order {SortOrder}")]
-public class ProfileInformationEntry : Entity
+public sealed class ProfileInformationEntry : Entity
 {
     private ProfileInformationEntry()
     {

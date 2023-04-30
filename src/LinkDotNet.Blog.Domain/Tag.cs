@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Blog.Domain;
 
-public class Tag
+public sealed class Tag
 {
     private Tag()
     {

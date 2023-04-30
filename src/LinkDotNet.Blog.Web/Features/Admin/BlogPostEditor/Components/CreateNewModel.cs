@@ -4,7 +4,7 @@ using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 
-public class CreateNewModel
+public sealed class CreateNewModel
 {
     private DateTime originalUpdatedDate;
     private string id;

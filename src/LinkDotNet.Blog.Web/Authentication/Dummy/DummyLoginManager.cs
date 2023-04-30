@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LinkDotNet.Blog.Web.Authentication.Dummy;
 
-public class DummyLoginManager : ILoginManager
+public sealed class DummyLoginManager : ILoginManager
 {
     private readonly HttpContext context;
 

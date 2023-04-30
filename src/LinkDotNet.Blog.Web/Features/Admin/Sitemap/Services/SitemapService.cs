@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
-public class SitemapService : ISitemapService
+public sealed class SitemapService : ISitemapService
 {
     private readonly IRepository<BlogPost> repository;
     private readonly NavigationManager navigationManager;

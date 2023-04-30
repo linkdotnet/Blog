@@ -3,7 +3,7 @@ using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 
-public class AddSkillModel
+public sealed class AddSkillModel
 {
     [Required]
     public string Skill { get; set; }

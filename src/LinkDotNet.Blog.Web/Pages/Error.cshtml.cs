@@ -6,7 +6,7 @@ namespace LinkDotNet.Blog.Web.Pages;
 
 [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 [IgnoreAntiforgeryToken]
-public partial class ErrorModel : PageModel
+public sealed partial class ErrorModel : PageModel
 {
     public string RequestId { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace LinkDotNet.Blog.Web.Features.Admin.Dashboard.Services;
 
-public class DashboardData
+public sealed class DashboardData
 {
     public int TotalAmountOfUsers { get; init; }
 

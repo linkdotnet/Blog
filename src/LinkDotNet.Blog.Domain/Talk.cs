@@ -2,7 +2,7 @@ using System;
 
 namespace LinkDotNet.Blog.Domain;
 
-public class Talk : Entity
+public sealed class Talk : Entity
 {
     private Talk()
     {

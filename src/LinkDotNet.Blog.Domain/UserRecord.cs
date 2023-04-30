@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Blog.Domain;
 
-public class UserRecord : Entity
+public sealed class UserRecord : Entity
 {
     public int UserIdentifierHash { get; set; }
 

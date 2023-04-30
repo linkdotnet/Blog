@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Blog.Domain;
 
-public class Skill : Entity
+public sealed class Skill : Entity
 {
     private Skill()
     {

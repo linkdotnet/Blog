@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public class BlogPostPublisher : BackgroundService
+public sealed class BlogPostPublisher : BackgroundService
 {
     private readonly IServiceProvider serviceProvider;
     private readonly ILogger<BlogPostPublisher> logger;

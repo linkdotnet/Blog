@@ -120,7 +120,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.SaveChangesAsync();
     }
 
-    private class FilterStubComponent : ComponentBase
+    private sealed class FilterStubComponent : ComponentBase
     {
         [Parameter]
         public EventCallback<Filter> FilterChanged { get; set; }

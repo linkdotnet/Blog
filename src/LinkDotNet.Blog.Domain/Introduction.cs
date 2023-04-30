@@ -1,6 +1,6 @@
 ﻿namespace LinkDotNet.Blog.Domain;
 
-public record Introduction
+public sealed record Introduction
 {
     public string BackgroundUrl { get; init; }
 

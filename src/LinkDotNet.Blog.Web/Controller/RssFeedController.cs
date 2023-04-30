@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LinkDotNet.Blog.Web.Controller;
 
-public class RssFeedController : ControllerBase
+public sealed class RssFeedController : ControllerBase
 {
     private readonly AppConfiguration appConfiguration;
     private readonly IRepository<BlogPost> blogPostRepository;

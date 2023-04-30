@@ -3,7 +3,7 @@ using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
 
-public class SortOrderCalculator : ISortOrderCalculator
+public sealed class SortOrderCalculator : ISortOrderCalculator
 {
     public int GetSortOrder(ProfileInformationEntry target, IEnumerable<ProfileInformationEntry> all)
     {

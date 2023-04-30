@@ -1,6 +1,6 @@
 ﻿namespace LinkDotNet.Blog.Domain;
 
-public record ProfileInformation
+public sealed record ProfileInformation
 {
     public string Name { get; init; }
 

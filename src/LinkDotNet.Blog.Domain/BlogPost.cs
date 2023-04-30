@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LinkDotNet.Blog.Domain;
 
-public class BlogPost : Entity
+public sealed class BlogPost : Entity
 {
     private BlogPost()
     {
@@ -24,7 +24,7 @@ public class BlogPost : Entity
 
     public DateTime? ScheduledPublishDate { get; private set; }
 
-    public virtual ICollection<Tag> Tags { get; private set; }
+    public ICollection<Tag> Tags { get; private set; }
 
     public bool IsPublished { get; private set; }
 

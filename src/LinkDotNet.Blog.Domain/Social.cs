@@ -1,6 +1,6 @@
 namespace LinkDotNet.Blog.Domain;
 
-public record Social
+public sealed record Social
 {
     public string LinkedinAccountUrl { get; init; }
 
