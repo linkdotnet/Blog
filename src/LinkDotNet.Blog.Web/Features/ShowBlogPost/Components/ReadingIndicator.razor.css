@@ -38,3 +38,7 @@
     stroke-dasharray: 100, 100;
     stroke-dashoffset: 100;
 }
+
+[data-bs-theme='light'] .progress-bg {
+    stroke: #444444;
+}
