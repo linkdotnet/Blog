@@ -139,7 +139,7 @@ public class ShowBlogPostPageTests : TestContext
         JSInterop.Mode = JSRuntimeMode.Loose;
         Services.AddScoped(_ => Mock.Of<IUserRecordService>());
         Services.AddScoped(_ => Mock.Of<IToastService>());
-        Services.AddScoped(_ => Mock.Of<AppConfiguration>());
+        Services.AddScoped(_ => new AppConfiguration());
         this.AddTestAuthorization();
         ComponentFactories.AddStub<PageTitle>();
         ComponentFactories.AddStub<Like>();
