@@ -39,4 +39,20 @@ public class DonationSectionTests : TestContext
 
         cut.HasComponent<GithubSponsor>().Should().Be(hasComponent);
     }
+
+    [Theory]
+    [InlineData("linkdotnet", true)]
+    [InlineData(null, false)]
+    public void ShouldShowPatreonSponsorIfSet(string account, bool hasComponent)
+    {
+        var appConfig = new AppConfiguration
+        {
+            PatreonName = account,
+        };
+        Services.AddScoped(_ => appConfig);
+
+        var cut = RenderComponent<DonationSection>();
+
+        cut.HasComponent<Patreon>().Should().Be(hasComponent);
+    }
 }

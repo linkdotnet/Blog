@@ -65,7 +65,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 ```
 
 | Property                  | Type           | Description                                                                                                                                                     |
-| ------------------------- | -------------- |-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | BlogName                  | string         | Name of your blog. Is used in the navbar and is used as the title of the page. Will not be shown when `BlogBrandUrl` is set                                     |
 | BlogBrandUrl              | string         | The url to an image which is used as a brand image in the navigation bar. If not set or `null` the `BlogName` will be shown                                     |
 | Social                    | node           | Represents all possible linked social accounts                                                                                                                  |
@@ -93,6 +93,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | KofiToken                 | string         | Enables the "Buy me a Coffee" button of Kofi. To aquire the token head down to the "Kofi" section                                                               |
 | GithubSponsorName         | string         | Enables the "Github Sponsor" button which redirects to GitHub. Only pass in the user name instead of the url.                                                   |
 | ShowReadingIndicator      | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                    |
+| PatreonName               | string         | Enables the "Become a patreon" button that redirects to patreon.com. Only pass the user name (public profile) as user name.                                     |
 
 ## Storage Provider
 Currently, there are 5 Storage-Provider:
