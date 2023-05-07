@@ -33,6 +33,7 @@ public class AppConfigurationFactoryTests
             { "KofiToken", "ABC" },
             { "GithubSponsorName", "linkdotnet" },
             { "ShowReadingIndicator", "true" },
+            { "PatreonName", "linkdotnet" },
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
@@ -66,6 +67,8 @@ public class AppConfigurationFactoryTests
         appConfiguration.KofiToken.Should().Be("ABC");
         appConfiguration.GithubSponsorName.Should().Be("linkdotnet");
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
+        appConfiguration.PatreonName.Should().Be("linkdotnet");
+        appConfiguration.IsPatreonEnabled.Should().BeTrue();
     }
 
     [Theory]

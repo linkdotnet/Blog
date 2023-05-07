@@ -29,6 +29,7 @@ public static class AppConfigurationFactory
             KofiToken = config[nameof(AppConfiguration.KofiToken)],
             GithubSponsorName = config[nameof(AppConfiguration.GithubSponsorName)],
             ShowReadingIndicator = config.GetValue<bool>(nameof(AppConfiguration.ShowReadingIndicator)),
+            PatreonName = config[nameof(AppConfiguration.PatreonName)],
         };
 
         return configuration;

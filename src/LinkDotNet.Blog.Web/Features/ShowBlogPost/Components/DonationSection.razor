@@ -9,4 +9,9 @@
     {
         <GithubSponsor Name="@AppConfiguration.GithubSponsorName"></GithubSponsor>
     }
+
+    @if (AppConfiguration.IsPatreonEnabled)
+    {
+	    <Patreon PatreonName="@AppConfiguration.PatreonName"></Patreon>
+    }
 </div>

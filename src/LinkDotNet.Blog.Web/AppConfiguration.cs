@@ -40,4 +40,8 @@ public sealed record AppConfiguration
     public bool IsGithubSponsorAvailable => !string.IsNullOrEmpty(GithubSponsorName);
 
     public bool ShowReadingIndicator { get; init; }
+
+    public string PatreonName { get; init; }
+
+    public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
 }
