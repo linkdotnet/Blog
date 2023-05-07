@@ -59,7 +59,8 @@ The appsettings.json file has a lot of options to customize the content of the b
  },
  "KofiToken": "ABC123",
  "GithubSponsorName": "your-tag-here",
- "ShowReadingIndicator": true
+ "ShowReadingIndicator": true,
+ "PatreonName": "your-tag-here"
 }
 
 ```
