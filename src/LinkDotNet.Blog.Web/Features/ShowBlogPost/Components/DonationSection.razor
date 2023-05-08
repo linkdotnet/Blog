@@ -1,17 +1,23 @@
 @inject AppConfiguration AppConfiguration
-<div class="d-inline-flex gap-2 align-items-center">
+<div class="d-flex flex-column flex-md-row gap-2 justify-content-start">
     @if (AppConfiguration.IsKofiEnabled)
     {
-        <Kofi KofiToken="@AppConfiguration.KofiToken"></Kofi>
+        <div class="mb-2 mb-md-0 me-md-2">
+            <Kofi KofiToken="@AppConfiguration.KofiToken"></Kofi>
+        </div>
     }
 
     @if (AppConfiguration.IsGithubSponsorAvailable)
     {
-        <GithubSponsor Name="@AppConfiguration.GithubSponsorName"></GithubSponsor>
+        <div class="mb-2 mb-md-0 me-md-2">
+            <GithubSponsor Name="@AppConfiguration.GithubSponsorName"></GithubSponsor>
+        </div>
     }
 
     @if (AppConfiguration.IsPatreonEnabled)
     {
-	    <Patreon PatreonName="@AppConfiguration.PatreonName"></Patreon>
+        <div class="mb-2 mb-md-0 me-md-2">
+            <Patreon PatreonName="@AppConfiguration.PatreonName"></Patreon>
+        </div>
     }
 </div>
