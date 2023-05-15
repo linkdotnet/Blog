@@ -9,7 +9,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-preview.3.23174.2" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
-      <PackageReference Include="RavenDB.Client" Version="5.4.103" />
+      <PackageReference Include="RavenDB.Client" Version="5.4.104" />
     </ItemGroup>
 
     <ItemGroup>
