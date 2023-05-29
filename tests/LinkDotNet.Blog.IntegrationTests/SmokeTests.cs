@@ -56,7 +56,7 @@ public class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
     {
         var client = factory.CreateClient();
 
-        var result = await client.GetAsync("/searchByTag/.NET5");
+        var result = await client.GetAsync("/search/.NET5");
 
         result.IsSuccessStatusCode.Should().BeTrue();
     }

@@ -57,7 +57,7 @@ public class BlogPostRepositoryTests
             false);
 
         var retrievedPosts = blogPosts.ToList();
-        retrievedPosts.Any(b => b.Id == filteredOutPost.Id).Should().BeFalse();
+        retrievedPosts.Exists(b => b.Id == filteredOutPost.Id).Should().BeFalse();
         retrievedPosts[0].Id.Should().Be(olderPost.Id);
         retrievedPosts[1].Id.Should().Be(newerPost.Id);
     }

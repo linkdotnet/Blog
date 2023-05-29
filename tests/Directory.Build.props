@@ -22,11 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.0.0.68202">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.1.0.70676">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -39,13 +35,6 @@
     <Using Include="Bunit" />
     <Using Include="Bunit.TestDoubles" />
   </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)\..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-  <PropertyGroup>
-    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)\..\stylecop.analyzers.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
 
   <PropertyGroup>
     <WarningLevel>5</WarningLevel>

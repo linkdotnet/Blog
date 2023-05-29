@@ -397,20 +397,6 @@ dotnet_naming_rule.parameters_rule.severity             = warning
 # Code Analyzers Rules
 ##########################################
 
-# AsyncFixer
-# http://www.asyncfixer.com
-
-
-# Meziantou
-# https://www.meziantou.net/enforcing-asynchronous-code-good-practices-using-a-roslyn-analyzer.htm
-dotnet_diagnostic.MA0003.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0003.md
-dotnet_diagnostic.MA0004.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0004.md
-dotnet_diagnostic.MA0016.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0016.md
-dotnet_diagnostic.MA0025.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0025.md
-dotnet_diagnostic.MA0026.severity = suggestion      # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0026.md
-dotnet_diagnostic.MA0028.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/Meziantou/MA0028.md
-
-
 # Microsoft - Code Analysis
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
 dotnet_diagnostic.CA1707.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1707.md
@@ -419,7 +405,9 @@ dotnet_diagnostic.CA2007.severity = none            # https://github.com/atc-net
 
 # SonarAnalyzer.CSharp
 # https://rules.sonarsource.com/csharp
-dotnet_diagnostic.S1135.severity = suggestion       # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
+dotnet_diagnostic.S1118.severity = none        # Add a 'protected' constructor or the 'static' keyword to the class declaration.
+dotnet_diagnostic.S1135.severity = suggestion # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
+dotnet_diagnostic.S3875.severity = none       # Remove this overload of 'operator =='.
 
 ##########################################
 # Custom - Code Analyzers Rules
@@ -500,3 +488,4 @@ dotnet_diagnostic.S125.severity = none # S125: Sections of code should not be co
 dotnet_diagnostic.S3459.severity = none # S3459: Unassigned members should be removed
 dotnet_diagnostic.S3871.severity = none # S3871: Exception types should be "public"
 dotnet_diagnostic.S1186.severity = none # S1186: Methods should not be empty
+dotnet_diagnostic.S6608.severity = none # S6608: Indexing at Count-1 should be used instead of "Enumerable" extension method "Last"
