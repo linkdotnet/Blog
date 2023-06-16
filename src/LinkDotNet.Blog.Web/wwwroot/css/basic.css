@@ -6,7 +6,7 @@
 	/* Color definitions */
 	--wild-sand: #f4f4f4;
 	--silver: #dadada;
-	--waterloo: rgba(124, 124, 148, 0.5);
+	--waterloo: rgba(140, 140, 162, 0.25);
 
 	/* Usages */
 	--background: var(--wild-sand);
