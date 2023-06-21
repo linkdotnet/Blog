@@ -8,7 +8,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.7" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.5.23280.1" />
-        <PackageReference Include="RavenDB.TestDriver" Version="5.4.104" />
+        <PackageReference Include="RavenDB.TestDriver" Version="5.4.105" />
     </ItemGroup>
 
     <ItemGroup>
