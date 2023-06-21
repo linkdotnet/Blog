@@ -22,7 +22,8 @@
     left: 0;
     z-index: 2;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 400;
+    color: var(--bs-navbar-color);
 }
 
 .search-bar-input:focus {
