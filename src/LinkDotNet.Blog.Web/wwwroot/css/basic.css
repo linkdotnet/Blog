@@ -14,6 +14,10 @@
 
 	--background-gradient-start: var(--wild-sand);
 	--background-gradient-end: var(--silver);
+
+    /* Override some Bootstrap defaults */
+    --bs-body-font-size: 1.1rem;
+    --bs-body-font-weight: 300;
 }
 
 html[data-bs-theme='dark'] {
