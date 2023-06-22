@@ -34,7 +34,7 @@
 .profile-text {
     margin: auto;
     grid-area: profile-text;
-    font-size: clamp(1.1rem, 0.6479rem + 1vw, 1.4rem);
+    font-size: clamp(1.0rem, 0.6479rem + 1vw, 1.4rem);
     line-height: clamp(1.5em, 0.6479rem + 1.1268vw, 2.25em);
     text-align: center;
 }
