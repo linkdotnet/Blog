@@ -39,6 +39,11 @@ public static class StorageProviderExtensions
             services.UseMySqlAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
+        else if (persistenceProvider == PersistenceProvider.Postgres)
+        {
+            services.UsePostgresAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+        }
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
