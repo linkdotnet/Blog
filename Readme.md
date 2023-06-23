@@ -1,4 +1,4 @@
-﻿# LinkDotNet.Blog
+# LinkDotNet.Blog
 [![.NET](https://github.com/linkdotnet/Blog/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/linkdotnet/Blog/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/linkdotnet/Blog/actions/workflows/codeql.yml/badge.svg)](https://github.com/linkdotnet/Blog/actions/workflows/codeql.yml)
 
@@ -103,6 +103,7 @@ Currently, there are 5 Storage-Provider:
  * Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
  * SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
  * MySql - Based on EF Core - also supports MariaDB.
+ * Postgres - Based on EF Core. 
 
 The default (when you clone the repository) is the `InMemory` option. That means every time you restart the service, all posts and related objects are gone.
 
@@ -242,4 +243,11 @@ For MySql use the following:
 ```
 "PersistenceProvider": "MySql"
 "ConnectionString": "Server=YOURSERVER;User ID=YOURUSERID;Password=YOURPASSWORD;Database=YOURDATABASE"
+```
+
+For Postgres use the following:
+
+```
+"PersistenceProvider": "Postgres"
+"ConnectionString": "Host=YOURSERVER;Database=YOURDATABASE;Username=YOURUSERNAME;Password=YOURPASSWORD"
 ```
