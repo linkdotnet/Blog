@@ -17,6 +17,7 @@
 
     /* Override some Bootstrap defaults */
     --bs-body-font-weight: 300;
+    --bs-nav-link-font-weight: 300;
 }
 
 html[data-bs-theme='dark'] {
@@ -31,6 +32,10 @@ html[data-bs-theme='dark'] {
 
 	--background-gradient-start: var(--jaguar);
 	--background-gradient-end: var(--shark);
+
+    /* Override some Bootstrap defaults */
+    --bs-body-font-weight: 300;
+    --bs-nav-link-font-weight: 300;
 }
 
 html {
