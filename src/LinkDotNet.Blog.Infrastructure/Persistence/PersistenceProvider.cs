@@ -9,7 +9,7 @@ public sealed class PersistenceProvider : Enumeration<PersistenceProvider>
     public static readonly PersistenceProvider RavenDb = new(nameof(RavenDb));
     public static readonly PersistenceProvider InMemory = new(nameof(InMemory));
     public static readonly PersistenceProvider MySql = new(nameof(MySql));
-    public static readonly PersistenceProvider Postgres = new(nameof(Postgres));
+    public static readonly PersistenceProvider Postgresql = new(nameof(Postgresql));
 
     private PersistenceProvider(string key)
         : base(key)

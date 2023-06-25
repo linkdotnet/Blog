@@ -62,7 +62,7 @@ public static class SqlRegistrationExtensions
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 
-    public static void UsePostgresAsStorageProvider(this IServiceCollection services)
+    public static void UsePostgresqlAsStorageProvider(this IServiceCollection services)
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 

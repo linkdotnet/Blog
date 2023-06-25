@@ -39,9 +39,9 @@ public static class StorageProviderExtensions
             services.UseMySqlAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
-        else if (persistenceProvider == PersistenceProvider.Postgres)
+        else if (persistenceProvider == PersistenceProvider.Postgresql)
         {
-            services.UsePostgresAsStorageProvider();
+            services.UsePostgresqlAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
     }
