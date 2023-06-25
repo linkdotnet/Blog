@@ -77,5 +77,7 @@ public static class SqlRegistrationExtensions
 #endif
                 ;
             });
+
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
 }
