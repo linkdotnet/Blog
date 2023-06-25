@@ -14,6 +14,7 @@ public class StorageProviderRegistrationExtensionsTests
             new object[] { new Action<IServiceCollection>(services => services.UseInMemoryAsStorageProvider()) },
             new object[] { new Action<IServiceCollection>(services => services.UseRavenDbAsStorageProvider()) },
             new object[] { new Action<IServiceCollection>(services => services.UseMySqlAsStorageProvider()) },
+            new object[] { new Action<IServiceCollection>(services => services.UsePostgresqlAsStorageProvider()) },
         };
 
     [Theory]
