@@ -97,13 +97,13 @@ The appsettings.json file has a lot of options to customize the content of the b
 | PatreonName               | string         | Enables the "Become a patreon" button that redirects to patreon.com. Only pass the user name (public profile) as user name.                                     |
 
 ## Storage Provider
-Currently, there are 5 Storage-Provider:
+Currently, there are 6 Storage-Provider:
  * InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
  * RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
  * Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
  * SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
  * MySql - Based on EF Core - also supports MariaDB.
- * Postgres - Based on EF Core. 
+ * Postgresql - Based on EF Core. 
 
 The default (when you clone the repository) is the `InMemory` option. That means every time you restart the service, all posts and related objects are gone.
 
