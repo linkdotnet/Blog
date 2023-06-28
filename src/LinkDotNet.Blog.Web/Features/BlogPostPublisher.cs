@@ -48,12 +48,10 @@ public sealed class BlogPostPublisher : BackgroundService
 
         var scheduledBlogPosts = await GetScheduledBlogPostsAsync(repository);
 
-        if (!scheduledBlogPosts.Any())
+        if (scheduledBlogPosts.Any())
         {
-            return;
+            await PublishAndSaveScheduledBlogPostsAsync(scheduledBlogPosts, repository);
         }
-
-        await PublishAndSaveScheduledBlogPostsAsync(scheduledBlogPosts, repository);
     }
 
     private async Task<IPagedList<BlogPost>> GetScheduledBlogPostsAsync(IRepository<BlogPost> repository)
