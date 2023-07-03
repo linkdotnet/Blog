@@ -1,0 +1,74 @@
+@using System.Text.Json
+@using System.Text.Json.Serialization
+
+<HeadContent>
+	<script suppress-error="BL9992" type="application/ld+json">@StructuredDataJson</script>
+</HeadContent>
+
+@code {
+	[Parameter]
+	public string Headline { get; set; }
+
+	[Parameter]
+	public string PreviewImage { get; set; }
+
+	[Parameter]
+	public string PreviewFallbackImage { get; set; }
+
+	[Parameter]
+	public DateTime PublishedDate { get; set; }
+
+	[Parameter]
+	public string Author { get; set; }
+
+	private string StructuredDataJson { get; set; }
+
+	private readonly JsonSerializerOptions jsonOptions = new() { WriteIndented = true };
+
+	protected override async Task OnParametersSetAsync()
+	{
+		var article = new NewsArticle
+		{
+			Context = "https://schema.org",
+			Type = "NewsArticle",
+			Headline = Headline,
+			Author = Author,
+			Image = new List<string> { PreviewImage },
+			DatePublished = PublishedDate.ToString("o"),
+			DateModified = PublishedDate.ToString("o")
+		};
+
+		if (!string.IsNullOrWhiteSpace(PreviewFallbackImage))
+		{
+			article.Image.Add(PreviewFallbackImage);
+		}
+
+		StructuredDataJson = JsonSerializer.Serialize(article, jsonOptions);
+
+		await base.OnParametersSetAsync();
+	}
+
+	private class NewsArticle
+	{
+		[JsonPropertyName("@context")]
+		public string Context { get; set; }
+
+		[JsonPropertyName("@type")]
+		public string Type { get; set; }
+
+		[JsonPropertyName("headline")]
+		public string Headline { get; set; }
+
+		[JsonPropertyName("author")]
+		public string Author { get; set; }
+
+		[JsonPropertyName("image")]
+		public List<string> Image { get; set; }
+
+		[JsonPropertyName("datePublished")]
+		public string DatePublished { get; set; }
+
+		[JsonPropertyName("dateModified")]
+		public string DateModified { get; set; }
+	}
+}
