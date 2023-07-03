@@ -75,6 +75,29 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ogData.Instance.Keywords.Should().Be("Tag1,Tag2");
     }
 
+    [Fact]
+    public async Task ShouldSetStructuredData()
+    {
+        var post = new BlogPostBuilder()
+            .WithTitle("Title")
+            .WithPreviewImageUrl("image1")
+            .WithPreviewImageUrlFallback("image2")
+            .Build();
+        await Repository.StoreAsync(post);
+        using var ctx = new TestContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddTestAuthorization();
+        RegisterComponents(ctx);
+        var cut = ctx.RenderComponent<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, post.Id));
+
+        var structuredData = cut.FindComponent<StructuredData>();
+
+        structuredData.Instance.Headline.Should().Be("Title");
+        structuredData.Instance.PreviewImage.Should().Be("image1");
+        structuredData.Instance.PreviewFallbackImage.Should().Be("image2");
+    }
+
     private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
     {
         ctx.Services.AddScoped(_ => Repository);
