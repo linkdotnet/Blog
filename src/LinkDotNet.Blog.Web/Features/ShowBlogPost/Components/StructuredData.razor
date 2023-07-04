@@ -21,7 +21,7 @@
 	[Parameter]
 	public string Author { get; set; }
 
-	private string StructuredDataJson { get; set; }
+	private MarkupString StructuredDataJson { get; set; }
 
 	private readonly JsonSerializerOptions jsonOptions = new() { WriteIndented = true };
 
@@ -43,7 +43,7 @@
 			article.Image.Add(PreviewFallbackImage);
 		}
 
-		StructuredDataJson = JsonSerializer.Serialize(article, jsonOptions);
+		StructuredDataJson = (MarkupString)JsonSerializer.Serialize(article, jsonOptions);
 
 		await base.OnParametersSetAsync();
 	}
