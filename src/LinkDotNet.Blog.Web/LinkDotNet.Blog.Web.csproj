@@ -9,7 +9,7 @@
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="all" />
         <PackageReference Include="Markdig" Version="0.31.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="7.0.8" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.5.23280.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.6.23329.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.5.23280.1" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="7.0.0" />
     </ItemGroup>
