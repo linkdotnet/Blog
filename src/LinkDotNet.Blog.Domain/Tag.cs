@@ -14,10 +14,7 @@ public sealed class Tag
 
     public static Tag Create(string content)
     {
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            throw new ArgumentNullException(nameof(content));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
 
         return new Tag
         {

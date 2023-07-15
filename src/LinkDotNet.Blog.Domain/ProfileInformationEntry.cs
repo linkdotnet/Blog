@@ -16,10 +16,7 @@ public sealed class ProfileInformationEntry : Entity
 
     public static ProfileInformationEntry Create(string key, int sortOrder)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
 
         return new ProfileInformationEntry
         {

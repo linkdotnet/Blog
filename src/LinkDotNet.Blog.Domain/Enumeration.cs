@@ -14,11 +14,7 @@ public abstract class Enumeration<TEnumeration>
 
     protected Enumeration(string key)
     {
-        if (string.IsNullOrWhiteSpace(key))
-        {
-            throw new ArgumentException("The enum key cannot be null or empty", nameof(key));
-        }
-
+        ArgumentException.ThrowIfNullOrWhiteSpace(key);
         Key = key;
     }
 

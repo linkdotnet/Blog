@@ -26,15 +26,8 @@ public sealed class Skill : Entity
 
     public static Skill Create(string name, string iconUrl, string capability, string proficiencyLevel)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new ArgumentNullException(nameof(name));
-        }
-
-        if (string.IsNullOrWhiteSpace(capability))
-        {
-            throw new ArgumentNullException(nameof(capability));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(capability);
 
         var level = ProficiencyLevel.Create(proficiencyLevel);
 
