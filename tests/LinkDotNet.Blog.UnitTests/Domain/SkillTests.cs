@@ -24,7 +24,7 @@ public class SkillTests
     {
         Action result = () => Skill.Create(name, "url", "backend", ProficiencyLevel.Expert.Key);
 
-        result.Should().Throw<ArgumentNullException>();
+        result.Should().Throw<ArgumentException>();
     }
 
     [Theory]
@@ -35,7 +35,7 @@ public class SkillTests
     {
         Action result = () => Skill.Create("name", "url", capability, ProficiencyLevel.Expert.Key);
 
-        result.Should().Throw<ArgumentNullException>();
+        result.Should().Throw<ArgumentException>();
     }
 
     [Fact]

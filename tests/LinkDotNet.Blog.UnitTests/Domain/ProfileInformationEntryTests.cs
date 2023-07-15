@@ -22,7 +22,7 @@ public class ProfileInformationEntryTests
     {
         Action act = () => ProfileInformationEntry.Create(content, 0);
 
-        act.Should().Throw<ArgumentNullException>();
+        act.Should().Throw<ArgumentException>();
     }
 
     [Fact]

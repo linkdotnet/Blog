@@ -21,6 +21,6 @@ public class TagTests
     {
         Action act = () => Tag.Create(content);
 
-        act.Should().Throw<ArgumentNullException>();
+        act.Should().Throw<ArgumentException>();
     }
 }
