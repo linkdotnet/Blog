@@ -38,27 +38,14 @@ public abstract class Enumeration<TEnumeration>
     }
 
     public static TEnumeration Create(string key)
-    {
-        var enumeration = All.SingleOrDefault(p => p.Key == key);
-
-        if (enumeration is null)
-        {
-            throw new InvalidOperationException($"{key} is not a valid value for {typeof(TEnumeration).Name}");
-        }
-
-        return enumeration;
-    }
+        => All.SingleOrDefault(p => p.Key == key)
+           ?? throw new InvalidOperationException($"{key} is not a valid value for {typeof(TEnumeration).Name}");
 
     public override int GetHashCode() => Key.GetHashCode();
 
     public override bool Equals(object obj)
     {
-        if (obj is null)
-        {
-            return false;
-        }
-
-        if (obj.GetType() != typeof(TEnumeration))
+        if (obj?.GetType() != typeof(TEnumeration))
         {
             return false;
         }
