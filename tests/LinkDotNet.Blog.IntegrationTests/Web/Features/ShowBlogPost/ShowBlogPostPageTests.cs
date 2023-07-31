@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -88,6 +89,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.AddTestAuthorization();
         RegisterComponents(ctx);
+        ctx.ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
         var cut = ctx.RenderComponent<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, post.Id));
 
