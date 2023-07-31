@@ -19,12 +19,13 @@ else
 	<OgData Title="@BlogPost.Title"
 	        AbsolutePreviewImageUrl="@OgDataImage"
 	        Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
-	        Keywords="@BlogPost.TagsAsString"></OgData>
-	<StructuredData Headline="@BlogPost.Title"
-	                PreviewImage="@BlogPost.PreviewImageUrl"
-	                PreviewFallbackImage="@BlogPost.PreviewImageUrlFallback"
-	                PublishedDate="@BlogPost.UpdatedDate"
-	                Author="@AppConfiguration.ProfileInformation?.Name"/>
+	        Keywords="@BlogPost.TagsAsString">
+		<StructuredData Headline="@BlogPost.Title"
+		                PreviewImage="@BlogPost.PreviewImageUrl"
+		                PreviewFallbackImage="@BlogPost.PreviewImageUrlFallback"
+		                PublishedDate="@BlogPost.UpdatedDate"
+		                Author="@AppConfiguration.ProfileInformation?.Name"/>
+	</OgData>
 
 	<div class="d-flex justify-content-center pt-2 blog-outer-box">
 		<div class="content blog-container">

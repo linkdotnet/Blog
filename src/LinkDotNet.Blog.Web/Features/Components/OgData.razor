@@ -3,20 +3,26 @@
 <HeadContent>
     <meta name="title" property="og:title" content="@Title" />
     <link rel="canonical" href="@GetCanoncialUri()" />
-    @if (AbsolutePreviewImageUrl != null)
+    @if (AbsolutePreviewImageUrl is not null)
     {
         <meta name="image" property="og:image" content="@AbsolutePreviewImageUrl"/>
     }
     <meta property="og:type" content="article" />
     <meta property="og:url" content="@NavigationManager.Uri" />
-    @if (Keywords != null)
+    @if (Keywords is not null)
     {
         <meta name="keywords" content="@Keywords"/>
     }
-    @if (Description != null)
+    @if (Description is not null)
     {
         <meta name="description" property="og:description" content="@Description" />
     }
+    
+    @if (ChildContent is not null)
+    {
+	    @ChildContent
+    }
+    
 </HeadContent>
 @code {
 
@@ -32,7 +38,10 @@
     [Parameter]
     public string Keywords { get; set; }
 
-    private string GetCanoncialUri()
+	[Parameter]
+	public RenderFragment ChildContent { get; set; }
+
+	private string GetCanoncialUri()
     {
         var uri = new Uri(NavigationManager.Uri);
         return uri.GetLeftPart(UriPartial.Path);

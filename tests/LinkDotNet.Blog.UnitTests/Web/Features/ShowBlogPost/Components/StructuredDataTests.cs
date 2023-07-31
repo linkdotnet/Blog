@@ -8,8 +8,6 @@ public class StructuredDataTests : TestContext
     [Fact]
     public void ShouldRenderRawMarkup()
     {
-        ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
-
         var cut = RenderComponent<StructuredData>(
             ps => ps.Add(p => p.Author, "Steven")
                 .Add(p => p.Headline, "Headline")
