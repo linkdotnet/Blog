@@ -14,8 +14,6 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<BlogPost> BlogPosts { get; set; }
 
-    public DbSet<Tag> Tags { get; set; }
-
     public DbSet<ProfileInformationEntry> ProfileInformationEntries { get; set; }
 
     public DbSet<Skill> Skills { get; set; }
@@ -27,7 +25,6 @@ public sealed class BlogDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
-        modelBuilder.ApplyConfiguration(new TagsConfiguration());
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
         modelBuilder.ApplyConfiguration(new SkillConfiguration());
         modelBuilder.ApplyConfiguration(new UserRecordConfiguration());

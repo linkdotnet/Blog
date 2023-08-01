@@ -37,7 +37,7 @@ else
 					@if (BlogPost.Tags != null && BlogPost.Tags.Any())
 					{
 						<span class="blogpost-tag d-inline-block">
-							@foreach (var tag in BlogPost.Tags.Select(t => t.Content))
+							@foreach (var tag in BlogPost.Tags)
 							{
 								<a class="goto-tag ms-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
 							}

@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql;
 
@@ -24,7 +26,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromRepo.PreviewImageUrl.Should().Be("url");
         blogPostFromRepo.IsPublished.Should().BeTrue();
         blogPostFromRepo.Tags.Should().HaveCount(2);
-        var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
+        var tagContent = blogPostFromRepo.Tags;
         tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
     }
 
@@ -35,7 +37,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
 
         await Repository.StoreAsync(blogPost);
 
-        var blogPostFromContext = await DbContext.BlogPosts.Include(b => b.Tags).AsNoTracking().SingleOrDefaultAsync(s => s.Id == blogPost.Id);
+        var blogPostFromContext = await DbContext.BlogPosts.AsNoTracking().SingleOrDefaultAsync(s => s.Id == blogPost.Id);
         blogPostFromContext.Should().NotBeNull();
         blogPostFromContext.Title.Should().Be("Title");
         blogPostFromContext.ShortDescription.Should().Be("Subtitle");
@@ -43,7 +45,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromContext.IsPublished.Should().BeTrue();
         blogPostFromContext.PreviewImageUrl.Should().Be("url");
         blogPostFromContext.Tags.Should().HaveCount(2);
-        var tagContent = blogPostFromContext.Tags.Select(t => t.Content).ToList();
+        var tagContent = blogPostFromContext.Tags;
         tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
     }
 
@@ -65,7 +67,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromRepo.PreviewImageUrl.Should().Be("url");
         blogPostFromRepo.IsPublished.Should().BeTrue();
         blogPostFromRepo.Tags.Should().HaveCount(2);
-        var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
+        var tagContent = blogPostFromRepo.Tags;
         tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
     }
 
@@ -115,5 +117,21 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         await Repository.DeleteAsync(blogPost.Id);
 
         (await DbContext.BlogPosts.AsNoTracking().AnyAsync(b => b.Id == blogPost.Id)).Should().BeFalse();
+    }
+    
+    [Fact]
+    public async Task GivenBlogPostWithTags_WhenLoadingAndDeleting_ThenShouldBeUpdated()
+    {
+        var bp = new BlogPostBuilder().WithTags("tag 1").Build();
+        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()));
+        await sut.StoreAsync(bp);
+        var updateBp = new BlogPostBuilder().WithTags("tag 2").Build();
+        var bpFromCache = await sut.GetByIdAsync(bp.Id);
+        bpFromCache.Update(updateBp);
+        await sut.StoreAsync(bpFromCache);
+
+        var bpFromDb = await sut.GetByIdAsync(bp.Id);
+
+        bpFromDb.Tags.Single().Should().Be("tag 2");
     }
 }

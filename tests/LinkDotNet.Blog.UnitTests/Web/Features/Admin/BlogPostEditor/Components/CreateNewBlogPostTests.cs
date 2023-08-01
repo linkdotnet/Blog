@@ -44,7 +44,7 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.IsPublished.Should().BeFalse();
         blogPost.UpdatedDate.Should().NotBe(default);
         blogPost.Tags.Should().HaveCount(3);
-        blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
+        blogPost.Tags.Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
     }
 
     [Fact]
@@ -69,8 +69,8 @@ public class CreateNewBlogPostTests : TestContext
         blogPostFromComponent.Title.Should().Be("Title");
         blogPostFromComponent.ShortDescription.Should().Be("Desc");
         blogPostFromComponent.Content.Should().Be("Content");
-        blogPostFromComponent.Tags.Select(t => t.Content).Should().Contain("tag1");
-        blogPostFromComponent.Tags.Select(t => t.Content).Should().Contain("tag2");
+        blogPostFromComponent.Tags.Should().Contain("tag1");
+        blogPostFromComponent.Tags.Should().Contain("tag2");
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class CreateNewBlogPostTests : TestContext
         blogPost.PreviewImageUrl.Should().Be("My preview url");
         blogPost.IsPublished.Should().BeFalse();
         blogPost.Tags.Should().HaveCount(3);
-        blogPost.Tags.Select(t => t.Content).Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
+        blogPost.Tags.Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
     }
 
     [Fact]

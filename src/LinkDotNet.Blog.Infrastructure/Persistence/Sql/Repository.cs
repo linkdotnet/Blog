@@ -69,12 +69,21 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
         else
         {
-            blogDbContext.Entry(entity).State = EntityState.Modified;
+            var dbEntity = blogDbContext.Set<TEntity>().Local.FirstOrDefault(e => e.Id == entity.Id);
+            if (dbEntity != null)
+            {
+                blogDbContext.Entry(dbEntity).CurrentValues.SetValues(entity);
+                blogDbContext.Entry(dbEntity).State = EntityState.Modified;
+            }
+            else
+            {
+                blogDbContext.Entry(entity).State = EntityState.Modified;
+            }
         }
 
         await blogDbContext.SaveChangesAsync();
     }
-
+    
     public async ValueTask DeleteAsync(string id)
     {
         var entityToDelete = await GetByIdAsync(id);
