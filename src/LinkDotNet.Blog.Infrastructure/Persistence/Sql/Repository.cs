@@ -69,16 +69,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
         else
         {
-            var dbEntity = blogDbContext.Set<TEntity>().Local.FirstOrDefault(e => e.Id == entity.Id);
-            if (dbEntity != null)
-            {
-                blogDbContext.Entry(dbEntity).CurrentValues.SetValues(entity);
-                blogDbContext.Entry(dbEntity).State = EntityState.Modified;
-            }
-            else
-            {
-                blogDbContext.Entry(entity).State = EntityState.Modified;
-            }
+            blogDbContext.Entry(entity).State = EntityState.Modified;
         }
 
         await blogDbContext.SaveChangesAsync();
