@@ -16,6 +16,7 @@ namespace LinkDotNet.Blog.Web.Controller;
 
 public sealed class RssFeedController : ControllerBase
 {
+    private static readonly XmlWriterSettings Settings = CreateXmlWriterSettings();
     private readonly AppConfiguration appConfiguration;
     private readonly IRepository<BlogPost> blogPostRepository;
 
@@ -45,8 +46,7 @@ public sealed class RssFeedController : ControllerBase
 
     private static async Task WriteRssInfoToStreamAsync(Stream stream, SyndicationFeed feed)
     {
-        var settings = CreateXmlWriterSettings();
-        await using var xmlWriter = XmlWriter.Create(stream, settings);
+        await using var xmlWriter = XmlWriter.Create(stream, Settings);
         var rssFormatter = new Rss20FeedFormatter(feed, false);
         rssFormatter.WriteTo(xmlWriter);
         await xmlWriter.FlushAsync();
