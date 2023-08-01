@@ -25,7 +25,7 @@ public sealed class BlogPost : Entity
 
     public DateTime? ScheduledPublishDate { get; private set; }
 
-    public ICollection<string> Tags { get; private set; }
+    public IReadOnlyCollection<string> Tags { get; private set; }
 
     public bool IsPublished { get; private set; }
 
