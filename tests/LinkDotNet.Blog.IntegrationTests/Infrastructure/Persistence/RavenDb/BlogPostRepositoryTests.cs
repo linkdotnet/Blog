@@ -37,7 +37,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromRepo.PreviewImageUrl.Should().Be("url");
         blogPostFromRepo.IsPublished.Should().BeTrue();
         blogPostFromRepo.Tags.Should().HaveCount(2);
-        var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
+        var tagContent = blogPostFromRepo.Tags;
         tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
     }
 
@@ -96,7 +96,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromContext.IsPublished.Should().BeTrue();
         blogPostFromContext.PreviewImageUrl.Should().Be("url");
         blogPostFromContext.Tags.Should().HaveCount(2);
-        var tagContent = blogPostFromContext.Tags.Select(t => t.Content).ToList();
+        var tagContent = blogPostFromContext.Tags;
         tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
     }
 
@@ -117,7 +117,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromRepo.PreviewImageUrl.Should().Be("url");
         blogPostFromRepo.IsPublished.Should().BeTrue();
         blogPostFromRepo.Tags.Should().HaveCount(2);
-        var tagContent = blogPostFromRepo.Tags.Select(t => t.Content).ToList();
+        var tagContent = blogPostFromRepo.Tags;
         tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
     }
 

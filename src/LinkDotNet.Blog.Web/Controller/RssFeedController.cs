@@ -86,9 +86,9 @@ public sealed class RssFeedController : ControllerBase
 
     private static void AddCategories(ICollection<SyndicationCategory> categories, BlogPostRssInfo blogPost)
     {
-        foreach (var tag in blogPost.Tags ?? Array.Empty<Tag>())
+        foreach (var tag in blogPost.Tags ?? Array.Empty<string>())
         {
-            categories.Add(new SyndicationCategory(tag.Content));
+            categories.Add(new SyndicationCategory(tag));
         }
     }
 
@@ -107,5 +107,5 @@ public sealed class RssFeedController : ControllerBase
         string ShortDescription,
         DateTime UpdatedDate,
         string PreviewImageUrl,
-        ICollection<Tag> Tags);
+        ICollection<string> Tags);
 }

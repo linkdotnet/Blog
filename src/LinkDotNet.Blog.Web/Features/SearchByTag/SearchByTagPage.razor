@@ -23,7 +23,7 @@
     {
         Tag = Uri.UnescapeDataString(Tag);
         blogPosts = await BlogPostRepository.GetAllAsync(
-            b => b.IsPublished && b.Tags.Any(t => t.Content == Tag),
+            b => b.IsPublished && b.Tags.Any(t => t == Tag),
             b => b.UpdatedDate);
     }
 

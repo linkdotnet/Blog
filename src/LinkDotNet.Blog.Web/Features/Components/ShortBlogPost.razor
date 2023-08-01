@@ -28,7 +28,7 @@
 				{
 					<li class="tags me-4">
 						<ul>
-							@foreach (var tag in BlogPost.Tags.Select(t => t.Content))
+							@foreach (var tag in BlogPost.Tags)
 							{
 								<li><a class="goto-tag" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
 							}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace LinkDotNet.Blog.Domain;
@@ -24,7 +25,7 @@ public sealed class BlogPost : Entity
 
     public DateTime? ScheduledPublishDate { get; private set; }
 
-    public ICollection<Tag> Tags { get; private set; }
+    public ICollection<string> Tags { get; private set; }
 
     public bool IsPublished { get; private set; }
 
@@ -32,7 +33,7 @@ public sealed class BlogPost : Entity
 
     public bool IsScheduled => ScheduledPublishDate is not null;
 
-    public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags.Select(t => t.Content));
+    public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
 
     public static BlogPost Create(
         string title,
@@ -62,7 +63,7 @@ public sealed class BlogPost : Entity
             PreviewImageUrl = previewImageUrl,
             PreviewImageUrlFallback = previewImageUrlFallback,
             IsPublished = isPublished,
-            Tags = tags?.Select(Tag.Create).ToList(),
+            Tags = tags?.Select(t => t.Trim()).ToImmutableArray(),
         };
 
         return blogPost;
@@ -89,22 +90,6 @@ public sealed class BlogPost : Entity
         PreviewImageUrl = from.PreviewImageUrl;
         PreviewImageUrlFallback = from.PreviewImageUrlFallback;
         IsPublished = from.IsPublished;
-        ReplaceTags(from.Tags);
-    }
-
-    private void ReplaceTags(IEnumerable<Tag> tags)
-    {
-        Tags?.Clear();
-        if (Tags == null || tags == null)
-        {
-            Tags = tags?.ToList();
-        }
-        else
-        {
-            foreach (var tag in tags)
-            {
-                Tags.Add(tag);
-            }
-        }
+        Tags = from.Tags;
     }
 }

@@ -37,7 +37,7 @@ public class BlogPostTests
         blogPostToUpdate.Update(blogPost);
 
         blogPostToUpdate.Tags.Should().HaveCount(1);
-        blogPostToUpdate.Tags.Single().Content.Should().Be("tag 2");
+        blogPostToUpdate.Tags.Single().Should().Be("tag 2");
     }
 
     [Fact]
@@ -45,8 +45,8 @@ public class BlogPostTests
     {
         var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, tags: new[] { " Tag 1", " Tag 2 ", });
 
-        blogPost.Tags.Select(t => t.Content).Should().Contain("Tag 1");
-        blogPost.Tags.Select(t => t.Content).Should().Contain("Tag 2");
+        blogPost.Tags.Should().Contain("Tag 1");
+        blogPost.Tags.Should().Contain("Tag 2");
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class BlogPostTests
         bp.Update(bp);
 
         bp.Tags.Should().HaveCount(1);
-        bp.Tags.Single().Content.Should().Be("tag 1");
+        bp.Tags.Single().Should().Be("tag 1");
     }
 
     [Fact]

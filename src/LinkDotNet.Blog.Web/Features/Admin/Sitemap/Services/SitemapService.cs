@@ -57,7 +57,6 @@ public sealed class SitemapService : ISitemapService
     {
         return blogPosts
             .SelectMany(b => b.Tags)
-            .Select(t => t.Content)
             .Distinct()
             .Select(t => new SitemapUrl
             {
