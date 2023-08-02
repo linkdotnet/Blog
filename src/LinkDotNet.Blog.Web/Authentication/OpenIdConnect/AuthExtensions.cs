@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LinkDotNet.Blog.Web.Authentication.Auth0;
+namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
-public static class Auth0Extensions
+public static class AuthExtensions
 {
-    public static void UseAuth0Authentication(this IServiceCollection services, IConfiguration configuration)
+    public static void UseAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
+        var authProvider = AuthHelper.GetAuthProvider(configuration);
+
         services.Configure<CookiePolicyOptions>(options =>
         {
             options.CheckConsentNeeded = _ => true;
@@ -26,38 +28,38 @@ public static class Auth0Extensions
             options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         })
         .AddCookie()
-        .AddOpenIdConnect("Auth0", options =>
+        .AddOpenIdConnect(authProvider, options =>
         {
-            var auth0 = configuration.GetSection("Auth0").Get<Auth0Information>();
-            options.Authority = $"https://{auth0.Domain}";
-            options.ClientId = auth0.ClientId;
-            options.ClientSecret = auth0.ClientSecret;
+            var auth = configuration.GetSection(authProvider).Get<AuthInformation>();
+            options.Authority = $"https://{auth.Domain}";
+            options.ClientId = auth.ClientId;
+            options.ClientSecret = auth.ClientSecret;
 
             options.ResponseType = "code";
 
             options.Scope.Clear();
             options.Scope.Add("openid");
 
-            // Set the callback path, so Auth0 will call back to http://localhost:1234/callback
-            // Also ensure that you have added the URL as an Allowed Callback URL in your Auth0 dashboard
+            // Set the callback path, so Auth provider will call back to http://localhost:1234/callback
+            // Also ensure that you have added the URL as an Allowed Callback URL in your Auth provider dashboard
             options.CallbackPath = new PathString("/callback");
 
-            // Configure the Claims Issuer to be Auth0
-            options.ClaimsIssuer = "Auth0";
+            // Configure the Claims Issuer to be Auth provider
+            options.ClaimsIssuer = authProvider;
 
             options.Events = new OpenIdConnectEvents
             {
-                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(auth0, context),
+                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(auth, context),
             };
         });
 
         services.AddHttpContextAccessor();
-        services.AddScoped<ILoginManager, Auth0LoginManager>();
+        services.AddScoped<ILoginManager, AuthLoginManager>();
     }
 
-    private static Task HandleRedirect(Auth0Information auth0, RedirectContext context)
+    private static Task HandleRedirect(AuthInformation auth, RedirectContext context)
     {
-        var logoutUri = $"https://{auth0.Domain}/v2/logout?client_id={auth0.ClientId}";
+        var logoutUri = AuthHelper.GetLogoutUri(auth);
 
         var postLogoutUri = context.Properties.RedirectUri;
         if (!string.IsNullOrEmpty(postLogoutUri))

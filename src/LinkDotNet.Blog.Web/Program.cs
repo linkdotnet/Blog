@@ -1,5 +1,5 @@
 using Blazored.Toast;
-using LinkDotNet.Blog.Web.Authentication.Auth0;
+using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
@@ -43,7 +43,7 @@ public class Program
         }
         else
         {
-            builder.Services.UseAuth0Authentication(builder.Configuration);
+            builder.Services.UseAuthentication(builder.Configuration);
         }
     }
 
