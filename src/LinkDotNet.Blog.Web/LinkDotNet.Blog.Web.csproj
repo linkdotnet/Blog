@@ -11,7 +11,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0-preview.6.23329.11" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-preview.6.23329.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-preview.6.23329.4" />
-				    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0-preview.6.23329.7" />
+			<PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0-preview.6.23329.7" />
     </ItemGroup>
 
     <ItemGroup>
