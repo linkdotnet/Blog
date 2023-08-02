@@ -1,68 +1,80 @@
 ﻿# LinkDotNet.Blog
+
 [![.NET](https://github.com/linkdotnet/Blog/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/linkdotnet/Blog/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/linkdotnet/Blog/actions/workflows/codeql.yml/badge.svg)](https://github.com/linkdotnet/Blog/actions/workflows/codeql.yml)
 
-This is a blog software completely written in C# / Blazor. The aim is to have it configurable as possible. 
+This is a blog software completely written in C# / Blazor. The aim is to have it configurable as possible.
 
 ## How does it work
-The basic idea is that the content creator writes his posts in markdown language (like this readme file). 
+
+The basic idea is that the content creator writes his posts in markdown language (like this readme file).
 The markdown will then be translated into HTML and displayed to the client. This gives an easy entry to writing posts with all the flexibility markdown has.
 This also includes source code snippets. Highlighting is done via [highlight.js](https://highlightjs.org/) with the GitHub theme.
 
 ## In Action
+
 ![overview](assets/overview.gif)
 
+## Components
+
+-   [Authorization](./docs/Authorization/Readme.md)
+-   [Comments](./docs/Comments/Readme.md)
+-   [Storage Provider](./docs/Storage/Readme.md)
+-   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
+-   [Setup](./docs/Setup/Readme.md)
+
 ## Setup
-Just clone this repository and you are good to go. There are some settings you can tweak. The following chapter will guide you 
+
+Just clone this repository and you are good to go. There are some settings you can tweak. The following chapter will guide you
 through the possibilities.
 
 ### appsettings.json
+
 The appsettings.json file has a lot of options to customize the content of the blog. The following table shows which values are used when.
 
 ```json
 {
-  "BlogName": "linkdotnet",
-  "BlogBrandUrl": "http//some.url/image.png",
-  "GithubAccountUrl": "",
-  "Social": {
-    "GithubAccountUrl": "",
-    "LinkedInAccountUrl": "",
-    "TwitterAccountUrl":  ""
-  },
-  "Introduction": {
-    "Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
-    "BackgroundUrl": "assets/profile-background.webp",
-    "ProfilePictureUrl": "assets/profile-picture.webp"
-  },
-  "PersistenceProvider": "InMemory",
-  "ConnectionString": "",
-  "DatabaseName": "",
-  "Auth0": {
-    "Domain": "",
-    "ClientId": "",
-    "ClientSecret": ""
-  },
-  "BlogPostsPerPage": 10,
-  "AboutMeProfileInformation": {
-    "Name": "Steven Giesel",
-    "Heading": "Software Engineer",
-    "ProfilePictureUrl": "assets/profile-picture.webp"
-  },
-  "Giscus": {
-    "Repository": "github/repo",
-    "RepositoryId": "id",
-    "Category": "general",
-    "CategoryId": "id"
-  },
- "Disqus": {
-  "Shortname": "blog"
- },
- "KofiToken": "ABC123",
- "GithubSponsorName": "your-tag-here",
- "ShowReadingIndicator": true,
- "PatreonName": "your-tag-here"
+	"BlogName": "linkdotnet",
+	"BlogBrandUrl": "http//some.url/image.png",
+	"GithubAccountUrl": "",
+	"Social": {
+		"GithubAccountUrl": "",
+		"LinkedInAccountUrl": "",
+		"TwitterAccountUrl": ""
+	},
+	"Introduction": {
+		"Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
+		"BackgroundUrl": "assets/profile-background.webp",
+		"ProfilePictureUrl": "assets/profile-picture.webp"
+	},
+	"PersistenceProvider": "InMemory",
+	"ConnectionString": "",
+	"DatabaseName": "",
+	"Auth0": {
+		"Domain": "",
+		"ClientId": "",
+		"ClientSecret": ""
+	},
+	"BlogPostsPerPage": 10,
+	"AboutMeProfileInformation": {
+		"Name": "Steven Giesel",
+		"Heading": "Software Engineer",
+		"ProfilePictureUrl": "assets/profile-picture.webp"
+	},
+	"Giscus": {
+		"Repository": "github/repo",
+		"RepositoryId": "id",
+		"Category": "general",
+		"CategoryId": "id"
+	},
+	"Disqus": {
+		"Shortname": "blog"
+	},
+	"KofiToken": "ABC123",
+	"GithubSponsorName": "your-tag-here",
+	"ShowReadingIndicator": true,
+	"PatreonName": "your-tag-here"
 }
-
 ```
 
 | Property                  | Type           | Description                                                                                                                                                     |
@@ -97,44 +109,53 @@ The appsettings.json file has a lot of options to customize the content of the b
 | PatreonName               | string         | Enables the "Become a patreon" button that redirects to patreon.com. Only pass the user name (public profile) as user name.                                     |
 
 ## Storage Provider
+
 Currently, there are 5 Storage-Provider:
- * InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
- * RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
- * Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
- * SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
- * MySql - Based on EF Core - also supports MariaDB.
+
+-   InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
+-   RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
+-   Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
+-   SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
+-   MySql - Based on EF Core - also supports MariaDB.
 
 The default (when you clone the repository) is the `InMemory` option. That means every time you restart the service, all posts and related objects are gone.
 
 ## Comment Section
-For comments, the blog is using [giscus](https://giscus.app/) or [disqus](https://disqus.com/). 
+
+For comments, the blog is using [giscus](https://giscus.app/) or [disqus](https://disqus.com/).
 
 **Note**: Please only register one service or provide the configuration for one of the nodes. The given configuration shows both only for demonstrational purposes.
 If multiple comment plugins are configured at the same time a warning will be displayed under the blog post itself.
 
 ### Giscus
+
 To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
 There you can enter all the information. You will find a detailed guide on the site.
 
 In short:
- * You need a public repository where the comments are hosted. Recommendation: Create a new repository just for the comments
- * You have to link the [giscus app](https://github.com/apps/giscus) to at least the repository where the comments are hosted
- * You have to enable the discussion feature in the repository (see [here](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/enabling-or-disabling-github-discussions-for-a-repository)
- )
 
- After you configured everything on the site, you get the `<script>` tag which you could embed. The blog needs the following information.
+-   You need a public repository where the comments are hosted. Recommendation: Create a new repository just for the comments
+-   You have to link the [giscus app](https://github.com/apps/giscus) to at least the repository where the comments are hosted
+-   You have to enable the discussion feature in the repository (see [here](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/enabling-or-disabling-github-discussions-for-a-repository)
+    )
 
- Here you can find an example. This is how the script tag looks on giscus.
- ```javascript
- <script src="https://giscus.app/client.js"
-        data-repo="your_username/reponame"
-        data-repo-id="M9/ab=="
-        data-category="General"
-        data-category-id="AbC==/8_D"
-        async>
-</script>
+After you configured everything on the site, you get the `<script>` tag which you could embed. The blog needs the following information.
+
+Here you can find an example. This is how the script tag looks on giscus.
+
+```javascript
+<script
+	src="https://giscus.app/client.js"
+	data-repo="your_username/reponame"
+	data-repo-id="M9/ab=="
+	data-category="General"
+	data-category-id="AbC==/8_D"
+	async
+></script>
 ```
+
 Now you can copy/paste that information into the appsettings.json. With the given information above your appsettings.json looks like this:
+
 ```json
   "Giscus": {
     "Repository": "your_username/reponame",
@@ -145,32 +166,40 @@ Now you can copy/paste that information into the appsettings.json. With the give
 ```
 
 ### Disqus
+
 For disqus you only need the short name (site-name) which you can find for example under your [home-tab](https://disqus.com/home/).
 
 ## Authorization
+
 There is only one real mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
 
 The main advantage of Auth0 is the easily configurable dashboard on their website.
 For testing purposes, you can use `services.UseDummyAuthentication();`. This allows every user, who presses Login, to be logged in.
 
 ## Donations
+
 The blog software allows you to integrate via different micro-transaction services. The following chapter will show you how to set up donations.
 
 ### Ko-fi
+
 You can use [Ko-fi](https://Ko-fi.com/) as a payment service to receive donations. To acquire the `KofiToken` as seen in the config above, head to [widgets page](https://Ko-fi.com/manage/widgets), click on "Ko-fi Button".
 Now choose "Image" as the type. In the field below under `Copy & Paste Code` you see an `<a href='https://ko-fi.com/XYZ'` tag. Just take the `XYZ` part and put it into `KofiToken`.
 
 ### GitHub Sponsor
+
 Enables the usage of [GitHub Sponsors](https://github.com/sponsors) as a payment service to receive donations. Only pass in your username. The button will use the following url: `https://github.com/sponsors/{your-user-name}`.
 
 ## Search Engine Optimization (SEO)
+
 The blog includes some of the most important tags to get indexed by a crawler. Furthermore, some aspects of the Open Graph specification are implemented.
 
 ### Robots.txt
+
 In the wwwroot/ you can find a default robots.txt. It allows the site gets completely indexed. If you want to tweak that behavior - feel free.
-Also, you can provide a sitemap.xml to get a better ranking. The blog can create a sitemap.xml on its own. For that log in and click on the `Admin` button in the navigation bar and afterward on `Sitemap`. There you can let the blog create a new one for you. This is especially helpful after you created a new blog post to make it easier for indexers like Google. 
+Also, you can provide a sitemap.xml to get a better ranking. The blog can create a sitemap.xml on its own. For that log in and click on the `Admin` button in the navigation bar and afterward on `Sitemap`. There you can let the blog create a new one for you. This is especially helpful after you created a new blog post to make it easier for indexers like Google.
 
 ### Open Graph Tags
+
 To get better results when for example shared via LinkedIn some of the `<meta property="og:tag">` tags are implemented.
 
 The following tags are set depending on the page:
@@ -191,6 +220,7 @@ Furthermore, the following tags are set:
 | &lt;meta name="keyword" content="" /&gt; | not set                              | Tags defined in the Blog Post |
 
 ## RSS Feed
+
 This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.org/feed/docs/rss2.html)), which can be consumed by your users or programs like Feedly. Just append `feed.rss` to your URL or click on the RSS feed icon in the navigation bar to get the feed. The RSS feed does not expose the whole content of a given blog post but its title and short description including some other tags like preview image, publishing date and so on.
 
 ## Host Web in Docker containers
@@ -198,6 +228,7 @@ This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.
 ### Server configuration
 
 To deploy with docker, you need to modify the variables in the docker-compose.yml file.
+
 ```yml
 volumes:
       - /root/.aspnet/DataProtection-Keys:/root/.aspnet/DataProtection-Keys
@@ -210,17 +241,19 @@ volumes:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/aspnetapp.pfx
       - ASPNETCORE_ENVIRONMENT=Production
 ```
+
 After modifying the settings, you can use the docker command `docker compose up -d`
 Deploy the web.
 If you don't use HTTPS, you can remove the related options.
 SQL Server
 
 If you use SQL Server, you can add an instance in `docker-compose.yml`.
-``` yml
+
+```yml
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sql
-    expose: 
+    expose:
       - 1433
     volumes:
       - sqlvolume:/var/opt/mssql
@@ -229,10 +262,12 @@ If you use SQL Server, you can add an instance in `docker-compose.yml`.
       - MSSQL_SA_PASSWORD=  # Your sql password
     networks:
       - web_net
-volumes: # creates a shared data volume named sqlvolume if you use sqlserver 
-  sqlvolume: 
+volumes: # creates a shared data volume named sqlvolume if you use sqlserver
+  sqlvolume:
 ```
+
 Note the ConnectionString format of SQL Server needs to be consistent:
+
 ```
 "ConnectionString": "Data Source=sql;Initial Catalog=master;User ID=sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"
 ```
