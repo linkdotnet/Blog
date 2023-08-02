@@ -2,7 +2,6 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.Configuration;
-using static Raven.Client.Constants;
 
 namespace LinkDotNet.Blog.Web;
 
@@ -45,30 +44,23 @@ public static class AppConfigurationFactory
 
     private static void SetAuthInformation(AppConfiguration configuration, IConfiguration config)
     {
-        var authProvider = GetAuthProvider(config);
-        if (!string.IsNullOrEmpty(authProvider))
-        {
-            var authInformation = config.GetSection(authProvider).Get<AuthInformation>();
-            if (authInformation != null)
-                SetLogoutUri(authInformation);
-            configuration.AuthInformation = authInformation;
-            configuration.AuthenticationProvider = authProvider;
-        }
-    }
-
-    public static string GetAuthProvider(IConfiguration configuration)
-    {
-        var authProvider = configuration.GetValue<string>("AuthenticationProvider");
+        var authProvider = config.GetValue<string>("AuthenticationProvider");
         if (string.IsNullOrEmpty(authProvider))
         {
-            // default if not provide, for backward compatibility
-            authProvider = "Auth0";
+            return;
         }
 
-        return authProvider;
+        var authInformation = config.GetSection(authProvider).Get<AuthInformation>();
+        if (authInformation != null)
+        {
+            SetLogoutUri(authInformation);
+        }
+
+        configuration.AuthInformation = authInformation;
+        configuration.AuthenticationProvider = authProvider;
     }
 
-    public static void SetLogoutUri(AuthInformation auth)
+    private static void SetLogoutUri(AuthInformation auth)
     {
         if (string.IsNullOrEmpty(auth.LogoutUri))
         {
