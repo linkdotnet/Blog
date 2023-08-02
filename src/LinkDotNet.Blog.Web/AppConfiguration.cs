@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
 namespace LinkDotNet.Blog.Web;
@@ -44,4 +45,8 @@ public sealed record AppConfiguration
     public string PatreonName { get; init; }
 
     public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
+
+    public string AuthenticationProvider { get; init; }
+
+    public AuthInformation AuthInformation { get; init; }
 }

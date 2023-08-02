@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using static Raven.Client.Constants;
 
 namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
@@ -13,10 +12,10 @@ public sealed class AuthLoginManager : ILoginManager
     private readonly HttpContext httpContext;
     private readonly string authProvider;
 
-    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, AppConfiguration appConfiguration)
     {
         httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        authProvider = AuthHelper.GetAuthProvider(configuration);
+        authProvider = appConfiguration.AuthenticationProvider;
     }
 
     public async Task SignInAsync(string redirectUri)

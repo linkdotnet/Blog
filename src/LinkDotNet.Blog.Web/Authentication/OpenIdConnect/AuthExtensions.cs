@@ -4,17 +4,14 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
 public static class AuthExtensions
 {
-    public static void UseAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static void UseAuthentication(this IServiceCollection services, AppConfiguration appConfiguration)
     {
-        var authProvider = AuthHelper.GetAuthProvider(configuration);
-
         services.Configure<CookiePolicyOptions>(options =>
         {
             options.CheckConsentNeeded = _ => true;
@@ -28,12 +25,11 @@ public static class AuthExtensions
             options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         })
         .AddCookie()
-        .AddOpenIdConnect(authProvider, options =>
+        .AddOpenIdConnect(appConfiguration.AuthenticationProvider, options =>
         {
-            var auth = configuration.GetSection(authProvider).Get<AuthInformation>();
-            options.Authority = $"https://{auth.Domain}";
-            options.ClientId = auth.ClientId;
-            options.ClientSecret = auth.ClientSecret;
+            options.Authority = $"https://{appConfiguration.AuthInformation.Domain}";
+            options.ClientId = appConfiguration.AuthInformation.ClientId;
+            options.ClientSecret = appConfiguration.AuthInformation.ClientSecret;
 
             options.ResponseType = "code";
 
@@ -45,11 +41,11 @@ public static class AuthExtensions
             options.CallbackPath = new PathString("/callback");
 
             // Configure the Claims Issuer to be Auth provider
-            options.ClaimsIssuer = authProvider;
+            options.ClaimsIssuer = appConfiguration.AuthenticationProvider;
 
             options.Events = new OpenIdConnectEvents
             {
-                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(auth, context),
+                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(appConfiguration.AuthInformation, context),
             };
         });
 
@@ -59,8 +55,6 @@ public static class AuthExtensions
 
     private static Task HandleRedirect(AuthInformation auth, RedirectContext context)
     {
-        var logoutUri = AuthHelper.GetLogoutUri(auth);
-
         var postLogoutUri = context.Properties.RedirectUri;
         if (!string.IsNullOrEmpty(postLogoutUri))
         {
@@ -70,10 +64,10 @@ public static class AuthExtensions
                 postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
             }
 
-            logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
+            auth.LogoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
         }
 
-        context.Response.Redirect(logoutUri);
+        context.Response.Redirect(auth.LogoutUri);
         context.HandleResponse();
 
         return Task.CompletedTask;

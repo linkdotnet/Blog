@@ -1,4 +1,5 @@
-﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.Configuration;
 
@@ -14,6 +15,9 @@ public static class AppConfigurationFactory
         var giscus = config.GetSection("Giscus").Get<GiscusConfiguration>();
         var disqus = config.GetSection("Disqus").Get<DisqusConfiguration>();
         var blogPostPerPage = GetBlogPostPerPage(config[nameof(AppConfiguration.BlogPostsPerPage)]);
+        var authProvider = GetAuthProvider(config);
+        var authInformation = config.GetSection(authProvider).Get<AuthInformation>();
+        authInformation.LogoutUri = GetLogoutUri(authInformation);
         var configuration = new AppConfiguration
         {
             BlogName = config[nameof(AppConfiguration.BlogName)],
@@ -30,6 +34,8 @@ public static class AppConfigurationFactory
             GithubSponsorName = config[nameof(AppConfiguration.GithubSponsorName)],
             ShowReadingIndicator = config.GetValue<bool>(nameof(AppConfiguration.ShowReadingIndicator)),
             PatreonName = config[nameof(AppConfiguration.PatreonName)],
+            AuthenticationProvider = authProvider,
+            AuthInformation = authInformation
         };
 
         return configuration;
@@ -38,5 +44,25 @@ public static class AppConfigurationFactory
     private static int GetBlogPostPerPage(string configValue)
     {
         return int.TryParse(configValue, out var blogPostPerPage) ? blogPostPerPage : 10;
+    }
+    public static string GetAuthProvider(IConfiguration configuration)
+    {
+        var authProvider = configuration.GetValue<string>("AuthenticationProvider");
+        if (string.IsNullOrEmpty(authProvider))
+        {
+            // default if not provide, for backward compatibility
+            authProvider = "Auth0";
+        }
+
+        return authProvider;
+    }
+
+    public static string GetLogoutUri(AuthInformation auth)
+    {
+        if (string.IsNullOrEmpty(auth.LogoutUri))
+        {
+            return $"https://{auth.Domain}/v2/logout?client_id={auth.ClientId}";
+        }
+        return auth.LogoutUri;
     }
 }

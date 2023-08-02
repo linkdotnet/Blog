@@ -8,5 +8,5 @@ public sealed record AuthInformation
 
     public string ClientSecret { get; init; }
 
-    public string LogoutUri { get; init; }
+    public string LogoutUri { get; set; }
 }
