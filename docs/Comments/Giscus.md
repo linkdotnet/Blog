@@ -45,4 +45,3 @@ In `appsettings.json` change following
 | RepositoryId | string |                                                                                             |
 | Category     | string |                                                                                             |
 | CategoryId   | string |                                                                                             |
-| Disqus       | node   | Enables the comment section via disqus. If left empty the comment secion will not be shown. |
