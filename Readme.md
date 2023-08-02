@@ -15,10 +15,18 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 
 ![overview](assets/overview.gif)
 
-## Components
+## Documentation
 
 -   [Authorization](./docs/Authorization/Readme.md)
 -   [Comments](./docs/Comments/Readme.md)
 -   [Storage Provider](./docs/Storage/Readme.md)
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
--   [Setup](./docs/Setup/Readme.md)
+
+## Installation
+
+-   [Installation Instructions](./docs/Setup/Readme.md)
+-   Releases on [github.com](https://github.com/linkdotnet/Blog/releases)
+
+## License
+
+This project is released under the terms of the [MIT License](./LICENSE).
