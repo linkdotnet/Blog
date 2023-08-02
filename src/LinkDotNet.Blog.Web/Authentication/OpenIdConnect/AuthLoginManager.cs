@@ -1,23 +1,26 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
-namespace LinkDotNet.Blog.Web.Authentication.Auth0;
+namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
-public sealed class Auth0LoginManager : ILoginManager
+public sealed class AuthLoginManager : ILoginManager
 {
     private readonly HttpContext httpContext;
+    private readonly string authProvider;
 
-    public Auth0LoginManager(IHttpContextAccessor httpContextAccessor)
+    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, AppConfiguration appConfiguration)
     {
         httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        authProvider = appConfiguration.AuthenticationProvider;
     }
 
     public async Task SignInAsync(string redirectUri)
     {
-        await httpContext.ChallengeAsync("Auth0", new AuthenticationProperties
+        await httpContext.ChallengeAsync(authProvider, new AuthenticationProperties
         {
             RedirectUri = redirectUri,
         });
@@ -25,7 +28,7 @@ public sealed class Auth0LoginManager : ILoginManager
 
     public async Task SignOutAsync(string redirectUri = "/")
     {
-        await httpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = redirectUri });
+        await httpContext.SignOutAsync(authProvider, new AuthenticationProperties { RedirectUri = redirectUri });
         await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

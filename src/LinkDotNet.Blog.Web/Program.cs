@@ -1,5 +1,5 @@
 using Blazored.Toast;
-using LinkDotNet.Blog.Web.Authentication.Auth0;
+using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
@@ -30,7 +30,8 @@ public class Program
         {
             options.MaximumReceiveMessageSize = 1024 * 1024;
         });
-        builder.Services.AddSingleton(_ => AppConfigurationFactory.Create(builder.Configuration));
+        var appConfiguration = AppConfigurationFactory.Create(builder.Configuration);
+        builder.Services.AddSingleton(_ => appConfiguration);
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
@@ -43,7 +44,7 @@ public class Program
         }
         else
         {
-            builder.Services.UseAuth0Authentication(builder.Configuration);
+            builder.Services.UseAuthentication(appConfiguration);
         }
     }
 
