@@ -23,18 +23,6 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
 -   [Setup](./docs/Setup/Readme.md)
 
-## Storage Provider
-
-Currently, there are 5 Storage-Provider:
-
--   InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
--   RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
--   Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
--   SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
--   MySql - Based on EF Core - also supports MariaDB.
-
-The default (when you clone the repository) is the `InMemory` option. That means every time you restart the service, all posts and related objects are gone.
-
 ## Donations
 
 The blog software allows you to integrate via different micro-transaction services. The following chapter will show you how to set up donations.
@@ -81,16 +69,3 @@ Furthermore, the following tags are set:
 ## RSS Feed
 
 This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.org/feed/docs/rss2.html)), which can be consumed by your users or programs like Feedly. Just append `feed.rss` to your URL or click on the RSS feed icon in the navigation bar to get the feed. The RSS feed does not expose the whole content of a given blog post but its title and short description including some other tags like preview image, publishing date and so on.
-
-Note the ConnectionString format of SQL Server needs to be consistent:
-
-```
-"ConnectionString": "Data Source=sql;Initial Catalog=master;User ID=sa;Password=<YOURPASSWORD>;TrustServerCertificate=True;MultiSubnetFailover=True"
-```
-
-For MySql use the following:
-
-```
-"PersistenceProvider": "MySql"
-"ConnectionString": "Server=YOURSERVER;User ID=YOURUSERID;Password=YOURPASSWORD;Database=YOURDATABASE"
-```
