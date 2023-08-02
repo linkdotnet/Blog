@@ -23,8 +23,6 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
 -   [Setup](./docs/Setup/Readme.md)
 
-                          |
-
 ## Storage Provider
 
 Currently, there are 5 Storage-Provider:
