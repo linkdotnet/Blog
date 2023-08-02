@@ -14,7 +14,7 @@ public static class AuthExtensions
     {
         services.Configure<CookiePolicyOptions>(options =>
         {
-            options.CheckConsentNeeded = _ => true;
+            options.CheckConsentNeeded = _ => false;
             options.MinimumSameSitePolicy = SameSiteMode.None;
         });
 

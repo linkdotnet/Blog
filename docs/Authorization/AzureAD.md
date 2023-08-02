@@ -19,13 +19,13 @@ Fore more about application registration please visit : https://learn.microsoft.
 
 ### Configuration
 
-In `appsettings.json` change the `AuthProvider` to `Auth0`
+In `appsettings.json` change the `AuthenticationProvider` to `Auth0`
 and add following configurations
 
 ```json
 {
 	//other configuration
-	"AuthProvider": "AzureAD",
+	"AuthenticationProvider": "AzureAD",
 	"AzureAD": {
 		"Domain": "",
 		"ClientId": "",
@@ -38,7 +38,7 @@ and add following configurations
 
 | Property                    | Type   | Description                                                                                                         |
 | --------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| AuthProvider                |        | Name of the auth provider                                                                                           |
+| AuthenticationProvider      |        | Name of the auth provider                                                                                           |
 | `name of the auth provider` |        | Configuration for setting up the auth provider, it should be same as the value of AuthProvider property             |
 | Domain                      | string | `login.microsoftonline.com/<TENANT_ID>/v2.0`                                                                        |
 | ClientId                    | string | Application (client) ID                                                                                             |

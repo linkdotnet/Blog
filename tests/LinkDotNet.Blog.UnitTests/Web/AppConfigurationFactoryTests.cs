@@ -161,4 +161,20 @@ public class AppConfigurationFactoryTests
 
         appConfiguration.BlogPostsPerPage.Should().Be(10);
     }
+
+    [Fact]
+    public void ShouldSetLogoutUriIfNotGiven()
+    {
+        var inMemorySettings = new Dictionary<string, string>
+        {
+            { "AuthenticationProvider", "Auth0" }, { "Auth0:Domain", "domain" }, { "Auth0:ClientId", "clientid" },
+        };
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
+
+        var appConfiguration = AppConfigurationFactory.Create(configuration);
+
+        appConfiguration.AuthInformation.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");
+    }
 }
