@@ -46,7 +46,7 @@ public sealed record AppConfiguration
 
     public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
 
-    public string AuthenticationProvider { get; init; }
+    public string AuthenticationProvider { get; set; }
 
-    public AuthInformation AuthInformation { get; init; }
+    public AuthInformation AuthInformation { get; set; }
 }

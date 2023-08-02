@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using LinkDotNet.Blog.Web;
 using Microsoft.Extensions.Configuration;
 
@@ -34,6 +34,11 @@ public class AppConfigurationFactoryTests
             { "GithubSponsorName", "linkdotnet" },
             { "ShowReadingIndicator", "true" },
             { "PatreonName", "linkdotnet" },
+            { "AuthenticationProvider","Auth0"},
+            { "Auth0:ClientId","123"},
+            { "Auth0:ClientSecret","qwe"},
+            { "Auth0:Domain","example.com"}
+
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
@@ -69,6 +74,10 @@ public class AppConfigurationFactoryTests
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
+        appConfiguration.AuthenticationProvider.Should().Be("Auth0");
+        appConfiguration.AuthInformation.ClientId.Should().Be("123");
+        appConfiguration.AuthInformation.ClientSecret.Should().Be("qwe");
+        appConfiguration.AuthInformation.Domain.Should().Be("example.com");
     }
 
     [Theory]

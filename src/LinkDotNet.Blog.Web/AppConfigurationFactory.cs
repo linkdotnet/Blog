@@ -2,6 +2,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.Configuration;
+using static Raven.Client.Constants;
 
 namespace LinkDotNet.Blog.Web;
 
@@ -15,9 +16,7 @@ public static class AppConfigurationFactory
         var giscus = config.GetSection("Giscus").Get<GiscusConfiguration>();
         var disqus = config.GetSection("Disqus").Get<DisqusConfiguration>();
         var blogPostPerPage = GetBlogPostPerPage(config[nameof(AppConfiguration.BlogPostsPerPage)]);
-        var authProvider = GetAuthProvider(config);
-        var authInformation = config.GetSection(authProvider).Get<AuthInformation>();
-        authInformation.LogoutUri = GetLogoutUri(authInformation);
+
         var configuration = new AppConfiguration
         {
             BlogName = config[nameof(AppConfiguration.BlogName)],
@@ -34,10 +33,8 @@ public static class AppConfigurationFactory
             GithubSponsorName = config[nameof(AppConfiguration.GithubSponsorName)],
             ShowReadingIndicator = config.GetValue<bool>(nameof(AppConfiguration.ShowReadingIndicator)),
             PatreonName = config[nameof(AppConfiguration.PatreonName)],
-            AuthenticationProvider = authProvider,
-            AuthInformation = authInformation
         };
-
+        SetAuthInformation(configuration, config);
         return configuration;
     }
 
@@ -45,6 +42,20 @@ public static class AppConfigurationFactory
     {
         return int.TryParse(configValue, out var blogPostPerPage) ? blogPostPerPage : 10;
     }
+
+    private static void SetAuthInformation(AppConfiguration configuration, IConfiguration config)
+    {
+        var authProvider = GetAuthProvider(config);
+        if (!string.IsNullOrEmpty(authProvider))
+        {
+            var authInformation = config.GetSection(authProvider).Get<AuthInformation>();
+            if (authInformation != null)
+                SetLogoutUri(authInformation);
+            configuration.AuthInformation = authInformation;
+            configuration.AuthenticationProvider = authProvider;
+        }
+    }
+
     public static string GetAuthProvider(IConfiguration configuration)
     {
         var authProvider = configuration.GetValue<string>("AuthenticationProvider");
@@ -57,12 +68,11 @@ public static class AppConfigurationFactory
         return authProvider;
     }
 
-    public static string GetLogoutUri(AuthInformation auth)
+    public static void SetLogoutUri(AuthInformation auth)
     {
         if (string.IsNullOrEmpty(auth.LogoutUri))
         {
-            return $"https://{auth.Domain}/v2/logout?client_id={auth.ClientId}";
+            auth.LogoutUri = $"https://{auth.Domain}/v2/logout?client_id={auth.ClientId}";
         }
-        return auth.LogoutUri;
     }
 }
