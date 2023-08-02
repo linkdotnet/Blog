@@ -120,62 +120,6 @@ Currently, there are 5 Storage-Provider:
 
 The default (when you clone the repository) is the `InMemory` option. That means every time you restart the service, all posts and related objects are gone.
 
-## Comment Section
-
-For comments, the blog is using [giscus](https://giscus.app/) or [disqus](https://disqus.com/).
-
-**Note**: Please only register one service or provide the configuration for one of the nodes. The given configuration shows both only for demonstrational purposes.
-If multiple comment plugins are configured at the same time a warning will be displayed under the blog post itself.
-
-### Giscus
-
-To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
-There you can enter all the information. You will find a detailed guide on the site.
-
-In short:
-
--   You need a public repository where the comments are hosted. Recommendation: Create a new repository just for the comments
--   You have to link the [giscus app](https://github.com/apps/giscus) to at least the repository where the comments are hosted
--   You have to enable the discussion feature in the repository (see [here](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/enabling-or-disabling-github-discussions-for-a-repository)
-    )
-
-After you configured everything on the site, you get the `<script>` tag which you could embed. The blog needs the following information.
-
-Here you can find an example. This is how the script tag looks on giscus.
-
-```javascript
-<script
-	src="https://giscus.app/client.js"
-	data-repo="your_username/reponame"
-	data-repo-id="M9/ab=="
-	data-category="General"
-	data-category-id="AbC==/8_D"
-	async
-></script>
-```
-
-Now you can copy/paste that information into the appsettings.json. With the given information above your appsettings.json looks like this:
-
-```json
-  "Giscus": {
-    "Repository": "your_username/reponame",
-    "RepositoryId": "M9/ab==",
-    "Category": "General",
-    "CategoryId": "AbC==/8_D"
-  }
-```
-
-### Disqus
-
-For disqus you only need the short name (site-name) which you can find for example under your [home-tab](https://disqus.com/home/).
-
-## Authorization
-
-There is only one real mechanism enabled via Auth0. For more information go to: https://auth0.com/docs/applications
-
-The main advantage of Auth0 is the easily configurable dashboard on their website.
-For testing purposes, you can use `services.UseDummyAuthentication();`. This allows every user, who presses Login, to be logged in.
-
 ## Donations
 
 The blog software allows you to integrate via different micro-transaction services. The following chapter will show you how to set up donations.
