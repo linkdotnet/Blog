@@ -29,6 +29,6 @@ public class AnchorTests : TestContext
 
         var anchor = cut.Find("a").Unwrap() as IHtmlAnchorElement;
         anchor.Should().NotBeNull();
-        anchor.Attributes.Count(a => a.Name == "href").Should().Be(0);
+        anchor.Attributes.Any(a => a.Name == "href").Should().BeFalse();
     }
 }
