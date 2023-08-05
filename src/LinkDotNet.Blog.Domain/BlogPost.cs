@@ -116,7 +116,7 @@ public sealed partial class BlogPost : Entity
             PreviewImageUrl = previewImageUrl,
             PreviewImageUrlFallback = previewImageUrlFallback,
             IsPublished = isPublished,
-            Tags = tags?.Select(t => t.Trim()).ToImmutableArray(),
+            Tags = tags?.Select(t => t.Trim()).ToImmutableArray() ?? ImmutableArray<string>.Empty,
             ReadingTimeInMinutes = ReadingTimeCalculator.CalculateReadingTime(content),
         };
 
