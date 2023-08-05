@@ -5,7 +5,6 @@
 @using LinkDotNet.Blog.Web.Features.Services
 @using Microsoft.Extensions.Caching.Memory
 
-@inject IMemoryCache MemoryCache
 <article>
 	<div class="blog-card @AltCssClass">
 		<div class="meta">
@@ -24,7 +23,7 @@
 					<li class="draft">Draft</li>
 				}
 				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></li>
-				@if (BlogPost.Tags != null && BlogPost.Tags.Any())
+				@if (BlogPost.Tags.Any())
 				{
 					<li class="tags me-4">
 						<ul>
@@ -35,7 +34,7 @@
 						</ul>
 					</li>
 				}
-				<li class="read-time me-4">@readingTime min</li>
+				<li class="read-time me-4">@BlogPost.ReadingTimeInMinutes min</li>
 			</ul>
 		</div>
 		<div class="description">
@@ -50,8 +49,6 @@
 </article>
 
 @code {
-	private int readingTime;
-
 	[Parameter]
 	public BlogPost BlogPost { get; set; }
 
@@ -82,15 +79,5 @@
 		}
 
 		return base.SetParametersAsync(ParameterView.Empty);
-	}
-
-	protected override void OnInitialized()
-	{
-		var key = "reading-time-" + BlogPost.Id;
-		readingTime = MemoryCache.GetOrCreate(key, entry =>
-		{
-			entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-			return ReadingTimeCalculator.CalculateReadingTime(BlogPost.Content);
-		});
 	}
 }

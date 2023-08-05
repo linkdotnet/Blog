@@ -38,6 +38,8 @@ public sealed partial class BlogPost : Entity
 
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
 
+    public int ReadingTimeInMinutes { get; private set; }
+
     public string Slug => GenerateSlug();
 
     private string GenerateSlug()
@@ -56,13 +58,13 @@ public sealed partial class BlogPost : Entity
 
         var slug = Title.ToLower(CultureInfo.CurrentCulture);
 
-        // Remove all special characters from the string.  
+        // Remove all special characters from the string.
         slug = MatchIfSpecialCharactersExist().Replace(slug, "");
 
-        // Remove all additional spaces in favour of just one.  
+        // Remove all additional spaces in favour of just one.
         slug= MatchIfAdditionalSpacesExist().Replace(slug," ").Trim();
 
-        // Replace all spaces with the hyphen.  
+        // Replace all spaces with the hyphen.
         slug= MatchIfSpaceExist().Replace(slug, "-");
 
         return slug;
@@ -115,6 +117,7 @@ public sealed partial class BlogPost : Entity
             PreviewImageUrlFallback = previewImageUrlFallback,
             IsPublished = isPublished,
             Tags = tags?.Select(t => t.Trim()).ToImmutableArray(),
+            ReadingTimeInMinutes = ReadingTimeCalculator.CalculateReadingTime(content),
         };
 
         return blogPost;
@@ -144,5 +147,6 @@ public sealed partial class BlogPost : Entity
         PreviewImageUrlFallback = from.PreviewImageUrlFallback;
         IsPublished = from.IsPublished;
         Tags = from.Tags;
+        ReadingTimeInMinutes = from.ReadingTimeInMinutes;
     }
 }

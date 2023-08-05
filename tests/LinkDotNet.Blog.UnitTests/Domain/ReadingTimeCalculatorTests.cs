@@ -1,7 +1,7 @@
 using System.Linq;
-using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Domain;
 
-namespace LinkDotNet.Blog.UnitTests.Web.Features.Services;
+namespace LinkDotNet.Blog.UnitTests.Domain;
 
 public class ReadingTimeCalculatorTests
 {

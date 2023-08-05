@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace LinkDotNet.Blog.Web.Features.Services;
+namespace LinkDotNet.Blog.Domain;
 
 public static partial class ReadingTimeCalculator
 {
