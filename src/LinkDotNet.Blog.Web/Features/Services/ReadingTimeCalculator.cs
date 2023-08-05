@@ -26,7 +26,7 @@ public static partial class ReadingTimeCalculator
         var wordCount = 0;
         for (var i = 0; i < content.Length; i++)
         {
-            if (content[i] == ' ' || content[i] == '\n' || content[i] == '\r')
+            if (content[i] == ' ')
             {
                 wordCount++;
             }
