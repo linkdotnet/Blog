@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -46,11 +44,11 @@ public sealed class BlogPostPublisher : BackgroundService
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
 
-        var scheduledBlogPosts = await GetScheduledBlogPostsAsync(repository);
-
-        if (scheduledBlogPosts.Any())
+        foreach (var blogPost in await GetScheduledBlogPostsAsync(repository))
         {
-            await PublishAndSaveScheduledBlogPostsAsync(scheduledBlogPosts, repository);
+            blogPost.Publish();
+            await repository.StoreAsync(blogPost);
+            logger.LogInformation("Published blog post with ID {BlogPostId}", blogPost.Id);
         }
     }
 
@@ -62,15 +60,5 @@ public sealed class BlogPostPublisher : BackgroundService
 
         logger.LogInformation("Found {Count} scheduled blog posts", scheduledBlogPosts.Count);
         return scheduledBlogPosts;
-    }
-
-    private async Task PublishAndSaveScheduledBlogPostsAsync(IEnumerable<BlogPost> scheduledBlogPosts, IRepository<BlogPost> repository)
-    {
-        foreach (var blogPost in scheduledBlogPosts)
-        {
-            blogPost.Publish();
-            await repository.StoreAsync(blogPost);
-            logger.LogInformation("Published blog post with ID {BlogPostId}", blogPost.Id);
-        }
     }
 }
