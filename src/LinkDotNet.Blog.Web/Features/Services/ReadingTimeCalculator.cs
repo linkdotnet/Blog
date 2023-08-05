@@ -7,13 +7,13 @@ public static partial class ReadingTimeCalculator
 {
     public static int CalculateReadingTime(string content)
     {
-        const int wordsPerMinute = 250;
+        const double wordsPerMinute = 250;
         const double minutesPerImage = 0.5;
 
         var imageCount = ImageRegex().Matches(content).Count;
 
         var wordCount = GetWordCount(content) - imageCount;
-        var readTimeWords = (double)wordCount / wordsPerMinute;
+        var readTimeWords = wordCount / wordsPerMinute;
         var readTimeImages = imageCount * minutesPerImage;
         return (int)Math.Ceiling(readTimeWords + readTimeImages);
     }
