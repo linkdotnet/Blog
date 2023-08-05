@@ -8,11 +8,6 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
 public class ShortBlogPostTests : TestContext
 {
-    public ShortBlogPostTests()
-    {
-        Services.AddMemoryCache();
-    }
-
     [Fact]
     public void ShouldOpenBlogPost()
     {
