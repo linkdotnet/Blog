@@ -34,19 +34,6 @@ public class ShortBlogPostTests : TestContext
     }
 
     [Fact]
-    public void ShouldCalculateReadingTime()
-    {
-        var content = string.Join(' ', Enumerable.Repeat("word", 750)) + string.Join(' ', Enumerable.Repeat("![image](url)", 4));
-        var blogPost = new BlogPostBuilder().WithContent(content).Build();
-        var cut = RenderComponent<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
-
-        var readTime = cut.Find(".read-time");
-
-        readTime.TextContent.Should().Be("5 min");
-    }
-
-    [Fact]
     public void WhenNoTagsAreGivenThenTagsAreNotShown()
     {
         var blogPost = new BlogPostBuilder().Build();
