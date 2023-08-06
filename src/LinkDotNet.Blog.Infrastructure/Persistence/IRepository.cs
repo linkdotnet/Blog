@@ -2,12 +2,15 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
 public interface IRepository<TEntity>
     where TEntity : Entity
 {
+    ValueTask<HealthCheckResult> PerformHealthCheckAsync();
+
     ValueTask<TEntity> GetByIdAsync(string id);
 
     ValueTask<IPagedList<TEntity>> GetAllAsync(

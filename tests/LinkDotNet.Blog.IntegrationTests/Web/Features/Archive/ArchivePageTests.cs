@@ -8,6 +8,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Archive;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Archive;
 
@@ -99,6 +100,8 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
     private sealed class SlowRepository : IRepository<BlogPost>
     {
+        public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => throw new NotImplementedException();
+
         public ValueTask<BlogPost> GetByIdAsync(string id) => throw new NotImplementedException();
 
         public ValueTask<IPagedList<BlogPost>> GetAllAsync(

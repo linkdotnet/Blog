@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Linq;
 
@@ -15,6 +16,20 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public Repository(IDocumentStore documentStore)
     {
         this.documentStore = documentStore;
+    }
+
+    public async ValueTask<HealthCheckResult> PerformHealthCheckAsync()
+    {
+        try
+        {
+            using var session = documentStore.OpenAsyncSession();
+            await session.Query<TEntity>().FirstOrDefaultAsync();
+            return HealthCheckResult.Healthy();
+        }
+        catch (Exception e)
+        {
+            return HealthCheckResult.Unhealthy(exception: e);
+        }
     }
 
     public async ValueTask<TEntity> GetByIdAsync(string id)

@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
@@ -17,6 +18,8 @@ public sealed class CachedRepository<T> : IRepository<T>
         this.repository = repository;
         this.memoryCache = memoryCache;
     }
+
+    public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => repository.PerformHealthCheckAsync();
 
     public async ValueTask<T> GetByIdAsync(string id)
     {

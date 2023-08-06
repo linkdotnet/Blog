@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.InMemory;
 
@@ -11,6 +12,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly List<TEntity> entities = new();
+
+    public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => ValueTask.FromResult(HealthCheckResult.Healthy());
 
     public ValueTask<TEntity> GetByIdAsync(string id)
     {

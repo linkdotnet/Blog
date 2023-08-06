@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
@@ -15,6 +16,20 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public Repository(IDbContextFactory<BlogDbContext> dbContextFactory)
     {
         this.dbContextFactory = dbContextFactory;
+    }
+
+    public async ValueTask<HealthCheckResult> PerformHealthCheckAsync()
+    {
+        try
+        {
+            await using var db = await dbContextFactory.CreateDbContextAsync();
+            await db.Database.ExecuteSqlRawAsync("SELECT 1");
+            return HealthCheckResult.Healthy();
+        }
+        catch (Exception exc)
+        {
+            return HealthCheckResult.Unhealthy(exception: exc);
+        }
     }
 
     public async ValueTask<TEntity> GetByIdAsync(string id)
@@ -74,7 +89,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
         await blogDbContext.SaveChangesAsync();
     }
-    
+
     public async ValueTask DeleteAsync(string id)
     {
         var entityToDelete = await GetByIdAsync(id);

@@ -1,9 +1,12 @@
 using Blazored.Toast;
+using HealthChecks.UI.Client;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -38,6 +41,9 @@ public class Program
         builder.Services.AddResponseCompression();
         builder.Services.AddHostedService<BlogPostPublisher>();
 
+        builder.Services.AddHealthChecks()
+            .AddCheck<DatabaseHealthCheck>("Database");
+
         if (builder.Environment.IsDevelopment())
         {
             builder.Services.UseDummyAuthentication();
@@ -63,6 +69,11 @@ public class Program
         app.UseResponseCompression();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+        });
 
         app.UseRouting();
 
