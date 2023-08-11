@@ -18,7 +18,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         using var ctx = new TestContext();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForState(() => cut.HasComponent<SkillTag>());
@@ -35,7 +35,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     {
         using var ctx = new TestContext();
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.Find("button").Click();
@@ -64,7 +64,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().Build();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
 
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, false));
@@ -81,7 +81,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         await DbContext.AddAsync(skill);
         await DbContext.SaveChangesAsync();
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
@@ -101,7 +101,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         await DbContext.AddAsync(skill);
         await DbContext.SaveChangesAsync();
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForState(() => cut.FindAll(".skill-tag").Any());

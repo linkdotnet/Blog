@@ -19,7 +19,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>, IDis
             .AddScoped(_ => Repository)
             .BuildServiceProvider();
 
-        sut = new BlogPostPublisher(serviceProvider, Mock.Of<ILogger<BlogPostPublisher>>());
+        sut = new BlogPostPublisher(serviceProvider, Substitute.For<ILogger<BlogPostPublisher>>());
     }
 
     [Fact]

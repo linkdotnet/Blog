@@ -16,8 +16,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Services
 
         public SitemapServiceTests()
         {
-            var repositoryMock = new Mock<IRepository<BlogPost>>();
-            sut = new SitemapService(repositoryMock.Object, null, new XmlFileWriter());
+            var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+            sut = new SitemapService(repositoryMock, null, new XmlFileWriter());
             Directory.CreateDirectory("wwwroot");
         }
 

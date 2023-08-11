@@ -9,12 +9,12 @@ public class LoginModelTests
     [Fact]
     public async Task ShouldLogin()
     {
-        var loginManager = new Mock<ILoginManager>();
-        var sut = new LoginModel(loginManager.Object);
+        var loginManager = Substitute.For<ILoginManager>();
+        var sut = new LoginModel(loginManager);
         const string redirectUrl = "newUrl";
 
         await sut.OnGet(redirectUrl);
 
-        loginManager.Verify(l => l.SignInAsync(redirectUrl), Times.Once);
+        await loginManager.Received(1).SignInAsync(redirectUrl);
     }
 }

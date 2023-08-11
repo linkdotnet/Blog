@@ -73,11 +73,11 @@ public class AboutMePageTests : TestContext
     private void SetupMocks(AppConfiguration config)
     {
         Services.AddScoped(_ => config);
-        Services.AddScoped(_ => Mock.Of<IUserRecordService>());
-        Services.AddScoped(_ => Mock.Of<ISortOrderCalculator>());
+        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<ISortOrderCalculator>());
         Services.RegisterRepositoryWithEmptyReturn<ProfileInformationEntry>();
         Services.RegisterRepositoryWithEmptyReturn<Skill>();
         Services.RegisterRepositoryWithEmptyReturn<Talk>();
-        Services.AddScoped(_ => Mock.Of<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IToastService>());
     }
 }

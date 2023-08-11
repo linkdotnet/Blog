@@ -20,14 +20,14 @@ public class UploadFileTests : TestContext
     {
         const string content = "Test";
         var invokedContent = string.Empty;
-        var file = new Mock<IBrowserFile>();
-        var fileProcessor = new Mock<IFileProcessor>();
-        fileProcessor.Setup(f => f.GetContentAsync(file.Object)).ReturnsAsync(content);
+        var file = Substitute.For<IBrowserFile>();
+        var fileProcessor = Substitute.For<IFileProcessor>();
+        fileProcessor.GetContentAsync(file).Returns(content);
         var args = new InputFileChangeEventArgs(new[]
         {
-            file.Object,
+            file,
         });
-        Services.AddScoped(_ => fileProcessor.Object);
+        Services.AddScoped(_ => fileProcessor);
         var cut = RenderComponent<UploadFile>(
             s => s.Add(p => p.OnFileUploaded, f => invokedContent = f));
         var inputComponent = cut.FindComponent<InputFile>().Instance;
@@ -40,7 +40,7 @@ public class UploadFileTests : TestContext
     [Fact]
     public void ShouldPutIdAndClassOnItems()
     {
-        Services.AddScoped(_ => Mock.Of<IFileProcessor>());
+        Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         var attributes = new Dictionary<string, object>
         {
             { "class", "some-class" },
@@ -56,7 +56,7 @@ public class UploadFileTests : TestContext
     [Fact]
     public void ShouldIndicateDragAndDropBehavior()
     {
-        Services.AddScoped(_ => Mock.Of<IFileProcessor>());
+        Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         var cut = RenderComponent<UploadFile>();
 
         cut.Find("input").DragEnter();
@@ -67,7 +67,7 @@ public class UploadFileTests : TestContext
     [Fact]
     public void ShouldRemoveDragAndDropBehaviorWhenOutside()
     {
-        Services.AddScoped(_ => Mock.Of<IFileProcessor>());
+        Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         var cut = RenderComponent<UploadFile>();
         cut.Find("input").DragEnter();
 

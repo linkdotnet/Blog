@@ -9,24 +9,24 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Services;
 
 public class UserRecordServiceTests : TestContext
 {
-    private readonly Mock<IRepository<UserRecord>> repositoryMock;
+    private readonly IRepository<UserRecord> repositoryMock;
     private readonly FakeNavigationManager fakeNavigationManager;
     private readonly FakeAuthenticationStateProvider fakeAuthenticationStateProvider;
-    private readonly Mock<ILocalStorageService> localStorageService;
+    private readonly ILocalStorageService localStorageService;
     private readonly UserRecordService sut;
 
     public UserRecordServiceTests()
     {
-        repositoryMock = new Mock<IRepository<UserRecord>>();
+        repositoryMock = Substitute.For<IRepository<UserRecord>>();
         fakeNavigationManager = new FakeNavigationManager(Renderer);
         fakeAuthenticationStateProvider = new FakeAuthenticationStateProvider();
-        localStorageService = new Mock<ILocalStorageService>();
+        localStorageService = Substitute.For<ILocalStorageService>();
         sut = new UserRecordService(
-            repositoryMock.Object,
+            repositoryMock,
             fakeNavigationManager,
             fakeAuthenticationStateProvider,
-            localStorageService.Object,
-            Mock.Of<ILogger<UserRecordService>>());
+            localStorageService,
+            Substitute.For<ILogger<UserRecordService>>());
     }
 
     [Fact]
@@ -35,8 +35,8 @@ public class UserRecordServiceTests : TestContext
         const string url = "http://localhost/subpart";
         fakeNavigationManager.NavigateTo(url);
         UserRecord recordToDb = null;
-        repositoryMock.Setup(r => r.StoreAsync(It.IsAny<UserRecord>()))
-            .Callback<UserRecord>(u => recordToDb = u);
+        repositoryMock.When(r => r.StoreAsync(Arg.Any<UserRecord>()))
+            .Do(call => recordToDb = call.Arg<UserRecord>());
 
         await sut.StoreUserRecordAsync();
 
@@ -51,12 +51,10 @@ public class UserRecordServiceTests : TestContext
     {
         UserRecord recordToDb = null;
         var guidForUser = Guid.NewGuid();
-        localStorageService.Setup(l => l.ContainKeyAsync("user"))
-            .ReturnsAsync(true);
-        localStorageService.Setup(l => l.GetItemAsync<Guid>("user"))
-            .ReturnsAsync(guidForUser);
-        repositoryMock.Setup(r => r.StoreAsync(It.IsAny<UserRecord>()))
-            .Callback<UserRecord>(u => recordToDb = u);
+        localStorageService.ContainKeyAsync("user").Returns(true);
+        localStorageService.GetItemAsync<Guid>("user").Returns(guidForUser);
+        repositoryMock.When(r => r.StoreAsync(Arg.Any<UserRecord>()))
+            .Do(call => recordToDb = call.Arg<UserRecord>());
 
         await sut.StoreUserRecordAsync();
 
@@ -72,13 +70,14 @@ public class UserRecordServiceTests : TestContext
 
         await sut.StoreUserRecordAsync();
 
-        repositoryMock.Verify(r => r.StoreAsync(It.IsAny<UserRecord>()), Times.Never);
+        await repositoryMock.Received(0).StoreAsync(Arg.Any<UserRecord>());
     }
 
     [Fact]
     public void ShouldNotThrowExceptionToOutsideWorld()
     {
-        localStorageService.Setup(l => l.SetItemAsync("user", It.IsAny<Guid>())).Throws<Exception>();
+        localStorageService.When(l => l.SetItemAsync("user", Arg.Any<Guid>()))
+            .Do(_ => throw new Exception());
 
         var act = () => sut.StoreUserRecordAsync();
 
@@ -88,12 +87,14 @@ public class UserRecordServiceTests : TestContext
     [Fact]
     public async Task ShouldReturnFalseWhenContainKeyOnExceptionAndCreateNewOne()
     {
-        localStorageService.Setup(l => l.ContainKeyAsync("user")).Throws<Exception>();
+        localStorageService.When(l => l.ContainKeyAsync("user"))
+            .Do(_ => throw new Exception());
 
         await sut.StoreUserRecordAsync();
 
-        repositoryMock.Verify(l => l.StoreAsync(It.IsAny<UserRecord>()), Times.Once);
-        localStorageService.Verify(l => l.SetItemAsync("user", It.IsAny<Guid>()), Times.Once);
+        await repositoryMock.Received(1).StoreAsync(Arg.Any<UserRecord>());
+        await localStorageService.Received(1).SetItemAsync("user", Arg.Any<Guid>());
+
     }
 
     [InlineData("http://localhost/blogPost/12?q=3", "blogPost/12")]
@@ -105,8 +106,8 @@ public class UserRecordServiceTests : TestContext
     {
         fakeNavigationManager.NavigateTo(url);
         UserRecord recordToDb = null;
-        repositoryMock.Setup(r => r.StoreAsync(It.IsAny<UserRecord>()))
-            .Callback<UserRecord>(u => recordToDb = u);
+        repositoryMock.When(r => r.StoreAsync(Arg.Any<UserRecord>()))
+            .Do(call => recordToDb = call.Arg<UserRecord>());
 
         await sut.StoreUserRecordAsync();
 

@@ -41,12 +41,12 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var publishedPost = new BlogPostBuilder().WithLikes(2).IsPublished().Build();
         await Repository.StoreAsync(publishedPost);
         using var ctx = new TestContext();
-        var localStorage = new Mock<ILocalStorageService>();
+        var localStorage = Substitute.For<ILocalStorageService>();
         var hasLikedStorage = $"hasLiked/{publishedPost.Id}";
-        localStorage.Setup(l => l.ContainKeyAsync(hasLikedStorage)).ReturnsAsync(true);
-        localStorage.Setup(l => l.GetItemAsync<bool>(hasLikedStorage)).ReturnsAsync(true);
+        localStorage.ContainKeyAsync(hasLikedStorage).Returns(true);
+        localStorage.GetItemAsync<bool>(hasLikedStorage).Returns(true);
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-        RegisterComponents(ctx, localStorage.Object);
+        RegisterComponents(ctx, localStorage);
         ctx.AddTestAuthorization().SetAuthorized("s");
         var cut = ctx.RenderComponent<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
@@ -103,9 +103,9 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => localStorageService ?? Mock.Of<ILocalStorageService>());
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
-        ctx.Services.AddScoped(_ => Mock.Of<IUserRecordService>());
+        ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         ctx.Services.AddScoped(_ => new AppConfiguration());
     }
 }

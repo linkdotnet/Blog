@@ -1,4 +1,5 @@
-﻿using Blazored.Toast.Services;
+﻿using System.Threading.Tasks;
+using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
@@ -10,48 +11,48 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Admin;
 public class BlogPostAdminActionsTests
 {
     [Fact]
-    public void ShouldDeleteBlogPostWhenOkClicked()
+    public async Task ShouldDeleteBlogPostWhenOkClicked()
     {
         const string blogPostId = "2";
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("s");
-        ctx.Services.AddSingleton(repositoryMock.Object);
-        ctx.Services.AddSingleton(Mock.Of<IToastService>());
+        ctx.Services.AddSingleton(repositoryMock);
+        ctx.Services.AddSingleton(Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
         cut.Find("#ok").Click();
 
-        repositoryMock.Verify(r => r.DeleteAsync(blogPostId), Times.Once);
+        await repositoryMock.Received(1).DeleteAsync(blogPostId);
     }
 
     [Fact]
-    public void ShouldNotDeleteBlogPostWhenCancelClicked()
+    public async Task ShouldNotDeleteBlogPostWhenCancelClicked()
     {
         const string blogPostId = "2";
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("s");
-        ctx.Services.AddSingleton(repositoryMock.Object);
-        ctx.Services.AddSingleton(Mock.Of<IToastService>());
+        ctx.Services.AddSingleton(repositoryMock);
+        ctx.Services.AddSingleton(Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
         cut.Find("#cancel").Click();
 
-        repositoryMock.Verify(r => r.DeleteAsync(blogPostId), Times.Never);
+        await repositoryMock.Received(0).DeleteAsync(blogPostId);
     }
 
     [Fact]
     public void ShouldGoToEditPageOnEditClick()
     {
         const string blogPostId = "2";
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("s");
-        ctx.Services.AddSingleton(repositoryMock.Object);
-        ctx.Services.AddSingleton(Mock.Of<IToastService>());
+        ctx.Services.AddSingleton(repositoryMock);
+        ctx.Services.AddSingleton(Substitute.For<IToastService>());
         var navigationManager = ctx.Services.GetRequiredService<NavigationManager>();
         var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
 

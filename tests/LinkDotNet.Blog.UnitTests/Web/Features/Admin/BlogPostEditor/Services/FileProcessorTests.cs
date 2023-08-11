@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using Microsoft.AspNetCore.Components.Forms;
@@ -10,17 +11,16 @@ public class FileProcessorTests
     [Fact]
     public async Task ShouldProcessFileContent()
     {
-        var browserFile = new Mock<IBrowserFile>();
+        var browserFile = Substitute.For<IBrowserFile>();
         await using var stream = new MemoryStream();
         await using var writer = new StreamWriter(stream);
         const string streamString = "Hello World";
         await writer.WriteAsync(streamString);
         await writer.FlushAsync();
         stream.Position = 0;
-        browserFile.Setup(b => b.OpenReadStream(It.IsAny<long>(), default))
-            .Returns(stream);
+        browserFile.OpenReadStream(Arg.Any<long>(), Arg.Any<CancellationToken>()).Returns(stream);
 
-        var content = await new FileProcessor().GetContentAsync(browserFile.Object);
+        var content = await new FileProcessor().GetContentAsync(browserFile);
 
         content.Should().Be(streamString);
     }

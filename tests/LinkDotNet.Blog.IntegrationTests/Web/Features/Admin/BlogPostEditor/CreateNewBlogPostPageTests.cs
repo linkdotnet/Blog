@@ -16,13 +16,13 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldSaveBlogPostOnSave()
     {
         using var ctx = new TestContext();
-        var toastService = new Mock<IToastService>();
+        var toastService = Substitute.For<IToastService>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => toastService.Object);
+        ctx.Services.AddScoped(_ => toastService);
         ctx.ComponentFactories.AddStub<UploadFile>();
-        ctx.Services.AddScoped(_ => Mock.Of<IFileProcessor>());
+        ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         using var cut = ctx.RenderComponent<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
@@ -31,7 +31,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Title == "My Title");
         blogPostFromDb.Should().NotBeNull();
         blogPostFromDb.ShortDescription.Should().Be("My short Description");
-        toastService.Verify(t => t.ShowInfo("Created BlogPost My Title", null), Times.Once);
+        toastService.Received(1).ShowInfo("Created BlogPost My Title", null);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var args = SetupUploadFile(contentFromFile, ctx);
         var cut = ctx.RenderComponent<CreateNewBlogPost>();
         var uploadFile = cut.FindComponent<UploadFile>();
@@ -66,14 +66,14 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
     private static InputFileChangeEventArgs SetupUploadFile(string contentFromFile, TestContext ctx)
     {
-        var file = new Mock<IBrowserFile>();
-        var fileProcessor = new Mock<IFileProcessor>();
-        fileProcessor.Setup(f => f.GetContentAsync(file.Object)).ReturnsAsync(contentFromFile);
+        var file = Substitute.For<IBrowserFile>();
+        var fileProcessor = Substitute.For<IFileProcessor>();
+        fileProcessor.GetContentAsync(file).Returns(contentFromFile);
         var args = new InputFileChangeEventArgs(new[]
         {
-            file.Object,
+            file,
         });
-        ctx.Services.AddScoped(_ => fileProcessor.Object);
+        ctx.Services.AddScoped(_ => fileProcessor);
         ctx.JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init")
             .SetVoidResult();
         return args;

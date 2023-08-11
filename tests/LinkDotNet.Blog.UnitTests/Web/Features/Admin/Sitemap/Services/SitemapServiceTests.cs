@@ -11,21 +11,21 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Sitemap.Services;
 
 public class SitemapServiceTests : TestContext
 {
-    private readonly Mock<IRepository<BlogPost>> repositoryMock;
-    private readonly Mock<IXmlFileWriter> xmlFileWriterMock;
+    private readonly IRepository<BlogPost> repositoryMock;
+    private readonly IXmlFileWriter xmlFileWriterMock;
     private readonly SitemapService sut;
     private readonly FakeNavigationManager fakeNavigationManager;
 
     public SitemapServiceTests()
     {
-        repositoryMock = new Mock<IRepository<BlogPost>>();
+        repositoryMock = Substitute.For<IRepository<BlogPost>>();
         fakeNavigationManager = new FakeNavigationManager(Renderer);
 
-        xmlFileWriterMock = new Mock<IXmlFileWriter>();
+        xmlFileWriterMock = Substitute.For<IXmlFileWriter>();
         sut = new SitemapService(
-            repositoryMock.Object,
+            repositoryMock,
             fakeNavigationManager,
-            xmlFileWriterMock.Object);
+            xmlFileWriterMock);
     }
 
     [Fact]
@@ -42,13 +42,13 @@ public class SitemapServiceTests : TestContext
             .Build();
         bp2.Id = "id2";
         var blogPosts = new[] { bp1, bp2 };
-        repositoryMock.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<BlogPost, bool>>>(),
-                p => p.UpdatedDate,
-                true,
-                It.IsAny<int>(),
-                It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<BlogPost>(blogPosts, 1, 10));
+        repositoryMock.GetAllAsync(
+                Arg.Any<Expression<Func<BlogPost, bool>>>(), 
+                Arg.Any<Expression<Func<BlogPost, object>>>(),
+                        true, 
+                Arg.Any<int>(), 
+                Arg.Any<int>())
+            .Returns(new PagedList<BlogPost>(blogPosts, 1, 10));
 
         var sitemap = await sut.CreateSitemapAsync();
 
@@ -68,6 +68,6 @@ public class SitemapServiceTests : TestContext
 
         await sut.SaveSitemapToFileAsync(sitemap);
 
-        xmlFileWriterMock.Verify(x => x.WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml"));
+        await xmlFileWriterMock.Received(1).WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml");
     }
 }

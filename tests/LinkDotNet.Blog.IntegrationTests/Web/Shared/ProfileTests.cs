@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -51,8 +52,8 @@ public class ProfileTests : TestContext
     {
         var (repo, _) = RegisterServices();
         ProfileInformationEntry entryToDb = null;
-        repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
-            .Callback<ProfileInformationEntry>(p => entryToDb = p);
+        repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
+            .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
         var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
         addShortItemComponent.Find("input").Change("key");
@@ -76,7 +77,8 @@ public class ProfileTests : TestContext
 
         cut.FindComponent<ConfirmDialog>().Find("#ok").Click();
 
-        repoMock.Verify(r => r.DeleteAsync("SomeId"), Times.Once);
+        repoMock.Received(1).DeleteAsync("SomeId");
+
     }
 
     [Fact]
@@ -91,7 +93,8 @@ public class ProfileTests : TestContext
 
         cut.FindComponent<ConfirmDialog>().Find("#cancel").Click();
 
-        repoMock.Verify(r => r.DeleteAsync("SomeId"), Times.Never);
+        repoMock.Received(0).DeleteAsync("SomeId");
+
     }
 
     [Fact]
@@ -101,8 +104,8 @@ public class ProfileTests : TestContext
         var entry = new ProfileInformationEntryBuilder().WithSortOrder(1).Build();
         SetupGetAll(repo, entry);
         ProfileInformationEntry entryToDb = null;
-        repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
-            .Callback<ProfileInformationEntry>(p => entryToDb = p);
+        repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
+            .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
         var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
         var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
         addShortItemComponent.Find("input").Change("key");
@@ -120,13 +123,12 @@ public class ProfileTests : TestContext
         var target = new ProfileInformationEntryBuilder().WithSortOrder(100).Build();
         var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
         var (repo, calculator) = RegisterServices();
-        var profileInformationEntries = new List<ProfileInformationEntry> { target, source };
         SetupGetAll(repo, target, source);
         ProfileInformationEntry entryToDb = null;
-        repo.Setup(p => p.StoreAsync(It.IsAny<ProfileInformationEntry>()))
-            .Callback<ProfileInformationEntry>(p => entryToDb = p);
+        repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
+            .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
         var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
-        calculator.Setup(s => s.GetSortOrder(target, profileInformationEntries)).Returns(150);
+        calculator.GetSortOrder(target, Arg.Any<IEnumerable<ProfileInformationEntry>>()).Returns(150);
 
         cut.FindAll("li")[1].Drag();
         cut.FindAll("li")[0].Drop();
@@ -158,31 +160,32 @@ public class ProfileTests : TestContext
     }
 
     private static void SetupGetAll(
-        Mock<IRepository<ProfileInformationEntry>> repoMock, params
-            ProfileInformationEntry[] entries)
+        IRepository<ProfileInformationEntry> repoMock,
+        params ProfileInformationEntry[] entries)
     {
-        repoMock.Setup(r => r.GetAllAsync(
-                It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
-                It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
-                It.IsAny<bool>(),
-                It.IsAny<int>(),
-                It.IsAny<int>()))
-            .ReturnsAsync(new PagedList<ProfileInformationEntry>(entries, 1, 100));
+        repoMock.GetAllAsync(
+                Arg.Any<Expression<Func<ProfileInformationEntry, bool>>>(),
+                Arg.Any<Expression<Func<ProfileInformationEntry, object>>>(),
+                Arg.Any<bool>(),
+                Arg.Any<int>(),
+                Arg.Any<int>())
+            .Returns(new PagedList<ProfileInformationEntry>(entries, 1, 100));
     }
 
-    private (Mock<IRepository<ProfileInformationEntry>> repoMock, Mock<ISortOrderCalculator> calcMock) RegisterServices()
+    private (IRepository<ProfileInformationEntry> repoMock, ISortOrderCalculator calcMock) RegisterServices()
     {
-        var repoMock = new Mock<IRepository<ProfileInformationEntry>>();
-        var calcMock = new Mock<ISortOrderCalculator>();
+        var repoMock = Substitute.For<IRepository<ProfileInformationEntry>>();
+        var calcMock = Substitute.For<ISortOrderCalculator>();
         Services.AddScoped(_ => CreateEmptyConfiguration());
-        Services.AddScoped(_ => repoMock.Object);
-        Services.AddScoped(_ => calcMock.Object);
-        repoMock.Setup(r => r.GetAllAsync(
-            It.IsAny<Expression<Func<ProfileInformationEntry, bool>>>(),
-            It.IsAny<Expression<Func<ProfileInformationEntry, object>>>(),
-            It.IsAny<bool>(),
-            It.IsAny<int>(),
-            It.IsAny<int>())).ReturnsAsync(PagedList<ProfileInformationEntry>.Empty);
+        Services.AddScoped(_ => repoMock);
+        Services.AddScoped(_ => calcMock);
+        repoMock.GetAllAsync(
+                Arg.Any<Expression<Func<ProfileInformationEntry, bool>>>(),
+                Arg.Any<Expression<Func<ProfileInformationEntry, object>>>(),
+                Arg.Any<bool>(),
+                Arg.Any<int>(),
+                Arg.Any<int>())
+            .Returns(PagedList<ProfileInformationEntry>.Empty);
         return (repoMock, calcMock);
     }
 }

@@ -11,8 +11,8 @@ public class AddSkillDialogTests : TestContext
     public void ShouldCreateSkill()
     {
         Skill addedSkill = null;
-        var toastServiceMock = new Mock<IToastService>();
-        Services.AddScoped(_ => toastServiceMock.Object);
+        var toastServiceMock = Substitute.For<IToastService>();
+        Services.AddScoped(_ => toastServiceMock);
         var cut = RenderComponent<AddSkillDialog>(p =>
             p.Add(s => s.SkillAdded, t => addedSkill = t));
         cut.Find("#title").Change("C#");
@@ -27,8 +27,7 @@ public class AddSkillDialogTests : TestContext
         addedSkill.IconUrl.Should().Be("Url");
         addedSkill.Capability.Should().Be("capability");
         addedSkill.ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
-        toastServiceMock.Verify(t => t.ShowSuccess(
-            "Created Skill C# in capability capability with level Expert",
-            null));
+        toastServiceMock.Received(1).ShowSuccess(
+            "Created Skill C# in capability capability with level Expert");
     }
 }

@@ -14,7 +14,7 @@ public class ShareBlogPostTests : TestContext
     public void ShouldCopyLinkToClipboard()
     {
         JSInterop.Mode = JSRuntimeMode.Loose;
-        Services.AddScoped(_ => Mock.Of<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
         var cut = RenderComponent<ShareBlogPost>();
 
@@ -27,7 +27,7 @@ public class ShareBlogPostTests : TestContext
     [Fact]
     public void ShouldShareToLinkedIn()
     {
-        Services.AddScoped(_ => Mock.Of<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
 
         var cut = RenderComponent<ShareBlogPost>();
@@ -39,7 +39,7 @@ public class ShareBlogPostTests : TestContext
     [Fact]
     public void ShouldNotCrashWhenCopyingLinkNotWorking()
     {
-        Services.AddScoped(_ => Mock.Of<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IToastService>());
         JSInterop.SetupVoid(s => s.InvocationMethodName == "navigator.clipboard.writeText").SetException(new Exception());
         var cut = RenderComponent<ShareBlogPost>();
 

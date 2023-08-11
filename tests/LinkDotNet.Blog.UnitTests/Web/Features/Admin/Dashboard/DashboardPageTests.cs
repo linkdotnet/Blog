@@ -16,12 +16,12 @@ public class DashboardPageTests : TestContext
     public void ShouldShowAboutMeStatisticsAccordingToConfig(bool aboutMeEnabled)
     {
         ComponentFactories.AddStub<VisitCountPerPage>();
-        var dashboardService = new Mock<IDashboardService>();
+        var dashboardService = Substitute.For<IDashboardService>();
         this.AddTestAuthorization().SetAuthorized("test");
         Services.AddScoped(_ => CreateAppConfiguration(aboutMeEnabled));
-        Services.AddScoped(_ => dashboardService.Object);
-        dashboardService.Setup(d => d.GetDashboardDataAsync())
-            .ReturnsAsync(new DashboardData());
+        Services.AddScoped(_ => dashboardService);
+        dashboardService.GetDashboardDataAsync()
+            .Returns(new DashboardData());
 
         var cut = RenderComponent<DashboardPage>();
 

@@ -17,12 +17,12 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
-        var toastService = new Mock<IToastService>();
+        var toastService = Substitute.For<IToastService>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => toastService.Object);
+        ctx.Services.AddScoped(_ => toastService);
         ctx.ComponentFactories.AddStub<UploadFile>();
         using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPost.Id));
@@ -33,7 +33,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
         blogPostFromDb.Should().NotBeNull();
         blogPostFromDb.ShortDescription.Should().Be("My new Description");
-        toastService.Verify(t => t.ShowInfo("Updated BlogPost Title",  null), Times.Once);
+        toastService.Received(1).ShowInfo("Updated BlogPost Title", null);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         ctx.AddTestAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Mock.Of<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
 
         Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, null));

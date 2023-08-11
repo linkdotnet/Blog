@@ -21,15 +21,16 @@ public class ShowBlogPostPageTests : TestContext
     public void ShouldShowLoadingAnimation()
     {
         const string blogPostId = "2";
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         SetupMocks();
-        Services.AddScoped(_ => repositoryMock.Object);
-        repositoryMock.Setup(r => r.GetByIdAsync(blogPostId))
-            .Returns(async () =>
+        Services.AddScoped(_ => repositoryMock);
+        repositoryMock.GetByIdAsync(blogPostId)
+            .Returns(new ValueTask<BlogPost>(Task.Run(async () => 
             {
                 await Task.Delay(250);
                 return new BlogPostBuilder().Build();
-            });
+            })));
+
 
         var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPostId));
@@ -41,10 +42,10 @@ public class ShowBlogPostPageTests : TestContext
     public void ShouldSetTitleToTag()
     {
         JSInterop.Mode = JSRuntimeMode.Loose;
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").Build();
-        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
-        Services.AddScoped(_ => repositoryMock.Object);
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
         var cut = RenderComponent<ShowBlogPostPage>(
@@ -61,13 +62,13 @@ public class ShowBlogPostPageTests : TestContext
     public void ShouldUseFallbackAsOgDataIfAvailable(string preview, string fallback, string expected)
     {
         JSInterop.Mode = JSRuntimeMode.Loose;
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .WithPreviewImageUrl(preview)
             .WithPreviewImageUrlFallback(fallback)
             .Build();
-        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
-        Services.AddScoped(_ => repositoryMock.Object);
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
         var cut = RenderComponent<ShowBlogPostPage>(
@@ -79,12 +80,12 @@ public class ShowBlogPostPageTests : TestContext
     [Fact]
     public void ShowTagWithLinksWhenAvailable()
     {
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .WithTags("tag1")
             .Build();
-        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
-        Services.AddScoped(_ => repositoryMock.Object);
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
         var cut = RenderComponent<ShowBlogPostPage>(
@@ -98,11 +99,11 @@ public class ShowBlogPostPageTests : TestContext
     [Fact]
     public void ShowNotShowTagsWhenNotSet()
     {
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .Build();
-        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
-        Services.AddScoped(_ => repositoryMock.Object);
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
         var cut = RenderComponent<ShowBlogPostPage>(
@@ -120,11 +121,11 @@ public class ShowBlogPostPageTests : TestContext
         {
             ShowReadingIndicator = isEnabled,
         };
-        var repositoryMock = new Mock<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .Build();
-        repositoryMock.Setup(r => r.GetByIdAsync("1")).ReturnsAsync(blogPost);
-        Services.AddScoped(_ => repositoryMock.Object);
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
         SetupMocks();
         Services.AddScoped(_ => appConfiguration);
 
@@ -137,8 +138,8 @@ public class ShowBlogPostPageTests : TestContext
     private void SetupMocks()
     {
         JSInterop.Mode = JSRuntimeMode.Loose;
-        Services.AddScoped(_ => Mock.Of<IUserRecordService>());
-        Services.AddScoped(_ => Mock.Of<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => new AppConfiguration());
         this.AddTestAuthorization();
         ComponentFactories.AddStub<PageTitle>();

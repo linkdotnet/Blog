@@ -9,12 +9,12 @@ public class LogoutModelTests
     [Fact]
     public async Task ShouldLogout()
     {
-        var loginManager = new Mock<ILoginManager>();
-        var sut = new LogoutModel(loginManager.Object);
+        var loginManager = Substitute.For<ILoginManager>();
+        var sut = new LogoutModel(loginManager);
         const string redirectUrl = "newUrl";
 
         await sut.OnGet(redirectUrl);
 
-        loginManager.Verify(l => l.SignOutAsync(redirectUrl), Times.Once);
+        await loginManager.Received(1).SignOutAsync(redirectUrl);
     }
 }

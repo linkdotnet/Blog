@@ -20,11 +20,10 @@ public class StorageProviderExtensionsTests
     public void ShouldRegisterPersistenceProvider(string persistenceKey)
     {
         var collection = new ServiceCollection();
-        var config = new Mock<IConfiguration>();
-        config.Setup(c => c["PersistenceProvider"])
-            .Returns(persistenceKey);
+        var config = Substitute.For<IConfiguration>();
+        config["PersistenceProvider"].Returns(persistenceKey);
 
-        collection.AddStorageProvider(config.Object);
+        collection.AddStorageProvider(config);
 
         var enumerable = collection.Select(c => c.ServiceType).ToList();
         enumerable.Should().Contain(typeof(IRepository<>));
@@ -34,11 +33,10 @@ public class StorageProviderExtensionsTests
     public void ShouldThrowExceptionWhenNotKnown()
     {
         var collection = new ServiceCollection();
-        var config = new Mock<IConfiguration>();
-        config.Setup(c => c["PersistenceProvider"])
-            .Returns("not known");
+        var config = Substitute.For<IConfiguration>();
+        config["PersistenceProvider"].Returns("not known");
 
-        Action act = () => collection.AddStorageProvider(config.Object);
+        Action act = () => collection.AddStorageProvider(config);
 
         act.Should().Throw<Exception>();
     }
@@ -47,12 +45,11 @@ public class StorageProviderExtensionsTests
     public void ShouldHaveCacheRepositoryOnlyForBlogPosts()
     {
         var collection = new ServiceCollection();
-        var config = new Mock<IConfiguration>();
-        config.Setup(c => c["PersistenceProvider"])
-            .Returns("Sqlite");
+        var config = Substitute.For<IConfiguration>();
+        config["PersistenceProvider"].Returns("Sqlite");
         collection.AddScoped(_ => new AppConfiguration { ConnectionString = "Filename=:memory:" });
 
-        collection.AddStorageProvider(config.Object);
+        collection.AddStorageProvider(config);
 
         var serviceProvider = collection.BuildServiceProvider();
         serviceProvider.GetService<IRepository<BlogPost>>().Should().BeOfType<CachedRepository<BlogPost>>();

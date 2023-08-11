@@ -17,11 +17,12 @@ public class RssFeedControllerTests
     public async Task ShouldCreateRssFeed()
     {
         var repository = new Repository<BlogPost>();
-        var request = new Mock<HttpRequest>();
-        request.Setup(x => x.Scheme).Returns("http");
-        request.Setup(x => x.Host).Returns(new HostString("localhost"));
-        request.Setup(x => x.PathBase).Returns(PathString.FromUriComponent("/"));
-        var httpContext = Mock.Of<HttpContext>(_ => _.Request == request.Object);
+        var request = Substitute.For<HttpRequest>();
+        request.Scheme.Returns("http");
+        request.Host.Returns(new HostString("localhost"));
+        request.PathBase.Returns(PathString.FromUriComponent("/"));
+        var httpContext = Substitute.For<HttpContext>();
+        httpContext.Request.Returns(request);
         var controllerContext = new ControllerContext
         {
             HttpContext = httpContext,

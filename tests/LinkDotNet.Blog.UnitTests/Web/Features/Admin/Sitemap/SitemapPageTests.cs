@@ -11,27 +11,26 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Sitemap;
 public class SitemapPageTests : TestContext
 {
     [Fact]
-    public void ShouldSaveSitemap()
+    public async Task ShouldSaveSitemap()
     {
         this.AddTestAuthorization().SetAuthorized("steven");
-        var sitemapMock = new Mock<ISitemapService>();
-        Services.AddScoped(_ => sitemapMock.Object);
+        var sitemapMock = Substitute.For<ISitemapService>();
+        Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet();
-        sitemapMock.Setup(s => s.CreateSitemapAsync())
-            .ReturnsAsync(sitemap);
+        sitemapMock.CreateSitemapAsync().Returns(sitemap);
         var cut = RenderComponent<SitemapPage>();
 
         cut.Find("button").Click();
 
-        sitemapMock.Verify(s => s.SaveSitemapToFileAsync(sitemap));
+        await sitemapMock.Received(1).SaveSitemapToFileAsync(sitemap);
     }
 
     [Fact]
     public void ShouldDisplaySitemap()
     {
         this.AddTestAuthorization().SetAuthorized("steven");
-        var sitemapMock = new Mock<ISitemapService>();
-        Services.AddScoped(_ => sitemapMock.Object);
+        var sitemapMock = Substitute.For<ISitemapService>();
+        Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet
         {
             Urls = new List<SitemapUrl>
@@ -39,8 +38,7 @@ public class SitemapPageTests : TestContext
                 new() { Location = "loc", LastModified = "Now" },
             },
         };
-        sitemapMock.Setup(s => s.CreateSitemapAsync())
-            .ReturnsAsync(sitemap);
+        sitemapMock.CreateSitemapAsync().Returns(sitemap);
         var cut = RenderComponent<SitemapPage>();
 
         cut.Find("button").Click();
@@ -55,8 +53,8 @@ public class SitemapPageTests : TestContext
     public void ShouldShowLoadingWhenGenerating()
     {
         this.AddTestAuthorization().SetAuthorized("steven");
-        var sitemapMock = new Mock<ISitemapService>();
-        Services.AddScoped(_ => sitemapMock.Object);
+        var sitemapMock = Substitute.For<ISitemapService>();
+        Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet
         {
             Urls = new List<SitemapUrl>
@@ -64,12 +62,12 @@ public class SitemapPageTests : TestContext
                 new() { Location = "loc", LastModified = "Now" },
             },
         };
-        sitemapMock.Setup(s => s.CreateSitemapAsync())
-            .Returns(async () =>
-            {
-                await Task.Delay(1000);
-                return sitemap;
-            });
+        sitemapMock.CreateSitemapAsync().Returns(Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            return sitemap;
+        }));
+
         var cut = RenderComponent<SitemapPage>();
 
         cut.Find("button").Click();
