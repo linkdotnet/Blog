@@ -1,5 +1,4 @@
 ﻿@page "/AboutMe"
-@using LinkDotNet.Blog.Web.Features.Services
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components
 @inject AppConfiguration AppConfiguration
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -29,9 +28,6 @@
     protected override async Task OnInitializedAsync()
     {
         var userIdentity = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
-        if (userIdentity != null)
-        {
-            isAuthenticated = userIdentity.IsAuthenticated;
-        }
+	    isAuthenticated = userIdentity?.IsAuthenticated ?? false;
     }
 }
