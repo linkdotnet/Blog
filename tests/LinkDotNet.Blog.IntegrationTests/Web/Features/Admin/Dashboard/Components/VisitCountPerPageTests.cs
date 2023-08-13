@@ -41,8 +41,8 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldFilterByDate()
     {
-        var blogPost1 = new BlogPostBuilder().WithTitle("1").WithLikes(2).Build();
-        var blogPost2 = new BlogPostBuilder().WithTitle("2").WithLikes(2).Build();
+        var blogPost1 = new BlogPostBuilder().WithTitle("1").WithLikes(2).WithUpdatedDate(new DateTime(2020, 1, 1)).Build();
+        var blogPost2 = new BlogPostBuilder().WithTitle("2").WithLikes(2).WithUpdatedDate(new DateTime(2020, 1, 1)).Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         var clicked1 = new BlogPostRecord
@@ -63,7 +63,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
 
         await cut.InvokeAsync(() => cut.FindComponent<FilterStubComponent>().Instance.FireFilterChanged(filter));
 
-        cut.WaitForState(() => cut.FindAll("td").Count == 3);
+        cut.WaitForState(() => cut.FindAll("td").Any());
         var elements = cut.FindAll("td").ToList();
         elements.Count.Should().Be(3);
         var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
