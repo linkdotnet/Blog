@@ -103,6 +103,8 @@ public class TransformBlogPostRecordsService : BackgroundService
         await blogPostRecordRepository.DeleteBulkAsync(oldBlogPostRecords.Select(o => o.Id));
         await blogPostRecordRepository.StoreBulkAsync(mergedRecords);
 
+        logger.LogInformation("Deleting {RecordCount} records from UserRecord-Table", userRecords.Count);
         await userRecordRepository.DeleteBulkAsync(userRecords.Select(u => u.Id));
+        logger.LogInformation("Deleted records from UserRecord-Table");
     }
 }

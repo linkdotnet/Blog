@@ -108,10 +108,21 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
     {
         await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        await blogDbContext
-            .Set<TEntity>()
-            .Where(s => ids.Contains(s.Id))
-            .ExecuteDeleteAsync();
+
+        var idList = ids.ToList();
+        const int batchSize = 1000;
+        var totalBatches = (int)Math.Ceiling((double)idList.Count / batchSize);
+
+        for (var batch = 0; batch < totalBatches; batch++)
+        {
+            var currentBatchIds = idList.Skip(batch * batchSize).Take(batchSize).ToList();
+
+            await blogDbContext.Set<TEntity>()
+                .Where(s => currentBatchIds.Contains(s.Id))
+                .ExecuteDeleteAsync();
+
+            logger.LogDebug("Deleted Batch {BatchNumber}. In total {TotalDeleted} elements deleted", batch + 1, (batch + 1) * batchSize);
+        }
     }
 
     public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
