@@ -108,6 +108,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
     {
         await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
         var idList = ids.ToList();
         const int batchSize = 1000;
@@ -123,11 +124,14 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
             logger.LogDebug("Deleted Batch {BatchNumber}. In total {TotalDeleted} elements deleted", batch + 1, (batch + 1) * batchSize);
         }
+
+        await trx.CommitAsync();
     }
 
     public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
     {
         await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
         var count = 0;
         foreach (var record in records)
@@ -141,5 +145,6 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
 
         await blogDbContext.SaveChangesAsync();
+        await trx.CommitAsync();
     }
 }
