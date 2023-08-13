@@ -5,8 +5,11 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Infrastructure.Persistence.Sql
 @using System.Collections.Immutable
+@using System.Diagnostics
+@using Microsoft.Extensions.Logging
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IRepository<BlogPostRecord> BlogPostRecordRepository
+@inject ILogger<VisitCountPerPage> Logger;
 
 <div class="card">
     <div class="card-header">Blog Post Visit Counts</div>
@@ -58,31 +61,64 @@
         visitData = await LoadBlogPostInformationAsync();
     }
 
+	private static async ValueTask<IPagedList<BlogPostVisitData>> GetRelevantBlogPostsAsync(
+		IRepository<BlogPost> blogPostRepository,
+		Filter filter)
+	{
+		Expression<Func<BlogPost, bool>> blogPostFilter = bp =>
+			!filter.EndDate.HasValue || bp.UpdatedDate.Date <= filter.EndDate.Value.ToDateTime(default);
+
+		return await blogPostRepository.GetAllByProjectionAsync(
+			s => new BlogPostVisitData(s.Id, s.Title, s.Likes),
+			filter: blogPostFilter);
+	}
+
+	private static async Task<IPagedList<BlogPostRecord>> GetRelevantBlogPostRecords(
+		IRepository<BlogPostRecord> blogPostRecordRepository,
+		Filter filter)
+	{
+		return await blogPostRecordRepository.GetAllAsync(
+			ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
+			      && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate));
+	}
+
     private async Task<IReadOnlyCollection<VisitCountPageData>> LoadBlogPostInformationAsync()
     {
-	    var blogPosts = await BlogPostRepository.GetAllByProjectionAsync(
-	        s => new { s.Id, s.Title, s.Likes });
-        var userRecords = await BlogPostRecordRepository.GetAllAsync(
-	        ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
-	              && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate));
+	    var stopwatch = Stopwatch.StartNew();
 
-	    return userRecords
+	    var blogPosts = await GetRelevantBlogPostsAsync(BlogPostRepository, filter);
+	    var userRecords = await GetRelevantBlogPostRecords(BlogPostRecordRepository, filter);
+
+	    var time = stopwatch.ElapsedMilliseconds;
+	    Logger.LogDebug("Retrieving data took {ElapsedMilliseconds}ms", time);
+
+	    var blogPostDictionary = blogPosts.ToDictionary(bp => bp.Id, bp => bp);
+	    var loadBlogPostInformationAsync = userRecords
 		    .GroupBy(s => s.BlogPostId)
-		    .Select(s => new { BlogPostId = s.Key, Count = s.Sum(l => l.Clicks) })
-		    .OrderByDescending(s => s.Count)
-		    .Join(blogPosts, ur => ur.BlogPostId, bp => bp.Id, (ur, bp) => new VisitCountPageData()
+		    .Select(s => new
 		    {
-			    Id = bp.Id,
-			    Likes = bp.Likes,
-			    Title = bp.Title,
-			    ClickCount = ur.Count,
+			    Count = s.Sum(l => l.Clicks),
+			    BlogPost = blogPostDictionary[s.Key]
 		    })
-		    .ToImmutableArray();
+		    .OrderByDescending(s => s.Count)
+		    .Select(s => new VisitCountPageData()
+		    {
+			    Id = s.BlogPost.Id,
+			    Likes = s.BlogPost.Likes,
+			    Title = s.BlogPost.Title,
+			    ClickCount = s.Count,
+		    }).ToImmutableArray();
+
+	    Logger.LogDebug("Processing data took {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds - time);
+
+	    return loadBlogPostInformationAsync;
     }
 
-    private async Task RefreshVisitCount(Filter newBeginning)
+	private async Task RefreshVisitCount(Filter newBeginning)
     {
         filter = newBeginning;
         visitData = await LoadBlogPostInformationAsync();
     }
+
+	private record struct BlogPostVisitData(string Id, string Title, int Likes);
 }
