@@ -70,7 +70,8 @@
 
 		return await blogPostRepository.GetAllByProjectionAsync(
 			s => new BlogPostVisitData(s.Id, s.Title, s.Likes),
-			filter: blogPostFilter);
+			filter: blogPostFilter,
+			orderBy: o => o.UpdatedDate);
 	}
 
 	private static async Task<IPagedList<BlogPostRecord>> GetRelevantBlogPostRecords(
@@ -79,7 +80,8 @@
 	{
 		return await blogPostRecordRepository.GetAllAsync(
 			ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
-			      && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate));
+			      && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate),
+			orderBy: o => o.DateClicked);
 	}
 
     private async Task<IReadOnlyCollection<VisitCountPageData>> LoadBlogPostInformationAsync()
