@@ -95,7 +95,7 @@
 	    Logger.LogDebug("Retrieving data took {ElapsedMilliseconds}ms", time);
 
 	    var blogPostDictionary = blogPosts.ToDictionary(bp => bp.Id, bp => bp);
-	    var loadBlogPostInformationAsync = userRecords
+	    var loadBlogPostInformation = userRecords
 		    .GroupBy(s => s.BlogPostId)
 		    .Select(s => new
 		    {
@@ -103,7 +103,7 @@
 			    BlogPost = blogPostDictionary[s.Key]
 		    })
 		    .OrderByDescending(s => s.Count)
-		    .Select(s => new VisitCountPageData()
+		    .Select(s => new VisitCountPageData
 		    {
 			    Id = s.BlogPost.Id,
 			    Likes = s.BlogPost.Likes,
@@ -113,7 +113,7 @@
 
 	    Logger.LogDebug("Processing data took {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds - time);
 
-	    return loadBlogPostInformationAsync;
+	    return loadBlogPostInformation;
     }
 
 	private async Task RefreshVisitCount(Filter newBeginning)
