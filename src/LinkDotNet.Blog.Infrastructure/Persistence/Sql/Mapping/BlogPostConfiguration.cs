@@ -9,7 +9,9 @@ public sealed class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
     public void Configure(EntityTypeBuilder<BlogPost> builder)
     {
         builder.HasKey(c => c.Id);
-        builder.Property(c => c.Id).ValueGeneratedOnAdd();
+        builder.Property(c => c.Id)
+            .IsUnicode(false)
+            .ValueGeneratedOnAdd();
         builder.Property(x => x.Title).HasMaxLength(256).IsRequired();
         builder.Property(x => x.PreviewImageUrl).HasMaxLength(1024).IsRequired();
         builder.Property(x => x.PreviewImageUrlFallback).HasMaxLength(1024);

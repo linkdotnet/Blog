@@ -9,7 +9,9 @@ public sealed class UserRecordConfiguration : IEntityTypeConfiguration<UserRecor
     public void Configure(EntityTypeBuilder<UserRecord> builder)
     {
         builder.HasKey(s => s.Id);
-        builder.Property(s => s.Id).ValueGeneratedOnAdd();
+        builder.Property(s => s.Id)
+            .IsUnicode(false)
+            .ValueGeneratedOnAdd();
         builder.Property(s => s.UrlClicked).HasMaxLength(256).IsRequired();
     }
 }
