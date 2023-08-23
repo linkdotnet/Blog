@@ -24,7 +24,7 @@
     border-radius: 50%;
     border: white;
     margin: auto;
-    box-shadow: 0 0 0 4px white;
+    /* box-shadow: 0 0 0 4px white; This is round circle kinda like linkined profile pic  */
     background-image: var(--profile-image);
     background-repeat: no-repeat;
     background-position: center center;

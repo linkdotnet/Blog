@@ -3,8 +3,8 @@
 
 <div style="--profile-background: url(@Configuration.Introduction.BackgroundUrl)" class="@IntroductionClass">
     <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@Configuration.Introduction.ProfilePictureUrl)">
-        </div>
+        @* This controls the round circle connected to Introductioncard.razor.css file <div class="profile-picture" style="--profile-image: url(@Configuration.Introduction.ProfilePictureUrl)">
+        </div> *@
         <div class="profile-text d-flex flex-column">
             <div>@MarkdownConverter.ToMarkupString(Configuration.Introduction.Description)</div>
             <SocialAccounts Social="@Configuration.Social"></SocialAccounts>
