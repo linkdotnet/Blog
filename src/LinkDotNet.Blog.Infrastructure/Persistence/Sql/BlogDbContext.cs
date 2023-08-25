@@ -1,5 +1,4 @@
 ﻿using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
