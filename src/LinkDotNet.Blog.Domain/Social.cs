@@ -13,4 +13,10 @@ public sealed record Social
     public string TwitterAccountUrl { get; init; }
 
     public bool HasTwitterAccount => !string.IsNullOrEmpty(TwitterAccountUrl);
+
+    public string YoutubeAccountUrl { get; init; }
+
+    public bool HasYoutubeAccount => !string.IsNullOrEmpty(YoutubeAccountUrl);
+
+    
 }
