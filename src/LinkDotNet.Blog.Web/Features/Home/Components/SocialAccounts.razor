@@ -1,21 +1,31 @@
 @using LinkDotNet.Blog.Domain
 <div class="d-flex flex-row justify-content-center" style="font-size: 1.25em;">
     @if (Social.HasLinkedinAccount)
-    {
+           
+    { @*Linkedin*@
         <a id="linkedin" class="nav-link px-3 py-2" target="_blank" href="@Social.LinkedinAccountUrl" aria-label="LinkedIn" rel="noreferrer">
             <i class="linkedin"></i>
         </a>
-    }
+        
+    } @*Github*@
     @if (Social.HasGithubAccount)
     {
         <a id="github" class="nav-link px-3 py-2" target="_blank" href="@Social.GithubAccountUrl" aria-label="Github" rel="noreferrer">
             <i class="github"></i>
         </a>
-    }
+       
+     } @*Twitter*@
     @if (Social.HasTwitterAccount)
     {
         <a id="twitter" class="nav-link px-3 py-2" target="_blank" href="@Social.TwitterAccountUrl" aria-label="Twitter" rel="noreferrer">
             <i class="twitter"></i>
+        </a>
+    }
+        @*Youtube*@
+    @if (Social.HasYoutubeAccount)
+    {
+        <a id="youtube" class="nav-link px-3 py-2" target="_blank" href="@Social.YoutubeAccountUrl" aria-label="Youtube" rel="noreferrer">
+            <i class="youtube"></i>
         </a>
     }
 </div>
