@@ -24,7 +24,7 @@ public class TransformBlogPostRecordsService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("TransformBlogPostRecordsService is starting");
+        logger.LogInformation($"{nameof(TransformBlogPostRecordsService)} is starting");
 
         using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
         while (!stoppingToken.IsCancellationRequested)
@@ -34,7 +34,7 @@ public class TransformBlogPostRecordsService : BackgroundService
             await timer.WaitForNextTickAsync(stoppingToken);
         }
 
-        logger.LogInformation("TransformBlogPostRecordsService is stopping");
+        logger.LogInformation($"{nameof(TransformBlogPostRecordsService)} is stopping");
     }
 
     private static IEnumerable<BlogPostRecord> GetBlogPostRecords(
@@ -69,7 +69,7 @@ public class TransformBlogPostRecordsService : BackgroundService
         return clicksPerDay;
     }
 
-    private static List<BlogPostRecord> MergeRecords(
+    private static IEnumerable<BlogPostRecord> MergeRecords(
         IEnumerable<BlogPostRecord> newBlogPostRecords,
         IEnumerable<BlogPostRecord> oldBlogPostRecords)
     {
@@ -80,8 +80,7 @@ public class TransformBlogPostRecordsService : BackgroundService
                 BlogPostId = g.Key.BlogPostId,
                 DateClicked = g.Key.DateClicked,
                 Clicks = g.Sum(x => x.Clicks),
-            })
-            .ToList();
+            });
     }
 
     private async Task TransformRecordsAsync()
