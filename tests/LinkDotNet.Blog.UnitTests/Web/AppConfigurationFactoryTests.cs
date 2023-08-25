@@ -13,9 +13,10 @@ public class AppConfigurationFactoryTests
         {
             { "BlogName", "UnitTest" },
             { "BlogBrandUrl", "http://localhost" },
-            { "Social:GithubAccountUrl", "github" },
-            { "Social:LinkedInAccountUrl", "linkedIn" },
-            { "Social:TwitterAccountUrl", "twitter" },
+            { "Social:GithubAccountUrl", "github" }, // Github Section
+            { "Social:LinkedInAccountUrl", "linkedIn" }, // LinkedIn Section
+            { "Social:TwitterAccountUrl", "twitter" }, // Twitter Section
+            { "Social:YoutubeAccountUrl", "youtube" }, // Youtube Social
             { "ConnectionString", "cs" },
             { "DatabaseName", "db" },
             { "Introduction:BackgroundUrl", "someurl" },
@@ -54,6 +55,8 @@ public class AppConfigurationFactoryTests
         appConfiguration.Social.HasLinkedinAccount.Should().BeTrue();
         appConfiguration.Social.TwitterAccountUrl.Should().Be("twitter");
         appConfiguration.Social.HasTwitterAccount.Should().BeTrue();
+        appConfiguration.Social.YoutubeAccountUrl.Should().Be("youtube");
+        appConfiguration.Social.HasYoutubeAccount.Should().BeTrue();
         appConfiguration.ConnectionString.Should().Be("cs");
         appConfiguration.DatabaseName.Should().Be("db");
         appConfiguration.Introduction.BackgroundUrl.Should().Be("someurl");
@@ -89,6 +92,8 @@ public class AppConfigurationFactoryTests
         string githubUrl,
         string linkedInUrl,
         string twitterUrl,
+        string youtubeUrl,
+        bool youtubeAvailable,
         bool githubAvailable,
         bool linkedInAvailable,
         bool twitterAvailable)
@@ -101,6 +106,8 @@ public class AppConfigurationFactoryTests
             { "Social:GithubAccountUrl", githubUrl },
             { "Social:LinkedInAccountUrl", linkedInUrl },
             { "Social:TwitterAccountUrl", twitterUrl },
+            { "Social:YoutubeAccountUrl", youtubeUrl },
+            
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
