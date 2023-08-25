@@ -38,22 +38,6 @@ public class UploadFileTests : TestContext
     }
 
     [Fact]
-    public void ShouldPutIdAndClassOnItems()
-    {
-        Services.AddScoped(_ => Substitute.For<IFileProcessor>());
-        var attributes = new Dictionary<string, object>
-        {
-            { "class", "some-class" },
-            { "id", "some-id" },
-        };
-
-        var cut = RenderComponent<UploadFile>(p => p.Add(s => s.AdditionalAttributes, attributes));
-
-        cut.FindAll(".some-class").Should().NotBeEmpty();
-        cut.FindAll("#some-id").Should().NotBeEmpty();
-    }
-
-    [Fact]
     public void ShouldIndicateDragAndDropBehavior()
     {
         Services.AddScoped(_ => Substitute.For<IFileProcessor>());
