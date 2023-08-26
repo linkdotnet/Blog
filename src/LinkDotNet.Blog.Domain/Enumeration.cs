@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.Frozen;
 using System.Linq;
 using System.Reflection;
 
@@ -18,7 +18,7 @@ public abstract class Enumeration<TEnumeration>
         Key = key;
     }
 
-    public static IReadOnlyCollection<TEnumeration> All => GetEnumerations();
+    public static FrozenSet<TEnumeration> All { get; } = GetEnumerations();
 
     public string Key { get; }
 
@@ -55,7 +55,7 @@ public abstract class Enumeration<TEnumeration>
 
     public override string ToString() => Key;
 
-    private static TEnumeration[] GetEnumerations()
+    private static FrozenSet<TEnumeration> GetEnumerations()
     {
         var enumerationType = typeof(TEnumeration);
 
@@ -63,6 +63,6 @@ public abstract class Enumeration<TEnumeration>
             .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
             .Where(info => info.FieldType == typeof(TEnumeration))
             .Select(info => (TEnumeration)info.GetValue(null))
-            .ToArray();
+            .ToFrozenSet();
     }
 }

@@ -3,17 +3,16 @@
 @using LinkDotNet.Blog.Web.Features.Components
 @using LinkDotNet.Blog.Web.Features.Services
 
-@inject AppConfiguration AppConfiguration
 @inject IRepository<ProfileInformationEntry> Repository
 @inject ISortOrderCalculator SortOrderCalculator
 <div class="profile-card">
     <div class="profile-name">
-        <span>@AppConfiguration.ProfileInformation.Name</span>
+        <span>@ProfileInformation.Name</span>
         <br/>
-        <span>@AppConfiguration.ProfileInformation.Heading</span>
+        <span>@ProfileInformation.Heading</span>
     </div>
     <div class="profile-image">
-        <img src="@AppConfiguration.ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
+        <img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
     </div>
     <ul class="profile-keypoints"
         ondragover="event.preventDefault();">
@@ -51,6 +50,9 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 @code {
     [Parameter]
     public bool ShowAdminActions { get; set; }
+
+	[Parameter]
+	public ProfileInformation ProfileInformation { get; set; }
 
     private List<ProfileInformationEntry> profileInformationEntries = new();
     private ConfirmDialog Dialog { get; set; }

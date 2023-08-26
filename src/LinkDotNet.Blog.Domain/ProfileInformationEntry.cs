@@ -10,7 +10,7 @@ public sealed class ProfileInformationEntry : Entity
     {
     }
 
-    public string Content { get; private set; }
+    public string Content { get; private init; }
 
     public int SortOrder { get; set; }
 

@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using LinkDotNet.Blog.Domain;
+﻿using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
@@ -23,7 +21,7 @@ public class ProfileTests : TestContext
         var entry2 = new ProfileInformationEntryBuilder().WithContent("key 2").WithSortOrder(2).Build();
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entry1, entry2);
-        var cut = RenderComponent<Profile>();
+        var cut = RenderProfileWithEmptyInformation();
 
         var items = cut.FindAll(".profile-keypoints li");
 
@@ -36,15 +34,14 @@ public class ProfileTests : TestContext
     public void ShouldNotShowAdminActions()
     {
         RegisterServices();
-        RenderComponent<Profile>().FindComponents<AddProfileShortItem>().Should().HaveCount(0);
+        RenderProfileWithEmptyInformation().FindComponents<AddProfileShortItem>().Should().HaveCount(0);
     }
 
     [Fact]
     public void ShouldShowAdminActionsWhenLoggedIn()
     {
         RegisterServices();
-        RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true))
-            .FindComponents<AddProfileShortItem>().Should().HaveCount(1);
+        RenderProfileInAdmin().FindComponents<AddProfileShortItem>().Should().HaveCount(1);
     }
 
     [Fact]
@@ -54,7 +51,7 @@ public class ProfileTests : TestContext
         ProfileInformationEntry entryToDb = null;
         repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
             .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
+        var cut = RenderProfileInAdmin();
         var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
         addShortItemComponent.Find("input").Change("key");
 
@@ -72,7 +69,7 @@ public class ProfileTests : TestContext
         entryToDelete.Id = "SomeId";
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entryToDelete);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
+        var cut = RenderProfileInAdmin();
         cut.Find(".profile-keypoints li button").Click();
 
         cut.FindComponent<ConfirmDialog>().Find("#ok").Click();
@@ -88,7 +85,7 @@ public class ProfileTests : TestContext
         entryToDelete.Id = "SomeId";
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entryToDelete);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
+        var cut = RenderProfileInAdmin();
         cut.Find(".profile-keypoints li button").Click();
 
         cut.FindComponent<ConfirmDialog>().Find("#cancel").Click();
@@ -106,7 +103,7 @@ public class ProfileTests : TestContext
         ProfileInformationEntry entryToDb = null;
         repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
             .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
+        var cut = RenderProfileInAdmin();
         var addShortItemComponent = cut.FindComponent<AddProfileShortItem>();
         addShortItemComponent.Find("input").Change("key");
 
@@ -127,7 +124,7 @@ public class ProfileTests : TestContext
         ProfileInformationEntry entryToDb = null;
         repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
             .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
+        var cut = RenderProfileInAdmin();
         calculator.GetSortOrder(target, Arg.Any<IEnumerable<ProfileInformationEntry>>()).Returns(150);
 
         cut.FindAll("li")[1].Drag();
@@ -143,20 +140,12 @@ public class ProfileTests : TestContext
         var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
         var (repo, _) = RegisterServices();
         SetupGetAll(repo, source);
-        var cut = RenderComponent<Profile>(p => p.Add(s => s.ShowAdminActions, true));
+        var cut = RenderProfileInAdmin();
 
         cut.FindAll("li")[0].Drag();
         cut.FindAll("li")[0].Drop();
 
         source.SortOrder.Should().Be(200);
-    }
-
-    private static AppConfiguration CreateEmptyConfiguration()
-    {
-        return new()
-        {
-            ProfileInformation = new ProfileInformation(),
-        };
     }
 
     private static void SetupGetAll(
@@ -176,7 +165,6 @@ public class ProfileTests : TestContext
     {
         var repoMock = Substitute.For<IRepository<ProfileInformationEntry>>();
         var calcMock = Substitute.For<ISortOrderCalculator>();
-        Services.AddScoped(_ => CreateEmptyConfiguration());
         Services.AddScoped(_ => repoMock);
         Services.AddScoped(_ => calcMock);
         repoMock.GetAllAsync(
@@ -188,4 +176,12 @@ public class ProfileTests : TestContext
             .Returns(PagedList<ProfileInformationEntry>.Empty);
         return (repoMock, calcMock);
     }
+
+    private IRenderedComponent<Profile> RenderProfileWithEmptyInformation()
+        => RenderComponent<Profile>(p => p.Add(s => s.ProfileInformation, new()));
+
+    private IRenderedComponent<Profile> RenderProfileInAdmin()
+        => RenderComponent<Profile>(p => p
+            .Add(s => s.ProfileInformation, new())
+            .Add(s => s.ShowAdminActions, true));
 }
