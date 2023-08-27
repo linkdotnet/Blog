@@ -63,6 +63,27 @@
 
 	private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
 
+	public override Task SetParametersAsync(ParameterView parameters)
+	{
+		foreach (var parameter in parameters)
+		{
+			switch (parameter.Name)
+			{
+				case nameof(BlogPost):
+					BlogPost = (BlogPost)parameter.Value;
+					break;
+				case nameof(UseAlternativeStyle):
+					UseAlternativeStyle = (bool)parameter.Value;
+					break;
+				case nameof(LazyLoadPreviewImage):
+					LazyLoadPreviewImage = (bool)parameter.Value;
+					break;
+			}
+		}
+
+		return Task.CompletedTask;
+	}
+
 	protected override void OnInitialized()
 	{
 		var key = "reading-time-" + BlogPost.Id;
