@@ -81,7 +81,7 @@
 			}
 		}
 
-		return Task.CompletedTask;
+		return base.SetParametersAsync(ParameterView.Empty);
 	}
 
 	protected override void OnInitialized()
