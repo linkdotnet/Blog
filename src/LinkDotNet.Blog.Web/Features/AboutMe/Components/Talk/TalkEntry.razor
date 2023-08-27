@@ -31,4 +31,25 @@
 
     [Parameter]
     public Talk Talk { get; set; }
+
+	public override Task SetParametersAsync(ParameterView parameters)
+	{
+		foreach (var parameter in parameters)
+		{
+			switch (parameter.Name)
+			{
+				case nameof(Talk):
+					Talk = (Talk)parameter.Value;
+					break;
+				case nameof(ShowAdminActions):
+					ShowAdminActions = (bool)parameter.Value;
+					break;
+				case nameof(TalkDeleted):
+					TalkDeleted = (EventCallback)parameter.Value;
+					break;
+			}
+		}
+
+		return base.SetParametersAsync(ParameterView.Empty);
+	}
 }
