@@ -39,6 +39,11 @@ public static class StorageProviderExtensions
             services.UseMySqlAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
         }
+        else if (persistenceProvider == PersistenceProvider.MongoDB)
+        {
+            services.UseMongoDBAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
+        }
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
