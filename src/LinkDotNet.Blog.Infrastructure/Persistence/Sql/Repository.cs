@@ -26,7 +26,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         try
         {
-            await using var db = await dbContextFactory.CreateDbContextAsync();
+            var db = await dbContextFactory.CreateDbContextAsync();
             await db.Database.ExecuteSqlRawAsync("SELECT 1");
             return HealthCheckResult.Healthy();
         }
@@ -38,7 +38,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask<TEntity> GetByIdAsync(string id)
     {
-        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
     }
 
@@ -61,7 +61,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         int pageSize = int.MaxValue)
     {
         ArgumentNullException.ThrowIfNull(selector);
-        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
 
         if (filter != null)
@@ -81,7 +81,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreAsync(TEntity entity)
     {
-        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         if (string.IsNullOrEmpty(entity.Id))
         {
             await blogDbContext.Set<TEntity>().AddAsync(entity);
@@ -99,7 +99,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         var entityToDelete = await GetByIdAsync(id);
         if (entityToDelete != null)
         {
-            await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+            var blogDbContext = await dbContextFactory.CreateDbContextAsync();
             blogDbContext.Remove(entityToDelete);
             await blogDbContext.SaveChangesAsync();
         }
@@ -107,7 +107,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
     {
-        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
         var idList = ids.ToList();
@@ -130,7 +130,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
     {
-        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
         var count = 0;
