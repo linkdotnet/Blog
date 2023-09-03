@@ -51,13 +51,21 @@ public sealed class CachedRepository<T> : IRepository<T>
     public async ValueTask StoreAsync(T entity)
     {
         await repository.StoreAsync(entity);
-        memoryCache.Remove(entity.Id);
+
+        if (!string.IsNullOrEmpty(entity.Id) && memoryCache.TryGetValue(entity.Id, out _))
+        {
+            memoryCache.Remove(entity.Id);
+        }
     }
 
     public async ValueTask DeleteAsync(string id)
     {
         await repository.DeleteAsync(id);
-        memoryCache.Remove(id);
+
+        if (memoryCache.TryGetValue(id, out _))
+        {
+            memoryCache.Remove(id);
+        }
     }
 
     public async ValueTask DeleteBulkAsync(IEnumerable<string> ids) => await repository.DeleteBulkAsync(ids);

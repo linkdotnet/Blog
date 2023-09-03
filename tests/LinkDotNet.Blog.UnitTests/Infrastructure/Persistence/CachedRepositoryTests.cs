@@ -105,6 +105,27 @@ public sealed class CachedRepositoryTests
                 Arg.Any<int>(), 
                 Arg.Any<int>());
     }
+    
+    [Theory]
+    [InlineData(null)]
+    [InlineData("some_id")]
+    public async Task ShouldNotThrowExceptionWhenCallingStoreWithoutRetrievingKeyFirst(string id)
+    {
+        var blogPost = new BlogPostBuilder().Build();
+        blogPost.Id = id;
+        
+        await sut.StoreAsync(blogPost);
+        
+        await repositoryMock.Received(1).StoreAsync(blogPost);
+    }
+    
+    [Fact]
+    public async Task ShouldNotThrowExceptionWhenCallingDeleteWithoutRetrievingKeyFirst()
+    {
+        await sut.DeleteAsync("some_id");
+        
+        await repositoryMock.Received(1).DeleteAsync("some_id");
+    }
 
     private void SetupRepository()
     {
