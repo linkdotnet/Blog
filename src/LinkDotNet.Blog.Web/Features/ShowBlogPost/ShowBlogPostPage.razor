@@ -39,7 +39,7 @@ else
 						<span class="blogpost-tag d-inline-block">
 							@foreach (var tag in BlogPost.Tags)
 							{
-								<a class="goto-tag ms-2" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+								<a class="goto-tag ms-1 me-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
 							}
 						</span>
 					}
