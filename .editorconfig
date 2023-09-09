@@ -407,6 +407,7 @@ dotnet_diagnostic.CA2007.severity = none            # https://github.com/atc-net
 # https://rules.sonarsource.com/csharp
 dotnet_diagnostic.S1118.severity = none        # Add a 'protected' constructor or the 'static' keyword to the class declaration.
 dotnet_diagnostic.S1135.severity = suggestion # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/SonarAnalyzerCSharp/S1135.md
+dotnet_diagnostic.S2583.severity = suggestion # Change this condition so that it does not always evaluate to 'False'.
 dotnet_diagnostic.S3875.severity = none       # Remove this overload of 'operator =='.
 
 ##########################################
