@@ -107,5 +107,5 @@ public sealed class RssFeedController : ControllerBase
         string ShortDescription,
         DateTime UpdatedDate,
         string PreviewImageUrl,
-        IReadOnlyCollection<string> Tags);
+        IEnumerable<string> Tags);
 }
