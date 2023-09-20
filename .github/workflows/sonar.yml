@@ -10,13 +10,14 @@ jobs:
     name: Build and analyze
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          dotnet-version: |
-            7.0.x
-            8.0.x
+          java-version: 17
+          distribution: 'zulu' # Alternative distribution options are available.
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -42,6 +43,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linkdotnet_Blog" /o:"linkdotnet" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"  /d:sonar.cs.opencover.reportsPaths="**/coverage/coverage.xml"
-          dotnet test ./LinkDotNet.Blog.sln --configuration Release -l trx /p:AltCover=true,AltCoverForce=true,AltCoverVisibleBranches=true,AltCoverAssemblyFilter='Moq|Humanizer|AltCover',AltCoverReport=./coverage/coverage.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linkdotnet_Blog" /o:"linkdotnet" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet build -c Release ./LinkDotNet.Blog.sln
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
