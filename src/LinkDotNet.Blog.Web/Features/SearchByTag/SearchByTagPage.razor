@@ -24,12 +24,4 @@
             b => b.IsPublished && b.Tags.Any(t => t == Tag),
             b => b.UpdatedDate);
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await UserRecordService.StoreUserRecordAsync();
-        }
-    }
 }

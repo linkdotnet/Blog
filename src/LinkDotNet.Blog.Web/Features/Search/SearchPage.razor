@@ -25,12 +25,4 @@
                                                                                  || t.Tags.Any(tag => tag == term)),
             b => b.UpdatedDate);
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await UserRecordService.StoreUserRecordAsync();
-        }
-    }
 }
