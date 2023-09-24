@@ -4,12 +4,13 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@using LinkDotNet.Blog.Web.Features.Services
 @using LinkDotNet.Blog.Web.Features.Home.Components
+@using Microsoft.Extensions.Caching.Memory
+@inject IMemoryCache MemoryCache
 @inject IRepository<BlogPost> BlogPostRepository
 @inject AppConfiguration AppConfiguration
 @inject NavigationManager NavigationManager
-@inject IUserRecordService UserRecordService
+
 
 <OgData Title="@(Markdown.ToPlainText(AppConfiguration.BlogName))"
         AbsolutePreviewImageUrl="@ImageUrl"
@@ -43,23 +44,35 @@
 
     protected override async Task OnParametersSetAsync()
     {
+	    const string firstPageCacheKey = "BlogPostList";
         if (Page is null or < 1)
         {
             Page = 1;
         }
 
-        currentPage = await BlogPostRepository.GetAllAsync(
-            p => p.IsPublished,
-            b => b.UpdatedDate,
-            pageSize: AppConfiguration.BlogPostsPerPage,
-            page: Page.Value);
+	    // The hot path is that users land on the initial page which is the first page.
+	    // So we want to cache that page for a while to reduce the load on the database
+	    // and to speed up the page load.
+		// That will lead to stale blog posts for 5 minutes for the first page,
+		// but I am fine with that (as publishing isn't super critical).
+		// It might be tackled in the future (for example invalidate option via Admin UI).
+	    if (Page == 1)
+	    {
+		    currentPage = await MemoryCache.GetOrCreateAsync(firstPageCacheKey, async entry =>
+		    {
+			    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+			    return await GetAllForPageAsync(Page.Value);
+		    });
+		    return;
+	    }
+
+        currentPage = await GetAllForPageAsync(Page.Value);
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await UserRecordService.StoreUserRecordAsync();
-        }
-    }
+	private ValueTask<IPagedList<BlogPost>> GetAllForPageAsync(int page)
+		=> BlogPostRepository.GetAllAsync(
+		p => p.IsPublished,
+		b => b.UpdatedDate,
+		pageSize: AppConfiguration.BlogPostsPerPage,
+		page: page);
 }
