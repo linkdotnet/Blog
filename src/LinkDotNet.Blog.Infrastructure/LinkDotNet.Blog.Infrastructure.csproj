@@ -9,7 +9,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0-rc.1.23419.6" />
       <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="8.0.0-rc.1.23421.29" />
-      <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
+      <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
       <PackageReference Include="RavenDB.Client" Version="5.4.110" />
     </ItemGroup>
