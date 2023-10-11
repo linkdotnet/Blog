@@ -11,7 +11,7 @@
         <PackageReference Include="Markdig" Version="0.33.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0-rc.1.23421.29" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0-rc.1.23419.6" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-rc.1.23419.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0-rc.2.23480.1" />
         <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0-rc.1.23419.4" />
     </ItemGroup>
 
