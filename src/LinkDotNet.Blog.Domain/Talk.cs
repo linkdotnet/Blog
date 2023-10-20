@@ -18,9 +18,9 @@ public sealed class Talk : Entity
 
     public static Talk Create(string presentationTitle, string place, string description, DateTime publishedDate)
     {
-        ArgumentException.ThrowIfNullOrEmpty(presentationTitle);
-        ArgumentException.ThrowIfNullOrEmpty(place);
-        ArgumentException.ThrowIfNullOrEmpty(description);
+        ArgumentException.ThrowIfNullOrWhiteSpace(presentationTitle);
+        ArgumentException.ThrowIfNullOrWhiteSpace(place);
+        ArgumentException.ThrowIfNullOrWhiteSpace(description);
 
         return new Talk
         {
