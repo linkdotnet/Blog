@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 
-public sealed class TalkConfiguration : IEntityTypeConfiguration<Talk>
+internal sealed class TalkConfiguration : IEntityTypeConfiguration<Talk>
 {
     public void Configure(EntityTypeBuilder<Talk> builder)
     {

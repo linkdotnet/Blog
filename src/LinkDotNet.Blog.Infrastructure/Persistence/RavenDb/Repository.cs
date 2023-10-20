@@ -92,6 +92,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
     {
+        ArgumentNullException.ThrowIfNull(ids);
+
         using var session = documentStore.OpenAsyncSession();
         foreach (var id in ids)
         {
@@ -103,6 +105,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
     {
+        ArgumentNullException.ThrowIfNull(records);
+
         using var session = documentStore.OpenAsyncSession();
         var count = 0;
         foreach (var record in records)

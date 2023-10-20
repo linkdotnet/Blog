@@ -58,6 +58,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public ValueTask StoreAsync(TEntity entity)
     {
+        ArgumentNullException.ThrowIfNull(entity);
+
         if (string.IsNullOrEmpty(entity.Id))
         {
             entity.Id = entities.Max(b => b.Id) + 1;
@@ -86,6 +88,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public ValueTask DeleteBulkAsync(IEnumerable<string> ids)
     {
+        ArgumentNullException.ThrowIfNull(ids);
+
         foreach (var id in ids)
         {
             var entity = entities.First(e => e.Id == id);

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public class TransformBlogPostRecordsService : BackgroundService
+public sealed partial class TransformBlogPostRecordsService : BackgroundService
 {
     private readonly IServiceProvider services;
     private readonly ILogger<TransformBlogPostRecordsService> logger;
@@ -24,7 +24,7 @@ public class TransformBlogPostRecordsService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation($"{nameof(TransformBlogPostRecordsService)} is starting");
+        LogTransformStarted();
 
         using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
         while (!stoppingToken.IsCancellationRequested)
@@ -34,7 +34,7 @@ public class TransformBlogPostRecordsService : BackgroundService
             await timer.WaitForNextTickAsync(stoppingToken);
         }
 
-        logger.LogInformation($"{nameof(TransformBlogPostRecordsService)} is stopping");
+        LogTransformStopped();
     }
 
     private static IEnumerable<BlogPostRecord> GetBlogPostRecords(
@@ -102,8 +102,20 @@ public class TransformBlogPostRecordsService : BackgroundService
         await blogPostRecordRepository.DeleteBulkAsync(oldBlogPostRecords.Select(o => o.Id));
         await blogPostRecordRepository.StoreBulkAsync(mergedRecords);
 
-        logger.LogInformation("Deleting {RecordCount} records from UserRecord-Table", userRecords.Count);
+        LogDeletingUserRecords(userRecords.Count);
         await userRecordRepository.DeleteBulkAsync(userRecords.Select(u => u.Id));
-        logger.LogInformation("Deleted records from UserRecord-Table");
+        LogDeletedUserRecords();
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = $"{nameof(TransformBlogPostRecordsService)} is starting")]
+    private partial void LogTransformStarted();
+
+    [LoggerMessage(Level = LogLevel.Information, Message = $"{nameof(TransformBlogPostRecordsService)} is stopping")]
+    private partial void LogTransformStopped();
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Deleting {RecordCount} records from UserRecord-Table")]
+    private partial void LogDeletingUserRecords(int recordCount);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Deleted records from UserRecord-Table")]
+    private partial void LogDeletedUserRecords();
 }

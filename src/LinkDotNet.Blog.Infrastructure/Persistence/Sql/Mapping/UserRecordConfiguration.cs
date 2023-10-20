@@ -1,10 +1,11 @@
-﻿using LinkDotNet.Blog.Domain;
+﻿using System;
+using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 
-public sealed class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
+internal sealed class UserRecordConfiguration : IEntityTypeConfiguration<UserRecord>
 {
     public void Configure(EntityTypeBuilder<UserRecord> builder)
     {

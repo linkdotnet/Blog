@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Forms;
@@ -8,6 +9,8 @@ public sealed class FileProcessor : IFileProcessor
 {
     public async Task<string> GetContentAsync(IBrowserFile file)
     {
+        ArgumentNullException.ThrowIfNull(file);
+
         await using var stream = file.OpenReadStream();
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync();

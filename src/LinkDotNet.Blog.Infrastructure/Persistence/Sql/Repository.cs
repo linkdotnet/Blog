@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 
-public sealed class Repository<TEntity> : IRepository<TEntity>
+public sealed partial class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly IDbContextFactory<BlogDbContext> dbContextFactory;
@@ -81,6 +81,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreAsync(TEntity entity)
     {
+        ArgumentNullException.ThrowIfNull(entity);
+
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         if (string.IsNullOrEmpty(entity.Id))
         {
@@ -122,7 +124,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
                 .Where(s => currentBatchIds.Contains(s.Id))
                 .ExecuteDeleteAsync();
 
-            logger.LogDebug("Deleted Batch {BatchNumber}. In total {TotalDeleted} elements deleted", batch + 1, (batch + 1) * batchSize);
+            LogDeleteBatch(batch + 1, (batch + 1) * batchSize);
         }
 
         await trx.CommitAsync();
@@ -130,6 +132,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
     {
+        ArgumentNullException.ThrowIfNull(records);
+
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
@@ -139,7 +143,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
             await blogDbContext.Set<TEntity>().AddAsync(record);
             if (++count % 1000 == 0)
             {
-                logger.LogDebug("Saving Batch. In total {Count} elements saved", count);
+                LogBatch(count);
                 await blogDbContext.SaveChangesAsync();
             }
         }
@@ -147,4 +151,11 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         await blogDbContext.SaveChangesAsync();
         await trx.CommitAsync();
     }
+
+    [LoggerMessage(LogLevel.Debug, "Saving Batch. In total {Count} elements saved")]
+    private partial void LogBatch(int count);
+
+
+    [LoggerMessage(LogLevel.Debug, "Deleted Batch {BatchNumber}. In total {TotalDeleted} elements deleted")]
+    private partial void LogDeleteBatch(int batchNumber, int totalDeleted);
 }

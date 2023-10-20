@@ -78,6 +78,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask StoreAsync(TEntity entity)
     {
+        ArgumentNullException.ThrowIfNull(entity);
+
         if (string.IsNullOrWhiteSpace(entity.Id))
         {
             entity.Id = ObjectId.GenerateNewId().ToString();

@@ -8,6 +8,8 @@ public sealed class FallbackUrlValidationAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
+        ArgumentNullException.ThrowIfNull(validationContext);
+
         var model = validationContext.ObjectInstance as CreateNewModel;
 
         return model.PreviewImageUrl == model.PreviewImageUrlFallback

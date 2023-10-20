@@ -1,3 +1,4 @@
+using System;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
@@ -9,6 +10,8 @@ public static class AppConfigurationFactory
 {
     public static AppConfiguration Create(IConfiguration config)
     {
+        ArgumentNullException.ThrowIfNull(config);
+
         var social = config.GetSection(nameof(Social)).Get<Social>();
         var introduction = config.GetSection(nameof(Introduction)).Get<Introduction>();
         var profileInformation = config.GetSection("AboutMeProfileInformation").Get<ProfileInformation>();

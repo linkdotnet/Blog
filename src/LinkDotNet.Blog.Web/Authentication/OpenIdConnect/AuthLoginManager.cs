@@ -13,6 +13,9 @@ public sealed class AuthLoginManager : ILoginManager
 
     public AuthLoginManager(IHttpContextAccessor httpContextAccessor, AppConfiguration appConfiguration)
     {
+        ArgumentNullException.ThrowIfNull(httpContextAccessor);
+        ArgumentNullException.ThrowIfNull(appConfiguration);
+
         httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         authProvider = appConfiguration.AuthenticationProvider;
     }

@@ -5,8 +5,10 @@ using System.Reflection;
 
 namespace LinkDotNet.Blog.Domain;
 
+#pragma warning disable CA1724
 public abstract class Enumeration<TEnumeration>
    where TEnumeration : Enumeration<TEnumeration>
+#pragma warning restore
 {
     protected Enumeration()
     {
@@ -29,7 +31,7 @@ public abstract class Enumeration<TEnumeration>
             return false;
         }
 
-        return a.Key.Equals(b.Key);
+        return a.Key.Equals(b.Key, StringComparison.Ordinal);
     }
 
     public static bool operator !=(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b)
@@ -41,7 +43,7 @@ public abstract class Enumeration<TEnumeration>
         => All.SingleOrDefault(p => p.Key == key)
            ?? throw new InvalidOperationException($"{key} is not a valid value for {typeof(TEnumeration).Name}");
 
-    public override int GetHashCode() => Key.GetHashCode();
+    public override int GetHashCode() => Key.GetHashCode(StringComparison.Ordinal);
 
     public override bool Equals(object obj)
     {

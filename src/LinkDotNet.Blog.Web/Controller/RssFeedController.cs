@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
@@ -84,7 +85,7 @@ public sealed class RssFeedController : ControllerBase
         return item;
     }
 
-    private static void AddCategories(ICollection<SyndicationCategory> categories, BlogPostRssInfo blogPost)
+    private static void AddCategories(Collection<SyndicationCategory> categories, BlogPostRssInfo blogPost)
     {
         foreach (var tag in blogPost.Tags ?? Array.Empty<string>())
         {

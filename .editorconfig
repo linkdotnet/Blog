@@ -427,9 +427,15 @@ dotnet_diagnostic.MA0018.severity = none # MA0018: Do not declare static members
 
 # Microsoft - Code Analysis
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
+dotnet_diagnostic.CA1000.severity = none # CA1000: Do not declare static members on generic types
 dotnet_diagnostic.CA1014.severity = none # CA1014: Mark assemblies with CLSCompliant
 dotnet_diagnostic.CA1031.severity = suggestion # CA1031: Do not catch general exception types
 dotnet_diagnostic.CA1032.severity = none # CA1032: Implement standard exception constructors
+dotnet_diagnostic.CA1052.severity = none # CA1052: Static holder types should be Static or NotInheritable
+dotnet_diagnostic.CA1054.severity = none # CA1054: URI-like parameters should not be strings
+dotnet_diagnostic.CA1055.severity = none # CA1055: Uri return values should not be strings
+dotnet_diagnostic.CA1056.severity = none # CA1056: Uri properties should not be strings
+dotnet_diagnostic.CA1812.severity = none # CA1812: Avoid uninstantiated internal classes
 dotnet_diagnostic.CA2201.severity = suggestion # CA2201: Do not raise reserved exception types
 
 # SonarAnalyzer.CSharp

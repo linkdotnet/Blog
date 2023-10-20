@@ -50,6 +50,8 @@ public sealed class CachedRepository<T> : IRepository<T>
 
     public async ValueTask StoreAsync(T entity)
     {
+        ArgumentNullException.ThrowIfNull(entity);
+
         await repository.StoreAsync(entity);
 
         if (!string.IsNullOrEmpty(entity.Id) && memoryCache.TryGetValue(entity.Id, out _))

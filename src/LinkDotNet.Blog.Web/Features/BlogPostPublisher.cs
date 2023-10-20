@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public sealed class BlogPostPublisher : BackgroundService
+public sealed partial class BlogPostPublisher : BackgroundService
 {
     private readonly IServiceProvider serviceProvider;
     private readonly ILogger<BlogPostPublisher> logger;
@@ -23,7 +23,7 @@ public sealed class BlogPostPublisher : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        logger.LogInformation("BlogPostPublisher is starting");
+        LogPublishStarting();
 
         using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
 
@@ -34,12 +34,12 @@ public sealed class BlogPostPublisher : BackgroundService
             await timer.WaitForNextTickAsync(stoppingToken);
         }
 
-        logger.LogInformation("BlogPostPublisher is stopping");
+        LogPublishStopping();
     }
 
     private async Task PublishScheduledBlogPostsAsync()
     {
-        logger.LogInformation("Checking for scheduled blog posts");
+        LogCheckingForScheduledBlogPosts();
 
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
@@ -48,7 +48,7 @@ public sealed class BlogPostPublisher : BackgroundService
         {
             blogPost.Publish();
             await repository.StoreAsync(blogPost);
-            logger.LogInformation("Published blog post with ID {BlogPostId}", blogPost.Id);
+            LogPublishedBlogPost(blogPost.Id);
         }
     }
 
@@ -58,7 +58,22 @@ public sealed class BlogPostPublisher : BackgroundService
         var scheduledBlogPosts = await repository.GetAllAsync(
             filter: b => b.ScheduledPublishDate != null && b.ScheduledPublishDate <= now);
 
-        logger.LogInformation("Found {Count} scheduled blog posts", scheduledBlogPosts.Count);
+        LogFoundScheduledBlogPosts(scheduledBlogPosts.Count);
         return scheduledBlogPosts;
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "BlogPostPublisher is starting")]
+    private partial void LogPublishStarting();
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "BlogPostPublisher is stopping")]
+    private partial void LogPublishStopping();
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Found {Count} scheduled blog posts")]
+    private partial void LogFoundScheduledBlogPosts(int count);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Publishing blog post with ID {BlogPostId}")]
+    private partial void LogPublishedBlogPost(string blogPostId);
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Checking for scheduled blog posts")]
+    private partial void LogCheckingForScheduledBlogPosts();
 }

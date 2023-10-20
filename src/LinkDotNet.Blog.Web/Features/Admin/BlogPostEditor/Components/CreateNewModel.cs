@@ -88,6 +88,8 @@ public sealed class CreateNewModel
 
     public static CreateNewModel FromBlogPost(BlogPost blogPost)
     {
+        ArgumentNullException.ThrowIfNull(blogPost);
+
         return new CreateNewModel
         {
             id = blogPost.Id,

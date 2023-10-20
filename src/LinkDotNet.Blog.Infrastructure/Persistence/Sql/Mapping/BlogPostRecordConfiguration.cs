@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 
-public class BlogPostRecordConfiguration : IEntityTypeConfiguration<BlogPostRecord>
+internal sealed class BlogPostRecordConfiguration : IEntityTypeConfiguration<BlogPostRecord>
 {
     public void Configure(EntityTypeBuilder<BlogPostRecord> builder)
     {

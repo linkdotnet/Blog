@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
@@ -7,6 +8,8 @@ public sealed class SortOrderCalculator : ISortOrderCalculator
 {
     public int GetSortOrder(ProfileInformationEntry target, IEnumerable<ProfileInformationEntry> all)
     {
+        ArgumentNullException.ThrowIfNull(target);
+
         var linkedEntries = new LinkedList<ProfileInformationEntry>(all);
         var targetNode = linkedEntries.Find(target);
         var next = targetNode!.Next;

@@ -1,3 +1,4 @@
+using System;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.Caching.Memory;
@@ -10,6 +11,8 @@ public static class StorageProviderExtensions
 {
     public static void AddStorageProvider(this IServiceCollection services, IConfiguration configuration)
     {
+        ArgumentNullException.ThrowIfNull(configuration);
+
         services.AddMemoryCache();
 
         var persistenceProvider = PersistenceProvider.Create(configuration["PersistenceProvider"]);

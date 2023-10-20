@@ -12,6 +12,8 @@ public static class AuthExtensions
 {
     public static void UseAuthentication(this IServiceCollection services, AppConfiguration appConfiguration)
     {
+        ArgumentNullException.ThrowIfNull(appConfiguration);
+
         services.Configure<CookiePolicyOptions>(options =>
         {
             options.CheckConsentNeeded = _ => false;

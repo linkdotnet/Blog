@@ -8,7 +8,9 @@ public static class PaginatedListQueryExtensions
 {
     public static Task<IPagedList<T>> ToPagedList<T>(this IEnumerable<T> source, int pageIndex, int pageSize)
     {
+#pragma warning disable CA1851
         var count = source.Count();
+
         if (count > 0)
         {
             var items = source
@@ -20,4 +22,5 @@ public static class PaginatedListQueryExtensions
 
         return Task.FromResult<IPagedList<T>>(PagedList<T>.Empty);
     }
+#pragma warning restore CA1851
 }

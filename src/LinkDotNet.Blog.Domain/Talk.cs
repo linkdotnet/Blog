@@ -18,19 +18,16 @@ public sealed class Talk : Entity
 
     public static Talk Create(string presentationTitle, string place, string description, DateTime publishedDate)
     {
-        presentationTitle = presentationTitle.Trim();
-        place = place.Trim();
-        description = description.Trim();
         ArgumentException.ThrowIfNullOrEmpty(presentationTitle);
         ArgumentException.ThrowIfNullOrEmpty(place);
         ArgumentException.ThrowIfNullOrEmpty(description);
 
         return new Talk
         {
-            PresentationTitle = presentationTitle,
+            PresentationTitle = presentationTitle.Trim(),
             PublishedDate = publishedDate,
-            Place = place,
-            Description = description,
+            Place = place.Trim(),
+            Description = description.Trim(),
         };
     }
 }

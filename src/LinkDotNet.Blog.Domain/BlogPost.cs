@@ -77,6 +77,8 @@ public sealed class BlogPost : Entity
 
     public void Update(BlogPost from)
     {
+        ArgumentNullException.ThrowIfNull(from);
+
         if (from == this)
         {
             return;

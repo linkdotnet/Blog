@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 
-public sealed class SkillConfiguration : IEntityTypeConfiguration<Skill>
+internal sealed class SkillConfiguration : IEntityTypeConfiguration<Skill>
 {
     public void Configure(EntityTypeBuilder<Skill> builder)
     {

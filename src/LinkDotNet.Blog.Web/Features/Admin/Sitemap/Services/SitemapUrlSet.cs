@@ -7,5 +7,7 @@ namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 public sealed class SitemapUrlSet
 {
     [XmlElement(ElementName = "url")]
-    public List<SitemapUrl> Urls { get; set; } = new();
+#pragma warning disable CA1002
+    public List<SitemapUrl> Urls { get; init; } = new();
+#pragma warning restore CA1002
 }

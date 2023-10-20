@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 
-public sealed class ProfileInformationEntryConfiguration : IEntityTypeConfiguration<ProfileInformationEntry>
+internal sealed class ProfileInformationEntryConfiguration : IEntityTypeConfiguration<ProfileInformationEntry>
 {
     public void Configure(EntityTypeBuilder<ProfileInformationEntry> builder)
     {

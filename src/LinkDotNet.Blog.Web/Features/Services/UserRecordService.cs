@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
 
-public sealed class UserRecordService : IUserRecordService
+public sealed partial class UserRecordService : IUserRecordService
 {
     private readonly IRepository<UserRecord> userRecordRepository;
     private readonly NavigationManager navigationManager;
@@ -35,7 +35,7 @@ public sealed class UserRecordService : IUserRecordService
         }
         catch (Exception e)
         {
-            logger.LogError("Error while storing user record service: {Exception}", e);
+            LogUserRecordError(e);
         }
     }
 
@@ -67,7 +67,10 @@ public sealed class UserRecordService : IUserRecordService
             return string.Empty;
         }
 
-        var queryIndex = basePath.IndexOf('?');
+        var queryIndex = basePath.IndexOf('?', StringComparison.OrdinalIgnoreCase);
         return queryIndex >= 0 ? basePath[..queryIndex] : basePath;
     }
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error while storing user record service.")]
+    private partial void LogUserRecordError(Exception exception);
 }
