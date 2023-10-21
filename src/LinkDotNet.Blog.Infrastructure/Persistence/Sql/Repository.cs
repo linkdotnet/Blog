@@ -110,24 +110,31 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
     {
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        await using var trx = await blogDbContext.Database.BeginTransactionAsync();
+        var strategy = blogDbContext.Database.CreateExecutionStrategy();
 
-        var idList = ids.ToList();
-        const int batchSize = 1000;
-        var totalBatches = (int)Math.Ceiling((double)idList.Count / batchSize);
+        await strategy.ExecuteAsync(async () => await DeleteBulkAsyncInBatchesAsync());
 
-        for (var batch = 0; batch < totalBatches; batch++)
+        async Task DeleteBulkAsyncInBatchesAsync()
         {
-            var currentBatchIds = idList.Skip(batch * batchSize).Take(batchSize).ToList();
+            await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
-            await blogDbContext.Set<TEntity>()
-                .Where(s => currentBatchIds.Contains(s.Id))
-                .ExecuteDeleteAsync();
+            var idList = ids.ToList();
+            const int batchSize = 1000;
+            var totalBatches = (int)Math.Ceiling((double)idList.Count / batchSize);
 
-            LogDeleteBatch(batch + 1, (batch + 1) * batchSize);
+            for (var batch = 0; batch < totalBatches; batch++)
+            {
+                var currentBatchIds = idList.Skip(batch * batchSize).Take(batchSize).ToList();
+
+                await blogDbContext.Set<TEntity>()
+                    .Where(s => currentBatchIds.Contains(s.Id))
+                    .ExecuteDeleteAsync();
+
+                LogDeleteBatch(batch + 1, (batch + 1) * batchSize);
+            }
+
+            await trx.CommitAsync();
         }
-
-        await trx.CommitAsync();
     }
 
     public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
@@ -135,21 +142,28 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         ArgumentNullException.ThrowIfNull(records);
 
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        await using var trx = await blogDbContext.Database.BeginTransactionAsync();
+        var strategy = blogDbContext.Database.CreateExecutionStrategy();
 
-        var count = 0;
-        foreach (var record in records)
+        await strategy.ExecuteAsync(async () => await StoreBulkAsyncInBatchesAsync());
+
+        async Task StoreBulkAsyncInBatchesAsync()
         {
-            await blogDbContext.Set<TEntity>().AddAsync(record);
-            if (++count % 1000 == 0)
-            {
-                LogBatch(count);
-                await blogDbContext.SaveChangesAsync();
-            }
-        }
+            await using var trx = await blogDbContext.Database.BeginTransactionAsync();
 
-        await blogDbContext.SaveChangesAsync();
-        await trx.CommitAsync();
+            var count = 0;
+            foreach (var record in records)
+            {
+                await blogDbContext.Set<TEntity>().AddAsync(record);
+                if (++count % 1000 == 0)
+                {
+                    LogBatch(count);
+                    await blogDbContext.SaveChangesAsync();
+                }
+            }
+
+            await blogDbContext.SaveChangesAsync();
+            await trx.CommitAsync();
+        }
     }
 
     [LoggerMessage(LogLevel.Debug, "Saving Batch. In total {Count} elements saved")]
