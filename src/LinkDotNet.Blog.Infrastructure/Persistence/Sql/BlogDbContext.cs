@@ -20,6 +20,8 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<Talk> Talks { get; set; }
 
+    public DbSet<UserRecord> UserRecords { get; set; }
+
     public DbSet<BlogPostRecord> BlogPostRecords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
