@@ -38,15 +38,15 @@ public sealed class BlogPost : Entity
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
 
     [NotMapped]
-    public string SeoFriendlyUrl => GenerateSeoFriendlyUrl();
+    public string SearchEngineFriendlyUrl => GenerateSearchEngineFriendlyUrl();
 
-    private string GenerateSeoFriendlyUrl()
+    private string GenerateSearchEngineFriendlyUrl()
     {
-        string seoFriendlyTitle = Title
+        string SearchEngineFriendlyTitle = Title
                                     .Replace(' ', '-')
                                     .ToLower(CultureInfo.CurrentCulture);
 
-        return $"{Id}/{seoFriendlyTitle}";
+        return $"{Id}/{SearchEngineFriendlyTitle}";
     }
 
     public static BlogPost Create(
