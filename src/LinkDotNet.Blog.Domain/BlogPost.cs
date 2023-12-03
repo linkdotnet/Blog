@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 
 namespace LinkDotNet.Blog.Domain;
@@ -34,6 +36,18 @@ public sealed class BlogPost : Entity
     public bool IsScheduled => ScheduledPublishDate is not null;
 
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
+
+    [NotMapped]
+    public string SeoFriendlyUrl => GenerateSeoFriendlyUrl();
+
+    private string GenerateSeoFriendlyUrl()
+    {
+        string seoFriendlyTitle = Title
+                                    .Replace(' ', '-')
+                                    .ToLower(CultureInfo.CurrentCulture);
+
+        return $"{Id}/{seoFriendlyTitle}";
+    }
 
     public static BlogPost Create(
         string title,

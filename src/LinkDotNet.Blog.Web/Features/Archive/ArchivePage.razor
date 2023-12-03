@@ -21,12 +21,12 @@
             <ul class="ps-5">
                 @foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
                 {
-                    <li class="pt-1"><a href="/blogPost/@blogPost.Id">@blogPost.Title</a></li>
+                    <li class="pt-1"><a href="/blogPost/@blogPost.SeoFriendlyUrl">@blogPost.Title</a></li>
                 }
             </ul>
         }
     }
-</div >
+</div>
 
 @code {
     private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
@@ -35,7 +35,7 @@
     protected override async Task OnInitializedAsync()
     {
         var blogPosts = await Repository.GetAllByProjectionAsync(
-            p => new BlogPostPerYear(p.Id, p.Title, p.UpdatedDate),
+            p => new BlogPostPerYear(p.Id, p.SeoFriendlyUrl, p.Title, p.UpdatedDate),
             p => p.IsPublished);
         blogPostCount = blogPosts.Count;
         blogPostsPerYear = blogPosts
@@ -44,5 +44,5 @@
             .ToImmutableArray();
     }
 
-    private sealed record BlogPostPerYear(string Id, string Title, DateTime UpdatedDate);
+    private sealed record BlogPostPerYear(string Id, string SeoFriendlyUrl, string Title, DateTime UpdatedDate);
 }
