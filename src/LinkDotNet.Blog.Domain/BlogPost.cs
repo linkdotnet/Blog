@@ -37,7 +37,6 @@ public sealed class BlogPost : Entity
 
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
 
-    [NotMapped]
     public string SearchEngineFriendlyUrl => GenerateSearchEngineFriendlyUrl();
 
     private string GenerateSearchEngineFriendlyUrl()
