@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LinkDotNet.Blog.Domain;
 
@@ -41,9 +42,27 @@ public sealed class BlogPost : Entity
 
     private string GenerateSearchEngineFriendlyUrl()
     {
-        string SearchEngineFriendlyTitle = Title
-                                    .Replace(' ', '-')
-                                    .ToLower(CultureInfo.CurrentCulture);
+        // Remove all accents and make the string lower case.
+        if (string.IsNullOrWhiteSpace(Title))
+            return Title;
+
+        Title = Title.Normalize(NormalizationForm.FormD);
+        char[] chars = Title
+            .Where(c => CharUnicodeInfo.GetUnicodeCategory(c)
+            != UnicodeCategory.NonSpacingMark).ToArray();
+
+        Title = new string(chars).Normalize(NormalizationForm.FormC);
+
+        string SearchEngineFriendlyTitle = Title.ToLower(CultureInfo.CurrentCulture);
+
+        // Remove all special characters from the string.  
+        SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"[^A-Za-z0-9\s-]", "");
+
+        // Remove all additional spaces in favour of just one.  
+        SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"\s+", " ").Trim();
+
+        // Replace all spaces with the hyphen.  
+        SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"\s", "-");
 
         return $"{Id}/{SearchEngineFriendlyTitle}";
     }
