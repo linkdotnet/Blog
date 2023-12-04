@@ -67,7 +67,7 @@ public sealed class RssFeedController : ControllerBase
 
     private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPostRssInfo blogPost)
     {
-        var blogPostUrl = url + $"/blogPost/{blogPost.SearchEngineFriendlyUrl}";
+        var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
         var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription);
         var item = new SyndicationItem(
             blogPost.Title,
@@ -96,7 +96,7 @@ public sealed class RssFeedController : ControllerBase
     private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
     {
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, s.UpdatedDate, s.PreviewImageUrl, s.Tags, s.SearchEngineFriendlyUrl),
+            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
             f => f.IsPublished,
             orderBy: post => post.UpdatedDate);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
@@ -108,6 +108,5 @@ public sealed class RssFeedController : ControllerBase
         string ShortDescription,
         DateTime UpdatedDate,
         string PreviewImageUrl,
-        IEnumerable<string> Tags,
-        string SearchEngineFriendlyUrl);
+        IEnumerable<string> Tags);
 }
