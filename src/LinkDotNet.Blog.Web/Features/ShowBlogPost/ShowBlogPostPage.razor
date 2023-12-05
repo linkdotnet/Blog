@@ -1,4 +1,4 @@
-@page "/blogPost/{blogPostId}/{searchEngineFriendlyTitle?}"
+@page "/blogPost/{blogPostId}/{slug?}"
 @using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
@@ -73,7 +73,7 @@ else
     public string BlogPostId { get; set; }
 
     [Parameter]
-    public string SearchEngineFriendlyTitle { get; set; }
+    public string Slug { get; set; }
 
 	private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
 

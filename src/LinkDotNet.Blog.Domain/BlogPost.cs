@@ -38,9 +38,9 @@ public sealed class BlogPost : Entity
 
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
 
-    public string SearchEngineFriendlyUrl => GenerateSearchEngineFriendlyUrl();
+    public string Slug => GenerateSlug();
 
-    private string GenerateSearchEngineFriendlyUrl()
+    private string GenerateSlug()
     {
         // Remove all accents and make the string lower case.
         if (string.IsNullOrWhiteSpace(Title))
