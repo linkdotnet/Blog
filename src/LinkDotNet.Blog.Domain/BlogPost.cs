@@ -54,18 +54,18 @@ public sealed class BlogPost : Entity
 
         Title = new string(chars).Normalize(NormalizationForm.FormC);
 
-        var SearchEngineFriendlyTitle = Title.ToLower(CultureInfo.CurrentCulture);
+        var slug = Title.ToLower(CultureInfo.CurrentCulture);
 
         // Remove all special characters from the string.  
-        SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"[^A-Za-z0-9\s-]", "");
+        slug = Regex.Replace(slug, @"[^A-Za-z0-9\s-]", "");
 
         // Remove all additional spaces in favour of just one.  
-        SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"\s+", " ").Trim();
+        slug = Regex.Replace(slug, @"\s+", " ").Trim();
 
         // Replace all spaces with the hyphen.  
-        SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"\s", "-");
+        slug = Regex.Replace(slug, @"\s", "-");
 
-        return $"{Id}/{SearchEngineFriendlyTitle}";
+        return slug;
     }
 
     public static BlogPost Create(

@@ -21,7 +21,7 @@
             <ul class="ps-5">
                 @foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
                 {
-                    <li class="pt-1"><a href="/blogPost/@blogPost.Slug">@blogPost.Title</a></li>
+                    <li class="pt-1"><a href="/blogPost/@blogPost.Id/@blogPost.Slug">@blogPost.Title</a></li>
                 }
             </ul>
         }
