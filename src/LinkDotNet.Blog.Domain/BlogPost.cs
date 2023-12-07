@@ -47,13 +47,14 @@ public sealed class BlogPost : Entity
             return Title;
 
         Title = Title.Normalize(NormalizationForm.FormD);
-        char[] chars = Title
+        var chars = Title
             .Where(c => CharUnicodeInfo.GetUnicodeCategory(c)
-            != UnicodeCategory.NonSpacingMark).ToArray();
+            != UnicodeCategory.NonSpacingMark)
+            .ToArray();
 
         Title = new string(chars).Normalize(NormalizationForm.FormC);
 
-        string SearchEngineFriendlyTitle = Title.ToLower(CultureInfo.CurrentCulture);
+        var SearchEngineFriendlyTitle = Title.ToLower(CultureInfo.CurrentCulture);
 
         // Remove all special characters from the string.  
         SearchEngineFriendlyTitle = Regex.Replace(SearchEngineFriendlyTitle, @"[^A-Za-z0-9\s-]", "");
