@@ -4,7 +4,7 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
 namespace LinkDotNet.Blog.Web;
 
-public sealed record AppConfiguration
+public sealed record ApplicationConfiguration
 {
     public string BlogName { get; init; }
 
@@ -18,19 +18,19 @@ public sealed record AppConfiguration
 
     public string DatabaseName { get; init; }
 
-    public int BlogPostsPerPage { get; init; }
+    public int BlogPostsPerPage { get; init; } = 10;
 
     public bool IsAboutMeEnabled => ProfileInformation != null;
 
     public ProfileInformation ProfileInformation { get; init; }
 
-    public GiscusConfiguration GiscusConfiguration { get; init; }
+    public GiscusConfiguration Giscus { get; init; }
 
-    public bool IsGiscusEnabled => GiscusConfiguration != null;
+    public bool IsGiscusEnabled => Giscus != null;
 
-    public DisqusConfiguration DisqusConfiguration { get; init; }
+    public DisqusConfiguration Disqus { get; init; }
 
-    public bool IsDisqusEnabled => DisqusConfiguration != null;
+    public bool IsDisqusEnabled => Disqus != null;
 
     public string KofiToken { get; init; }
 
@@ -46,7 +46,5 @@ public sealed record AppConfiguration
 
     public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
 
-    public string AuthenticationProvider { get; set; }
-
-    public AuthInformation AuthInformation { get; set; }
+    public  AuthInformation Authentication { get; set; }
 }

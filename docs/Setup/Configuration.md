@@ -22,15 +22,15 @@ The appsettings.json file has a lot of options to customize the content of the b
 	"PersistenceProvider": "InMemory",
 	"ConnectionString": "",
 	"DatabaseName": "",
-	"AuthProvider": "PROVIDER_NAME",
-	"PROVIDER_NAME": {
+	"Authentication": {
+		"Provider": "PROVIDER_NAME",
 		"Domain": "",
 		"ClientId": "",
 		"ClientSecret": "",
 		"LogoutUri": ""
 	},
 	"BlogPostsPerPage": 10,
-	"AboutMeProfileInformation": {
+	"ProfileInformation": {
 		"Name": "Steven Giesel",
 		"Heading": "Software Engineer",
 		"ProfilePictureUrl": "assets/profile-picture.webp"

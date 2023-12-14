@@ -4,6 +4,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options; 
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
@@ -17,11 +18,11 @@ public class IntroductionCardTests : TestContext
         {
             BackgroundUrl = "something_but_null",
         };
-        var appConfiguration = new AppConfiguration
+        var appConfiguration = new ApplicationConfiguration
         {
             Introduction = introduction,
         };
-        Services.AddScoped(_ => appConfiguration);
+        Services.AddScoped(_ => Options.Create(appConfiguration));
 
         var cut = RenderComponent<IntroductionCard>();
 
@@ -41,11 +42,11 @@ public class IntroductionCardTests : TestContext
         {
             BackgroundUrl = url,
         };
-        var appConfiguration = new AppConfiguration
+        var appConfiguration = new ApplicationConfiguration
         {
             Introduction = introduction,
         };
-        Services.AddScoped(_ => appConfiguration);
+        Services.AddScoped(_ => Options.Create(appConfiguration));
 
         var cut = RenderComponent<IntroductionCard>();
 

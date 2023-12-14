@@ -1,20 +1,21 @@
-﻿@inject AppConfiguration Configuration
+﻿@inject IOptions<ApplicationConfiguration> Configuration
 @inject NavigationManager NavigationManager
+@using Microsoft.Extensions.Options
 @implements IDisposable
 
 <nav class="navbar navbar-expand-lg navbar-light w-100">
     <div class="container-fluid">
-        @if (!string.IsNullOrEmpty(Configuration.BlogBrandUrl))
+        @if (!string.IsNullOrEmpty(Configuration.Value.BlogBrandUrl))
         {
             <a class="nav-brand ms-5" href="/">
                 <img style="max-height: 70px; width: 70px; height: 70px;"
-                     src="@Configuration.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
+                     src="@Configuration.Value.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
                      alt="brand" />
             </a>
         }
         else
         {
-            <a class="nav-brand barcode ms-5" href="/">@Configuration.BlogName</a>
+            <a class="nav-brand barcode ms-5" href="/">@Configuration.Value.BlogName</a>
         }
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -23,7 +24,7 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
                 <li class="nav-item active"><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
                 <li class="nav-item active"><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
-                @if (Configuration.IsAboutMeEnabled)
+                @if (Configuration.Value.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="AboutMe"><i class="profile"></i> About

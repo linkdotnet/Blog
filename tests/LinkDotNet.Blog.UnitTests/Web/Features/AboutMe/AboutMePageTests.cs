@@ -9,6 +9,7 @@ using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe;
 
@@ -63,17 +64,17 @@ public class AboutMePageTests : TestContext
         ogData.Description.Should().Contain("About Me,My Name");
     }
 
-    private static AppConfiguration CreateAppConfiguration(ProfileInformation info = null)
+    private static ApplicationConfiguration CreateAppConfiguration(ProfileInformation info = null)
     {
-        return new AppConfiguration
+        return new ApplicationConfiguration
         {
             ProfileInformation = info,
         };
     }
 
-    private void SetupMocks(AppConfiguration config)
+    private void SetupMocks(ApplicationConfiguration config)
     {
-        Services.AddScoped(_ => config);
+        Services.AddScoped(_ => Options.Create(config));
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<ISortOrderCalculator>());
         Services.RegisterRepositoryWithEmptyReturn<ProfileInformationEntry>();

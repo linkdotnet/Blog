@@ -1,4 +1,5 @@
-@inject AppConfiguration AppConfiguration
+@using Microsoft.Extensions.Options
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 
 @if (MultipleCommentPlugins)
 {
@@ -7,15 +8,15 @@
     </div>
 }
 
-@if (AppConfiguration.IsDisqusEnabled)
+@if (AppConfiguration.Value.IsDisqusEnabled)
 {
     <Disqus></Disqus>
 }
-@if (AppConfiguration.IsGiscusEnabled)
+@if (AppConfiguration.Value.IsGiscusEnabled)
 {
     <Giscus></Giscus>
 }
 
 @code {
-    private bool MultipleCommentPlugins => AppConfiguration.IsDisqusEnabled && AppConfiguration.IsGiscusEnabled;
+    private bool MultipleCommentPlugins => AppConfiguration.Value.IsDisqusEnabled && AppConfiguration.Value.IsGiscusEnabled;
 }

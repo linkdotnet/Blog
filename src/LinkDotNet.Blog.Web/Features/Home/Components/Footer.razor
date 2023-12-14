@@ -1,10 +1,11 @@
-@inject AppConfiguration AppConfiguration
+@using Microsoft.Extensions.Options
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <footer id="footer" class="text-center">
     <span class="py-2 mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
 </footer>
 @code {
-    private string CopyrightName => AppConfiguration.IsAboutMeEnabled
-        ? AppConfiguration.ProfileInformation.Name
+    private string CopyrightName => AppConfiguration.Value.IsAboutMeEnabled
+        ? AppConfiguration.Value.ProfileInformation.Name
         : string.Empty;
 }

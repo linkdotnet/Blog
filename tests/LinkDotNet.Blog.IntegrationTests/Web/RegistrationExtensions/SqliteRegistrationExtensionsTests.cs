@@ -1,6 +1,7 @@
 ﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
+using Microsoft.Extensions.Options;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,10 +13,10 @@ public class SqliteRegistrationExtensionsTests
     public void ShouldGetValidRepository()
     {
         var serviceCollection = new ServiceCollection();
-        var appConfig = new AppConfiguration
+        var appConfig = Options.Create(new ApplicationConfiguration()
         {
             ConnectionString = "Filename=:memory:",
-        };
+        });
         serviceCollection.AddScoped(_ => appConfig);
         serviceCollection.AddLogging();
 

@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Home;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Home;
 
@@ -138,7 +139,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 
-    private static AppConfiguration CreateSampleAppConfiguration(string profilePictureUri = null)
+    private static ApplicationConfiguration CreateSampleAppConfiguration(string profilePictureUri = null)
     {
         return new()
         {
@@ -166,7 +167,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterComponents(TestContextBase ctx, string profilePictureUri = null)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => CreateSampleAppConfiguration(profilePictureUri));
+        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri)));
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         ctx.Services.AddMemoryCache();
     }

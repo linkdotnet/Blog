@@ -1,19 +1,19 @@
 ﻿@page "/AboutMe"
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components
-@inject AppConfiguration AppConfiguration
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
-@if (AppConfiguration.IsAboutMeEnabled)
+@if (AppConfiguration.Value.IsAboutMeEnabled)
 {
-    <OgData Title="@("About Me - " + AppConfiguration.ProfileInformation.Name)"
-            Description="@("About Me," + AppConfiguration.ProfileInformation.Name)"
-            Keywords="@AppConfiguration.ProfileInformation.Name"
+    <OgData Title="@("About Me - " + AppConfiguration.Value.ProfileInformation.Name)"
+            Description="@("About Me," + AppConfiguration.Value.ProfileInformation.Name)"
+            Keywords="@AppConfiguration.Value.ProfileInformation.Name"
             AbsolutePreviewImageUrl="@ImageUrl"></OgData>
 
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-4">
-                <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="AppConfiguration.ProfileInformation"/>
+                <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="AppConfiguration.Value.ProfileInformation"/>
             </div>
             <TabbedNavigation IsAuthenticated="isAuthenticated"></TabbedNavigation>
         </div>
@@ -23,7 +23,7 @@
 @code {
     private bool isAuthenticated;
 
-    private string ImageUrl => AppConfiguration.ProfileInformation.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
+    private string ImageUrl => AppConfiguration.Value.ProfileInformation.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 
     protected override async Task OnInitializedAsync()
     {

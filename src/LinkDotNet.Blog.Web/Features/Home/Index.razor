@@ -6,15 +6,16 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Home.Components
 @using Microsoft.Extensions.Caching.Memory
+@using Microsoft.Extensions.Options
 @inject IMemoryCache MemoryCache
 @inject IRepository<BlogPost> BlogPostRepository
-@inject AppConfiguration AppConfiguration
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager NavigationManager
 
 
-<OgData Title="@(Markdown.ToPlainText(AppConfiguration.BlogName))"
+<OgData Title="@(Markdown.ToPlainText(AppConfiguration.Value.BlogName))"
         AbsolutePreviewImageUrl="@ImageUrl"
-        Description="@(Markdown.ToPlainText(AppConfiguration.Introduction.Description))"></OgData>
+        Description="@(Markdown.ToPlainText(AppConfiguration.Value.Introduction.Description))"></OgData>
 <section>
     <IntroductionCard></IntroductionCard>
 </section>
@@ -40,7 +41,7 @@
 
     private IPagedList<BlogPost> currentPage = PagedList<BlogPost>.Empty;
 
-    private string ImageUrl => AppConfiguration.Introduction.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
+    private string ImageUrl => AppConfiguration.Value.Introduction.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 
     protected override async Task OnParametersSetAsync()
     {
@@ -73,6 +74,6 @@
 		=> BlogPostRepository.GetAllAsync(
 		p => p.IsPublished,
 		b => b.UpdatedDate,
-		pageSize: AppConfiguration.BlogPostsPerPage,
+		pageSize: AppConfiguration.Value.BlogPostsPerPage,
 		page: page);
 }

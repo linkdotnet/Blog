@@ -2,6 +2,7 @@ using System.Linq;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
@@ -14,7 +15,7 @@ public class DisqusTests : TestContext
         {
             Shortname = "blog",
         };
-        Services.AddScoped(_ => new AppConfiguration { DisqusConfiguration = disqusData });
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { Disqus = disqusData }));
         JSInterop.SetupModule("./Features/ShowBlogPost/Components/Disqus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -28,7 +29,7 @@ public class DisqusTests : TestContext
     [Fact]
     public void ShouldNotInitDisqusWhenNoInformationProvided()
     {
-        Services.AddScoped(_ => new AppConfiguration());
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
 
         RenderComponent<Disqus>();
 

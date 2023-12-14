@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace LinkDotNet.Blog.UnitTests.Web;
 
-public class AppConfigurationFactoryTests
+public class ApplicationConfigurationTests
 {
     [Fact]
     public void ShouldMapFromAppConfiguration()
@@ -22,9 +22,9 @@ public class AppConfigurationFactoryTests
             { "Introduction:ProfilePictureUrl", "anotherurl" },
             { "Introduction:Description", "desc" },
             { "BlogPostsPerPage", "5" },
-            { "AboutMeProfileInformation:Name", "Steven" },
-            { "AboutMeProfileInformation:Heading", "Dev" },
-            { "AboutMeProfileInformation:ProfilePictureUrl", "Url" },
+            { "ProfileInformation:Name", "Steven" },
+            { "ProfileInformation:Heading", "Dev" },
+            { "ProfileInformation:ProfilePictureUrl", "Url" },
             { "Giscus:Repository", "repo" },
             { "Giscus:RepositoryId", "repoid" },
             { "Giscus:Category", "general" },
@@ -34,17 +34,18 @@ public class AppConfigurationFactoryTests
             { "GithubSponsorName", "linkdotnet" },
             { "ShowReadingIndicator", "true" },
             { "PatreonName", "linkdotnet" },
-            { "AuthenticationProvider","Auth0"},
-            { "Auth0:ClientId","123"},
-            { "Auth0:ClientSecret","qwe"},
-            { "Auth0:Domain","example.com"}
+            { "Authentication:Provider","Auth0"},
+            { "Authentication:ClientId","123"},
+            { "Authentication:ClientSecret","qwe"},
+            { "Authentication:Domain","example.com"}
 
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = AppConfigurationFactory.Create(configuration);
+        var appConfiguration = new ApplicationConfiguration();
+        configuration.Bind(appConfiguration);
 
         appConfiguration.BlogName.Should().Be("UnitTest");
         appConfiguration.BlogBrandUrl.Should().Be("http://localhost");
@@ -64,20 +65,20 @@ public class AppConfigurationFactoryTests
         appConfiguration.ProfileInformation.Name.Should().Be("Steven");
         appConfiguration.ProfileInformation.Heading.Should().Be("Dev");
         appConfiguration.ProfileInformation.ProfilePictureUrl.Should().Be("Url");
-        appConfiguration.GiscusConfiguration.Repository.Should().Be("repo");
-        appConfiguration.GiscusConfiguration.RepositoryId.Should().Be("repoid");
-        appConfiguration.GiscusConfiguration.Category.Should().Be("general");
-        appConfiguration.GiscusConfiguration.CategoryId.Should().Be("generalid");
-        appConfiguration.DisqusConfiguration.Shortname.Should().Be("blog");
+        appConfiguration.Giscus.Repository.Should().Be("repo");
+        appConfiguration.Giscus.RepositoryId.Should().Be("repoid");
+        appConfiguration.Giscus.Category.Should().Be("general");
+        appConfiguration.Giscus.CategoryId.Should().Be("generalid");
+        appConfiguration.Disqus.Shortname.Should().Be("blog");
         appConfiguration.KofiToken.Should().Be("ABC");
         appConfiguration.GithubSponsorName.Should().Be("linkdotnet");
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
-        appConfiguration.AuthenticationProvider.Should().Be("Auth0");
-        appConfiguration.AuthInformation.ClientId.Should().Be("123");
-        appConfiguration.AuthInformation.ClientSecret.Should().Be("qwe");
-        appConfiguration.AuthInformation.Domain.Should().Be("example.com");
+        appConfiguration.Authentication.Provider.Should().Be("Auth0");
+        appConfiguration.Authentication.ClientId.Should().Be("123");
+        appConfiguration.Authentication.ClientSecret.Should().Be("qwe");
+        appConfiguration.Authentication.Domain.Should().Be("example.com");
     }
 
     [Theory]
@@ -106,7 +107,8 @@ public class AppConfigurationFactoryTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = AppConfigurationFactory.Create(configuration);
+        var appConfiguration = new ApplicationConfiguration();
+        configuration.Bind(appConfiguration);
 
         appConfiguration.Social.HasGithubAccount.Should().Be(githubAvailable);
         appConfiguration.Social.HasLinkedinAccount.Should().Be(linkedInAvailable);
@@ -126,7 +128,8 @@ public class AppConfigurationFactoryTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = AppConfigurationFactory.Create(configuration);
+        var appConfiguration = new ApplicationConfiguration();
+        configuration.Bind(appConfiguration);
 
         appConfiguration.IsAboutMeEnabled.Should().BeFalse();
     }
@@ -144,7 +147,8 @@ public class AppConfigurationFactoryTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = AppConfigurationFactory.Create(configuration);
+        var appConfiguration = new ApplicationConfiguration();
+        configuration.Bind(appConfiguration);
 
         appConfiguration.IsGiscusEnabled.Should().BeFalse();
         appConfiguration.IsDisqusEnabled.Should().BeFalse();
@@ -157,7 +161,8 @@ public class AppConfigurationFactoryTests
             .AddInMemoryCollection(new Dictionary<string, string>())
             .Build();
 
-        var appConfiguration = AppConfigurationFactory.Create(configuration);
+        var appConfiguration = new ApplicationConfiguration();
+        configuration.Bind(appConfiguration);
 
         appConfiguration.BlogPostsPerPage.Should().Be(10);
     }
@@ -167,14 +172,15 @@ public class AppConfigurationFactoryTests
     {
         var inMemorySettings = new Dictionary<string, string>
         {
-            { "AuthenticationProvider", "Auth0" }, { "Auth0:Domain", "domain" }, { "Auth0:ClientId", "clientid" },
+            { "Authentication:AuthenticationProvider", "Auth0" }, { "Authentication:Domain", "domain" }, { "Authentication:ClientId", "clientid" },
         };
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = AppConfigurationFactory.Create(configuration);
+        var appConfiguration = new ApplicationConfiguration();
+        configuration.Bind(appConfiguration);
 
-        appConfiguration.AuthInformation.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");
+        appConfiguration.Authentication.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");
     }
 }

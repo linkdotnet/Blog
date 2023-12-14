@@ -32,8 +32,7 @@ public class Program
         {
             options.MaximumReceiveMessageSize = 1024 * 1024;
         });
-        var appConfiguration = AppConfigurationFactory.Create(builder.Configuration);
-        builder.Services.AddSingleton(_ => appConfiguration);
+        builder.Services.AddConfigurations();
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
@@ -50,7 +49,7 @@ public class Program
         }
         else
         {
-            builder.Services.UseAuthentication(appConfiguration);
+            builder.Services.UseAuthentication();
         }
     }
 

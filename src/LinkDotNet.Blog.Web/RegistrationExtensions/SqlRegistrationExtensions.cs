@@ -2,6 +2,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web.RegistrationExtensions;
 
@@ -14,8 +15,8 @@ public static class SqlRegistrationExtensions
         services.AddPooledDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
-            var configuration = s.GetRequiredService<AppConfiguration>();
-            var connectionString = configuration.ConnectionString;
+            var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
+            var connectionString = configuration.Value.ConnectionString;
             builder.UseSqlServer(connectionString)
 #if DEBUG
                 .EnableDetailedErrors()
@@ -33,8 +34,8 @@ public static class SqlRegistrationExtensions
         services.AddPooledDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
-            var configuration = s.GetRequiredService<AppConfiguration>();
-            var connectionString = configuration.ConnectionString;
+            var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
+            var connectionString = configuration.Value.ConnectionString;
             builder.UseSqlite(connectionString)
 #if DEBUG
                 .EnableDetailedErrors()
@@ -51,8 +52,8 @@ public static class SqlRegistrationExtensions
         services.AddPooledDbContextFactory<BlogDbContext>(
         (s, builder) =>
         {
-            var configuration = s.GetRequiredService<AppConfiguration>();
-            var connectionString = configuration.ConnectionString;
+            var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
+            var connectionString = configuration.Value.ConnectionString;
             builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 #if DEBUG
                 .EnableDetailedErrors()
