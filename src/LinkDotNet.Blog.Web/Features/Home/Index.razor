@@ -9,13 +9,14 @@
 @using Microsoft.Extensions.Options
 @inject IMemoryCache MemoryCache
 @inject IRepository<BlogPost> BlogPostRepository
+@inject IOptions<Introduction> Introduction
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager NavigationManager
 
 
 <OgData Title="@(Markdown.ToPlainText(AppConfiguration.Value.BlogName))"
         AbsolutePreviewImageUrl="@ImageUrl"
-        Description="@(Markdown.ToPlainText(AppConfiguration.Value.Introduction.Description))"></OgData>
+        Description="@(Markdown.ToPlainText(Introduction.Value.Description))"></OgData>
 <section>
     <IntroductionCard></IntroductionCard>
 </section>
@@ -41,7 +42,7 @@
 
     private IPagedList<BlogPost> currentPage = PagedList<BlogPost>.Empty;
 
-    private string ImageUrl => AppConfiguration.Value.Introduction.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
+    private string ImageUrl => Introduction.Value.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 
     protected override async Task OnParametersSetAsync()
     {

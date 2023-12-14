@@ -32,7 +32,11 @@ public class Program
         {
             options.MaximumReceiveMessageSize = 1024 * 1024;
         });
-        builder.Services.AddConfigurations();
+
+        builder.Services
+            .AddConfigurations()
+            .AddAuthenticationConfigurations();
+
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);

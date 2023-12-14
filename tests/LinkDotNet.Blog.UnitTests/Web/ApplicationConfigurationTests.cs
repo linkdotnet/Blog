@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
@@ -58,9 +59,6 @@ public class ApplicationConfigurationTests
         appConfiguration.Social.HasTwitterAccount.Should().BeTrue();
         appConfiguration.ConnectionString.Should().Be("cs");
         appConfiguration.DatabaseName.Should().Be("db");
-        appConfiguration.Introduction.BackgroundUrl.Should().Be("someurl");
-        appConfiguration.Introduction.ProfilePictureUrl.Should().Be("anotherurl");
-        appConfiguration.Introduction.Description.Should().Be("desc");
         appConfiguration.BlogPostsPerPage.Should().Be(5);
         appConfiguration.IsAboutMeEnabled.Should().BeTrue();
         appConfiguration.ProfileInformation.Name.Should().Be("Steven");
@@ -76,6 +74,12 @@ public class ApplicationConfigurationTests
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
+        
+        var introduction = new Introduction();
+        configuration.GetSection(Introduction.IntroductionSection).Bind(introduction);
+        introduction.BackgroundUrl.Should().Be("someurl");
+        introduction.ProfilePictureUrl.Should().Be("anotherurl");
+        introduction.Description.Should().Be("desc");
         
         var authInformation = new AuthInformation();
         configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);

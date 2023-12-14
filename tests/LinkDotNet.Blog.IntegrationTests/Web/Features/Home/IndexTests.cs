@@ -139,20 +139,20 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 
-    private static ApplicationConfiguration CreateSampleAppConfiguration(string profilePictureUri = null)
+    private static (ApplicationConfiguration ApplicationConfiguration,Introduction Introduction) CreateSampleAppConfiguration(string profilePictureUri = null)
     {
-        return new()
-        {
-            BlogName = string.Empty,
-            Introduction = new Introduction
+        return (new ApplicationConfiguration
             {
-                Description = string.Empty,
-                BackgroundUrl = string.Empty,
-                ProfilePictureUrl = profilePictureUri ?? string.Empty,
-            },
+            BlogName = string.Empty,
             Social = new Social(),
             BlogPostsPerPage = 10,
-        };
+        },
+        new Introduction
+        {
+            Description = string.Empty,
+            BackgroundUrl = string.Empty,
+            ProfilePictureUrl = profilePictureUri ?? string.Empty,
+        });
     }
 
     private async Task CreatePublishedBlogPosts(int amount)
@@ -167,7 +167,8 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterComponents(TestContextBase ctx, string profilePictureUri = null)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri)));
+        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).ApplicationConfiguration));
+        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).Introduction));
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         ctx.Services.AddMemoryCache();
     }

@@ -30,11 +30,12 @@ public class RssFeedControllerTests
         };
         var config = Options.Create<ApplicationConfiguration>(new ApplicationConfiguration
         {
-            BlogName = "Test",
-            Introduction = new Introduction
-            {
-                Description = "Description",
-            },
+            BlogName = "Test"
+        });
+        
+        var introductionConfig = Options.Create<Introduction>(new Introduction
+        {
+            Description = "Description",
         });
         var blogPost1 = new BlogPostBuilder()
             .WithTitle("1")
@@ -53,7 +54,7 @@ public class RssFeedControllerTests
         blogPost2.Id = "2";
         await repository.StoreAsync(blogPost1);
         await repository.StoreAsync(blogPost2);
-        var cut = new RssFeedController(config, repository)
+        var cut = new RssFeedController(introductionConfig, config, repository)
         {
             ControllerContext = controllerContext,
         };

@@ -10,7 +10,19 @@ namespace LinkDotNet.Blog.Web;
 
 public static class ConfigurationExtension
 {
-    public static void AddConfigurations(this IServiceCollection services)
+    public static IServiceCollection AddConfigurations(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<ApplicationConfiguration>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.Bind(settings);
+            });
+        return services;
+    }
+
+    public static IServiceCollection AddAuthenticationConfigurations(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -19,11 +31,6 @@ public static class ConfigurationExtension
             {
                 config.GetSection(AuthInformation.AuthInformationSection).Bind(settings);
             });
-
-        services.AddOptions<ApplicationConfiguration>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.Bind(settings);
-            });
+        return services;
     }
 }

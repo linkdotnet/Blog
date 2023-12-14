@@ -18,11 +18,8 @@ public class IntroductionCardTests : TestContext
         {
             BackgroundUrl = "something_but_null",
         };
-        var appConfiguration = new ApplicationConfiguration
-        {
-            Introduction = introduction,
-        };
-        Services.AddScoped(_ => Options.Create(appConfiguration));
+        
+        Services.AddScoped(_ => Options.Create(introduction));
 
         var cut = RenderComponent<IntroductionCard>();
 
@@ -42,11 +39,8 @@ public class IntroductionCardTests : TestContext
         {
             BackgroundUrl = url,
         };
-        var appConfiguration = new ApplicationConfiguration
-        {
-            Introduction = introduction,
-        };
-        Services.AddScoped(_ => Options.Create(appConfiguration));
+
+        Services.AddScoped(_ => Options.Create(introduction));
 
         var cut = RenderComponent<IntroductionCard>();
 
