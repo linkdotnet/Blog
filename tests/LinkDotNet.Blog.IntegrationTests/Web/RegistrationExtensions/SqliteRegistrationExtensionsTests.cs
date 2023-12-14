@@ -1,8 +1,8 @@
 ﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
-using Microsoft.Extensions.Options;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions;
