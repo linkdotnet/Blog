@@ -19,8 +19,14 @@ public class AboutMePageTests : TestContext
     public void ShouldPassIsAuthenticated()
     {
         this.AddTestAuthorization().SetAuthorized("test");
-        var config = CreateAppConfiguration(new ProfileInformation { ProfilePictureUrl = string.Empty });
-        SetupMocks(config);
+        var config = new ProfileInformation { ProfilePictureUrl = string.Empty };
+        
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            IsAboutMeEnabled = true
+        };
+        
+        SetupMocks(config, applicationConfiguration);
 
         var cut = RenderComponent<AboutMePage>();
 
@@ -33,8 +39,14 @@ public class AboutMePageTests : TestContext
     public void ShouldNotShowWhenEnabledFalse()
     {
         this.AddTestAuthorization().SetNotAuthorized();
-        var config = CreateAppConfiguration();
-        SetupMocks(config);
+        var config = new ProfileInformation();
+        
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            IsAboutMeEnabled = false
+        };
+        
+        SetupMocks(config, applicationConfiguration);
 
         var cut = RenderComponent<AboutMePage>();
 
@@ -52,8 +64,11 @@ public class AboutMePageTests : TestContext
             Name = "My Name",
             ProfilePictureUrl = "someurl",
         };
-        var config = CreateAppConfiguration(profileInformation);
-        SetupMocks(config);
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            IsAboutMeEnabled = true
+        };
+        SetupMocks(profileInformation, applicationConfiguration);
 
         var cut = RenderComponent<AboutMePage>();
 
@@ -64,17 +79,10 @@ public class AboutMePageTests : TestContext
         ogData.Description.Should().Contain("About Me,My Name");
     }
 
-    private static ApplicationConfiguration CreateAppConfiguration(ProfileInformation info = null)
-    {
-        return new ApplicationConfiguration
-        {
-            ProfileInformation = info,
-        };
-    }
-
-    private void SetupMocks(ApplicationConfiguration config)
+    private void SetupMocks(ProfileInformation config, ApplicationConfiguration applicationConfiguration)
     {
         Services.AddScoped(_ => Options.Create(config));
+        Services.AddScoped(_ => Options.Create(applicationConfiguration));
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<ISortOrderCalculator>());
         Services.RegisterRepositoryWithEmptyReturn<ProfileInformationEntry>();

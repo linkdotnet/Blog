@@ -16,9 +16,7 @@ public sealed record ApplicationConfiguration
 
     public int BlogPostsPerPage { get; init; } = 10;
 
-    public bool IsAboutMeEnabled => ProfileInformation != null;
-
-    public ProfileInformation ProfileInformation { get; init; }
+    public bool IsAboutMeEnabled { get; set; }
 
     public GiscusConfiguration Giscus { get; init; }
 

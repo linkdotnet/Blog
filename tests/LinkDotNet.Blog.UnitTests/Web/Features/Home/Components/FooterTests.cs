@@ -11,15 +11,18 @@ public class FooterTests : TestContext
     [Fact]
     public void ShouldSetCopyrightInformation()
     {
+        var profileInfoConfig = Options.Create(new ProfileInformation
+        {
+            Name = "Steven",
+        });
+        Services.AddScoped(_ => profileInfoConfig);
+
         var appConfig = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation()
-            {
-                Name = "Steven",
-            },
+             IsAboutMeEnabled= true,
         });
         Services.AddScoped(_ => appConfig);
-
+        
         var cut = RenderComponent<Footer>();
 
         cut.Find("span").TextContent.Should().Contain("Steven");

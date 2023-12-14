@@ -8,6 +8,7 @@
 @inject IJSRuntime JsRuntime
 @inject IUserRecordService UserRecordService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IOptions<ProfileInformation> ProfileInformation
 
 @if (BlogPost == null)
 {
@@ -24,7 +25,7 @@ else
 		                PreviewImage="@BlogPost.PreviewImageUrl"
 		                PreviewFallbackImage="@BlogPost.PreviewImageUrlFallback"
 		                PublishedDate="@BlogPost.UpdatedDate"
-		                Author="@AppConfiguration.Value.ProfileInformation?.Name"/>
+		                Author="@ProfileInformation.Value?.Name"/>
 	</OgData>
 
 	<div class="d-flex justify-content-center pt-2 blog-outer-box">

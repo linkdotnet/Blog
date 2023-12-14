@@ -47,6 +47,8 @@ public class ApplicationConfigurationTests
             .Build();
 
         var appConfiguration = new ApplicationConfiguration();
+        var profileInfoSection = configuration.GetSection(ProfileInformation.ProfileInformationSection);
+        appConfiguration.IsAboutMeEnabled = profileInfoSection.Exists();
         configuration.Bind(appConfiguration);
 
         appConfiguration.BlogName.Should().Be("UnitTest");
@@ -55,9 +57,6 @@ public class ApplicationConfigurationTests
         appConfiguration.DatabaseName.Should().Be("db");
         appConfiguration.BlogPostsPerPage.Should().Be(5);
         appConfiguration.IsAboutMeEnabled.Should().BeTrue();
-        appConfiguration.ProfileInformation.Name.Should().Be("Steven");
-        appConfiguration.ProfileInformation.Heading.Should().Be("Dev");
-        appConfiguration.ProfileInformation.ProfilePictureUrl.Should().Be("Url");
         appConfiguration.Giscus.Repository.Should().Be("repo");
         appConfiguration.Giscus.RepositoryId.Should().Be("repoid");
         appConfiguration.Giscus.Category.Should().Be("general");
@@ -68,6 +67,12 @@ public class ApplicationConfigurationTests
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
+        
+        var profileInformation = new ProfileInformation();
+        configuration.GetSection(ProfileInformation.ProfileInformationSection).Bind(profileInformation);
+        profileInformation.Name.Should().Be("Steven");
+        profileInformation.Heading.Should().Be("Dev");
+        profileInformation.ProfilePictureUrl.Should().Be("Url");
         
         var social = new Social();
         configuration.GetSection(Social.SocialSection).Bind(social);

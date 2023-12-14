@@ -1,11 +1,13 @@
 @using Microsoft.Extensions.Options
+@using LinkDotNet.Blog.Domain
 @inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IOptions<ProfileInformation> ProfileInformation
 
 <footer id="footer" class="text-center">
     <span class="py-2 mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
 </footer>
 @code {
     private string CopyrightName => AppConfiguration.Value.IsAboutMeEnabled
-        ? AppConfiguration.Value.ProfileInformation.Name
+        ? ProfileInformation.Value.Name
         : string.Empty;
 }

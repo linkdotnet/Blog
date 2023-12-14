@@ -17,6 +17,9 @@ public static class ConfigurationExtension
         services.AddOptions<ApplicationConfiguration>()
             .Configure<IConfiguration>((settings, config) =>
             {
+                var profileInfoSection = config.GetSection(ProfileInformation.ProfileInformationSection);
+                settings.IsAboutMeEnabled = profileInfoSection.Exists();
+
                 config.Bind(settings);
             });
         return services;
@@ -54,6 +57,18 @@ public static class ConfigurationExtension
             .Configure<IConfiguration>((settings, config) =>
             {
                 config.GetSection(Social.SocialSection).Bind(settings);
+            });
+        return services;
+    }
+
+    public static IServiceCollection AddProfileInformationConfigurations(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<ProfileInformation>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(ProfileInformation.ProfileInformationSection).Bind(settings);
             });
         return services;
     }

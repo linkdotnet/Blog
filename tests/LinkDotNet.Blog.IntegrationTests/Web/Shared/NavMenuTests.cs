@@ -36,7 +36,7 @@ public class NavMenuTests : TestContext
     {
         var config = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation(),
+            IsAboutMeEnabled = true
         });
         Services.AddScoped(_ => config);
         this.AddTestAuthorization();
@@ -52,10 +52,7 @@ public class NavMenuTests : TestContext
     [Fact]
     public void ShouldPassCorrectUriToComponent()
     {
-        var config = Options.Create(new ApplicationConfiguration
-        {
-            ProfileInformation = new ProfileInformation(),
-        });
+        var config = Options.Create(new ProfileInformation());
         Services.AddScoped(_ => config);
         this.AddTestAuthorization();
         var cut = RenderComponent<NavMenu>();
@@ -70,10 +67,13 @@ public class NavMenuTests : TestContext
     {
         var config = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation(),
             BlogBrandUrl = "http://localhost/img.png",
         });
         Services.AddScoped(_ => config);
+        
+        var profileInfoConfig = Options.Create(new ProfileInformation());
+        Services.AddScoped(_ => profileInfoConfig);
+
         this.AddTestAuthorization();
 
         var cut = RenderComponent<NavMenu>();
@@ -91,11 +91,14 @@ public class NavMenuTests : TestContext
     {
         var config = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation(),
             BlogBrandUrl = brandUrl,
             BlogName = "Steven",
         });
         Services.AddScoped(_ => config);
+        
+        var profileInfoConfig = Options.Create(new ProfileInformation());
+        Services.AddScoped(_ => profileInfoConfig);
+        
         this.AddTestAuthorization();
 
         var cut = RenderComponent<NavMenu>();
