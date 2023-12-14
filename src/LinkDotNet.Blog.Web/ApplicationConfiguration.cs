@@ -10,8 +10,6 @@ public sealed record ApplicationConfiguration
 
     public string BlogBrandUrl { get; init; }
 
-    public Social Social { get; init; }
-
     public string ConnectionString { get; init; }
 
     public string DatabaseName { get; init; }

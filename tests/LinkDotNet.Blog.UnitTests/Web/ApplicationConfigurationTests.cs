@@ -51,12 +51,6 @@ public class ApplicationConfigurationTests
 
         appConfiguration.BlogName.Should().Be("UnitTest");
         appConfiguration.BlogBrandUrl.Should().Be("http://localhost");
-        appConfiguration.Social.GithubAccountUrl.Should().Be("github");
-        appConfiguration.Social.HasGithubAccount.Should().BeTrue();
-        appConfiguration.Social.LinkedinAccountUrl.Should().Be("linkedIn");
-        appConfiguration.Social.HasLinkedinAccount.Should().BeTrue();
-        appConfiguration.Social.TwitterAccountUrl.Should().Be("twitter");
-        appConfiguration.Social.HasTwitterAccount.Should().BeTrue();
         appConfiguration.ConnectionString.Should().Be("cs");
         appConfiguration.DatabaseName.Should().Be("db");
         appConfiguration.BlogPostsPerPage.Should().Be(5);
@@ -74,6 +68,15 @@ public class ApplicationConfigurationTests
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
+        
+        var social = new Social();
+        configuration.GetSection(Social.SocialSection).Bind(social);
+        social.GithubAccountUrl.Should().Be("github");
+        social.HasGithubAccount.Should().BeTrue();
+        social.LinkedinAccountUrl.Should().Be("linkedIn");
+        social.HasLinkedinAccount.Should().BeTrue();
+        social.TwitterAccountUrl.Should().Be("twitter");
+        social.HasTwitterAccount.Should().BeTrue();
         
         var introduction = new Introduction();
         configuration.GetSection(Introduction.IntroductionSection).Bind(introduction);
@@ -115,12 +118,12 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = new ApplicationConfiguration();
-        configuration.Bind(appConfiguration);
+        var socialConfiguration = new Social();
+        configuration.GetSection(Social.SocialSection).Bind(socialConfiguration);
 
-        appConfiguration.Social.HasGithubAccount.Should().Be(githubAvailable);
-        appConfiguration.Social.HasLinkedinAccount.Should().Be(linkedInAvailable);
-        appConfiguration.Social.HasTwitterAccount.Should().Be(twitterAvailable);
+        socialConfiguration.HasGithubAccount.Should().Be(githubAvailable);
+        socialConfiguration.HasLinkedinAccount.Should().Be(linkedInAvailable);
+        socialConfiguration.HasTwitterAccount.Should().Be(twitterAvailable);
     }
 
     [Fact]

@@ -139,12 +139,11 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 
-    private static (ApplicationConfiguration ApplicationConfiguration,Introduction Introduction) CreateSampleAppConfiguration(string profilePictureUri = null)
+    private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction) CreateSampleAppConfiguration(string profilePictureUri = null)
     {
         return (new ApplicationConfiguration
             {
             BlogName = string.Empty,
-            Social = new Social(),
             BlogPostsPerPage = 10,
         },
         new Introduction

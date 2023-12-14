@@ -33,4 +33,28 @@ public static class ConfigurationExtension
             });
         return services;
     }
+
+    public static IServiceCollection AddIntroductionConfigurations(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<Introduction>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(Introduction.IntroductionSection).Bind(settings);
+            });
+        return services;
+    }
+
+    public static IServiceCollection AddSocialConfigurations(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<AuthInformation>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(Social.SocialSection).Bind(settings);
+            });
+        return services;
+    }
 }

@@ -2,6 +2,8 @@ namespace LinkDotNet.Blog.Domain;
 
 public sealed record Social
 {
+    public const string SocialSection = "Social";
+
     public string LinkedinAccountUrl { get; init; }
 
     public bool HasLinkedinAccount => !string.IsNullOrEmpty(LinkedinAccountUrl);

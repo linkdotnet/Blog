@@ -35,7 +35,9 @@ public class Program
 
         builder.Services
             .AddConfigurations()
-            .AddAuthenticationConfigurations();
+            .AddAuthenticationConfigurations()
+            .AddIntroductionConfigurations()
+            .AddSocialConfigurations();
 
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
