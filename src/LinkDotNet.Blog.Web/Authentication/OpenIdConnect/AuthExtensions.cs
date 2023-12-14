@@ -13,7 +13,7 @@ public static class AuthExtensions
 {
     public static void UseAuthentication(this IServiceCollection services)
     {
-        var  appConfiguration =services.BuildServiceProvider().GetService<IOptions<ApplicationConfiguration>>();
+        var  authInformation =services.BuildServiceProvider().GetService<IOptions<AuthInformation>>();
 
         services.Configure<CookiePolicyOptions>(options =>
         {
@@ -28,11 +28,11 @@ public static class AuthExtensions
             options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         })
         .AddCookie()
-        .AddOpenIdConnect(appConfiguration.Value.Authentication.Provider, options =>
+        .AddOpenIdConnect(authInformation.Value.Provider, options =>
         {
-            options.Authority = $"https://{appConfiguration.Value.Authentication.Domain}";
-            options.ClientId = appConfiguration.Value.Authentication.ClientId;
-            options.ClientSecret = appConfiguration.Value.Authentication.ClientSecret;
+            options.Authority = $"https://{authInformation.Value.Domain}";
+            options.ClientId = authInformation.Value.ClientId;
+            options.ClientSecret = authInformation.Value.ClientSecret;
 
             options.ResponseType = "code";
 
@@ -44,11 +44,11 @@ public static class AuthExtensions
             options.CallbackPath = new PathString("/callback");
 
             // Configure the Claims Issuer to be Auth provider
-            options.ClaimsIssuer = appConfiguration.Value.Authentication.Provider;
+            options.ClaimsIssuer = authInformation.Value.Provider;
 
             options.Events = new OpenIdConnectEvents
             {
-                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(appConfiguration.Value.Authentication, context),
+                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(authInformation.Value, context),
             };
         });
 

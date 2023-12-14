@@ -14,6 +14,12 @@ public static class ConfigurationExtension
     {
         ArgumentNullException.ThrowIfNull(services);
 
+        services.AddOptions<AuthInformation>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(AuthInformation.AuthInformationSection).Bind(settings);
+            });
+
         services.AddOptions<ApplicationConfiguration>()
             .Configure<IConfiguration>((settings, config) =>
             {

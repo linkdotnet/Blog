@@ -45,6 +45,4 @@ public sealed record ApplicationConfiguration
     public string PatreonName { get; init; }
 
     public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
-
-    public  AuthInformation Authentication { get; set; }
 }

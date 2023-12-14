@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 
 namespace LinkDotNet.Blog.UnitTests.Web;
@@ -75,10 +76,13 @@ public class ApplicationConfigurationTests
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
-        appConfiguration.Authentication.Provider.Should().Be("Auth0");
-        appConfiguration.Authentication.ClientId.Should().Be("123");
-        appConfiguration.Authentication.ClientSecret.Should().Be("qwe");
-        appConfiguration.Authentication.Domain.Should().Be("example.com");
+        
+        var authInformation = new AuthInformation();
+        configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
+        authInformation.Provider.Should().Be("Auth0");
+        authInformation.ClientId.Should().Be("123");
+        authInformation.ClientSecret.Should().Be("qwe");
+        authInformation.Domain.Should().Be("example.com");
     }
 
     [Theory]
@@ -178,9 +182,9 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = new ApplicationConfiguration();
-        configuration.Bind(appConfiguration);
+        var authInformation = new AuthInformation();
+        configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
 
-        appConfiguration.Authentication.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");
+        authInformation.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");
     }
 }

@@ -12,13 +12,13 @@ public sealed class AuthLoginManager : ILoginManager
     private readonly HttpContext httpContext;
     private readonly string authProvider;
 
-    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, IOptions<ApplicationConfiguration> appConfiguration)
+    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, IOptions<AuthInformation> authInformation)
     {
         ArgumentNullException.ThrowIfNull(httpContextAccessor);
-        ArgumentNullException.ThrowIfNull(appConfiguration);
+        ArgumentNullException.ThrowIfNull(authInformation);
 
         httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        authProvider = appConfiguration.Value.Authentication.Provider;
+        authProvider = authInformation.Value.Provider;
     }
 
     public async Task SignInAsync(string redirectUri)
