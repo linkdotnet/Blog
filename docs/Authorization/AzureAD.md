@@ -25,8 +25,9 @@ and add following configurations
 ```json
 {
 	//other configuration
-	"AuthenticationProvider": "AzureAD",
-	"AzureAD": {
+
+	"Authentication": {
+		"Provider": "AzureAD",
 		"Domain": "",
 		"ClientId": "",
 		"ClientSecret": "",
@@ -38,7 +39,7 @@ and add following configurations
 
 | Property                    | Type   | Description                                                                                                         |
 | --------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
-| AuthenticationProvider      |        | Name of the auth provider                                                                                           |
+| Authentication:Provider     |        | Name of the auth provider                                                                                           |
 | `name of the auth provider` |        | Configuration for setting up the auth provider, it should be same as the value of AuthProvider property             |
 | Domain                      | string | `login.microsoftonline.com/<TENANT_ID>/v2.0`                                                                        |
 | ClientId                    | string | Application (client) ID                                                                                             |

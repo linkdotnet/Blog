@@ -6,14 +6,15 @@ For more information go to: https://auth0.com/docs/applications
 
 ### Configuration
 
-In `appsettings.json` change the `AuthenticationProvider` to `Auth0`
+In `appsettings.json` change the `Authentication:Provider` to `Auth0`
 and add following configurations
 
 ```json
 {
 	//other configuration
-	"AuthenticationProvider": "Auth0",
-	"Auth0": {
+	,
+	"Authentication": {
+		"Provider": "Auth0",
 		"Domain": "",
 		"ClientId": "",
 		"ClientSecret": ""
@@ -24,7 +25,7 @@ and add following configurations
 
 | Property                    | Type   | Description                                                                                             |
 | --------------------------- | ------ | ------------------------------------------------------------------------------------------------------- |
-| AuthenticationProvider      |        | Name of the auth provider                                                                               |
+| Authentication:Provider     |        | Name of the auth provider                                                                               |
 | `name of the auth provider` |        | Configuration for setting up the auth provider, it should be same as the value of AuthProvider property |
 | Domain                      | string | See more details here: https://manage.auth0.com/dashboard/                                              |
 | ClientId                    | string | See more details here: https://manage.auth0.com/dashboard/                                              |
