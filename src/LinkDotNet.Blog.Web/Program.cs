@@ -38,7 +38,9 @@ public class Program
             .AddAuthenticationConfigurations()
             .AddIntroductionConfigurations()
             .AddSocialConfigurations()
-            .AddProfileInformationConfigurations();
+            .AddProfileInformationConfigurations()
+            .AddGiscusConfiguration()
+            .AddDisqusConfiguration();
 
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();

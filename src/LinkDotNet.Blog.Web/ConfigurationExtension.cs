@@ -20,6 +20,12 @@ public static class ConfigurationExtension
                 var profileInfoSection = config.GetSection(ProfileInformation.ProfileInformationSection);
                 settings.IsAboutMeEnabled = profileInfoSection.Exists();
 
+                var disqusSection = config.GetSection(DisqusConfiguration.DisqusConfigurationSection);
+                settings.IsDisqusEnabled = disqusSection.Exists();
+
+                var giscusSection = config.GetSection(GiscusConfiguration.GiscusConfigurationSection);
+                settings.IsGiscusEnabled = giscusSection.Exists();
+
                 config.Bind(settings);
             });
         return services;
@@ -69,6 +75,30 @@ public static class ConfigurationExtension
             .Configure<IConfiguration>((settings, config) =>
             {
                 config.GetSection(ProfileInformation.ProfileInformationSection).Bind(settings);
+            });
+        return services;
+    }
+
+    public static IServiceCollection AddGiscusConfiguration(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<GiscusConfiguration>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(settings);
+            });
+        return services;
+    }
+
+    public static IServiceCollection AddDisqusConfiguration(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<DisqusConfiguration>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(settings);
             });
         return services;
     }

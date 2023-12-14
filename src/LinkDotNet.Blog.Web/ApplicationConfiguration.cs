@@ -18,13 +18,8 @@ public sealed record ApplicationConfiguration
 
     public bool IsAboutMeEnabled { get; set; }
 
-    public GiscusConfiguration Giscus { get; init; }
-
-    public bool IsGiscusEnabled => Giscus != null;
-
-    public DisqusConfiguration Disqus { get; init; }
-
-    public bool IsDisqusEnabled => Disqus != null;
+    public bool IsGiscusEnabled { get; set; }
+    public bool IsDisqusEnabled { get; set; }
 
     public string KofiToken { get; init; }
 

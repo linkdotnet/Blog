@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.Configuration;
 
 namespace LinkDotNet.Blog.UnitTests.Web;
@@ -57,16 +58,22 @@ public class ApplicationConfigurationTests
         appConfiguration.DatabaseName.Should().Be("db");
         appConfiguration.BlogPostsPerPage.Should().Be(5);
         appConfiguration.IsAboutMeEnabled.Should().BeTrue();
-        appConfiguration.Giscus.Repository.Should().Be("repo");
-        appConfiguration.Giscus.RepositoryId.Should().Be("repoid");
-        appConfiguration.Giscus.Category.Should().Be("general");
-        appConfiguration.Giscus.CategoryId.Should().Be("generalid");
-        appConfiguration.Disqus.Shortname.Should().Be("blog");
         appConfiguration.KofiToken.Should().Be("ABC");
         appConfiguration.GithubSponsorName.Should().Be("linkdotnet");
         appConfiguration.ShowReadingIndicator.Should().BeTrue();
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
+        
+        var giscusConfiguration = new GiscusConfiguration();
+        configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);
+        giscusConfiguration.Repository.Should().Be("repo");
+        giscusConfiguration.RepositoryId.Should().Be("repoid");
+        giscusConfiguration.Category.Should().Be("general");
+        giscusConfiguration.CategoryId.Should().Be("generalid");
+        
+        var disqusConfiguration = new DisqusConfiguration();
+        configuration.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(disqusConfiguration);
+        disqusConfiguration.Shortname.Should().Be("blog");
         
         var profileInformation = new ProfileInformation();
         configuration.GetSection(ProfileInformation.ProfileInformationSection).Bind(profileInformation);

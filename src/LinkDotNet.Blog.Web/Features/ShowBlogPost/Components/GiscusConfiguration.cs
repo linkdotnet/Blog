@@ -2,6 +2,8 @@
 
 public sealed record GiscusConfiguration
 {
+    public const string GiscusConfigurationSection = "Giscus";
+
     public string Repository { get; init; }
 
     public string RepositoryId { get; init; }

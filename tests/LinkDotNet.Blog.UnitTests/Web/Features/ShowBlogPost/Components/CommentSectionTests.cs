@@ -10,7 +10,8 @@ public class CommentSectionTests : TestContext
     [Fact]
     public void ShouldShowDisqusWhenConfigured()
     {
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { Disqus = new DisqusConfiguration() }));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration{IsDisqusEnabled = true} ));
+        Services.AddScoped(_ => Options.Create(new DisqusConfiguration() ));
         JSInterop.Mode = JSRuntimeMode.Loose;
 
         var cut = RenderComponent<CommentSection>();
@@ -21,7 +22,8 @@ public class CommentSectionTests : TestContext
     [Fact]
     public void ShouldShowGiscusWhenConfigured()
     {
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { Giscus = new GiscusConfiguration() }));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration{IsGiscusEnabled = true} ));
+        Services.AddScoped(_ => Options.Create(new GiscusConfiguration() ));
         JSInterop.Mode = JSRuntimeMode.Loose;
 
         var cut = RenderComponent<CommentSection>();
@@ -33,7 +35,9 @@ public class CommentSectionTests : TestContext
     public void ShouldShowAlertWhenMultipleRegistered()
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfiguration
-            { Disqus = new DisqusConfiguration(), Giscus = new GiscusConfiguration() }));
+            { IsDisqusEnabled = true, IsGiscusEnabled = true }));
+        Services.AddScoped(_ => Options.Create( new DisqusConfiguration()));
+        Services.AddScoped(_ => Options.Create( new GiscusConfiguration()));
         JSInterop.Mode = JSRuntimeMode.Loose;
 
         var cut = RenderComponent<CommentSection>();

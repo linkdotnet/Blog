@@ -15,7 +15,8 @@ public class DisqusTests : TestContext
         {
             Shortname = "blog",
         };
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { Disqus = disqusData }));
+        Services.AddScoped(_ => Options.Create(disqusData));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { IsDisqusEnabled = true }));
         JSInterop.SetupModule("./Features/ShowBlogPost/Components/Disqus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
