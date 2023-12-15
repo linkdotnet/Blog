@@ -10,7 +10,19 @@ namespace LinkDotNet.Blog.Web;
 
 public static class ConfigurationExtension
 {
-    public static IServiceCollection AddConfiguration(this IServiceCollection services)
+    public static void AddConfiguration(this IServiceCollection services)
+    {
+        services
+            .AddApplicationConfiguration()
+            .AddAuthenticationConfigurations()
+            .AddIntroductionConfigurations()
+            .AddSocialConfigurations()
+            .AddProfileInformationConfigurations()
+            .AddGiscusConfiguration()
+            .AddDisqusConfiguration();
+    }
+
+    private static IServiceCollection AddApplicationConfiguration(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -31,7 +43,7 @@ public static class ConfigurationExtension
         return services;
     }
 
-    public static IServiceCollection AddAuthenticationConfigurations(this IServiceCollection services)
+    private static IServiceCollection AddAuthenticationConfigurations(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -43,7 +55,7 @@ public static class ConfigurationExtension
         return services;
     }
 
-    public static IServiceCollection AddIntroductionConfigurations(this IServiceCollection services)
+    private static IServiceCollection AddIntroductionConfigurations(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -55,7 +67,7 @@ public static class ConfigurationExtension
         return services;
     }
 
-    public static IServiceCollection AddSocialConfigurations(this IServiceCollection services)
+    private static IServiceCollection AddSocialConfigurations(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -67,7 +79,7 @@ public static class ConfigurationExtension
         return services;
     }
 
-    public static IServiceCollection AddProfileInformationConfigurations(this IServiceCollection services)
+    private static IServiceCollection AddProfileInformationConfigurations(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -79,7 +91,7 @@ public static class ConfigurationExtension
         return services;
     }
 
-    public static IServiceCollection AddGiscusConfiguration(this IServiceCollection services)
+    private static IServiceCollection AddGiscusConfiguration(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
@@ -91,7 +103,7 @@ public static class ConfigurationExtension
         return services;
     }
 
-    public static IServiceCollection AddDisqusConfiguration(this IServiceCollection services)
+    private static IServiceCollection AddDisqusConfiguration(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 

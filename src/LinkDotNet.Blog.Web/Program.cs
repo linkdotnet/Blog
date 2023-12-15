@@ -33,14 +33,7 @@ public class Program
             options.MaximumReceiveMessageSize = 1024 * 1024;
         });
 
-        builder.Services
-            .AddConfiguration()
-            .AddAuthenticationConfigurations()
-            .AddIntroductionConfigurations()
-            .AddSocialConfigurations()
-            .AddProfileInformationConfigurations()
-            .AddGiscusConfiguration()
-            .AddDisqusConfiguration();
+        builder.Services.AddConfiguration();
 
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
