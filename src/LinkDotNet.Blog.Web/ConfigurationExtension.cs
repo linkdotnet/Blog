@@ -10,7 +10,7 @@ namespace LinkDotNet.Blog.Web;
 
 public static class ConfigurationExtension
 {
-    public static IServiceCollection AddConfigurations(this IServiceCollection services)
+    public static IServiceCollection AddConfiguration(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 

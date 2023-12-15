@@ -34,7 +34,7 @@ public class Program
         });
 
         builder.Services
-            .AddConfigurations()
+            .AddConfiguration()
             .AddAuthenticationConfigurations()
             .AddIntroductionConfigurations()
             .AddSocialConfigurations()
