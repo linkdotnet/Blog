@@ -1,6 +1,7 @@
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
@@ -12,11 +13,11 @@ public class DonationSectionTests : TestContext
 
     public void ShouldShowKofiIfSet(string token, bool hasComponent)
     {
-        var appConfig = new AppConfiguration
+        var appConfig = new ApplicationConfiguration
         {
             KofiToken = token,
         };
-        Services.AddScoped(_ => appConfig);
+        Services.AddScoped(_ => Options.Create(appConfig));
 
         var cut = RenderComponent<DonationSection>();
 
@@ -29,11 +30,11 @@ public class DonationSectionTests : TestContext
 
     public void ShouldShowGithubSponsorIfSet(string account, bool hasComponent)
     {
-        var appConfig = new AppConfiguration
+        var appConfig = new ApplicationConfiguration
         {
             GithubSponsorName = account,
         };
-        Services.AddScoped(_ => appConfig);
+        Services.AddScoped(_ =>Options.Create(appConfig));
 
         var cut = RenderComponent<DonationSection>();
 
@@ -45,11 +46,11 @@ public class DonationSectionTests : TestContext
     [InlineData(null, false)]
     public void ShouldShowPatreonSponsorIfSet(string account, bool hasComponent)
     {
-        var appConfig = new AppConfiguration
+        var appConfig = new ApplicationConfiguration
         {
             PatreonName = account,
         };
-        Services.AddScoped(_ => appConfig);
+        Services.AddScoped(_ => Options.Create(appConfig));
 
         var cut = RenderComponent<DonationSection>();
 

@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
@@ -19,7 +20,7 @@ public class NavMenuTests : TestContext
     [Fact]
     public void ShouldNavigateToSearchPage()
     {
-        Services.AddScoped(_ => new AppConfiguration());
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
         this.AddTestAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
         var cut = RenderComponent<NavMenu>();
@@ -33,10 +34,10 @@ public class NavMenuTests : TestContext
     [Fact]
     public void ShouldDisplayAboutMePage()
     {
-        var config = new AppConfiguration
+        var config = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation(),
-        };
+            IsAboutMeEnabled = true
+        });
         Services.AddScoped(_ => config);
         this.AddTestAuthorization();
 
@@ -51,10 +52,7 @@ public class NavMenuTests : TestContext
     [Fact]
     public void ShouldPassCorrectUriToComponent()
     {
-        var config = new AppConfiguration
-        {
-            ProfileInformation = new ProfileInformation(),
-        };
+        var config = Options.Create(new ProfileInformation());
         Services.AddScoped(_ => config);
         this.AddTestAuthorization();
         var cut = RenderComponent<NavMenu>();
@@ -67,12 +65,15 @@ public class NavMenuTests : TestContext
     [Fact]
     public void ShouldShowBrandImageIfAvailable()
     {
-        var config = new AppConfiguration
+        var config = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation(),
             BlogBrandUrl = "http://localhost/img.png",
-        };
+        });
         Services.AddScoped(_ => config);
+        
+        var profileInfoConfig = Options.Create(new ProfileInformation());
+        Services.AddScoped(_ => profileInfoConfig);
+
         this.AddTestAuthorization();
 
         var cut = RenderComponent<NavMenu>();
@@ -88,13 +89,16 @@ public class NavMenuTests : TestContext
     [InlineData("")]
     public void ShouldShowBlogNameWhenNotBrand(string brandUrl)
     {
-        var config = new AppConfiguration
+        var config = Options.Create(new ApplicationConfiguration
         {
-            ProfileInformation = new ProfileInformation(),
             BlogBrandUrl = brandUrl,
             BlogName = "Steven",
-        };
+        });
         Services.AddScoped(_ => config);
+        
+        var profileInfoConfig = Options.Create(new ProfileInformation());
+        Services.AddScoped(_ => profileInfoConfig);
+        
         this.AddTestAuthorization();
 
         var cut = RenderComponent<NavMenu>();

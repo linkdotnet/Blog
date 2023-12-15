@@ -10,6 +10,7 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost;
 
@@ -106,6 +107,6 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
-        ctx.Services.AddScoped(_ => new AppConfiguration());
+        ctx.Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
     }
 }

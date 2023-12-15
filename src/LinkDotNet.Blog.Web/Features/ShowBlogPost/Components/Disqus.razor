@@ -1,15 +1,16 @@
 @inject IJSRuntime JsRuntime
-@inject AppConfiguration AppConfiguration
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IOptions<DisqusConfiguration> DisqusConfiguration
 <div id="disqus_thread">
 </div>
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && AppConfiguration.IsDisqusEnabled)
+        if (firstRender && AppConfiguration.Value.IsDisqusEnabled)
         {
             await using var _ = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/Disqus.razor.js");
-            await JsRuntime.InvokeVoidAsync("initDisqus", AppConfiguration.DisqusConfiguration);
+            await JsRuntime.InvokeVoidAsync("initDisqus", DisqusConfiguration.Value);
         }
     }
 }

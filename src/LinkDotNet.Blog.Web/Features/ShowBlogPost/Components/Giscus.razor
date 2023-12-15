@@ -1,15 +1,17 @@
-﻿@inject IJSRuntime JsRuntime
-@inject AppConfiguration AppConfiguration
+﻿@using Microsoft.Extensions.Options
+@inject IJSRuntime JsRuntime
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IOptions<GiscusConfiguration> GiscusConfiguration
 <div class="giscus">
 </div>
 
 @code {
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && AppConfiguration.IsGiscusEnabled)
+        if (firstRender && AppConfiguration.Value.IsGiscusEnabled)
         {
             await using var _ = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/Giscus.razor.js");
-            await JsRuntime.InvokeVoidAsync("initGiscus", "giscus", AppConfiguration.GiscusConfiguration);
+            await JsRuntime.InvokeVoidAsync("initGiscus", "giscus", GiscusConfiguration.Value);
         }
     }
 }

@@ -12,6 +12,7 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost;
 
@@ -117,7 +118,7 @@ public class ShowBlogPostPageTests : TestContext
     [InlineData(false)]
     public void ShowReadingIndicatorWhenEnabled(bool isEnabled)
     {
-        var appConfiguration = new AppConfiguration
+        var appConfiguration = new ApplicationConfiguration
         {
             ShowReadingIndicator = isEnabled,
         };
@@ -127,7 +128,7 @@ public class ShowBlogPostPageTests : TestContext
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
         SetupMocks();
-        Services.AddScoped(_ => appConfiguration);
+        Services.AddScoped(_ => Options.Create(appConfiguration));
 
         var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -140,7 +141,7 @@ public class ShowBlogPostPageTests : TestContext
         JSInterop.Mode = JSRuntimeMode.Loose;
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<IToastService>());
-        Services.AddScoped(_ => new AppConfiguration());
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
         this.AddTestAuthorization();
         ComponentFactories.AddStub<PageTitle>();
         ComponentFactories.AddStub<Like>();

@@ -12,18 +12,24 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web.Controller;
 
 public sealed class RssFeedController : ControllerBase
 {
     private static readonly XmlWriterSettings Settings = CreateXmlWriterSettings();
-    private readonly AppConfiguration appConfiguration;
+    private readonly string description;
+    private readonly string blogName;
     private readonly IRepository<BlogPost> blogPostRepository;
 
-    public RssFeedController(AppConfiguration appConfiguration, IRepository<BlogPost> blogPostRepository)
+    public RssFeedController(IOptions<Introduction> introductionConfiguration,IOptions<ApplicationConfiguration> applicationConfiguration, IRepository<BlogPost> blogPostRepository)
     {
-        this.appConfiguration = appConfiguration;
+        ArgumentNullException.ThrowIfNull(introductionConfiguration);
+        ArgumentNullException.ThrowIfNull(applicationConfiguration);
+
+        description = introductionConfiguration.Value.Description;
+        blogName = applicationConfiguration.Value.BlogName;
         this.blogPostRepository = blogPostRepository;
     }
 
@@ -33,8 +39,8 @@ public sealed class RssFeedController : ControllerBase
     public async Task<IActionResult> GetRssFeed()
     {
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
-        var introductionDescription = MarkdownConverter.ToPlainString(appConfiguration.Introduction?.Description);
-        var feed = new SyndicationFeed(appConfiguration.BlogName, introductionDescription, new Uri(url))
+        var introductionDescription = MarkdownConverter.ToPlainString(description);
+        var feed = new SyndicationFeed(blogName, introductionDescription, new Uri(url))
         {
             Items = await GetBlogPostItems(url),
         };

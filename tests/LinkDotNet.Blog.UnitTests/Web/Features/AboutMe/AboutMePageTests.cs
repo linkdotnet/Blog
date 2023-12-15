@@ -9,6 +9,7 @@ using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe;
 
@@ -18,8 +19,14 @@ public class AboutMePageTests : TestContext
     public void ShouldPassIsAuthenticated()
     {
         this.AddTestAuthorization().SetAuthorized("test");
-        var config = CreateAppConfiguration(new ProfileInformation { ProfilePictureUrl = string.Empty });
-        SetupMocks(config);
+        var config = new ProfileInformation { ProfilePictureUrl = string.Empty };
+        
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            IsAboutMeEnabled = true
+        };
+        
+        SetupMocks(config, applicationConfiguration);
 
         var cut = RenderComponent<AboutMePage>();
 
@@ -32,8 +39,14 @@ public class AboutMePageTests : TestContext
     public void ShouldNotShowWhenEnabledFalse()
     {
         this.AddTestAuthorization().SetNotAuthorized();
-        var config = CreateAppConfiguration();
-        SetupMocks(config);
+        var config = new ProfileInformation();
+        
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            IsAboutMeEnabled = false
+        };
+        
+        SetupMocks(config, applicationConfiguration);
 
         var cut = RenderComponent<AboutMePage>();
 
@@ -51,8 +64,11 @@ public class AboutMePageTests : TestContext
             Name = "My Name",
             ProfilePictureUrl = "someurl",
         };
-        var config = CreateAppConfiguration(profileInformation);
-        SetupMocks(config);
+        var applicationConfiguration = new ApplicationConfiguration
+        {
+            IsAboutMeEnabled = true
+        };
+        SetupMocks(profileInformation, applicationConfiguration);
 
         var cut = RenderComponent<AboutMePage>();
 
@@ -63,17 +79,10 @@ public class AboutMePageTests : TestContext
         ogData.Description.Should().Contain("About Me,My Name");
     }
 
-    private static AppConfiguration CreateAppConfiguration(ProfileInformation info = null)
+    private void SetupMocks(ProfileInformation config, ApplicationConfiguration applicationConfiguration)
     {
-        return new AppConfiguration
-        {
-            ProfileInformation = info,
-        };
-    }
-
-    private void SetupMocks(AppConfiguration config)
-    {
-        Services.AddScoped(_ => config);
+        Services.AddScoped(_ => Options.Create(config));
+        Services.AddScoped(_ => Options.Create(applicationConfiguration));
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<ISortOrderCalculator>());
         Services.RegisterRepositoryWithEmptyReturn<ProfileInformationEntry>();

@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
 public static class AuthExtensions
 {
-    public static void UseAuthentication(this IServiceCollection services, AppConfiguration appConfiguration)
+    public static void UseAuthentication(this IServiceCollection services)
     {
-        ArgumentNullException.ThrowIfNull(appConfiguration);
+        var  authInformation = services.BuildServiceProvider().GetService<IOptions<AuthInformation>>();
 
         services.Configure<CookiePolicyOptions>(options =>
         {
@@ -27,11 +28,11 @@ public static class AuthExtensions
             options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         })
         .AddCookie()
-        .AddOpenIdConnect(appConfiguration.AuthenticationProvider, options =>
+        .AddOpenIdConnect(authInformation.Value.Provider, options =>
         {
-            options.Authority = $"https://{appConfiguration.AuthInformation.Domain}";
-            options.ClientId = appConfiguration.AuthInformation.ClientId;
-            options.ClientSecret = appConfiguration.AuthInformation.ClientSecret;
+            options.Authority = $"https://{authInformation.Value.Domain}";
+            options.ClientId = authInformation.Value.ClientId;
+            options.ClientSecret = authInformation.Value.ClientSecret;
 
             options.ResponseType = "code";
 
@@ -43,11 +44,11 @@ public static class AuthExtensions
             options.CallbackPath = new PathString("/callback");
 
             // Configure the Claims Issuer to be Auth provider
-            options.ClaimsIssuer = appConfiguration.AuthenticationProvider;
+            options.ClaimsIssuer = authInformation.Value.Provider;
 
             options.Events = new OpenIdConnectEvents
             {
-                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(appConfiguration.AuthInformation, context),
+                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(authInformation.Value, context),
             };
         });
 

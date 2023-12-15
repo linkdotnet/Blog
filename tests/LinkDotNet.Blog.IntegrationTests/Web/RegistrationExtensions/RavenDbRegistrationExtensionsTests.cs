@@ -3,6 +3,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.RegistrationExtensions;
 
@@ -12,11 +13,11 @@ public class RavenDbRegistrationExtensionsTests
     public void ShouldGetValidRepository()
     {
         var serviceCollection = new ServiceCollection();
-        var appConfig = new AppConfiguration
+        var appConfig = Options.Create(new ApplicationConfiguration
         {
             ConnectionString = "http://localhost",
             DatabaseName = "Blog",
-        };
+        });
         serviceCollection.AddScoped(_ => appConfig);
 
         serviceCollection.UseRavenDbAsStorageProvider();

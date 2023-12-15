@@ -1,18 +1,20 @@
 ﻿@using LinkDotNet.Blog.Domain
-@inject AppConfiguration Configuration
+@using Microsoft.Extensions.Options
+@inject IOptions<Introduction> Introduction
+@inject IOptions<Social> Social
 
-<div style="--profile-background: url(@Configuration.Introduction.BackgroundUrl)" class="@IntroductionClass">
+<div style="--profile-background: url(@Introduction.Value.BackgroundUrl)" class="@IntroductionClass">
     <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@Configuration.Introduction.ProfilePictureUrl)">
+        <div class="profile-picture" style="--profile-image: url(@Introduction.Value.ProfilePictureUrl)">
         </div>
         <div class="profile-text d-flex flex-column">
-            <div>@MarkdownConverter.ToMarkupString(Configuration.Introduction.Description)</div>
-            <SocialAccounts Social="@Configuration.Social"></SocialAccounts>
+            <div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
+            <SocialAccounts Social="@Social.Value"></SocialAccounts>
         </div>
     </div>
 </div>
 @code {
-    private string IntroductionClass => !string.IsNullOrEmpty(Configuration.Introduction.BackgroundUrl)
+    private string IntroductionClass => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
         ? "introduction-background"
         : string.Empty;
 }

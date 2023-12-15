@@ -7,7 +7,8 @@
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IJSRuntime JsRuntime
 @inject IUserRecordService UserRecordService
-@inject AppConfiguration AppConfiguration
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IOptions<ProfileInformation> ProfileInformation
 
 @if (BlogPost == null)
 {
@@ -24,7 +25,7 @@ else
 		                PreviewImage="@BlogPost.PreviewImageUrl"
 		                PreviewFallbackImage="@BlogPost.PreviewImageUrlFallback"
 		                PublishedDate="@BlogPost.UpdatedDate"
-		                Author="@AppConfiguration.ProfileInformation?.Name"/>
+		                Author="@ProfileInformation.Value?.Name"/>
 	</OgData>
 
 	<div class="d-flex justify-content-center pt-2 blog-outer-box">
@@ -62,7 +63,7 @@ else
 		</div>
 	</div>
 
-	@if (AppConfiguration.ShowReadingIndicator)
+	@if (AppConfiguration.Value.ShowReadingIndicator)
 	{
 		<ReadingIndicator ContainerCssSelector=".blog-inner-content"/>
 	}

@@ -8,6 +8,7 @@ using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Controller;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Controller;
 
@@ -27,14 +28,15 @@ public class RssFeedControllerTests
         {
             HttpContext = httpContext,
         };
-        var config = new AppConfiguration
+        var config = Options.Create<ApplicationConfiguration>(new ApplicationConfiguration
         {
-            BlogName = "Test",
-            Introduction = new Introduction
-            {
-                Description = "Description",
-            },
-        };
+            BlogName = "Test"
+        });
+        
+        var introductionConfig = Options.Create<Introduction>(new Introduction
+        {
+            Description = "Description",
+        });
         var blogPost1 = new BlogPostBuilder()
             .WithTitle("1")
             .WithShortDescription("Short 1")
@@ -52,7 +54,7 @@ public class RssFeedControllerTests
         blogPost2.Id = "2";
         await repository.StoreAsync(blogPost1);
         await repository.StoreAsync(blogPost2);
-        var cut = new RssFeedController(config, repository)
+        var cut = new RssFeedController(introductionConfig, config, repository)
         {
             ControllerContext = controllerContext,
         };

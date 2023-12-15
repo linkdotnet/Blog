@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
@@ -11,13 +12,13 @@ public sealed class AuthLoginManager : ILoginManager
     private readonly HttpContext httpContext;
     private readonly string authProvider;
 
-    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, AppConfiguration appConfiguration)
+    public AuthLoginManager(IHttpContextAccessor httpContextAccessor, IOptions<AuthInformation> authInformation)
     {
         ArgumentNullException.ThrowIfNull(httpContextAccessor);
-        ArgumentNullException.ThrowIfNull(appConfiguration);
+        ArgumentNullException.ThrowIfNull(authInformation);
 
         httpContext = httpContextAccessor.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor));
-        authProvider = appConfiguration.AuthenticationProvider;
+        authProvider = authInformation.Value.Provider;
     }
 
     public async Task SignInAsync(string redirectUri)

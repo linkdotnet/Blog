@@ -2,6 +2,7 @@
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
@@ -17,7 +18,8 @@ public class GiscusTests : TestContext
             Category = "General",
             CategoryId = "GeneralId",
         };
-        Services.AddScoped(_ => new AppConfiguration { GiscusConfiguration = giscusData });
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { IsGiscusEnabled = true }));
+        Services.AddScoped(_ => Options.Create(giscusData));
         JSInterop.SetupModule("./Features/ShowBlogPost/Components/Giscus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -32,7 +34,7 @@ public class GiscusTests : TestContext
     [Fact]
     public void ShouldNotInitGiscusWhenNoInformationProvided()
     {
-        Services.AddScoped(_ => new AppConfiguration());
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
 
         RenderComponent<Giscus>();
 

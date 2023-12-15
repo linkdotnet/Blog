@@ -4,33 +4,22 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
 namespace LinkDotNet.Blog.Web;
 
-public sealed record AppConfiguration
+public sealed record ApplicationConfiguration
 {
     public string BlogName { get; init; }
 
     public string BlogBrandUrl { get; init; }
 
-    public Introduction Introduction { get; init; }
-
-    public Social Social { get; init; }
-
     public string ConnectionString { get; init; }
 
     public string DatabaseName { get; init; }
 
-    public int BlogPostsPerPage { get; init; }
+    public int BlogPostsPerPage { get; init; } = 10;
 
-    public bool IsAboutMeEnabled => ProfileInformation != null;
+    public bool IsAboutMeEnabled { get; set; }
 
-    public ProfileInformation ProfileInformation { get; init; }
-
-    public GiscusConfiguration GiscusConfiguration { get; init; }
-
-    public bool IsGiscusEnabled => GiscusConfiguration != null;
-
-    public DisqusConfiguration DisqusConfiguration { get; init; }
-
-    public bool IsDisqusEnabled => DisqusConfiguration != null;
+    public bool IsGiscusEnabled { get; set; }
+    public bool IsDisqusEnabled { get; set; }
 
     public string KofiToken { get; init; }
 
@@ -45,8 +34,4 @@ public sealed record AppConfiguration
     public string PatreonName { get; init; }
 
     public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
-
-    public string AuthenticationProvider { get; set; }
-
-    public AuthInformation AuthInformation { get; set; }
 }
