@@ -23,7 +23,10 @@ public sealed class RssFeedController : ControllerBase
     private readonly string blogName;
     private readonly IRepository<BlogPost> blogPostRepository;
 
-    public RssFeedController(IOptions<Introduction> introductionConfiguration,IOptions<ApplicationConfiguration> applicationConfiguration, IRepository<BlogPost> blogPostRepository)
+    public RssFeedController(
+        IOptions<Introduction> introductionConfiguration,
+        IOptions<ApplicationConfiguration> applicationConfiguration,
+        IRepository<BlogPost> blogPostRepository)
     {
         ArgumentNullException.ThrowIfNull(introductionConfiguration);
         ArgumentNullException.ThrowIfNull(applicationConfiguration);
