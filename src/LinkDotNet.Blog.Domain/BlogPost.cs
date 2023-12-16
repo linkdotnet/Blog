@@ -69,7 +69,7 @@ public sealed partial class BlogPost : Entity
     }
 
     [GeneratedRegex(
-       @"[^A-Za-z0-9\s-]",
+       @"[^A-Za-z0-9\s]",
        RegexOptions.CultureInvariant,
        matchTimeoutMilliseconds: 1000)]
     private static partial Regex MatchIfSpecialCharactersExist();
