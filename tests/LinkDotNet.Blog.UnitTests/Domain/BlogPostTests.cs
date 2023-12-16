@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
@@ -24,6 +24,27 @@ public class BlogPostTests
         blogPostToUpdate.PreviewImageUrlFallback.Should().Be("Url2");
         blogPostToUpdate.IsPublished.Should().BeTrue();
         blogPostToUpdate.Tags.Should().BeNullOrEmpty();
+        blogPostToUpdate.Slug.Should().NotBeNull();
+    }
+
+    [Theory]
+    [InlineData("blog title","blog-title")]
+    [InlineData("blog      title", "blog-title")]
+    [InlineData("blog +title", "blog-title")]
+    [InlineData("blog/title", "blogtitle")]
+    [InlineData("blog /title", "blog-title")]
+    [InlineData("BLOG TITLE", "blog-title")]
+    [InlineData("àccent", "accent")]
+    [InlineData("get 100$ quick", "get-100-quick")]
+    [InlineData("blog,title", "blogtitle")]
+    [InlineData("blog?!title", "blogtitle")]
+    [InlineData("blog----title", "blogtitle")]
+    [InlineData("überaus gut", "uberaus-gut")]
+    public void ShouldGenerateValidSlug(string title, string expectedSlug)
+    {
+        var blogPost = new BlogPostBuilder().WithTitle(title).Build();
+
+        blogPost.Slug.Should().Be(expectedSlug);
     }
 
     [Fact]

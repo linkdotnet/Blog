@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -17,7 +17,7 @@ public class ShortBlogPostTests : TestContext
 
         var readMore = cut.Find(".read-more a");
 
-        readMore.Attributes.Single(a => a.Name == "href").Value.Should().Be("/blogPost/SomeId");
+        readMore.Attributes.Single(a => a.Name == "href").Value.Should().Be("/blogPost/SomeId/blogpost");
     }
 
     [Fact]

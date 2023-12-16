@@ -1,11 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LinkDotNet.Blog.Domain;
 
-public sealed class BlogPost : Entity
+public sealed partial class BlogPost : Entity
 {
     private BlogPost()
     {
@@ -34,6 +37,54 @@ public sealed class BlogPost : Entity
     public bool IsScheduled => ScheduledPublishDate is not null;
 
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
+
+    public string Slug => GenerateSlug();
+
+    private string GenerateSlug()
+    {
+        // Remove all accents and make the string lower case.
+        if (string.IsNullOrWhiteSpace(Title))
+            return Title;
+
+        Title = Title.Normalize(NormalizationForm.FormD);
+        var chars = Title
+            .Where(c => CharUnicodeInfo.GetUnicodeCategory(c)
+            != UnicodeCategory.NonSpacingMark)
+            .ToArray();
+
+        Title = new string(chars).Normalize(NormalizationForm.FormC);
+
+        var slug = Title.ToLower(CultureInfo.CurrentCulture);
+
+        // Remove all special characters from the string.  
+        slug = MatchIfSpecialCharactersExist().Replace(slug, "");
+
+        // Remove all additional spaces in favour of just one.  
+        slug= MatchIfAdditionalSpacesExist().Replace(slug," ").Trim();
+
+        // Replace all spaces with the hyphen.  
+        slug= MatchIfSpaceExist().Replace(slug, "-");
+
+        return slug;
+    }
+
+    [GeneratedRegex(
+       @"[^A-Za-z0-9\s]",
+       RegexOptions.CultureInvariant,
+       matchTimeoutMilliseconds: 1000)]
+    private static partial Regex MatchIfSpecialCharactersExist();
+
+    [GeneratedRegex(
+       @"\s+",
+       RegexOptions.CultureInvariant,
+       matchTimeoutMilliseconds: 1000)]
+    private static partial Regex MatchIfAdditionalSpacesExist();
+
+    [GeneratedRegex(
+       @"\s",
+       RegexOptions.CultureInvariant,
+       matchTimeoutMilliseconds: 1000)]
+    private static partial Regex MatchIfSpaceExist();
 
     public static BlogPost Create(
         string title,
