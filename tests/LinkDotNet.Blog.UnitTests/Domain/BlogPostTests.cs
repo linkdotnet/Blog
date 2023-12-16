@@ -33,10 +33,16 @@ public class BlogPostTests
     [InlineData("blog +title", "blog-title")]
     [InlineData("blog/title", "blogtitle")]
     [InlineData("blog /title", "blog-title")]
+    [InlineData("BLOG TITLE", "blog-title")]
+    [InlineData("àccent", "accent")]
+    [InlineData("get 100$ quick", "get-100-quick")]
+    [InlineData("blog,title", "blogtitle")]
+    [InlineData("blog?!title", "blogtitle")]
+    [InlineData("blog----title", "blogtitle")]
+    [InlineData("überaus gut", "uberaus-gut")]
     public void ShouldGenerateValidSlug(string title, string expectedSlug)
     {
-        var blogPost = BlogPost.Create(title, "Desc", "Content", "Url", true, previewImageUrlFallback: "Url2");
-        blogPost.Id = "random-id";
+        var blogPost = new BlogPostBuilder().WithTitle(title).Build();
 
         blogPost.Slug.Should().Be(expectedSlug);
     }
