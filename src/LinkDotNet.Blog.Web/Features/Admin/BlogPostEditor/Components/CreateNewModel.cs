@@ -23,21 +23,21 @@ public sealed class CreateNewModel
     public string Title
     {
         get => title;
-        set => SetProperty(ref title, value);
+        set => SetProperty(out title, value);
     }
 
     [Required]
     public string ShortDescription
     {
         get => shortDescription;
-        set => SetProperty(ref shortDescription, value);
+        set => SetProperty(out shortDescription, value);
     }
 
     [Required]
     public string Content
     {
         get => content;
-        set => SetProperty(ref content, value);
+        set => SetProperty(out content, value);
     }
 
     [Required]
@@ -45,7 +45,7 @@ public sealed class CreateNewModel
     public string PreviewImageUrl
     {
         get => previewImageUrl;
-        set => SetProperty(ref previewImageUrl, value);
+        set => SetProperty(out previewImageUrl, value);
     }
 
     [Required]
@@ -53,27 +53,27 @@ public sealed class CreateNewModel
     public bool IsPublished
     {
         get => isPublished;
-        set => SetProperty(ref isPublished, value);
+        set => SetProperty(out isPublished, value);
     }
 
     [Required]
     public bool ShouldUpdateDate
     {
         get => shouldUpdateDate;
-        set => SetProperty(ref shouldUpdateDate, value);
+        set => SetProperty(out shouldUpdateDate, value);
     }
 
     [FutureDateValidation]
     public DateTime? ScheduledPublishDate
     {
         get => scheduledPublishDate;
-        set => SetProperty(ref scheduledPublishDate, value);
+        set => SetProperty(out scheduledPublishDate, value);
     }
 
     public string Tags
     {
         get => tags;
-        set => SetProperty(ref tags, value);
+        set => SetProperty(out tags, value);
     }
 
     [MaxLength(256)]
@@ -81,7 +81,7 @@ public sealed class CreateNewModel
     public string PreviewImageUrlFallback
     {
         get => previewImageUrlFallback;
-        set => SetProperty(ref previewImageUrlFallback, value);
+        set => SetProperty(out previewImageUrlFallback, value);
     }
 
     public bool IsDirty { get; private set; }
@@ -108,7 +108,9 @@ public sealed class CreateNewModel
 
     public BlogPost ToBlogPost()
     {
-        var tagList = string.IsNullOrWhiteSpace(Tags) ? ArraySegment<string>.Empty : Tags.Split(",");
+        var tagList = string.IsNullOrWhiteSpace(Tags)
+            ? Array.Empty<string>()
+            : Tags.Split(",", StringSplitOptions.RemoveEmptyEntries);
         DateTime? updatedDate = ShouldUpdateDate || originalUpdatedDate == default
             ? null
             : originalUpdatedDate;
@@ -127,7 +129,7 @@ public sealed class CreateNewModel
         return blogPost;
     }
 
-    private void SetProperty<T>(ref T backingField, T value)
+    private void SetProperty<T>(out T backingField, T value)
     {
         backingField = value;
         IsDirty = true;

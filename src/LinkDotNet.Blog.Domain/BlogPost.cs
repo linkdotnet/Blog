@@ -38,34 +38,35 @@ public sealed partial class BlogPost : Entity
 
     public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
 
+    public int ReadingTimeInMinutes { get; private set; }
+
     public string Slug => GenerateSlug();
 
     private string GenerateSlug()
     {
-        // Remove all accents and make the string lower case.
         if (string.IsNullOrWhiteSpace(Title))
+        {
             return Title;
+        }
 
-        Title = Title.Normalize(NormalizationForm.FormD);
-        var chars = Title
-            .Where(c => CharUnicodeInfo.GetUnicodeCategory(c)
-            != UnicodeCategory.NonSpacingMark)
-            .ToArray();
+        var normalizedTitle = Title.Normalize(NormalizationForm.FormD);
+        var stringBuilder = new StringBuilder();
 
-        Title = new string(chars).Normalize(NormalizationForm.FormC);
+        foreach (var c in normalizedTitle.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark))
+        {
+            stringBuilder.Append(c);
+        }
 
-        var slug = Title.ToLower(CultureInfo.CurrentCulture);
+        var cleanTitle = stringBuilder
+            .ToString()
+            .Normalize(NormalizationForm.FormC)
+            .ToLower(CultureInfo.CurrentCulture);
 
-        // Remove all special characters from the string.  
-        slug = MatchIfSpecialCharactersExist().Replace(slug, "");
+        cleanTitle = MatchIfSpecialCharactersExist().Replace(cleanTitle, "");
+        cleanTitle = MatchIfAdditionalSpacesExist().Replace(cleanTitle, " ");
+        cleanTitle = MatchIfSpaceExist().Replace(cleanTitle, "-");
 
-        // Remove all additional spaces in favour of just one.  
-        slug= MatchIfAdditionalSpacesExist().Replace(slug," ").Trim();
-
-        // Replace all spaces with the hyphen.  
-        slug= MatchIfSpaceExist().Replace(slug, "-");
-
-        return slug;
+        return cleanTitle.Trim();
     }
 
     [GeneratedRegex(
@@ -114,7 +115,8 @@ public sealed partial class BlogPost : Entity
             PreviewImageUrl = previewImageUrl,
             PreviewImageUrlFallback = previewImageUrlFallback,
             IsPublished = isPublished,
-            Tags = tags?.Select(t => t.Trim()).ToImmutableArray(),
+            Tags = tags?.Select(t => t.Trim()).ToImmutableArray() ?? ImmutableArray<string>.Empty,
+            ReadingTimeInMinutes = ReadingTimeCalculator.CalculateReadingTime(content),
         };
 
         return blogPost;
@@ -144,5 +146,6 @@ public sealed partial class BlogPost : Entity
         PreviewImageUrlFallback = from.PreviewImageUrlFallback;
         IsPublished = from.IsPublished;
         Tags = from.Tags;
+        ReadingTimeInMinutes = from.ReadingTimeInMinutes;
     }
 }
