@@ -1,7 +1,3 @@
-using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
-using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
-
 namespace LinkDotNet.Blog.Web;
 
 public sealed record ApplicationConfiguration

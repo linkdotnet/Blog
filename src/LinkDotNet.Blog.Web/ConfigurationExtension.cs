@@ -1,5 +1,4 @@
 using System;
-using Amazon.Util.Internal.PlatformServices;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;

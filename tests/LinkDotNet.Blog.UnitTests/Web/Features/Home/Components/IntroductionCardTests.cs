@@ -1,7 +1,6 @@
 using System.Linq;
 using AngleSharp.Css.Dom;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options; 
