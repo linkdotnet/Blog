@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,7 +31,7 @@ public class ShareBlogPostTests : TestContext
 
         var cut = RenderComponent<ShareBlogPost>();
 
-        var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin").Unwrap();
+        var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin");
         linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
     }
 

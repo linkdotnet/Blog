@@ -1,6 +1,5 @@
 using System.Linq;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using LinkDotNet.Blog.Web.Features.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
@@ -30,7 +29,7 @@ public class PreviewImageTests : TestContext
         var cut = RenderComponent<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/"));
 
-        var image = cut.Find("img").Unwrap() as IHtmlImageElement;
+        var image = cut.Find("img") as IHtmlImageElement;
 
         image.Should().NotBeNull();
         image.Source.Should().Be("http://image.png/");
@@ -62,7 +61,7 @@ public class PreviewImageTests : TestContext
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.LazyLoadImage, lazyLoad));
 
-        var image = cut.Find("img").Unwrap() as IHtmlImageElement;
+        var image = cut.Find("img") as IHtmlImageElement;
 
         image.Attributes.FirstOrDefault(a => a.Name == "loading").Value.Should().Be(expectedLazy);
     }
@@ -109,7 +108,7 @@ public class PreviewImageTests : TestContext
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.LazyLoadImage, lazyLoad));
 
-        var image = cut.Find("img").Unwrap() as IHtmlImageElement;
+        var image = cut.Find("img") as IHtmlImageElement;
 
         image.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.Should().Be(expectedBehaviour);
     }

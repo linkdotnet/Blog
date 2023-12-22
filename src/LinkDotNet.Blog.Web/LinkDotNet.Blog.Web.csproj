@@ -5,10 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="7.1.0" />
+        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.0" />
         <PackageReference Include="Blazored.Toast" Version="4.1.0" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="all" />
-        <PackageReference Include="Markdig" Version="0.33.0" />
+        <PackageReference Include="Markdig" Version="0.34.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />

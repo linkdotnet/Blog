@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
@@ -79,7 +78,7 @@ public class NavMenuTests : TestContext
         var cut = RenderComponent<NavMenu>();
 
         var brandImage = cut.Find(".nav-brand img");
-        var image = brandImage.Unwrap() as IHtmlImageElement;
+        var image = brandImage as IHtmlImageElement;
         image.Should().NotBeNull();
         image.Source.Should().Be("http://localhost/img.png");
     }
@@ -104,7 +103,7 @@ public class NavMenuTests : TestContext
         var cut = RenderComponent<NavMenu>();
 
         var brandImage = cut.Find(".nav-brand");
-        var image = brandImage.Unwrap() as IHtmlAnchorElement;
+        var image = brandImage as IHtmlAnchorElement;
         image.Should().NotBeNull();
         image.TextContent.Should().Be("Steven");
     }

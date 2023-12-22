@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
@@ -94,7 +93,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.RenderComponent<VisitCountPerPage>();
 
         cut.WaitForState(() => cut.FindAll("td").Any());
-        cut.Find("#total-clicks").Unwrap().TextContent.Should().Be("4 clicks in total");
+        cut.Find("#total-clicks").TextContent.Should().Be("4 clicks in total");
     }
 
     private void RegisterRepositories(TestContextBase ctx)

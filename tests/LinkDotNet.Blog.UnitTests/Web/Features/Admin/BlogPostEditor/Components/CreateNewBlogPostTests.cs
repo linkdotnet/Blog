@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
@@ -242,7 +241,7 @@ public class CreateNewBlogPostTests : TestContext
 
         cut.Find("#scheduled").Change("01/01/2099 00:00");
 
-        var element = cut.Find("#published").Unwrap() as IHtmlInputElement;
+        var element = cut.Find("#published") as IHtmlInputElement;
         element.IsChecked.Should().BeFalse();
     }
 }

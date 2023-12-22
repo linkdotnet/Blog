@@ -1,5 +1,4 @@
 ﻿using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
@@ -37,7 +36,7 @@ public class AccessControlTests : TestContext
         var cut = RenderComponent<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')").Unwrap()).Href.Should().Contain(currentUri);
+        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.Should().Contain(currentUri);
     }
 
     [Fact]
@@ -49,6 +48,6 @@ public class AccessControlTests : TestContext
         var cut = RenderComponent<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log out')").Unwrap()).Href.Should().Contain(currentUri);
+        ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.Should().Contain(currentUri);
     }
 }

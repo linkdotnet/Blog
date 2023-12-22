@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
-using AngleSharpWrappers;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -92,7 +91,7 @@ public class ShowBlogPostPageTests : TestContext
         var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
-        var aElement = cut.Find(".goto-tag").Unwrap() as IHtmlAnchorElement;
+        var aElement = cut.Find(".goto-tag") as IHtmlAnchorElement;
         aElement.Should().NotBeNull();
         aElement.Href.Should().Contain("/searchByTag/tag1");
     }
