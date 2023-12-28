@@ -82,7 +82,6 @@ public class AboutMePageTests : TestContext
     {
         Services.AddScoped(_ => Options.Create(config));
         Services.AddScoped(_ => Options.Create(applicationConfiguration));
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<ISortOrderCalculator>());
         Services.RegisterRepositoryWithEmptyReturn<ProfileInformationEntry>();
         Services.RegisterRepositoryWithEmptyReturn<Skill>();

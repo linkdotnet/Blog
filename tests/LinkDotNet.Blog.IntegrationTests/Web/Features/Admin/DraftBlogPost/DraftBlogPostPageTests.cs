@@ -20,7 +20,6 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new TestContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddMemoryCache();
         var cut = ctx.RenderComponent<DraftBlogPostPage>();
         cut.WaitForState(() => cut.FindAll(".blog-card").Any());
 

@@ -66,7 +66,5 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterServices(TestContext ctx)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
-        ctx.Services.AddMemoryCache();
     }
 }

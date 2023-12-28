@@ -168,7 +168,5 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).ApplicationConfiguration));
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).Introduction));
-        ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
-        ctx.Services.AddMemoryCache();
     }
 }

@@ -48,7 +48,6 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new TestContext();
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         ctx.ComponentFactories.AddStub<PageTitle>();
 
         var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
@@ -68,7 +67,5 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterServices(TestContext ctx)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
-        ctx.Services.AddMemoryCache();
     }
 }
