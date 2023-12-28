@@ -12,7 +12,6 @@ public class IntroductionCardTests : TestContext
     [Fact]
     public void ShouldSetBackgroundWhenSet()
     {
-        ComponentFactories.AddStub<SocialAccounts>();
         var introduction = new Introduction
         {
             BackgroundUrl = "something_but_null",
@@ -33,7 +32,6 @@ public class IntroductionCardTests : TestContext
     [InlineData("")]
     public void ShouldNotSetBackgroundWhenNotSet(string url)
     {
-        ComponentFactories.AddStub<SocialAccounts>();
         var introduction = new Introduction
         {
             BackgroundUrl = url,

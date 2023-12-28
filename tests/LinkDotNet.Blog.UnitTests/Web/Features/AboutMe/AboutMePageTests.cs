@@ -57,7 +57,6 @@ public class AboutMePageTests : TestContext
     [Fact]
     public void ShouldSetOgData()
     {
-        ComponentFactories.AddStub<Profile>();
         this.AddTestAuthorization().SetNotAuthorized();
         var profileInformation = new ProfileInformation
         {
