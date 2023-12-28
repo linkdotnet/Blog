@@ -51,8 +51,8 @@ public class ShowBlogPostPageTests : TestContext
         var cut = RenderComponent<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
-        var pageTitleStub = cut.FindComponent<Stub<PageTitle>>();
-        var pageTitle = Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent));
+        var pageTitleStub = cut.FindComponent<PageTitleStub>();
+        var pageTitle = Render(pageTitleStub.Instance.ChildContent!);
         pageTitle.Markup.Should().Be("Title");
     }
 

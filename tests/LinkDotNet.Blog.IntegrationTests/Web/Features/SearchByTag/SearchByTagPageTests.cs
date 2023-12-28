@@ -53,8 +53,8 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
 
-        var pageTitleStub = cut.FindComponent<Stub<PageTitle>>();
-        var pageTitle = ctx.Render(pageTitleStub.Instance.Parameters.Get(p => p.ChildContent));
+        var pageTitleStub = cut.FindComponent<PageTitleStub>();
+        var pageTitle = ctx.Render(pageTitleStub.Instance.ChildContent!);
         pageTitle.Markup.Should().Be("Search for tag: Tag");
     }
 
