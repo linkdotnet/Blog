@@ -36,7 +36,7 @@ public sealed partial class BlogPost : Entity
 
     public bool IsScheduled => ScheduledPublishDate is not null;
 
-    public string TagsAsString => Tags is null ? string.Empty : string.Join(", ", Tags);
+    public string TagsAsString => string.Join(",", Tags ?? []);
 
     public int ReadingTimeInMinutes { get; private set; }
 
