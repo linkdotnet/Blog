@@ -10,7 +10,7 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
 
-@if (BlogPost == null)
+@if (BlogPost is null)
 {
     <Loading></Loading>
 }
@@ -20,7 +20,8 @@ else
 	<OgData Title="@BlogPost.Title"
 	        AbsolutePreviewImageUrl="@OgDataImage"
 	        Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
-	        Keywords="@BlogPost.TagsAsString">
+	        Keywords="@BlogPost.TagsAsString"
+	        CanonicalRelativeUrl="@BlogPostCanoncialUrl">
 		<StructuredData Headline="@BlogPost.Title"
 		                PreviewImage="@BlogPost.PreviewImageUrl"
 		                PreviewFallbackImage="@BlogPost.PreviewImageUrlFallback"
@@ -77,6 +78,7 @@ else
     public string Slug { get; set; }
 
 	private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
+	private string BlogPostCanoncialUrl => $"blogPost/{BlogPost.Id}";
 
     private BlogPost BlogPost { get; set; }
 

@@ -1,4 +1,5 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using System.IO
+@inject NavigationManager NavigationManager
 
 <HeadContent>
     <meta name="title" property="og:title" content="@Title" />
@@ -17,12 +18,12 @@
     {
         <meta name="description" property="og:description" content="@Description" />
     }
-    
+
     @if (ChildContent is not null)
     {
 	    @ChildContent
     }
-    
+
 </HeadContent>
 @code {
 
@@ -38,11 +39,19 @@
     [Parameter]
     public string Keywords { get; set; }
 
+    [Parameter]
+    public string CanonicalRelativeUrl { get; set; }
+
 	[Parameter]
 	public RenderFragment ChildContent { get; set; }
 
 	private string GetCanoncialUri()
     {
+	    if (!string.IsNullOrEmpty(CanonicalRelativeUrl))
+	    {
+		    return Path.Combine(NavigationManager.BaseUri, CanonicalRelativeUrl);
+	    }
+
         var uri = new Uri(NavigationManager.Uri);
         return uri.GetLeftPart(UriPartial.Path);
     }

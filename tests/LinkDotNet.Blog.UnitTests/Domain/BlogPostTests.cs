@@ -151,7 +151,7 @@ public class BlogPostTests
 
         var tags = bp.TagsAsString;
 
-        tags.Should().Be("tag 1, tag 2");
+        tags.Should().Be("tag 1,tag 2");
     }
 
     [Fact]

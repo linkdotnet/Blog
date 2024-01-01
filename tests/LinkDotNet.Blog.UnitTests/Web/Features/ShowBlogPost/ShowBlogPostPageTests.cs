@@ -41,7 +41,6 @@ public class ShowBlogPostPageTests : TestContext
     [Fact]
     public void ShouldSetTitleToTag()
     {
-        JSInterop.Mode = JSRuntimeMode.Loose;
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
@@ -61,7 +60,6 @@ public class ShowBlogPostPageTests : TestContext
     [InlineData("url1", "url2", "url2")]
     public void ShouldUseFallbackAsOgDataIfAvailable(string preview, string fallback, string expected)
     {
-        JSInterop.Mode = JSRuntimeMode.Loose;
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .WithPreviewImageUrl(preview)
@@ -133,6 +131,24 @@ public class ShowBlogPostPageTests : TestContext
             p => p.Add(s => s.BlogPostId, "1"));
 
         cut.HasComponent<ReadingIndicator>().Should().Be(isEnabled);
+    }
+
+    [Fact]
+    public void ShouldSetCanoncialUrlOfOgDataWithoutSlug()
+    {
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .WithTitle("sample")
+            .Build();
+        blogPost.Id = "1";
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
+        SetupMocks();
+        
+        var cut = RenderComponent<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+        
+        cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.Should().Be("blogPost/1");
     }
 
     private void SetupMocks()
