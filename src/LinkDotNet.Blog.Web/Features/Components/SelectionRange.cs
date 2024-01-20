@@ -1,6 +1,6 @@
 namespace LinkDotNet.Blog.Web.Features.Components;
 
-internal record struct SelectionRange
+public record struct SelectionRange
 {
     public int Start { get; init; }
 
