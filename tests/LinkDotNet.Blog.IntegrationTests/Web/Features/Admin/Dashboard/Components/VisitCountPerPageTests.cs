@@ -7,7 +7,6 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
-using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -55,12 +54,12 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
         await DbContext.SaveChangesAsync();
         using var ctx = new TestContext();
-        ctx.ComponentFactories.Add<DateRangeSelector, FilterStubComponent>();
+        ctx.ComponentFactories.AddStub<DateRangeSelector>();
         RegisterRepositories(ctx);
         var cut = ctx.RenderComponent<VisitCountPerPage>();
         var filter = new Filter { StartDate = new DateOnly(2019, 1, 1), EndDate = new DateOnly(2020, 12, 31) };
 
-        await cut.InvokeAsync(() => cut.FindComponent<FilterStubComponent>().Instance.FireFilterChanged(filter));
+        await cut.InvokeAsync(() => cut.FindComponent<DateRangeSelectorStub>().Instance.FilterChanged.InvokeAsync(filter));
 
         cut.WaitForState(() => cut.FindAll("td").Any());
         var elements = cut.FindAll("td").ToList();
@@ -115,13 +114,5 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         }
 
         await DbContext.SaveChangesAsync();
-    }
-
-    private sealed class FilterStubComponent : ComponentBase
-    {
-        [Parameter]
-        public EventCallback<Filter> FilterChanged { get; set; }
-
-        public void FireFilterChanged(Filter filter) => FilterChanged.InvokeAsync(filter);
     }
 }

@@ -25,19 +25,9 @@ public abstract class Enumeration<TEnumeration>
     public string Key { get; }
 
     public static bool operator ==(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b)
-    {
-        if (a is null || b is null)
-        {
-            return false;
-        }
+        => a is not null && b is not null && a.Key.Equals(b.Key, StringComparison.Ordinal);
 
-        return a.Key.Equals(b.Key, StringComparison.Ordinal);
-    }
-
-    public static bool operator !=(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b)
-    {
-        return !(a == b);
-    }
+    public static bool operator !=(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b) => !(a == b);
 
     public static TEnumeration Create(string key)
         => All.SingleOrDefault(p => p.Key == key)
@@ -45,15 +35,7 @@ public abstract class Enumeration<TEnumeration>
 
     public override int GetHashCode() => Key.GetHashCode(StringComparison.Ordinal);
 
-    public override bool Equals(object obj)
-    {
-        if (obj?.GetType() != typeof(TEnumeration))
-        {
-            return false;
-        }
-
-        return ((TEnumeration)obj).Key == Key;
-    }
+    public override bool Equals(object obj) => obj?.GetType() == typeof(TEnumeration) && ((TEnumeration)obj).Key == Key;
 
     public override string ToString() => Key;
 
