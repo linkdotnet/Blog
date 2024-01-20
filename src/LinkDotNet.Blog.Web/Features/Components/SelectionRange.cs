@@ -1,8 +1,8 @@
 namespace LinkDotNet.Blog.Web.Features.Components;
 
-public sealed class SelectionRange
+internal record struct SelectionRange
 {
-    public int Start { get; set; }
+    public int Start { get; init; }
 
-    public int End { get; set; }
+    public int End { get; init; }
 }

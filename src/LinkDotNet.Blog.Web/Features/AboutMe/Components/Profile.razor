@@ -54,7 +54,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 	[Parameter]
 	public ProfileInformation ProfileInformation { get; set; }
 
-    private List<ProfileInformationEntry> profileInformationEntries = new();
+    private List<ProfileInformationEntry> profileInformationEntries = [];
     private ConfirmDialog Dialog { get; set; }
     private string currentDeleteKey;
     private ProfileInformationEntry currentDragItem;

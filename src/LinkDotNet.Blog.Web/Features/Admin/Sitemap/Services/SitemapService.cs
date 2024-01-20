@@ -45,7 +45,7 @@ public sealed class SitemapService : ISitemapService
         await xmlFileWriter.WriteObjectToXmlFileAsync(sitemap, "wwwroot/sitemap.xml");
     }
 
-    private IEnumerable<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPost> blogPosts)
+    private ImmutableArray<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPost> blogPosts)
     {
         return blogPosts.Select(b => new SitemapUrl
         {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web.Authentication.Dummy;
 
-public static class DummyExtensions
+internal static class DummyExtensions
 {
     public static void UseDummyAuthentication(this IServiceCollection services)
     {

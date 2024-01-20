@@ -11,7 +11,7 @@ namespace LinkDotNet.Blog.Infrastructure.Persistence.InMemory;
 public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
-    private readonly List<TEntity> entities = new();
+    private readonly List<TEntity> entities = [];
 
     public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => ValueTask.FromResult(HealthCheckResult.Healthy());
 
