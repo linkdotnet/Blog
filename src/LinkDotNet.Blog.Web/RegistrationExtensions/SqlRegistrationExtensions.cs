@@ -25,6 +25,8 @@ public static class SqlRegistrationExtensions
         });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        services.AddScoped<DbContextInitializer>();
     }
 
     public static void UseSqliteAsStorageProvider(this IServiceCollection services)
@@ -43,6 +45,8 @@ public static class SqlRegistrationExtensions
                 ;
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        services.AddScoped<DbContextInitializer>();
     }
 
     public static void UseMySqlAsStorageProvider(this IServiceCollection services)
@@ -61,5 +65,7 @@ public static class SqlRegistrationExtensions
                 ;
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        services.AddScoped<DbContextInitializer>();
     }
 }
