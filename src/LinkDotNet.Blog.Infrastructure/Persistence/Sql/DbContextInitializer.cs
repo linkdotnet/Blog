@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 public sealed partial class DbContextInitializer
@@ -23,9 +24,11 @@ public sealed partial class DbContextInitializer
     {
         try
         {
-            if (StorageProviderIsSQL())
+            var database = dbContext.Database;
+
+            if (StorageProviderIsSQL() && database.GetPendingMigrations().Any())
             {
-                dbContext.Database.Migrate();
+                database.Migrate();
                 LogInitializingInfo();
             }
         }
