@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LinkDotNet.Blog.Domain;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +9,7 @@ public sealed class BlogDbContext : DbContext
     public BlogDbContext(DbContextOptions options)
         : base(options)
     {
-        Database.EnsureCreated();
+
     }
 
     public DbSet<BlogPost> BlogPosts { get; set; }
