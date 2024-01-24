@@ -53,11 +53,13 @@ public static class StorageProviderExtensions
 
     public static void InitializeDatabase(this WebApplication app)
     {
-        using var scope = app?.Services.CreateScope();
+        ArgumentNullException.ThrowIfNull(app);
 
-        var initializer = scope?.ServiceProvider.GetRequiredService<DbContextInitializer>();
+        using var scope = app.Services.CreateScope();
 
-        initializer?.Initialize();
+        var initializer = scope.ServiceProvider.GetRequiredService<DbContextInitializer>();
+
+        initializer.Initialize();
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
