@@ -21,6 +21,8 @@ public class Program
         var app = builder.Build();
         ConfigureApp(app);
 
+        app.InitializeDatabase();
+
         app.Run();
     }
 
