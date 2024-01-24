@@ -1,6 +1,8 @@
 using System;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,15 @@ public static class StorageProviderExtensions
             services.UseMongoDBAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
         }
+    }
+
+    public static void InitializeDatabase(this WebApplication app)
+    {
+        using var scope = app?.Services.CreateScope();
+
+        var initializer = scope?.ServiceProvider.GetRequiredService<DbContextInitializer>();
+
+        initializer?.Initialize();
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
