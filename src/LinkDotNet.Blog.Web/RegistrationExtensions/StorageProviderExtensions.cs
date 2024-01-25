@@ -55,9 +55,7 @@ public static class StorageProviderExtensions
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        using var scope = app.Services.CreateScope();
-
-        var initializer = scope.ServiceProvider.GetRequiredService<DbContextInitializer>();
+        var initializer = app.Services.GetRequiredService<DbContextInitializer>();
 
         initializer.Initialize();
     }
