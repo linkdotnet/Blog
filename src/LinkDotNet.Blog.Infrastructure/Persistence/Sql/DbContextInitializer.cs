@@ -26,7 +26,7 @@ public sealed partial class DbContextInitializer
         {
             var database = dbContext.Database;
 
-            if (StorageProviderIsSQL() && database.GetPendingMigrations().Any())
+            if (database.GetPendingMigrations().Any())
             {
                 database.Migrate();
                 LogInitializingInfo();
@@ -44,14 +44,4 @@ public sealed partial class DbContextInitializer
 
     [LoggerMessage(LogLevel.Information, "Database migrated.")]
     private partial void LogInitializingInfo();
-
-    private bool StorageProviderIsSQL()
-    {
-        if (dbContext.Database.IsMySql() || dbContext.Database.IsSqlServer() || dbContext.Database.IsSqlite())
-        {
-            return true;
-        }
-
-        return false;
-    }
 }
