@@ -51,13 +51,30 @@ public static class StorageProviderExtensions
         }
     }
 
-    public static void InitializeDatabase(this WebApplication app)
+    public static void InitializeStorageProvider(this WebApplication app, IConfiguration configuration)
     {
-        ArgumentNullException.ThrowIfNull(app);
+        if (StorageProviderIsSQL(configuration))
+        {
+            ArgumentNullException.ThrowIfNull(app);
 
-        var initializer = app.Services.GetRequiredService<DbContextInitializer>();
+            var initializer = app.Services.GetRequiredService<DbContextInitializer>();
 
-        initializer.Initialize();
+            initializer.Initialize();
+        }
+    }
+
+    private static bool StorageProviderIsSQL(IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        var persistenceProvider = PersistenceProvider.Create(configuration["PersistenceProvider"]);
+
+        if (persistenceProvider == PersistenceProvider.MySql
+            || persistenceProvider == PersistenceProvider.SqlServer
+            || persistenceProvider == PersistenceProvider.Sqlite)
+            return true;
+
+        return false;
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)

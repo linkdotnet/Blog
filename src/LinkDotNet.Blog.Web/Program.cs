@@ -21,7 +21,7 @@ public class Program
         var app = builder.Build();
         ConfigureApp(app);
 
-        app.InitializeDatabase();
+        app.InitializeStorageProvider(app.Configuration);
 
         app.Run();
     }
