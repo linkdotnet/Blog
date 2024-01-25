@@ -25,10 +25,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EditorConfigFiles Remove="C:\Users\Kamyab\Desktop\src\Blog\src\LinkDotNet.Blog.Infrastructure\Migrations\.editorconfig" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Include="C:\Users\Kamyab\Desktop\src\Blog\src\LinkDotNet.Blog.Infrastructure\Migrations\.editorconfig" />
     </ItemGroup>
 </Project>
