@@ -2,7 +2,6 @@ using Blazored.Toast;
 using HealthChecks.UI.Client;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
-using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -38,6 +37,7 @@ public class Program
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
+        builder.Services.AddResponseCompression();
         builder.Services.AddBackgroundServices();
 
         builder.Services.AddHealthChecks()
