@@ -38,9 +38,7 @@ public class Program
         builder.Services.AddBlazoredToast();
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
-        builder.Services.AddResponseCompression();
-        builder.Services.AddHostedService<BlogPostPublisher>();
-        builder.Services.AddHostedService<TransformBlogPostRecordsService>();
+        builder.Services.AddBackgroundServices();
 
         builder.Services.AddHealthChecks()
             .AddCheck<DatabaseHealthCheck>("Database");
