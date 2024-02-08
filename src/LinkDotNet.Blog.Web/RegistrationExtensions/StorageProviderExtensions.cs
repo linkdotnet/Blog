@@ -1,6 +1,8 @@
 using System;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +49,32 @@ public static class StorageProviderExtensions
             services.UseMongoDBAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
         }
+    }
+
+    public static void InitializeStorageProvider(this WebApplication app, IConfiguration configuration)
+    {
+        if (StorageProviderIsSQL(configuration))
+        {
+            ArgumentNullException.ThrowIfNull(app);
+
+            var initializer = app.Services.GetRequiredService<DbContextInitializer>();
+
+            initializer.Initialize();
+        }
+    }
+
+    private static bool StorageProviderIsSQL(IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        var persistenceProvider = PersistenceProvider.Create(configuration["PersistenceProvider"]);
+
+        if (persistenceProvider == PersistenceProvider.MySql
+            || persistenceProvider == PersistenceProvider.SqlServer
+            || persistenceProvider == PersistenceProvider.Sqlite)
+            return true;
+
+        return false;
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)

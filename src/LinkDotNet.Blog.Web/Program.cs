@@ -20,6 +20,8 @@ public class Program
         var app = builder.Build();
         ConfigureApp(app);
 
+        app.InitializeStorageProvider(app.Configuration);
+
         app.Run();
     }
 

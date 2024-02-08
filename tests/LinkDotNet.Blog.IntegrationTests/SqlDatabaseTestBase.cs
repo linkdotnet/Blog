@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Common;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -22,6 +22,8 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDispo
         DbContextFactory = Substitute.For<IDbContextFactory<BlogDbContext>>();
         DbContextFactory.CreateDbContextAsync()
             .Returns(_ => new BlogDbContext(options));
+
+        DbContext.Database.EnsureCreated();
         Repository = new Repository<TEntity>(DbContextFactory, Substitute.For<ILogger<Repository<TEntity>>>());
     }
 
