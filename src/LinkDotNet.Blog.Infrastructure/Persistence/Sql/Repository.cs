@@ -42,15 +42,13 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
     }
 
-    public async ValueTask<IPagedList<TEntity>> GetAllAsync(
+    public ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>> filter = null,
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
         int page = 1,
-        int pageSize = int.MaxValue)
-    {
-        return await GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
-    }
+        int pageSize = int.MaxValue) =>
+        GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<TEntity, TProjection>> selector,

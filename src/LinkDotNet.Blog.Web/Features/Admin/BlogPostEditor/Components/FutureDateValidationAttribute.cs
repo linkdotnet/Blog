@@ -8,13 +8,8 @@ public sealed class FutureDateValidationAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)
     {
-        if (value is null)
-        {
-            return ValidationResult.Success;
-        }
-
-        return (DateTime)value <= DateTime.UtcNow
-            ? new ValidationResult("The scheduled publish date must be in the future.")
-            : ValidationResult.Success;
+        return value is not DateTime dt || dt > DateTime.UtcNow
+            ? ValidationResult.Success
+            : new ValidationResult("The scheduled publish date must be in the future.");
     }
 }

@@ -1,6 +1,6 @@
 namespace LinkDotNet.Blog.Web.Features.Components;
 
-public record struct SelectionRange
+public readonly record struct SelectionRange
 {
     public int Start { get; init; }
 

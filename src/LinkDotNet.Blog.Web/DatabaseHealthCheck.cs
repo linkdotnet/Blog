@@ -17,6 +17,6 @@ public class DatabaseHealthCheck : IHealthCheck
 
     public Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,
-        CancellationToken cancellationToken =  default) =>
+        CancellationToken cancellationToken = default) =>
         repository.PerformHealthCheckAsync().AsTask();
 }

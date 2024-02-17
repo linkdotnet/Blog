@@ -96,7 +96,7 @@ public sealed class RssFeedController : ControllerBase
 
     private static void AddCategories(Collection<SyndicationCategory> categories, BlogPostRssInfo blogPost)
     {
-        foreach (var tag in blogPost.Tags ?? Array.Empty<string>())
+        foreach (var tag in blogPost.Tags ?? [])
         {
             categories.Add(new SyndicationCategory(tag));
         }

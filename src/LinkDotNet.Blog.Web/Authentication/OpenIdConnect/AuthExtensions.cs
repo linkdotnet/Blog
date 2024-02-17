@@ -13,7 +13,7 @@ public static class AuthExtensions
 {
     public static void UseAuthentication(this IServiceCollection services)
     {
-        var  authInformation = services.BuildServiceProvider().GetService<IOptions<AuthInformation>>();
+        var authInformation = services.BuildServiceProvider().GetRequiredService<IOptions<AuthInformation>>();
 
         services.Configure<CookiePolicyOptions>(options =>
         {

@@ -26,10 +26,8 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         Expression<Func<TEntity, object>> orderBy = null,
         bool descending = true,
         int page = 1,
-        int pageSize = int.MaxValue)
-    {
-        return GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
-    }
+        int pageSize = int.MaxValue) =>
+        GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
 
     public ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
         Expression<Func<TEntity, TProjection>> selector,
