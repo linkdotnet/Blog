@@ -10,7 +10,7 @@
     <PropertyGroup Label="Analyzer settings">
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
-        <AnalysisLevel>preview</AnalysisLevel>
+        <AnalysisLevel>latest</AnalysisLevel>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     </PropertyGroup>
 

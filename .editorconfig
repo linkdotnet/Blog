@@ -415,6 +415,8 @@ dotnet_diagnostic.S3875.severity = none       # Remove this overload of 'operato
 ##########################################
 
 # Visual Studio
+dotnet_diagnostic.IDE0005.severity = none # IDE0005: Using directive is unnecessary
+dotnet_diagnostic.IDE0058.severity = none # IDE0058: Expression value is never used
 dotnet_diagnostic.IDE0079.severity = warning # IDE0079: Remove unnecessary suppression
 
 # AsyncFixer
