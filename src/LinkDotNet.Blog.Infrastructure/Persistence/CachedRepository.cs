@@ -70,7 +70,7 @@ public sealed class CachedRepository<T> : IRepository<T>
         }
     }
 
-    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids) => await repository.DeleteBulkAsync(ids);
+    public async ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids) => await repository.DeleteBulkAsync(ids);
 
-    public async ValueTask StoreBulkAsync(IEnumerable<T> records) => await repository.StoreBulkAsync(records);
+    public async ValueTask StoreBulkAsync(IReadOnlyCollection<T> records) => await repository.StoreBulkAsync(records);
 }

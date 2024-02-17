@@ -90,7 +90,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         await session.SaveChangesAsync();
     }
 
-    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    public async ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids)
     {
         ArgumentNullException.ThrowIfNull(ids);
 
@@ -103,7 +103,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         await session.SaveChangesAsync();
     }
 
-    public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    public async ValueTask StoreBulkAsync(IReadOnlyCollection<TEntity> records)
     {
         ArgumentNullException.ThrowIfNull(records);
 

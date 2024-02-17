@@ -96,15 +96,17 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         await Collection.DeleteOneAsync(filter);
     }
 
-    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    public async ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids)
     {
         var filter = Builders<TEntity>.Filter.In(doc => doc.Id, ids);
         await Collection.DeleteManyAsync(filter);
     }
 
-    public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    public async ValueTask StoreBulkAsync(IReadOnlyCollection<TEntity> records)
     {
-        if (records.Any())
+        ArgumentNullException.ThrowIfNull(records);
+
+        if (records.Count != 0)
         {
             await Collection.InsertManyAsync(records);
         }

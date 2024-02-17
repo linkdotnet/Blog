@@ -107,12 +107,12 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public async ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    public async ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids)
     {
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var strategy = blogDbContext.Database.CreateExecutionStrategy();
 
-        await strategy.ExecuteAsync(async () => await DeleteBulkAsyncInBatchesAsync());
+        await strategy.ExecuteAsync(DeleteBulkAsyncInBatchesAsync);
 
         async Task DeleteBulkAsyncInBatchesAsync()
         {
@@ -137,14 +137,14 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public async ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    public async ValueTask StoreBulkAsync(IReadOnlyCollection<TEntity> records)
     {
         ArgumentNullException.ThrowIfNull(records);
 
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var strategy = blogDbContext.Database.CreateExecutionStrategy();
 
-        await strategy.ExecuteAsync(async () => await StoreBulkAsyncInBatchesAsync());
+        await strategy.ExecuteAsync(StoreBulkAsyncInBatchesAsync);
 
         async Task StoreBulkAsyncInBatchesAsync()
         {

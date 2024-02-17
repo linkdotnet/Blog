@@ -34,7 +34,7 @@ public interface IRepository<TEntity>
 
     ValueTask DeleteAsync(string id);
 
-    ValueTask DeleteBulkAsync(IEnumerable<string> ids);
+    ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids);
 
-    ValueTask StoreBulkAsync(IEnumerable<TEntity> records);
+    ValueTask StoreBulkAsync(IReadOnlyCollection<TEntity> records);
 }

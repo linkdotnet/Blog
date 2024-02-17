@@ -86,7 +86,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask DeleteBulkAsync(IEnumerable<string> ids)
+    public ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids)
     {
         ArgumentNullException.ThrowIfNull(ids);
 
@@ -99,7 +99,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask StoreBulkAsync(IEnumerable<TEntity> records)
+    public ValueTask StoreBulkAsync(IReadOnlyCollection<TEntity> records)
     {
         entities.AddRange(records);
         return ValueTask.CompletedTask;

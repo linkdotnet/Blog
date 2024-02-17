@@ -99,11 +99,11 @@ public sealed partial class TransformBlogPostRecordsService : BackgroundService
 
         var mergedRecords = MergeRecords(newBlogPostRecords, oldBlogPostRecords);
 
-        await blogPostRecordRepository.DeleteBulkAsync(oldBlogPostRecords.Select(o => o.Id));
-        await blogPostRecordRepository.StoreBulkAsync(mergedRecords);
+        await blogPostRecordRepository.DeleteBulkAsync(oldBlogPostRecords.Select(o => o.Id).ToArray());
+        await blogPostRecordRepository.StoreBulkAsync(mergedRecords.ToArray());
 
         LogDeletingUserRecords(userRecords.Count);
-        await userRecordRepository.DeleteBulkAsync(userRecords.Select(u => u.Id));
+        await userRecordRepository.DeleteBulkAsync(userRecords.Select(u => u.Id).ToArray());
         LogDeletedUserRecords();
     }
 

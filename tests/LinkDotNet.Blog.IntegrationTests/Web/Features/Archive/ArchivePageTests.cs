@@ -128,8 +128,8 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         public ValueTask DeleteAsync(string id) => throw new NotImplementedException();
 
-        public ValueTask DeleteBulkAsync(IEnumerable<string> ids) => throw new NotImplementedException();
+        public ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids) => throw new NotImplementedException();
 
-        public ValueTask StoreBulkAsync(IEnumerable<BlogPost> records) => throw new NotImplementedException();
+        public ValueTask StoreBulkAsync(IReadOnlyCollection<BlogPost> records) => throw new NotImplementedException();
     }
 }

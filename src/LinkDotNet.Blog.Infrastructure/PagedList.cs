@@ -9,7 +9,7 @@ namespace LinkDotNet.Blog.Infrastructure;
 [DebuggerDisplay("PagedList<{typeof(T).Name}>, Count = {Count}")]
 public sealed class PagedList<T> : IPagedList<T>
 {
-    public static readonly PagedList<T> Empty = new(Enumerable.Empty<T>(), 0, 0, 0);
+    public static readonly PagedList<T> Empty = new([], 0, 0, 0);
 
     private readonly IReadOnlyList<T> subset;
     private readonly int totalPages;
