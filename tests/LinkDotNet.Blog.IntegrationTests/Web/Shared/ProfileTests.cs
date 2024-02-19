@@ -158,7 +158,7 @@ public class ProfileTests : TestContext
                 Arg.Any<bool>(),
                 Arg.Any<int>(),
                 Arg.Any<int>())
-            .Returns(new PagedList<ProfileInformationEntry>(entries, 1, 100));
+            .Returns(new PagedList<ProfileInformationEntry>(entries, entries.Length, 1, 100));
     }
 
     private (IRepository<ProfileInformationEntry> repoMock, ISortOrderCalculator calcMock) RegisterServices()

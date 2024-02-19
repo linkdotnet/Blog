@@ -19,7 +19,7 @@ public static class RepositoryTestExtensions
                 Arg.Any<bool>(), 
                 Arg.Any<int>(), 
                 Arg.Any<int>())
-            .Returns(new PagedList<TEntity>(Array.Empty<TEntity>(), 1, 1));
+            .Returns(new PagedList<TEntity>([], 0, 1, 1));
 
         collection.AddScoped(_ => repositoryMock);
     }

@@ -41,14 +41,13 @@ public class SitemapServiceTests : TestContext
             .WithTags("tag2")
             .Build();
         bp2.Id = "id2";
-        var blogPosts = new[] { bp1, bp2 };
         repositoryMock.GetAllAsync(
                 Arg.Any<Expression<Func<BlogPost, bool>>>(), 
                 Arg.Any<Expression<Func<BlogPost, object>>>(),
                         true, 
                 Arg.Any<int>(), 
                 Arg.Any<int>())
-            .Returns(new PagedList<BlogPost>(blogPosts, 1, 10));
+            .Returns(new PagedList<BlogPost>([bp1, bp2], 2, 1, 10));
 
         var sitemap = await sut.CreateSitemapAsync();
 

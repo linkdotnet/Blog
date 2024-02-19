@@ -135,6 +135,6 @@ public sealed class CachedRepositoryTests
             Arg.Any<Expression<Func<BlogPost, object>>>(),
             Arg.Any<bool>(),
             Arg.Any<int>(),
-            Arg.Any<int>()).Returns(new PagedList<BlogPost>(new[] { blogPost }, 1, 1));
+            Arg.Any<int>()).Returns(new PagedList<BlogPost>([blogPost], 1, 1, 1));
     }
 }
