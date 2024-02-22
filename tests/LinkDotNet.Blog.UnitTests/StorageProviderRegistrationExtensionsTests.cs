@@ -7,14 +7,14 @@ namespace LinkDotNet.Blog.UnitTests;
 
 public class StorageProviderRegistrationExtensionsTests
 {
-    public static IEnumerable<object[]> Data => new List<object[]>
-        {
-            new object[] { new Action<IServiceCollection>(services => services.UseSqliteAsStorageProvider()) },
-            new object[] { new Action<IServiceCollection>(services => services.UseSqlAsStorageProvider()) },
-            new object[] { new Action<IServiceCollection>(services => services.UseInMemoryAsStorageProvider()) },
-            new object[] { new Action<IServiceCollection>(services => services.UseRavenDbAsStorageProvider()) },
-            new object[] { new Action<IServiceCollection>(services => services.UseMySqlAsStorageProvider()) },
-        };
+    public static TheoryData<Action<IServiceCollection>> Data => new() 
+    {
+        services => services.UseSqliteAsStorageProvider(),
+        services => services.UseSqlAsStorageProvider(),
+        services => services.UseInMemoryAsStorageProvider(),
+        services => services.UseRavenDbAsStorageProvider(),
+        services => services.UseMySqlAsStorageProvider()
+    };
 
     [Theory]
     [MemberData(nameof(Data))]
