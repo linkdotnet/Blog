@@ -67,8 +67,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, false));
 
-        cut.WaitForState(() => cut.FindComponents<SkillTag>().Any());
-        cut.FindComponent<SkillTag>().Instance.ShowAdminActions.Should().BeFalse();
+        cut.WaitForComponent<SkillTag>().Instance.ShowAdminActions.Should().BeFalse();
     }
 
     [Fact]

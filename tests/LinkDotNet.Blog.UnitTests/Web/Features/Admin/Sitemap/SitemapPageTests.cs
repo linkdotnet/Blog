@@ -43,8 +43,7 @@ public class SitemapPageTests : TestContext
 
         cut.Find("button").Click();
 
-        cut.WaitForState(() => cut.FindAll("tr").Count > 1);
-        var row = cut.FindAll("tr").Last();
+        var row = cut.WaitForElements("tr").Last();
         row.Children.First().InnerHtml.Should().Be("loc");
         row.Children.Last().InnerHtml.Should().Be("Now");
     }

@@ -117,8 +117,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<Index>();
 
-        cut.WaitForState(() => cut.FindComponents<OgData>().Any());
-        cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expectedUri);
+        cut.WaitForComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expectedUri);
     }
 
     [Theory]

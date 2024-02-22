@@ -23,10 +23,8 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Title 1"));
 
-        cut.WaitForState(() => cut.FindComponents<ShortBlogPost>().Any());
-        var blogPosts = cut.FindComponents<ShortBlogPost>();
-        blogPosts.Should().HaveCount(1);
-        blogPosts.Single().Find(".description h1").TextContent.Should().Be("Title 1");
+        var blogPosts = cut.WaitForComponent<ShortBlogPost>();
+        blogPosts.Find(".description h1").TextContent.Should().Be("Title 1");
     }
 
     [Fact]
@@ -41,10 +39,8 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Cat"));
 
-        cut.WaitForState(() => cut.FindComponents<ShortBlogPost>().Any());
-        var blogPosts = cut.FindComponents<ShortBlogPost>();
-        blogPosts.Should().HaveCount(1);
-        blogPosts.Single().Find(".description h1").TextContent.Should().Be("Title 1");
+        var blogPost = cut.WaitForComponent<ShortBlogPost>();
+        blogPost.Find(".description h1").TextContent.Should().Be("Title 1");
     }
 
     [Fact]
@@ -57,10 +53,8 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<SearchPage>(p => p.Add(s => s.SearchTerm, "Title%201"));
 
-        cut.WaitForState(() => cut.FindComponents<ShortBlogPost>().Any());
-        var blogPosts = cut.FindComponents<ShortBlogPost>();
-        blogPosts.Should().HaveCount(1);
-        blogPosts.Single().Find(".description h1").TextContent.Should().Be("Title 1");
+        var blogPosts = cut.WaitForComponent<ShortBlogPost>();
+        blogPosts.Find(".description h1").TextContent.Should().Be("Title 1");
     }
 
     private void RegisterServices(TestContext ctx)
