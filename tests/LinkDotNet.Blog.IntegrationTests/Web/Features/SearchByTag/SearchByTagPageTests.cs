@@ -22,7 +22,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         await AddBlogPostWithTagAsync("Tag 2");
         RegisterServices(ctx);
         var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag 1"));
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var tags = cut.FindAll(".blog-card");
 
@@ -36,7 +36,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
         await AddBlogPostWithTagAsync("C#");
         RegisterServices(ctx);
         var cut = ctx.RenderComponent<SearchByTagPage>(p => p.Add(s => s.Tag, Uri.EscapeDataString("C#")));
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var tags = cut.FindAll(".blog-card");
 

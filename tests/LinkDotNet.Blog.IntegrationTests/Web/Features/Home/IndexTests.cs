@@ -24,7 +24,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
         var cut = ctx.RenderComponent<Index>();
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -44,7 +44,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
         var cut = ctx.RenderComponent<Index>();
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -60,7 +60,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
         var cut = ctx.RenderComponent<Index>();
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
@@ -78,7 +78,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.RenderComponent<Index>(
             p => p.Add(s => s.Page, 2));
 
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
         var blogPosts = cut.FindComponents<ShortBlogPost>();
         blogPosts.Should().HaveCount(1);
     }
@@ -96,7 +96,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
         var cut = ctx.RenderComponent<Index>();
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var tags = cut.FindComponent<ShortBlogPost>().FindAll(".goto-tag");
 
@@ -135,7 +135,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.RenderComponent<Index>(p => p.Add(
             i => i.Page, page));
 
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
         cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 

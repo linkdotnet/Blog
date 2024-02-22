@@ -21,7 +21,7 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.Services.AddScoped(_ => Repository);
         var cut = ctx.RenderComponent<DraftBlogPostPage>();
-        cut.WaitForState(() => cut.FindAll(".blog-card").Any());
+        cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 

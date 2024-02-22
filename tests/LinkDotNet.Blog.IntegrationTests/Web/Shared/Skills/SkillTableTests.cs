@@ -21,9 +21,8 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
-        cut.WaitForState(() => cut.HasComponent<SkillTag>());
 
-        cut.FindComponent<SkillTag>().Find("button").Click();
+        cut.WaitForComponent<SkillTag>().Find("button").Click();
 
         var items = await Repository.GetAllAsync();
         items.Should().HaveCount(0);
@@ -47,8 +46,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
 
         dialog.Find("form").Submit();
 
-        cut.WaitForState(() => cut.HasComponent<SkillTag>());
-        var skillTag = cut.FindComponent<SkillTag>();
+        var skillTag = cut.WaitForComponent<SkillTag>();
         skillTag.Find("span").Text().Should().Contain("C#");
         var fromRepo = (await Repository.GetAllAsync())[0];
         fromRepo.Name.Should().Be("C#");
@@ -84,7 +82,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
-        cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
+        cut.WaitForElement(".skill-tag");
 
         cut.FindAll(".skill-tag")[0].Drag();
         cut.FindAll(".proficiency-level")[1].Drop();
@@ -104,7 +102,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.RenderComponent<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
-        cut.WaitForState(() => cut.FindAll(".skill-tag").Any());
+        cut.WaitForElement(".skill-tag");
 
         cut.FindAll(".skill-tag")[0].Drag();
         cut.FindAll(".proficiency-level")[0].Drop();

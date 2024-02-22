@@ -89,7 +89,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<VisitCountPerPage>();
 
-        cut.WaitForState(() => cut.FindAll("td").Any());
+        cut.WaitForElement("td");
         cut.Find("#total-clicks").TextContent.Should().Be("4 clicks in total");
     }
 

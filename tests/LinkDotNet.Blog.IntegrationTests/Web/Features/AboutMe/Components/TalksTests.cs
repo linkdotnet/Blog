@@ -30,8 +30,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 
         cut.Find("form").Submit();
 
-        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
-        var entry = cut.FindComponent<TalkEntry>();
+        var entry = cut.WaitForComponent<TalkEntry>();
         entry.Find("#talk-display-content strong").TextContent.Should().Be("title");
         entry.Find("#talk-place").TextContent.Should().Be("Zurich");
         entry.Find("#talk-description p").TextContent.Should().Be("text");
@@ -45,8 +44,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 
         var cut = ctx.RenderComponent<Talks>();
 
-        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
-        cut.FindComponents<TalkEntry>().Count.Should().Be(2);
+        cut.WaitForComponents<TalkEntry>().Count.Should().Be(2);
     }
 
     [Fact]
@@ -55,9 +53,8 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         await Repository.StoreAsync(new TalkBuilder().Build());
         var cut = ctx.RenderComponent<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
-        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
 
-        cut.FindComponent<TalkEntry>().Find("#talk-delete").Click();
+        cut.WaitForComponent<TalkEntry>().Find("#talk-delete").Click();
 
         cut.WaitForState(() => !cut.HasComponent<TalkEntry>());
         cut.HasComponent<TalkEntry>().Should().BeFalse();
@@ -73,8 +70,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         var cut = ctx.RenderComponent<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
 
-        cut.WaitForState(() => cut.HasComponent<TalkEntry>());
-        var talks = cut.FindComponents<TalkEntry>();
+        var talks = cut.WaitForComponents<TalkEntry>();
         talks.Count.Should().Be(2);
         talks[0].Instance.Talk.PublishedDate.Should().Be(new DateTime(2022, 1, 1));
         talks[1].Instance.Talk.PublishedDate.Should().Be(new DateTime(2021, 1, 1));

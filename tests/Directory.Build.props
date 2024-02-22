@@ -5,8 +5,8 @@
     <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Bunit</InterceptorsPreviewNamespaces>
   </PropertyGroup>
 
-  <ItemGroup Condition="$(MSBuildProjectName) != 'LinkDotNet.Blog.TestUtilities'">
-    <PackageReference Include="bunit.generators" Version="1.27.5-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  <ItemGroup>
+    <PackageReference Include="bunit.generators" Version="1.27.11-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <PackageReference Include="bunit" Version="1.26.64" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
@@ -33,7 +33,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Label="Implicit usings" Condition="$(MSBuildProjectName) != 'LinkDotNet.Blog.TestUtilities'">
+  <ItemGroup Label="Implicit usings">
     <Using Include="FluentAssertions" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
