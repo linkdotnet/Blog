@@ -25,8 +25,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.RenderComponent<VisitCountPerPage>();
 
-        cut.WaitForState(() => cut.FindAll("td").Any());
-        var elements = cut.FindAll("td").ToList();
+        var elements = cut.WaitForElements("td");
         elements.Count.Should().Be(3);
         var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
         titleData.Should().NotBeNull();
@@ -61,8 +60,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
 
         await cut.InvokeAsync(() => cut.FindComponent<DateRangeSelectorStub>().Instance.FilterChanged.InvokeAsync(filter));
 
-        cut.WaitForState(() => cut.FindAll("td").Any());
-        var elements = cut.FindAll("td").ToList();
+        var elements = cut.WaitForElements("td");
         elements.Count.Should().Be(3);
         var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
         titleData.Should().NotBeNull();
