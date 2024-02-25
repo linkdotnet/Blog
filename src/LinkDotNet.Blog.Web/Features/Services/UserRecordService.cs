@@ -42,7 +42,7 @@ public sealed partial class UserRecordService : IUserRecordService
     private async ValueTask GetAndStoreUserRecordAsync()
     {
         var userIdentity = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
-        if (userIdentity == null || userIdentity.IsAuthenticated)
+        if (userIdentity is { IsAuthenticated: true })
         {
             return;
         }
