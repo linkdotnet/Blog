@@ -101,6 +101,19 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         structuredData.Instance.PreviewFallbackImage.Should().Be("image2");
     }
 
+    [Fact]
+    public void ShouldShowErrorPageWhenBlogPostNotFound()
+    {
+        using var ctx = new TestContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        RegisterComponents(ctx);
+
+        var cut = ctx.RenderComponent<ShowBlogPostPage>();
+
+        cut.FindAll(".blogpost-content").Should().HaveCount(0);
+        cut.FindAll("#no-blog-post-error").Should().HaveCount(1);
+    }
+
     private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
     {
         ctx.Services.AddScoped(_ => Repository);

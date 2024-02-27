@@ -10,9 +10,18 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
 
-@if (BlogPost is null)
+@if (isLoading)
 {
     <Loading></Loading>
+}
+else if (!isLoading && BlogPost is null)
+{
+	<div class="m-auto text-center" id="no-blog-post-error">
+		<h1 class="fs-1">404 - o((⊙﹏⊙))o</h1>
+		<br/>
+		<p>I really looked hard but I couldn't find the page you are looking for.</p>
+		<p>Go back to <a href="/">safety</a></p>
+	</div>
 }
 else
 {
@@ -77,6 +86,8 @@ else
     [Parameter]
     public string Slug { get; set; }
 
+    private bool isLoading;
+
 	private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
 	private string BlogPostCanoncialUrl => $"blogPost/{BlogPost.Id}";
 
@@ -84,7 +95,9 @@ else
 
     protected override async Task OnParametersSetAsync()
     {
+	    isLoading = true;
         BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
+        isLoading = false;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
