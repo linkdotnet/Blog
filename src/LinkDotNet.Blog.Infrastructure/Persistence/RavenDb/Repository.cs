@@ -59,12 +59,12 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         using var session = documentStore.OpenAsyncSession();
 
         var query = session.Query<TEntity>();
-        if (filter != null)
+        if (filter is not null)
         {
             query = query.Where(filter);
         }
 
-        if (orderBy != null)
+        if (orderBy is not null)
         {
             query = descending
                 ? query.OrderByDescending(orderBy)

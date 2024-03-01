@@ -83,7 +83,7 @@
 
     private async Task HandleDrop(ProficiencyLevel proficiencyLevel)
     {
-        if (currentDragItem == null || currentDragItem.ProficiencyLevel == proficiencyLevel)
+        if (currentDragItem is null || currentDragItem.ProficiencyLevel == proficiencyLevel)
         {
             return;
         }

@@ -62,12 +62,12 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
 
-        if (filter != null)
+        if (filter is not null)
         {
             entity = entity.Where(filter);
         }
 
-        if (orderBy != null)
+        if (orderBy is not null)
         {
             entity = descending
                 ? entity.OrderByDescending(orderBy)
@@ -97,7 +97,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask DeleteAsync(string id)
     {
         var entityToDelete = await GetByIdAsync(id);
-        if (entityToDelete != null)
+        if (entityToDelete is not null)
         {
             var blogDbContext = await dbContextFactory.CreateDbContextAsync();
             blogDbContext.Remove(entityToDelete);

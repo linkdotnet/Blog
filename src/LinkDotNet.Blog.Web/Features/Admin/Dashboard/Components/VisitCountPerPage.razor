@@ -16,7 +16,7 @@
     <div class="card-body">
         <div class="row">
             <DateRangeSelector FilterChanged="RefreshVisitCount"></DateRangeSelector>
-            @if (visitData != null)
+            @if (visitData is not null)
             {
                 <p id="total-clicks">@visitData.Sum(c => c.ClickCount) clicks in total</p>
             }
@@ -31,7 +31,7 @@
                     <th>Clicks</th>
                     <th>Likes</th>
                 </tr>
-                @if (visitData != null)
+                @if (visitData is not null)
                 {
                     @foreach (var date in visitData)
                     {

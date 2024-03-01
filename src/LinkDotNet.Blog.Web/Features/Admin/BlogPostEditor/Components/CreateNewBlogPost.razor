@@ -65,7 +65,7 @@
 	            <label for="tags">Tags</label>
 	            <InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
             </div>
-            @if (BlogPost != null && !IsScheduled)
+            @if (BlogPost is not null && !IsScheduled)
             {
                 <div class="form-check">
                     <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
@@ -117,7 +117,7 @@
 
     protected override void OnParametersSet()
     {
-        if (BlogPost == null)
+        if (BlogPost is null)
         {
             return;
         }

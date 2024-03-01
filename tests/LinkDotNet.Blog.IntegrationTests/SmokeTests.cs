@@ -64,7 +64,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
 
     public async ValueTask DisposeAsync()
     {
-        if (factory != null)
+        if (factory is not null)
         {
             await factory.DisposeAsync();
         }

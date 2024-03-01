@@ -39,12 +39,12 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         ArgumentNullException.ThrowIfNull(selector);
         var result = entities.AsEnumerable();
-        if (filter != null)
+        if (filter is not null)
         {
             result = result.Where(filter.Compile());
         }
 
-        if (orderBy != null)
+        if (orderBy is not null)
         {
             result = descending
                 ? result.OrderByDescending(orderBy.Compile())
@@ -64,7 +64,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
 
         var entry = entities.SingleOrDefault(b => b.Id == entity.Id);
-        if (entry != null)
+        if (entry is not null)
         {
             entities.Remove(entry);
         }
@@ -76,7 +76,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public ValueTask DeleteAsync(string id)
     {
         var blogPostToDelete = entities.SingleOrDefault(b => b.Id == id);
-        if (blogPostToDelete != null)
+        if (blogPostToDelete is not null)
         {
             entities.Remove(blogPostToDelete);
         }

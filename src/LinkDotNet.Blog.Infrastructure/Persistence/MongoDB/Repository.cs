@@ -62,12 +62,12 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         var query = Collection.AsQueryable();
 
-        if (filter != null)
+        if (filter is not null)
         {
             query = query.Where(filter);
         }
 
-        if (orderBy != null)
+        if (orderBy is not null)
         {
             query = descending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
         }

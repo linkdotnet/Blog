@@ -98,7 +98,7 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
 
     private async Task HandleDrop(ProfileInformationEntry dropTarget)
     {
-        if (currentDragItem == null || dropTarget  == currentDragItem)
+        if (currentDragItem is null || dropTarget == currentDragItem)
         {
             return;
         }

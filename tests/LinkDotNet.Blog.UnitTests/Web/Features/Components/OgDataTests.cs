@@ -78,7 +78,7 @@ public class OgDataTests : TestContext
         titleMeta.Should().NotBeNull();
         var titleMetaTag = (IHtmlMetaElement)titleMeta;
         titleMetaTag.Content.Should().Be(metaTagValue);
-        if (ogPropertyName != null)
+        if (ogPropertyName is not null)
         {
             titleMetaTag.Attributes.Any(a => a.Value == ogPropertyName).Should().BeTrue();
         }

@@ -45,7 +45,7 @@ else
 					<h1>@BlogPost.Title</h1></header>
 				<div class="blogpost-metainformation d-flex flex-row flex-wrap gap-2">
 					<div><span class="date"></span><span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></div>
-					@if (BlogPost.Tags != null && BlogPost.Tags.Any())
+					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
 						<span class="blogpost-tag d-inline-block">
 							@foreach (var tag in BlogPost.Tags)
