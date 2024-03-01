@@ -12,6 +12,8 @@ public sealed record ApplicationConfiguration
 
     public int BlogPostsPerPage { get; init; } = 10;
 
+    public int FirstPageCacheDurationInMinutes { get; init; } = 5;
+
     public bool IsAboutMeEnabled { get; set; }
 
     public bool IsGiscusEnabled { get; set; }

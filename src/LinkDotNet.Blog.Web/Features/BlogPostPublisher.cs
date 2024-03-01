@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,10 +15,12 @@ public sealed partial class BlogPostPublisher : BackgroundService
 {
     private readonly IServiceProvider serviceProvider;
     private readonly ILogger<BlogPostPublisher> logger;
+    private readonly ICacheInvalidator cacheInvalidator;
 
-    public BlogPostPublisher(IServiceProvider serviceProvider, ILogger<BlogPostPublisher> logger)
+    public BlogPostPublisher(IServiceProvider serviceProvider, ICacheInvalidator cacheInvalidator, ILogger<BlogPostPublisher> logger)
     {
         this.serviceProvider = serviceProvider;
+        this.cacheInvalidator = cacheInvalidator;
         this.logger = logger;
     }
 
@@ -44,11 +47,17 @@ public sealed partial class BlogPostPublisher : BackgroundService
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
 
-        foreach (var blogPost in await GetScheduledBlogPostsAsync(repository))
+        var blogPostsToPublish = await GetScheduledBlogPostsAsync(repository);
+        foreach (var blogPost in blogPostsToPublish)
         {
             blogPost.Publish();
             await repository.StoreAsync(blogPost);
             LogPublishedBlogPost(blogPost.Id);
+        }
+
+        if (blogPostsToPublish.Count > 0)
+        {
+            cacheInvalidator.Cancel();
         }
     }
 

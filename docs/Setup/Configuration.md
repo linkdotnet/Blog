@@ -30,6 +30,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"LogoutUri": ""
 	},
 	"BlogPostsPerPage": 10,
+	"FirstPageCacheDurationInMinutes": 10,
 	"ProfileInformation": {
 		"Name": "Steven Giesel",
 		"Heading": "Software Engineer",
@@ -73,6 +74,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ClientSecret                                  | string         |                                                                                                                                                                                   |
 | LogoutUri                                     | string         |                                                                                                                                                                                   |
 | BlogPostsPerPage                              | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                                                           |
+| FirstPageCacheDurationInMinutes               | int            | The duration in minutes the first page is cached.                                                                                                                                 |
 | AboutMeProfileInformation                     | node           | Sets information for the About Me Page. If omitted the page is disabled completely                                                                                                |
 | Name                                          | string         | Name, which is displayed on top of the profile card                                                                                                                               |
 | Heading                                       | string         | Displayed under the name. For example job title                                                                                                                                   |

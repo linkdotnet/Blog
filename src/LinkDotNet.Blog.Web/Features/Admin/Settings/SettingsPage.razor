@@ -1,0 +1,38 @@
+@page "/settings"
+@using LinkDotNet.Blog.Web.Features.Services
+@inject IOptions<ApplicationConfiguration> ApplicationConfiguration
+@inject ICacheInvalidator CacheInvalidator
+@inject IToastService ToastService
+@attribute [Authorize]
+
+<div class="container-fluid ms-3">
+	<h3>Settings</h3>
+	<table class="table table-responsive table-hover">
+		<thead>
+		<tr>
+			<th scope="col">Configuration Name</th>
+			<th scope="col">Description</th>
+			<th scope="col">Value</th>
+			<th scope="col">Actions</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td>Cache Duration (First Page)</td>
+			<td>Defines how long the first page remains cached before a refresh is required.<br/>
+				When a scheduled blog post is published, the cache is always invalidated.<br/>
+				The longer the cache lives, the longer it takes for the user to see updated content on the first page.</td>
+			<td>@ApplicationConfiguration.Value.FirstPageCacheDurationInMinutes Minutes</td>
+			<td><button class="btn btn-warning" id="invalidate-cache" @onclick="InvalidateCache">Invalidate Cache</button></td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+
+@code {
+	private void InvalidateCache()
+	{
+		CacheInvalidator.Cancel();
+		ToastService.ShowInfo("Cache was invalidated.");
+	}
+}

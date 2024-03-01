@@ -5,8 +5,11 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Home.Components
+@using LinkDotNet.Blog.Web.Features.Services
 @using Microsoft.Extensions.Caching.Memory
+@using Microsoft.Extensions.Primitives
 @inject IMemoryCache MemoryCache
+@inject ICacheTokenProvider CacheTokenProvider
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IOptions<Introduction> Introduction
 @inject IOptions<ApplicationConfiguration> AppConfiguration
@@ -61,7 +64,9 @@
 	    {
 		    currentPage = await MemoryCache.GetOrCreateAsync(firstPageCacheKey, async entry =>
 		    {
-			    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
+			    var cacheDuration = TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes);
+			    entry.AbsoluteExpirationRelativeToNow = cacheDuration;
+			    entry.AddExpirationToken(new CancellationChangeToken(CacheTokenProvider.Token));
 			    return await GetAllForPageAsync(1);
 		    });
 		    return;
