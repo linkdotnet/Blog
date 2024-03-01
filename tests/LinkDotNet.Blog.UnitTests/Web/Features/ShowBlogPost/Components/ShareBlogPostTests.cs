@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using AngleSharp.Html.Dom;
-using Blazored.Toast.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,38 +11,25 @@ public class ShareBlogPostTests : TestContext
     [Fact]
     public void ShouldCopyLinkToClipboard()
     {
-        JSInterop.Mode = JSRuntimeMode.Loose;
-        Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
         var cut = RenderComponent<ShareBlogPost>();
 
-        cut.Find("#share-clipboard").Click();
+        var element = cut.Find("#share-clipboard") as IHtmlAnchorElement;
 
-        var copyToClipboardInvocation = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "navigator.clipboard.writeText");
-        copyToClipboardInvocation.Arguments[0].Should().Be("http://localhost/blogPost/1");
+        element.Should().NotBeNull();
+        var onclick = element!.Attributes.FirstOrDefault(a => a.Name.Equals("onclick", StringComparison.InvariantCultureIgnoreCase));
+        onclick.Should().NotBeNull();
+        onclick!.Value.Should().Contain("blogPost/1");
     }
 
     [Fact]
     public void ShouldShareToLinkedIn()
     {
-        Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
 
         var cut = RenderComponent<ShareBlogPost>();
 
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin");
         linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
-    }
-
-    [Fact]
-    public void ShouldNotCrashWhenCopyingLinkNotWorking()
-    {
-        Services.AddScoped(_ => Substitute.For<IToastService>());
-        JSInterop.SetupVoid(s => s.InvocationMethodName == "navigator.clipboard.writeText").SetException(new Exception());
-        var cut = RenderComponent<ShareBlogPost>();
-
-        var act = () => cut.Find("#share-clipboard").Click();
-
-        act.Should().NotThrow<Exception>();
     }
 }
