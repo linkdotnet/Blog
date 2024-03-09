@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class CommentSectionTests : TestContext
+public class CommentSectionTests : BunitContext
 {
     [Fact]
     public void ShouldShowDisqusWhenConfigured()
@@ -14,7 +14,7 @@ public class CommentSectionTests : TestContext
         Services.AddScoped(_ => Options.Create(new DisqusConfiguration() ));
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        var cut = RenderComponent<CommentSection>();
+        var cut = Render<CommentSection>();
 
         cut.FindComponents<Disqus>().Should().NotBeEmpty();
     }
@@ -26,7 +26,7 @@ public class CommentSectionTests : TestContext
         Services.AddScoped(_ => Options.Create(new GiscusConfiguration() ));
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        var cut = RenderComponent<CommentSection>();
+        var cut = Render<CommentSection>();
 
         cut.FindComponents<Giscus>().Should().NotBeEmpty();
     }
@@ -40,7 +40,7 @@ public class CommentSectionTests : TestContext
         Services.AddScoped(_ => Options.Create( new GiscusConfiguration()));
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        var cut = RenderComponent<CommentSection>();
+        var cut = Render<CommentSection>();
 
         cut.FindAll(".alert-danger").Should().NotBeEmpty();
     }

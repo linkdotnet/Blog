@@ -15,15 +15,15 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldSaveBlogPostOnSave()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         var toastService = Substitute.For<IToastService>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
-        ctx.AddTestAuthorization().SetAuthorized("some username");
+        ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.ComponentFactories.AddStub<UploadFile>();
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
-        using var cut = ctx.RenderComponent<CreateBlogPost>();
+        using var cut = ctx.Render<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
         TriggerNewBlogPost(newBlogPost);
@@ -37,14 +37,14 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldSetContentFromFile()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         const string contentFromFile = "content";
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
-        ctx.AddTestAuthorization().SetAuthorized("some username");
+        ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var args = SetupUploadFile(contentFromFile, ctx);
-        var cut = ctx.RenderComponent<CreateNewBlogPost>();
+        var cut = ctx.Render<CreateNewBlogPost>();
         var uploadFile = cut.FindComponent<UploadFile>();
 
         await uploadFile.InvokeAsync(() => cut.FindComponent<InputFile>().Instance.OnChange.InvokeAsync(args));
@@ -52,7 +52,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find("#content").TextContent.Should().Be(contentFromFile);
     }
 
-    private static void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
+    private static void TriggerNewBlogPost(RenderedComponent<CreateNewBlogPost> cut)
     {
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");
@@ -64,7 +64,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find("form").Submit();
     }
 
-    private static InputFileChangeEventArgs SetupUploadFile(string contentFromFile, TestContext ctx)
+    private static InputFileChangeEventArgs SetupUploadFile(string contentFromFile, BunitContext ctx)
     {
         var file = Substitute.For<IBrowserFile>();
         var fileProcessor = Substitute.For<IFileProcessor>();

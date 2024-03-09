@@ -6,14 +6,14 @@ using LinkDotNet.Blog.Web.Features.Home.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class BlogPostNavigationTests : TestContext
+public class BlogPostNavigationTests : BunitContext
 {
     [Fact]
     public void ShouldFireEventWhenGoingToNextPage()
     {
         var page = CreatePagedList(2, 3);
 
-        var cut = RenderComponent<BlogPostNavigation<BlogPost>>(p =>
+        var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
         cut.FindAll("a").Cast<IHtmlAnchorElement>().Last().Href.Should().EndWith("/3");
@@ -24,7 +24,7 @@ public class BlogPostNavigationTests : TestContext
     {
         var page = CreatePagedList(2, 3);
 
-        var cut = RenderComponent<BlogPostNavigation<BlogPost>>(p =>
+        var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
         cut.FindAll("a").Cast<IHtmlAnchorElement>().First().Href.Should().EndWith("/1");
@@ -34,7 +34,7 @@ public class BlogPostNavigationTests : TestContext
     public void ShouldNotFireNextWhenOnLastPage()
     {
         var page = CreatePagedList(2, 2);
-        var cut = RenderComponent<BlogPostNavigation<BlogPost>>(p =>
+        var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
         cut.Find("li:last-child").ClassList.Should().Contain("disabled");
@@ -44,7 +44,7 @@ public class BlogPostNavigationTests : TestContext
     public void ShouldNotFireNextWhenOnFirstPage()
     {
         var page = CreatePagedList(1, 2);
-        var cut = RenderComponent<BlogPostNavigation<BlogPost>>(p =>
+        var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
         cut.Find("li:first-child").ClassList.Should().Contain("disabled");
@@ -54,7 +54,7 @@ public class BlogPostNavigationTests : TestContext
     public void ShouldNotFireNextWhenNoPage()
     {
         var page = CreatePagedList(0, 0);
-        var cut = RenderComponent<BlogPostNavigation<BlogPost>>(p =>
+        var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
         cut.Find("li:first-child").ClassList.Should().Contain("disabled");

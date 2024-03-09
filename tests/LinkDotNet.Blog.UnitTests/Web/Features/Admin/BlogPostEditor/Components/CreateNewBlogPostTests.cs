@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components;
 
-public class CreateNewBlogPostTests : TestContext
+public class CreateNewBlogPostTests : BunitContext
 {
     public CreateNewBlogPostTests()
     {
@@ -21,7 +21,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldCreateNewBlogPostWhenValidDataGiven()
     {
         BlogPost blogPost = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");
@@ -56,7 +56,7 @@ public class CreateNewBlogPostTests : TestContext
             .WithTags("tag1", "tag2")
             .Build();
         BlogPost blogPostFromComponent = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
                  .Add(c => c.BlogPost, blogPost));
@@ -76,7 +76,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotDeleteModelWhenSet()
     {
         BlogPost blogPost = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, true)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
         cut.Find("#title").Input("My Title");
@@ -96,7 +96,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotDeleteModelWhenNotSet()
     {
         BlogPost blogPost = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, false)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
         cut.Find("#title").Input("My Title");
@@ -118,7 +118,7 @@ public class CreateNewBlogPostTests : TestContext
         var someWhen = new DateTime(1991, 5, 17);
         var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(someWhen).Build();
         BlogPost blogPostFromComponent = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
                     .Add(c => c.BlogPost, originalBlogPost));
@@ -137,7 +137,7 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldNotSetOptionToNotUpdateUpdatedDateOnInitialCreate()
     {
-        var cut = RenderComponent<CreateNewBlogPost>();
+        var cut = Render<CreateNewBlogPost>();
 
         var found = cut.FindAll("#updatedate");
 
@@ -148,7 +148,7 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldAcceptInputWithoutLosingFocusOrEnter()
     {
         BlogPost blogPost = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");
@@ -173,7 +173,7 @@ public class CreateNewBlogPostTests : TestContext
     [Fact]
     public void ShouldStopExternalNavigationWhenDirty()
     {
-        var cut = RenderComponent<CreateNewBlogPost>();
+        var cut = Render<CreateNewBlogPost>();
 
         cut.Find("#title").Input("Hey");
 
@@ -185,9 +185,9 @@ public class CreateNewBlogPostTests : TestContext
     {
         JSInterop.Setup<bool>("confirm", "You have unsaved changes. Are you sure you want to continue?")
             .SetResult(false);
-        var cut = RenderComponent<CreateNewBlogPost>();
+        var cut = Render<CreateNewBlogPost>();
         cut.Find("#tags").Change("Hey");
-        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
+        var fakeNavigationManager = Services.GetRequiredService<BunitNavigationManager>();
 
         fakeNavigationManager.NavigateTo("/internal");
 
@@ -199,9 +199,9 @@ public class CreateNewBlogPostTests : TestContext
     public void ShouldNotBlogNavigationOnInitialLoad()
     {
         var blogPost = new BlogPostBuilder().Build();
-        RenderComponent<CreateNewBlogPost>(
+        Render<CreateNewBlogPost>(
             p => p.Add(s => s.BlogPost, blogPost));
-        var fakeNavigationManager = Services.GetRequiredService<FakeNavigationManager>();
+        var fakeNavigationManager = Services.GetRequiredService<BunitNavigationManager>();
 
         fakeNavigationManager.NavigateTo("/internal");
 
@@ -213,7 +213,7 @@ public class CreateNewBlogPostTests : TestContext
     public void GivenBlogPostWithSchedule_ShouldSetSchedule()
     {
         BlogPost blogPost = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");
@@ -231,7 +231,7 @@ public class CreateNewBlogPostTests : TestContext
     public void GivenBlogPost_WhenEnteringScheduledDate_ThenIsPublishedSetToFalse()
     {
         BlogPost blogPost = null;
-        var cut = RenderComponent<CreateNewBlogPost>(
+        var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");

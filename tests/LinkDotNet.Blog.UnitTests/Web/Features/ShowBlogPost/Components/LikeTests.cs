@@ -6,14 +6,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class LikeTests : TestContext
+public class LikeTests : BunitContext
 {
     [Fact]
     public void ShouldDisplayLikes()
     {
         Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
         var blogPost = new BlogPostBuilder().WithLikes(1).Build();
-        var cut = RenderComponent<Like>(
+        var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
         var label = cut.Find("div").TextContent;
@@ -28,7 +28,7 @@ public class LikeTests : TestContext
         var blogPost = new BlogPostBuilder().Build();
         var wasClicked = false;
         var wasLike = false;
-        var cut = RenderComponent<Like>(
+        var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost)
                 .Add(l => l.OnBlogPostLiked, b =>
                 {
@@ -49,7 +49,7 @@ public class LikeTests : TestContext
         Services.AddScoped(_ => localStorage);
         var blogPost = new BlogPostBuilder().Build();
         blogPost.Id = "id";
-        var cut = RenderComponent<Like>(
+        var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
         cut.Find("span").Click();
@@ -67,7 +67,7 @@ public class LikeTests : TestContext
         var blogPost = new BlogPostBuilder().Build();
         blogPost.Id = "id";
         var wasLike = true;
-        var cut = RenderComponent<Like>(
+        var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost)
                 .Add(l => l.OnBlogPostLiked, b => wasLike = b));
 
@@ -84,7 +84,7 @@ public class LikeTests : TestContext
         var blogPost = new BlogPostBuilder().Build();
         blogPost.Id = "id";
         var wasClicked = false;
-        var cut = RenderComponent<Like>(
+        var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost)
                 .Add(l => l.OnBlogPostLiked, _ => wasClicked = true));
         localStorage.ContainKeyAsync("hasLiked/id").Returns(true);

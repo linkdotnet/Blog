@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe.Components;
 
-public class AddSkillDialogTests : TestContext
+public class AddSkillDialogTests : BunitContext
 {
     [Fact]
     public void ShouldCreateSkill()
@@ -13,7 +13,7 @@ public class AddSkillDialogTests : TestContext
         Skill addedSkill = null;
         var toastServiceMock = Substitute.For<IToastService>();
         Services.AddScoped(_ => toastServiceMock);
-        var cut = RenderComponent<AddSkillDialog>(p =>
+        var cut = Render<AddSkillDialog>(p =>
             p.Add(s => s.SkillAdded, t => addedSkill = t));
         cut.Find("#title").Change("C#");
         cut.Find("#image").Change("Url");

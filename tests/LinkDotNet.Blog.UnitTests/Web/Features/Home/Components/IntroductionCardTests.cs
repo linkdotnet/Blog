@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class IntroductionCardTests : TestContext
+public class IntroductionCardTests : BunitContext
 {
     [Fact]
     public void ShouldSetBackgroundWhenSet()
@@ -19,7 +19,7 @@ public class IntroductionCardTests : TestContext
         
         Services.AddScoped(_ => Options.Create(introduction));
 
-        var cut = RenderComponent<IntroductionCard>();
+        var cut = Render<IntroductionCard>();
 
         var background = cut.FindAll(".introduction-background");
         background.Should().NotBeNullOrEmpty();
@@ -39,7 +39,7 @@ public class IntroductionCardTests : TestContext
 
         Services.AddScoped(_ => Options.Create(introduction));
 
-        var cut = RenderComponent<IntroductionCard>();
+        var cut = Render<IntroductionCard>();
 
         var background = cut.FindAll(".introduction-background");
         background.Should().BeNullOrEmpty();

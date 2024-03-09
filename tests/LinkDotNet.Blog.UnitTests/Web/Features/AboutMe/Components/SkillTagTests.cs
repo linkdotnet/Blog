@@ -4,14 +4,14 @@ using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe.Components;
 
-public class SkillTagTests : TestContext
+public class SkillTagTests : BunitContext
 {
     [Fact]
     public void ShouldRenderImageAndText()
     {
         var skill = new SkillBuilder().WithSkillName("C#").WithIconUrl("test").Build();
 
-        var cut = RenderComponent<SkillTag>(p => p.Add(
+        var cut = Render<SkillTag>(p => p.Add(
             s => s.Skill, skill));
 
         cut.Find("span").TextContent.Should().Contain("C#");
@@ -24,7 +24,7 @@ public class SkillTagTests : TestContext
     {
         var skill = new SkillBuilder().WithIconUrl(null).Build();
 
-        var cut = RenderComponent<SkillTag>(p => p.Add(
+        var cut = Render<SkillTag>(p => p.Add(
             s => s.Skill, skill));
 
         cut.FindAll("img").Should().HaveCount(0);
@@ -35,7 +35,7 @@ public class SkillTagTests : TestContext
     {
         var skill = new SkillBuilder().Build();
         var wasInvoked = false;
-        var cut = RenderComponent<SkillTag>(p => p
+        var cut = Render<SkillTag>(p => p
             .Add(
             s => s.Skill, skill)
             .Add(s => s.ShowAdminActions, true)

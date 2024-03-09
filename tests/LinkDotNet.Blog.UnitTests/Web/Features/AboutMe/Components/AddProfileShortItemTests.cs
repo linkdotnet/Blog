@@ -2,13 +2,13 @@
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe.Components;
 
-public class AddProfileShortItemTests : TestContext
+public class AddProfileShortItemTests : BunitContext
 {
     [Fact]
     public void ShouldAddShortItem()
     {
         string addedItem = null;
-        var cut = RenderComponent<AddProfileShortItem>(
+        var cut = Render<AddProfileShortItem>(
             p => p.Add(s => s.ValueAdded, c => addedItem = c));
         cut.Find("input").Change("Key");
 
@@ -24,7 +24,7 @@ public class AddProfileShortItemTests : TestContext
     public void ShouldNotAddItemWhenKeyOrValueIsEmpty(string content)
     {
         var wasInvoked = false;
-        var cut = RenderComponent<AddProfileShortItem>(
+        var cut = Render<AddProfileShortItem>(
             p => p.Add(s => s.ValueAdded, _ => wasInvoked = true));
         cut.Find("input").Change(content);
 
@@ -36,7 +36,7 @@ public class AddProfileShortItemTests : TestContext
     [Fact]
     public void ShouldEmptyModelAfterTextEntered()
     {
-        var cut = RenderComponent<AddProfileShortItem>();
+        var cut = Render<AddProfileShortItem>();
         cut.Find("input").Change("Key");
 
         cut.Find("button").Click();

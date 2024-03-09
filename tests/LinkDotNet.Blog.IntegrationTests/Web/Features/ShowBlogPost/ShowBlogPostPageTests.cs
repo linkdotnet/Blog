@@ -21,14 +21,14 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         var publishedPost = new BlogPostBuilder().WithLikes(2).IsPublished().Build();
         await Repository.StoreAsync(publishedPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
-        ctx.AddTestAuthorization().SetAuthorized("s");
-        var cut = ctx.RenderComponent<ShowBlogPostPage>(
+        ctx.AddAuthorization().SetAuthorized("s");
+        var cut = ctx.Render<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
         var likeComponent = cut.FindComponent<Like>();
-        likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
+        likeComponent.Render(c => c.Add(p => p.BlogPost, publishedPost));
 
         likeComponent.Find("span").Click();
 
@@ -41,18 +41,18 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         var publishedPost = new BlogPostBuilder().WithLikes(2).IsPublished().Build();
         await Repository.StoreAsync(publishedPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         var localStorage = Substitute.For<ILocalStorageService>();
         var hasLikedStorage = $"hasLiked/{publishedPost.Id}";
         localStorage.ContainKeyAsync(hasLikedStorage).Returns(true);
         localStorage.GetItemAsync<bool>(hasLikedStorage).Returns(true);
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx, localStorage);
-        ctx.AddTestAuthorization().SetAuthorized("s");
-        var cut = ctx.RenderComponent<ShowBlogPostPage>(
+        ctx.AddAuthorization().SetAuthorized("s");
+        var cut = ctx.Render<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
         var likeComponent = cut.FindComponent<Like>();
-        likeComponent.SetParametersAndRender(c => c.Add(p => p.BlogPost, publishedPost));
+        likeComponent.Render(c => c.Add(p => p.BlogPost, publishedPost));
 
         likeComponent.Find("span").Click();
 
@@ -65,11 +65,11 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     {
         var publishedPost = new BlogPostBuilder().IsPublished().WithTags("Tag1,Tag2").Build();
         await Repository.StoreAsync(publishedPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-        ctx.AddTestAuthorization();
+        ctx.AddAuthorization();
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<ShowBlogPostPage>(
+        var cut = ctx.Render<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, publishedPost.Id));
 
         var ogData = cut.FindComponent<OgData>();
@@ -86,12 +86,12 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
             .WithPreviewImageUrlFallback("image2")
             .Build();
         await Repository.StoreAsync(post);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-        ctx.AddTestAuthorization();
+        ctx.AddAuthorization();
         RegisterComponents(ctx);
         ctx.ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
-        var cut = ctx.RenderComponent<ShowBlogPostPage>(
+        var cut = ctx.Render<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, post.Id));
 
         var structuredData = cut.FindComponent<StructuredData>();
@@ -104,17 +104,17 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public void ShouldShowErrorPageWhenBlogPostNotFound()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
 
-        var cut = ctx.RenderComponent<ShowBlogPostPage>();
+        var cut = ctx.Render<ShowBlogPostPage>();
 
         cut.FindAll(".blogpost-content").Should().HaveCount(0);
         cut.FindAll("#no-blog-post-error").Should().HaveCount(1);
     }
 
-    private void RegisterComponents(TestContextBase ctx, ILocalStorageService localStorageService = null)
+    private void RegisterComponents(BunitContext ctx, ILocalStorageService localStorageService = null)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());

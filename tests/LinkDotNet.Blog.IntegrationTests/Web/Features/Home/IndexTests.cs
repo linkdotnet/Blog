@@ -20,10 +20,10 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var newestBlogPost = new BlogPostBuilder().WithTitle("New").Build();
         await Repository.StoreAsync(oldestBlogPost);
         await Repository.StoreAsync(newestBlogPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<Index>();
+        var cut = ctx.Render<Index>();
         cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
@@ -40,10 +40,10 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var unpublishedPost = new BlogPostBuilder().WithTitle("Not published").IsPublished(false).Build();
         await Repository.StoreAsync(publishedPost);
         await Repository.StoreAsync(unpublishedPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<Index>();
+        var cut = ctx.Render<Index>();
         cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
@@ -56,10 +56,10 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldOnlyLoadTenEntities()
     {
         await CreatePublishedBlogPosts(11);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<Index>();
+        var cut = ctx.Render<Index>();
         cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
@@ -71,11 +71,11 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldLoadOnlyItemsInPage()
     {
         await CreatePublishedBlogPosts(11);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
 
-        var cut = ctx.RenderComponent<Index>(
+        var cut = ctx.Render<Index>(
             p => p.Add(s => s.Page, 2));
 
         cut.WaitForElement(".blog-card");
@@ -92,10 +92,10 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
             .WithTags("C Sharp", "Tag2")
             .Build();
         await Repository.StoreAsync(publishedPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
-        var cut = ctx.RenderComponent<Index>();
+        var cut = ctx.Render<Index>();
         cut.WaitForElement(".blog-card");
 
         var tags = cut.FindComponent<ShortBlogPost>().FindAll(".goto-tag");
@@ -112,10 +112,10 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     [InlineData("http://localhost/relative/url", "http://localhost/relative/url")]
     public void ShouldSetAbsoluteUriForOgData(string givenUri, string expectedUri)
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         RegisterComponents(ctx, givenUri);
 
-        var cut = ctx.RenderComponent<Index>();
+        var cut = ctx.Render<Index>();
 
         cut.WaitForComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expectedUri);
     }
@@ -127,11 +127,11 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldSetPageToFirstIfOutOfRange(int? page)
     {
         await CreatePublishedBlogPosts(11);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
 
-        var cut = ctx.RenderComponent<Index>(p => p.Add(
+        var cut = ctx.Render<Index>(p => p.Add(
             i => i.Page, page));
 
         cut.WaitForElement(".blog-card");
@@ -162,7 +162,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         }
     }
 
-    private void RegisterComponents(TestContextBase ctx, string profilePictureUri = null)
+    private void RegisterComponents(BunitContext ctx, string profilePictureUri = null)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).ApplicationConfiguration));

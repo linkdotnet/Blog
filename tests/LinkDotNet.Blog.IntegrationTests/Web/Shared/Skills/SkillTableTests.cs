@@ -15,11 +15,11 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     public async Task ShouldDeleteItem()
     {
         var skill = new SkillBuilder().WithSkillName("C#").Build();
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
-        var cut = ctx.RenderComponent<SkillTable>(p =>
+        var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
 
         cut.WaitForComponent<SkillTag>().Find("button").Click();
@@ -32,10 +32,10 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     [Fact]
     public async Task ShouldAddSkill()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
-        var cut = ctx.RenderComponent<SkillTable>(p =>
+        var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.Find("button").Click();
         var dialog = cut.FindComponent<AddSkillDialog>();
@@ -58,13 +58,13 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     [Fact]
     public async Task ShouldNotAllowToEditSkillTagsWhenNotAdmin()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         var skill = new SkillBuilder().Build();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
 
-        var cut = ctx.RenderComponent<SkillTable>(p =>
+        var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, false));
 
         cut.WaitForComponent<SkillTag>().Instance.ShowAdminActions.Should().BeFalse();
@@ -73,13 +73,13 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     [Fact]
     public async Task ShouldUpdateProficiencyWhenSkillTagDragged()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
         await DbContext.AddAsync(skill);
         await DbContext.SaveChangesAsync();
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
-        var cut = ctx.RenderComponent<SkillTable>(p =>
+        var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForElement(".skill-tag");
 
@@ -93,13 +93,13 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     [Fact]
     public async Task ShouldStayOnSameProficiencyWhenDroppedOnSameProficiencyLevel()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
         await DbContext.AddAsync(skill);
         await DbContext.SaveChangesAsync();
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
-        var cut = ctx.RenderComponent<SkillTable>(p =>
+        var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForElement(".skill-tag");
 

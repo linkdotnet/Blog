@@ -6,8 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.generators" Version="1.27.11-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <PackageReference Include="bunit" Version="1.26.64" />
+    <PackageReference Include="bunit.generators" Version="2.0.22-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <PackageReference Include="bunit" Version="2.0.22-preview" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />

@@ -6,13 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class ShareBlogPostTests : TestContext
+public class ShareBlogPostTests : BunitContext
 {
     [Fact]
     public void ShouldCopyLinkToClipboard()
     {
-        Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
-        var cut = RenderComponent<ShareBlogPost>();
+        Services.GetRequiredService<BunitNavigationManager>().NavigateTo("blogPost/1");
+        var cut = Render<ShareBlogPost>();
 
         var element = cut.Find("#share-clipboard") as IHtmlAnchorElement;
 
@@ -25,9 +25,9 @@ public class ShareBlogPostTests : TestContext
     [Fact]
     public void ShouldShareToLinkedIn()
     {
-        Services.GetRequiredService<FakeNavigationManager>().NavigateTo("blogPost/1");
+        Services.GetRequiredService<BunitNavigationManager>().NavigateTo("blogPost/1");
 
-        var cut = RenderComponent<ShareBlogPost>();
+        var cut = Render<ShareBlogPost>();
 
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin");
         linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");

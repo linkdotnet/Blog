@@ -9,17 +9,17 @@ using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Sitemap.Services;
 
-public class SitemapServiceTests : TestContext
+public class SitemapServiceTests : BunitContext
 {
     private readonly IRepository<BlogPost> repositoryMock;
     private readonly IXmlFileWriter xmlFileWriterMock;
     private readonly SitemapService sut;
-    private readonly FakeNavigationManager fakeNavigationManager;
+    private readonly BunitNavigationManager fakeNavigationManager;
 
     public SitemapServiceTests()
     {
         repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        fakeNavigationManager = new FakeNavigationManager(Renderer);
+        fakeNavigationManager = new BunitNavigationManager(this);
 
         xmlFileWriterMock = Substitute.For<IXmlFileWriter>();
         sut = new SitemapService(

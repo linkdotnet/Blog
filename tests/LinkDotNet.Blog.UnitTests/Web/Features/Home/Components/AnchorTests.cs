@@ -4,12 +4,12 @@ using LinkDotNet.Blog.Web.Features.Home.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class AnchorTests : TestContext
+public class AnchorTests : BunitContext
 {
     [Fact]
     public void ShouldShowHrefWhenNotEmpty()
     {
-        var cut = RenderComponent<Anchor>(ps => ps
+        var cut = Render<Anchor>(ps => ps
             .Add(p => p.Href, "http://url/")
             .Add(p => p.CssClass, "page"));
 
@@ -22,7 +22,7 @@ public class AnchorTests : TestContext
     [Fact]
     public void ShouldNotShowHrefWhenEmpty()
     {
-        var cut = RenderComponent<Anchor>(ps => ps
+        var cut = Render<Anchor>(ps => ps
             .Add(p => p.Href, string.Empty)
             .Add(p => p.CssClass, "page"));
 

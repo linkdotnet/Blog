@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components;
 
-public class UploadFileTests : TestContext
+public class UploadFileTests : BunitContext
 {
     public UploadFileTests()
     {
@@ -27,7 +27,7 @@ public class UploadFileTests : TestContext
             file,
         });
         Services.AddScoped(_ => fileProcessor);
-        var cut = RenderComponent<UploadFile>(
+        var cut = Render<UploadFile>(
             s => s.Add(p => p.OnFileUploaded, f => invokedContent = f));
         var inputComponent = cut.FindComponent<InputFile>().Instance;
 
@@ -40,7 +40,7 @@ public class UploadFileTests : TestContext
     public void ShouldIndicateDragAndDropBehavior()
     {
         Services.AddScoped(_ => Substitute.For<IFileProcessor>());
-        var cut = RenderComponent<UploadFile>();
+        var cut = Render<UploadFile>();
 
         cut.Find("input").DragEnter();
 
@@ -51,7 +51,7 @@ public class UploadFileTests : TestContext
     public void ShouldRemoveDragAndDropBehaviorWhenOutside()
     {
         Services.AddScoped(_ => Substitute.For<IFileProcessor>());
-        var cut = RenderComponent<UploadFile>();
+        var cut = Render<UploadFile>();
         cut.Find("input").DragEnter();
 
         cut.Find("input").DragLeave();

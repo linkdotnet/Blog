@@ -3,7 +3,7 @@ using LinkDotNet.Blog.Web.Features.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
-public class TextAreaWithShortcutsTests : TestContext
+public class TextAreaWithShortcutsTests : BunitContext
 {
     [Theory]
     [InlineData("b", 0, 4, true, "**Test**")]
@@ -23,7 +23,7 @@ public class TextAreaWithShortcutsTests : TestContext
         };
         JSInterop.Mode = JSRuntimeMode.Loose;
         JSInterop.Setup<SelectionRange>("getSelectionFromElement", id).SetResult(range);
-        var cut = RenderComponent<TextAreaWithShortcuts>(
+        var cut = Render<TextAreaWithShortcuts>(
             p => p.Add(s => s.Id, id));
         cut.Find("textarea").Input("Test");
         cut.Find("textarea").KeyUp(key, ctrlKey: ctrlPressed);
@@ -40,7 +40,7 @@ public class TextAreaWithShortcutsTests : TestContext
         JSInterop.Mode = JSRuntimeMode.Loose;
         JSInterop.Setup<SelectionRange>("getSelectionFromElement", element)
             .SetResult(new SelectionRange { Start = 2, End = 5 });
-        var cut = RenderComponent<TextAreaWithShortcuts>(
+        var cut = Render<TextAreaWithShortcuts>(
             p => p.Add(s => s.Id, element));
         cut.Find($"#{element}").Input("Hello World");
 

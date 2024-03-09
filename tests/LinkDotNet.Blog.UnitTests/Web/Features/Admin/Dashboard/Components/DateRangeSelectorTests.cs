@@ -3,13 +3,13 @@ using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Dashboard.Components;
 
-public class DateRangeSelectorTests : TestContext
+public class DateRangeSelectorTests : BunitContext
 {
     [Fact]
     public void ShouldSetBeginDateWhenSet()
     {
         Filter filter = null;
-        var cut = RenderComponent<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
+        var cut = Render<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
         {
             filter = f;
         }));
@@ -25,7 +25,7 @@ public class DateRangeSelectorTests : TestContext
     public void ShouldSetEndDateWhenSet()
     {
         Filter filter = null;
-        var cut = RenderComponent<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
+        var cut = Render<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
         {
             filter = f;
         }));
@@ -41,7 +41,7 @@ public class DateRangeSelectorTests : TestContext
     public void ShouldReset()
     {
         Filter filter = null;
-        var cut = RenderComponent<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
+        var cut = Render<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
         {
             filter = f;
         }));

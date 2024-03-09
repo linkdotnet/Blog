@@ -4,12 +4,12 @@ using LinkDotNet.Blog.Web.Features.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
-public class PreviewImageTests : TestContext
+public class PreviewImageTests : BunitContext
 {
     [Fact]
     public void ShouldOfferImageWhenProvided()
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.PreviewImageUrlFallback, "http://fallback.png/"));
 
@@ -26,7 +26,7 @@ public class PreviewImageTests : TestContext
     [Fact]
     public void ShouldOfferOnlyImageWhenNoFallbackProvided()
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/"));
 
         var image = cut.Find("img") as IHtmlImageElement;
@@ -40,7 +40,7 @@ public class PreviewImageTests : TestContext
     [InlineData(false, "eager")]
     public void ShouldSetLazyLoadBehavior(bool lazyLoad, string expectedLazy)
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.PreviewImageUrlFallback, "http://fallback.png/")
             .Add(p => p.LazyLoadImage, lazyLoad));
@@ -57,7 +57,7 @@ public class PreviewImageTests : TestContext
     [InlineData(false, "eager")]
     public void ShouldSetLazyLoadBehaviorNoFallback(bool lazyLoad, string expectedLazy)
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.LazyLoadImage, lazyLoad));
 
@@ -72,7 +72,7 @@ public class PreviewImageTests : TestContext
     [InlineData("http://localhost/image.avif", "image/avif")]
     public void ShouldDetectFileTypes(string fileName, string mimeType)
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, fileName)
             .Add(p => p.PreviewImageUrlFallback, "not empty"));
 
@@ -87,7 +87,7 @@ public class PreviewImageTests : TestContext
     [InlineData(false, "auto")]
     public void ShouldSetDecodingBehavior(bool lazyLoad, string expectedBehaviour)
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.PreviewImageUrlFallback, "http://fallback.png/")
             .Add(p => p.LazyLoadImage, lazyLoad));
@@ -104,7 +104,7 @@ public class PreviewImageTests : TestContext
     [InlineData(false, "auto")]
     public void ShouldSetDecodingBehaviorNoFallback(bool lazyLoad, string expectedBehaviour)
     {
-        var cut = RenderComponent<PreviewImage>(ps => ps
+        var cut = Render<PreviewImage>(ps => ps
             .Add(p => p.PreviewImageUrl, "http://image.png/")
             .Add(p => p.LazyLoadImage, lazyLoad));
 

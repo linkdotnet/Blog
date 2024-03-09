@@ -3,14 +3,14 @@ using LinkDotNet.Blog.Web.Features.Home.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class AccessControlTests : TestContext
+public class AccessControlTests : BunitContext
 {
     [Fact]
     public void ShouldShowLoginAndHideAdminWhenNotLoggedIn()
     {
-        this.AddTestAuthorization();
+        this.AddAuthorization();
 
-        var cut = RenderComponent<AccessControl>();
+        var cut = Render<AccessControl>();
 
         cut.FindAll("a:contains('Admin')").Should().HaveCount(0);
         cut.FindAll("a:contains('Log in')").Should().HaveCount(1);
@@ -19,9 +19,9 @@ public class AccessControlTests : TestContext
     [Fact]
     public void ShouldShowLogoutAndAdminWhenLoggedIn()
     {
-        this.AddTestAuthorization().SetAuthorized("steven");
+        this.AddAuthorization().SetAuthorized("steven");
 
-        var cut = RenderComponent<AccessControl>();
+        var cut = Render<AccessControl>();
 
         cut.FindAll("a:contains('Admin')").Should().HaveCount(1);
         cut.FindAll("a:contains('Log out')").Should().HaveCount(1);
@@ -31,9 +31,9 @@ public class AccessControlTests : TestContext
     public void LoginShouldHaveCurrentUriAsRedirectUri()
     {
         const string currentUri = "http://localhost/test";
-        this.AddTestAuthorization();
+        this.AddAuthorization();
 
-        var cut = RenderComponent<AccessControl>(
+        var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
         ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.Should().Contain(currentUri);
@@ -43,9 +43,9 @@ public class AccessControlTests : TestContext
     public void LogoutShouldHaveCurrentUriAsRedirectUri()
     {
         const string currentUri = "http://localhost/test";
-        this.AddTestAuthorization().SetAuthorized("steven");
+        this.AddAuthorization().SetAuthorized("steven");
 
-        var cut = RenderComponent<AccessControl>(
+        var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
         ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.Should().Contain(currentUri);

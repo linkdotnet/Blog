@@ -18,13 +18,13 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldDisplayAllBlogPosts()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 1, 1), "Blog Post 1"));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 2, 1), "Blog Post 2"));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2022, 1, 1), "Blog Post 3"));
 
-        var cut = ctx.RenderComponent<ArchivePage>();
+        var cut = ctx.Render<ArchivePage>();
 
         cut.WaitForElements("h2");
         var yearHeader = cut.FindAll("h2");
@@ -41,14 +41,14 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldOnlyShowPublishedBlogPosts()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
         var publishedBlogPost = new BlogPostBuilder().WithUpdatedDate(new DateTime(2022, 1, 1)).IsPublished().Build();
         var unPublishedBlogPost = new BlogPostBuilder().WithUpdatedDate(new DateTime(2022, 1, 1)).IsPublished(false).Build();
         await Repository.StoreAsync(publishedBlogPost);
         await Repository.StoreAsync(unPublishedBlogPost);
 
-        var cut = ctx.RenderComponent<ArchivePage>();
+        var cut = ctx.Render<ArchivePage>();
 
         cut.WaitForElements("h2");
         cut.FindAll("h2").Should().HaveCount(1);
@@ -57,12 +57,12 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldShowTotalAmountOfBlogPosts()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 1, 1), "Blog Post 1"));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 2, 1), "Blog Post 2"));
 
-        var cut = ctx.RenderComponent<ArchivePage>();
+        var cut = ctx.Render<ArchivePage>();
 
         cut.WaitForElements("h2");
         cut.Find("h3").TextContent.Should().Be("Archive (2 posts)");
@@ -71,10 +71,10 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public void ShouldShowLoading()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new SlowRepository());
 
-        var cut = ctx.RenderComponent<ArchivePage>();
+        var cut = ctx.Render<ArchivePage>();
 
         cut.FindComponents<Loading>().Count.Should().Be(1);
     }
@@ -82,10 +82,10 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public void ShouldSetOgData()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
 
-        var cut = ctx.RenderComponent<ArchivePage>();
+        var cut = ctx.Render<ArchivePage>();
 
         var ogData = cut.FindComponent<OgData>().Instance;
         ogData.Title.Should().Contain("Archive");

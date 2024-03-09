@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
-public class NavMenuTests : TestContext
+public class NavMenuTests : BunitContext
 {
     public NavMenuTests()
     {
@@ -20,9 +20,9 @@ public class NavMenuTests : TestContext
     public void ShouldNavigateToSearchPage()
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
-        this.AddTestAuthorization();
+        this.AddAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
-        var cut = RenderComponent<NavMenu>();
+        var cut = Render<NavMenu>();
         cut.FindComponent<SearchInput>().Find("input").Change("Text");
 
         cut.FindComponent<SearchInput>().Find("button").Click();
@@ -38,9 +38,9 @@ public class NavMenuTests : TestContext
             IsAboutMeEnabled = true
         });
         Services.AddScoped(_ => config);
-        this.AddTestAuthorization();
+        this.AddAuthorization();
 
-        var cut = RenderComponent<NavMenu>();
+        var cut = Render<NavMenu>();
 
         cut
             .FindAll(".nav-link").ToList()
@@ -53,8 +53,8 @@ public class NavMenuTests : TestContext
     {
         var config = Options.Create(new ProfileInformation());
         Services.AddScoped(_ => config);
-        this.AddTestAuthorization();
-        var cut = RenderComponent<NavMenu>();
+        this.AddAuthorization();
+        var cut = Render<NavMenu>();
 
         Services.GetRequiredService<NavigationManager>().NavigateTo("test");
 
@@ -73,9 +73,9 @@ public class NavMenuTests : TestContext
         var profileInfoConfig = Options.Create(new ProfileInformation());
         Services.AddScoped(_ => profileInfoConfig);
 
-        this.AddTestAuthorization();
+        this.AddAuthorization();
 
-        var cut = RenderComponent<NavMenu>();
+        var cut = Render<NavMenu>();
 
         var brandImage = cut.Find(".nav-brand img");
         var image = brandImage as IHtmlImageElement;
@@ -98,9 +98,9 @@ public class NavMenuTests : TestContext
         var profileInfoConfig = Options.Create(new ProfileInformation());
         Services.AddScoped(_ => profileInfoConfig);
         
-        this.AddTestAuthorization();
+        this.AddAuthorization();
 
-        var cut = RenderComponent<NavMenu>();
+        var cut = Render<NavMenu>();
 
         var brandImage = cut.Find(".nav-brand");
         var image = brandImage as IHtmlAnchorElement;

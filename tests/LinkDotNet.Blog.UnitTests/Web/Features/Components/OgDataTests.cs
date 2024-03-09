@@ -7,14 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
-public class OgDataTests : TestContext
+public class OgDataTests : BunitContext
 {
     [Fact]
     public void ShouldRenderMetaTagsWhenSet()
     {
         ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
 
-        var cut = RenderComponent<OgData>(p => p
+        var cut = Render<OgData>(p => p
             .Add(s => s.Title, "Title")
             .Add(s => s.Description, "Description")
             .Add(s => s.AbsolutePreviewImageUrl, "http://localhost/image.png")
@@ -31,7 +31,7 @@ public class OgDataTests : TestContext
     {
         ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
 
-        var cut = RenderComponent<OgData>(p => p
+        var cut = Render<OgData>(p => p
             .Add(s => s.Title, "Title"));
 
         GetMetaTagExists(cut, "image").Should().BeFalse();
@@ -46,7 +46,7 @@ public class OgDataTests : TestContext
         Services.GetRequiredService<NavigationManager>().NavigateTo(expectedUri);
         ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
 
-        var cut = RenderComponent<OgData>(p => p
+        var cut = Render<OgData>(p => p
             .Add(s => s.Title, "Title"));
 
         var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
@@ -60,7 +60,7 @@ public class OgDataTests : TestContext
         ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
         Services.GetRequiredService<NavigationManager>().NavigateTo("https://localhost.com/site?query=2");
 
-        var cut = RenderComponent<OgData>(p => p
+        var cut = Render<OgData>(p => p
             .Add(s => s.Title, "Title"));
 
         var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
@@ -68,7 +68,7 @@ public class OgDataTests : TestContext
     }
 
     private static void AssertMetaTagExistsWithValue(
-        IRenderedFragment cut,
+        RenderedFragment cut,
         string metaTag,
         string metaTagValue,
         string ogPropertyName = null)
@@ -85,7 +85,7 @@ public class OgDataTests : TestContext
     }
 
     private static bool GetMetaTagExists(
-        IRenderedFragment cut,
+        RenderedFragment cut,
         string metaTag)
     {
         var metaTags = cut.FindAll("meta");

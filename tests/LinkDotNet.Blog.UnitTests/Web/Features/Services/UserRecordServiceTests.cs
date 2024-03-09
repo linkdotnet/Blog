@@ -7,18 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Services;
 
-public class UserRecordServiceTests : TestContext
+public class UserRecordServiceTests : BunitContext
 {
     private readonly IRepository<UserRecord> repositoryMock;
-    private readonly FakeNavigationManager fakeNavigationManager;
-    private readonly FakeAuthenticationStateProvider fakeAuthenticationStateProvider;
+    private readonly BunitNavigationManager fakeNavigationManager;
+    private readonly BunitAuthenticationStateProvider fakeAuthenticationStateProvider;
     private readonly UserRecordService sut;
 
     public UserRecordServiceTests()
     {
         repositoryMock = Substitute.For<IRepository<UserRecord>>();
-        fakeNavigationManager = new FakeNavigationManager(Renderer);
-        fakeAuthenticationStateProvider = new FakeAuthenticationStateProvider();
+        fakeNavigationManager = new BunitNavigationManager(this);
+        fakeAuthenticationStateProvider = new BunitAuthenticationStateProvider();
         sut = new UserRecordService(
             repositoryMock,
             fakeNavigationManager,

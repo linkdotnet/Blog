@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class DisqusTests : TestContext
+public class DisqusTests : BunitContext
 {
     [Fact]
     public void ShouldLoadJavascript()
@@ -20,7 +20,7 @@ public class DisqusTests : TestContext
         JSInterop.SetupModule("./Features/ShowBlogPost/Components/Disqus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        RenderComponent<Disqus>();
+        Render<Disqus>();
 
         var init = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "initDisqus");
         init.Should().NotBeNull();
@@ -32,7 +32,7 @@ public class DisqusTests : TestContext
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
 
-        RenderComponent<Disqus>();
+        Render<Disqus>();
 
         JSInterop.Invocations.Should().BeEmpty();
     }

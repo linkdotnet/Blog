@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Settings;
 
-public class SettingsPageTests : TestContext
+public class SettingsPageTests : BunitContext
 {
     [Fact]
     public void GivenSettingsPage_WhenClicking_InvalidateCacheButton_TokenIsCancelled()
@@ -16,7 +16,7 @@ public class SettingsPageTests : TestContext
         Services.AddScoped(_ => cacheInvalidator);
         Services.AddScoped(_ => Options.Create<ApplicationConfiguration>(new()));
         Services.AddScoped(_ => Substitute.For<IToastService>());
-        var cut = RenderComponent<SettingsPage>();
+        var cut = Render<SettingsPage>();
         var invalidateCacheButton = cut.Find("#invalidate-cache");
         
         invalidateCacheButton.Click();

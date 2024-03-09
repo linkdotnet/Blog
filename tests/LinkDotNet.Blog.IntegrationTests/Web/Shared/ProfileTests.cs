@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
-public class ProfileTests : TestContext
+public class ProfileTests : BunitContext
 {
     [Fact]
     public void ShouldRenderAllItemsSortedByOrder()
@@ -177,11 +177,11 @@ public class ProfileTests : TestContext
         return (repoMock, calcMock);
     }
 
-    private IRenderedComponent<Profile> RenderProfileWithEmptyInformation()
-        => RenderComponent<Profile>(p => p.Add(s => s.ProfileInformation, new()));
+    private RenderedComponent<Profile> RenderProfileWithEmptyInformation()
+        => Render<Profile>(p => p.Add(s => s.ProfileInformation, new()));
 
-    private IRenderedComponent<Profile> RenderProfileInAdmin()
-        => RenderComponent<Profile>(p => p
+    private RenderedComponent<Profile> RenderProfileInAdmin()
+        => Render<Profile>(p => p
             .Add(s => s.ProfileInformation, new())
             .Add(s => s.ShowAdminActions, true));
 }

@@ -10,7 +10,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Features.AboutMe.Components;
 
 public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 {
-    private readonly TestContext ctx = new();
+    private readonly BunitContext ctx = new();
 
     public TalksTests()
     {
@@ -20,7 +20,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     [Fact]
     public void WhenAddingTalkThenDisplayedToUser()
     {
-        var cut = ctx.RenderComponent<Talks>(
+        var cut = ctx.Render<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
         cut.Find("#add-talk").Click();
         cut.Find("#talk-title").Change("title");
@@ -42,7 +42,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         await Repository.StoreAsync(new TalkBuilder().Build());
         await Repository.StoreAsync(new TalkBuilder().Build());
 
-        var cut = ctx.RenderComponent<Talks>();
+        var cut = ctx.Render<Talks>();
 
         cut.WaitForComponents<TalkEntry>().Count.Should().Be(2);
     }
@@ -51,7 +51,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     public async Task WhenUserClickDeleteButtonThenDeleted()
     {
         await Repository.StoreAsync(new TalkBuilder().Build());
-        var cut = ctx.RenderComponent<Talks>(
+        var cut = ctx.Render<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
 
         cut.WaitForComponent<TalkEntry>().Find("#talk-delete").Click();
@@ -67,7 +67,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         await Repository.StoreAsync(new TalkBuilder().WithPublishedDate(new DateTime(2021, 1, 1)).Build());
         await Repository.StoreAsync(new TalkBuilder().WithPublishedDate(new DateTime(2022, 1, 1)).Build());
 
-        var cut = ctx.RenderComponent<Talks>(
+        var cut = ctx.Render<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
 
         var talks = cut.WaitForComponents<TalkEntry>();

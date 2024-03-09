@@ -13,12 +13,12 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe;
 
-public class AboutMePageTests : TestContext
+public class AboutMePageTests : BunitContext
 {
     [Fact]
     public void ShouldPassIsAuthenticated()
     {
-        this.AddTestAuthorization().SetAuthorized("test");
+        AddAuthorization().SetAuthorized("test");
         var config = new ProfileInformation { ProfilePictureUrl = string.Empty };
         
         var applicationConfiguration = new ApplicationConfiguration
@@ -28,7 +28,7 @@ public class AboutMePageTests : TestContext
         
         SetupMocks(config, applicationConfiguration);
 
-        var cut = RenderComponent<AboutMePage>();
+        var cut = Render<AboutMePage>();
 
         cut.FindComponent<Profile>().Instance.ShowAdminActions.Should().BeTrue();
         cut.FindComponent<SkillTable>().Instance.ShowAdminActions.Should().BeTrue();
@@ -38,7 +38,7 @@ public class AboutMePageTests : TestContext
     [Fact]
     public void ShouldNotShowWhenEnabledFalse()
     {
-        this.AddTestAuthorization().SetNotAuthorized();
+        this.AddAuthorization().SetNotAuthorized();
         var config = new ProfileInformation();
         
         var applicationConfiguration = new ApplicationConfiguration
@@ -48,7 +48,7 @@ public class AboutMePageTests : TestContext
         
         SetupMocks(config, applicationConfiguration);
 
-        var cut = RenderComponent<AboutMePage>();
+        var cut = Render<AboutMePage>();
 
         cut.FindComponents<Profile>().Any().Should().BeFalse();
         cut.FindComponents<SkillTable>().Any().Should().BeFalse();
@@ -57,7 +57,7 @@ public class AboutMePageTests : TestContext
     [Fact]
     public void ShouldSetOgData()
     {
-        this.AddTestAuthorization().SetNotAuthorized();
+        this.AddAuthorization().SetNotAuthorized();
         var profileInformation = new ProfileInformation
         {
             Name = "My Name",
@@ -69,7 +69,7 @@ public class AboutMePageTests : TestContext
         };
         SetupMocks(profileInformation, applicationConfiguration);
 
-        var cut = RenderComponent<AboutMePage>();
+        var cut = Render<AboutMePage>();
 
         var ogData = cut.FindComponent<OgData>().Instance;
         ogData.AbsolutePreviewImageUrl.Should().Be("http://localhost/someurl");

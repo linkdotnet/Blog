@@ -17,10 +17,10 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var unpublishedPost = new BlogPostBuilder().WithTitle("Not published").IsPublished(false).Build();
         await Repository.StoreAsync(publishedPost);
         await Repository.StoreAsync(unpublishedPost);
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.Services.AddScoped(_ => Repository);
-        var cut = ctx.RenderComponent<DraftBlogPostPage>();
+        var cut = ctx.Render<DraftBlogPostPage>();
         cut.WaitForElement(".blog-card");
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();

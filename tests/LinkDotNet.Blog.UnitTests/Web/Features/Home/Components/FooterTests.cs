@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class FooterTests : TestContext
+public class FooterTests : BunitContext
 {
     [Fact]
     public void ShouldSetCopyrightInformation()
@@ -23,7 +23,7 @@ public class FooterTests : TestContext
         });
         Services.AddScoped(_ => appConfig);
         
-        var cut = RenderComponent<Footer>();
+        var cut = Render<Footer>();
 
         cut.Find("span").TextContent.Should().Contain("Steven");
     }
@@ -34,7 +34,7 @@ public class FooterTests : TestContext
         var appConfig = new ApplicationConfiguration();
         Services.AddScoped(_ => Options.Create(appConfig));
 
-        var cut = RenderComponent<Footer>();
+        var cut = Render<Footer>();
 
         cut.Find("span").TextContent.Should().Contain("©");
     }

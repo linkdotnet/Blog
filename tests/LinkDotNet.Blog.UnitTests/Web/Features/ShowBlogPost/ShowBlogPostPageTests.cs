@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost;
 
-public class ShowBlogPostPageTests : TestContext
+public class ShowBlogPostPageTests : BunitContext
 {
     [Fact]
     public void ShouldShowLoadingAnimation()
@@ -32,7 +32,7 @@ public class ShowBlogPostPageTests : TestContext
             })));
 
 
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPostId));
 
         cut.FindComponents<Loading>().Count.Should().Be(1);
@@ -47,7 +47,7 @@ public class ShowBlogPostPageTests : TestContext
         Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         var pageTitleStub = cut.FindComponent<PageTitleStub>();
@@ -69,7 +69,7 @@ public class ShowBlogPostPageTests : TestContext
         Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expected);
@@ -86,7 +86,7 @@ public class ShowBlogPostPageTests : TestContext
         Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         var aElement = cut.Find(".goto-tag") as IHtmlAnchorElement;
@@ -104,7 +104,7 @@ public class ShowBlogPostPageTests : TestContext
         Services.AddScoped(_ => repositoryMock);
         SetupMocks();
 
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         cut.FindAll(".goto-tag").Should().BeEmpty();
@@ -127,7 +127,7 @@ public class ShowBlogPostPageTests : TestContext
         SetupMocks();
         Services.AddScoped(_ => Options.Create(appConfiguration));
 
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
         cut.HasComponent<ReadingIndicator>().Should().Be(isEnabled);
@@ -145,7 +145,7 @@ public class ShowBlogPostPageTests : TestContext
         Services.AddScoped(_ => repositoryMock);
         SetupMocks();
         
-        var cut = RenderComponent<ShowBlogPostPage>(
+        var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
         
         cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.Should().Be("blogPost/1");
@@ -157,7 +157,7 @@ public class ShowBlogPostPageTests : TestContext
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
-        this.AddTestAuthorization();
+        this.AddAuthorization();
         ComponentFactories.AddStub<PageTitle>();
         ComponentFactories.AddStub<Like>();
         ComponentFactories.AddStub<CommentSection>();

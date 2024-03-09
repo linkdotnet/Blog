@@ -8,17 +8,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Sitemap;
 
-public class SitemapPageTests : TestContext
+public class SitemapPageTests : BunitContext
 {
     [Fact]
     public async Task ShouldSaveSitemap()
     {
-        this.AddTestAuthorization().SetAuthorized("steven");
+        this.AddAuthorization().SetAuthorized("steven");
         var sitemapMock = Substitute.For<ISitemapService>();
         Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet();
         sitemapMock.CreateSitemapAsync().Returns(sitemap);
-        var cut = RenderComponent<SitemapPage>();
+        var cut = Render<SitemapPage>();
 
         cut.Find("button").Click();
 
@@ -28,7 +28,7 @@ public class SitemapPageTests : TestContext
     [Fact]
     public void ShouldDisplaySitemap()
     {
-        this.AddTestAuthorization().SetAuthorized("steven");
+        this.AddAuthorization().SetAuthorized("steven");
         var sitemapMock = Substitute.For<ISitemapService>();
         Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet
@@ -39,7 +39,7 @@ public class SitemapPageTests : TestContext
             },
         };
         sitemapMock.CreateSitemapAsync().Returns(sitemap);
-        var cut = RenderComponent<SitemapPage>();
+        var cut = Render<SitemapPage>();
 
         cut.Find("button").Click();
 
@@ -51,7 +51,7 @@ public class SitemapPageTests : TestContext
     [Fact]
     public void ShouldShowLoadingWhenGenerating()
     {
-        this.AddTestAuthorization().SetAuthorized("steven");
+        this.AddAuthorization().SetAuthorized("steven");
         var sitemapMock = Substitute.For<ISitemapService>();
         Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet
@@ -67,7 +67,7 @@ public class SitemapPageTests : TestContext
             return sitemap;
         }));
 
-        var cut = RenderComponent<SitemapPage>();
+        var cut = Render<SitemapPage>();
 
         cut.Find("button").Click();
 

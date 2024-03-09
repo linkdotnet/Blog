@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class ThemeTogglerTests : TestContext
+public class ThemeTogglerTests : BunitContext
 {
     [Fact]
     public void ShouldSetSystemDefault()
@@ -15,7 +15,7 @@ public class ThemeTogglerTests : TestContext
         JSInterop.Setup<string>("getCurrentSystemPreference").SetResult("dark");
         var setTheme = JSInterop.SetupVoid("setTheme", "dark");
 
-        RenderComponent<ThemeToggler>();
+        Render<ThemeToggler>();
 
         setTheme.Invocations.Should().NotBeNullOrEmpty();
     }
@@ -31,7 +31,7 @@ public class ThemeTogglerTests : TestContext
         JSInterop.Setup<string>("getCurrentSystemPreference").SetResult("light");
         var setTheme = JSInterop.SetupVoid("setTheme", "dark");
 
-        RenderComponent<ThemeToggler>();
+        Render<ThemeToggler>();
 
         setTheme.Invocations.Should().NotBeNullOrEmpty();
     }
@@ -46,7 +46,7 @@ public class ThemeTogglerTests : TestContext
         JSInterop.SetupVoid("setTheme", "light");
         var setTheme = JSInterop.SetupVoid("setTheme", "dark")
             .SetVoidResult();
-        var cut = RenderComponent<ThemeToggler>();
+        var cut = Render<ThemeToggler>();
 
         cut.Find("span").Click();
 

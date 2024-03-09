@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class GiscusTests : TestContext
+public class GiscusTests : BunitContext
 {
     [Fact]
     public void ShouldLoadJavascript()
@@ -23,7 +23,7 @@ public class GiscusTests : TestContext
         JSInterop.SetupModule("./Features/ShowBlogPost/Components/Giscus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        RenderComponent<Giscus>();
+        Render<Giscus>();
 
         var init = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "initGiscus");
         init.Should().NotBeNull();
@@ -36,7 +36,7 @@ public class GiscusTests : TestContext
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
 
-        RenderComponent<Giscus>();
+        Render<Giscus>();
 
         JSInterop.Invocations.Should().BeEmpty();
     }

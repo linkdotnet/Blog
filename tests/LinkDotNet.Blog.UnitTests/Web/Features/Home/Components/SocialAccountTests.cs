@@ -4,7 +4,7 @@ using LinkDotNet.Blog.Web.Features.Home.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
-public class SocialAccountTests : TestContext
+public class SocialAccountTests : BunitContext
 {
     [Theory]
     [InlineData(null, null, null, false, false, false)]
@@ -26,7 +26,7 @@ public class SocialAccountTests : TestContext
             TwitterAccountUrl = twitter,
         };
 
-        var cut = RenderComponent<SocialAccounts>(s => s.Add(p => p.Social, social));
+        var cut = Render<SocialAccounts>(s => s.Add(p => p.Social, social));
 
         cut.FindAll("#github").Any().Should().Be(githubAvailable);
         cut.FindAll("#linkedin").Any().Should().Be(linkedinAvailable);

@@ -15,11 +15,11 @@ public class BlogPostAdminActionsTests
     {
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        using var ctx = new TestContext();
-        ctx.AddTestAuthorization().SetAuthorized("s");
+        using var ctx = new BunitContext();
+        ctx.AddAuthorization().SetAuthorized("s");
         ctx.Services.AddSingleton(repositoryMock);
         ctx.Services.AddSingleton(Substitute.For<IToastService>());
-        var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
+        var cut = ctx.Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
         cut.Find("#ok").Click();
@@ -32,11 +32,11 @@ public class BlogPostAdminActionsTests
     {
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        using var ctx = new TestContext();
-        ctx.AddTestAuthorization().SetAuthorized("s");
+        using var ctx = new BunitContext();
+        ctx.AddAuthorization().SetAuthorized("s");
         ctx.Services.AddSingleton(repositoryMock);
         ctx.Services.AddSingleton(Substitute.For<IToastService>());
-        var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
+        var cut = ctx.Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
         cut.Find("#cancel").Click();
@@ -49,12 +49,12 @@ public class BlogPostAdminActionsTests
     {
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        using var ctx = new TestContext();
-        ctx.AddTestAuthorization().SetAuthorized("s");
+        using var ctx = new BunitContext();
+        ctx.AddAuthorization().SetAuthorized("s");
         ctx.Services.AddSingleton(repositoryMock);
         ctx.Services.AddSingleton(Substitute.For<IToastService>());
         var navigationManager = ctx.Services.GetRequiredService<NavigationManager>();
-        var cut = ctx.RenderComponent<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
+        var cut = ctx.Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
 
         cut.Find("#edit-blogpost").Click();
 

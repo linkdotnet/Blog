@@ -2,12 +2,12 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class StructuredDataTests : TestContext
+public class StructuredDataTests : BunitContext
 {
     [Fact]
     public void ShouldRenderRawMarkup()
     {
-        var cut = RenderComponent<StructuredData>(
+        var cut = Render<StructuredData>(
             ps => ps.Add(p => p.Author, "Steven")
                 .Add(p => p.Headline, "Headline")
                 .Add(p => p.PreviewImage, "url1")

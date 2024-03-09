@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 
-public class DonationSectionTests : TestContext
+public class DonationSectionTests : BunitContext
 {
     [Theory]
     [InlineData("linkdotnet", true)]
@@ -19,7 +19,7 @@ public class DonationSectionTests : TestContext
         };
         Services.AddScoped(_ => Options.Create(appConfig));
 
-        var cut = RenderComponent<DonationSection>();
+        var cut = Render<DonationSection>();
 
         cut.HasComponent<Kofi>().Should().Be(hasComponent);
     }
@@ -36,7 +36,7 @@ public class DonationSectionTests : TestContext
         };
         Services.AddScoped(_ =>Options.Create(appConfig));
 
-        var cut = RenderComponent<DonationSection>();
+        var cut = Render<DonationSection>();
 
         cut.HasComponent<GithubSponsor>().Should().Be(hasComponent);
     }
@@ -52,7 +52,7 @@ public class DonationSectionTests : TestContext
         };
         Services.AddScoped(_ => Options.Create(appConfig));
 
-        var cut = RenderComponent<DonationSection>();
+        var cut = Render<DonationSection>();
 
         cut.HasComponent<Patreon>().Should().Be(hasComponent);
     }

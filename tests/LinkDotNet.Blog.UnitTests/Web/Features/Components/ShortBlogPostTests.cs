@@ -5,14 +5,14 @@ using LinkDotNet.Blog.Web.Features.Components;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
-public class ShortBlogPostTests : TestContext
+public class ShortBlogPostTests : BunitContext
 {
     [Fact]
     public void ShouldOpenBlogPost()
     {
         var blogPost = new BlogPostBuilder().Build();
         blogPost.Id = "SomeId";
-        var cut = RenderComponent<ShortBlogPost>(
+        var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
         var readMore = cut.Find(".read-more a");
@@ -24,7 +24,7 @@ public class ShortBlogPostTests : TestContext
     public void ShouldNavigateToEscapedTagSiteWhenClickingOnTag()
     {
         var blogPost = new BlogPostBuilder().WithTags("Tag 1").Build();
-        var cut = RenderComponent<ShortBlogPost>(
+        var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
         var searchByTagLink = cut.Find(".goto-tag");
@@ -37,7 +37,7 @@ public class ShortBlogPostTests : TestContext
     {
         var blogPost = new BlogPostBuilder().Build();
 
-        var cut = RenderComponent<ShortBlogPost>(
+        var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
         cut.FindAll(".goto-tag").Should().BeEmpty();
@@ -49,7 +49,7 @@ public class ShortBlogPostTests : TestContext
         var blogPost = new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(new DateTime(2099, 1, 1))
             .Build();
 
-        var cut = RenderComponent<ShortBlogPost>(
+        var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
         cut.Find(".schedule").Should().NotBeNull();
@@ -60,7 +60,7 @@ public class ShortBlogPostTests : TestContext
     {
         var blogPost = new BlogPostBuilder().IsPublished(false).Build();
 
-        var cut = RenderComponent<ShortBlogPost>(
+        var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
         cut.Find(".draft").Should().NotBeNull();
@@ -71,7 +71,7 @@ public class ShortBlogPostTests : TestContext
     {
         var blogPost = new BlogPostBuilder().IsPublished(true).Build();
 
-        var cut = RenderComponent<ShortBlogPost>(
+        var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
         cut.FindAll(".draft").Should().BeEmpty();

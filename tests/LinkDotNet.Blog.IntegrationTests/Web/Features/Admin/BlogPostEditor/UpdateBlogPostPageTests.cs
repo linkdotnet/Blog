@@ -15,16 +15,16 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldSaveBlogPostOnSave()
     {
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         var toastService = Substitute.For<IToastService>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);
-        ctx.AddTestAuthorization().SetAuthorized("some username");
+        ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.ComponentFactories.AddStub<UploadFile>();
-        using var cut = ctx.RenderComponent<UpdateBlogPostPage>(
+        using var cut = ctx.Render<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPost.Id));
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
@@ -39,18 +39,18 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public void ShouldThrowWhenNoIdProvided()
     {
-        using var ctx = new TestContext();
-        ctx.AddTestAuthorization().SetAuthorized("some username");
+        using var ctx = new BunitContext();
+        ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
 
-        Action act = () => ctx.RenderComponent<UpdateBlogPostPage>(
+        Action act = () => ctx.Render<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, null));
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
 
-    private static void TriggerUpdate(IRenderedFragment cut)
+    private static void TriggerUpdate(RenderedFragment cut)
     {
         cut.Find("#short").Input("My new Description");
 
