@@ -13,6 +13,7 @@ public class DonationSectionTests : BunitContext
 
     public void ShouldShowKofiIfSet(string token, bool hasComponent)
     {
+        JSInterop.SetupVoid("myfunc", "myarg").SetVoidResult();
         var appConfig = new ApplicationConfiguration
         {
             KofiToken = token,
