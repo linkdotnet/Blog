@@ -33,7 +33,7 @@ This project is released under the terms of the [MIT License](./LICENSE).
 
 ## Support & Contributing
 
-Thanks to all [contributors](https://github.com/linkdotnet/tips-and-tricks/graphs/contributors) and people that are creating bug-reports and valuable input:
+Thanks to all [contributors](https://github.com/linkdotnet/Blog/graphs/contributors) and people that are creating bug-reports and valuable input:
 
 <a href="https://github.com/linkdotnet/blog/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=linkdotnet/blog" alt="Supporters" />
