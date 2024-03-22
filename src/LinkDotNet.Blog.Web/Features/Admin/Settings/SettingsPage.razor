@@ -1,8 +1,10 @@
 @page "/settings"
 @using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.NCronJob
 @inject IOptions<ApplicationConfiguration> ApplicationConfiguration
 @inject ICacheInvalidator CacheInvalidator
 @inject IToastService ToastService
+@inject IInstantJobRegistry InstantJobRegistry
 @attribute [Authorize]
 
 <div class="container-fluid ms-3">
@@ -25,6 +27,13 @@
 			<td>@ApplicationConfiguration.Value.FirstPageCacheDurationInMinutes Minutes</td>
 			<td><button class="btn btn-warning" id="invalidate-cache" @onclick="InvalidateCache">Invalidate Cache</button></td>
 		</tr>
+		<tr>
+			<td>Run Visit Counter Data Collection</td>
+			<td>The visit counter data collection is a background job that collects the visit data of the blog posts.<br/>
+				The job runs every hour (on the hour). The job can be run on demand.</td>
+			<td></td>
+			<td><button class="btn btn-warning" id="run-visit-transformer" @onclick="RunVisitTransformer">Run transformer</button></td>
+		</tr>
 		</tbody>
 	</table>
 </div>
@@ -34,5 +43,11 @@
 	{
 		CacheInvalidator.Cancel();
 		ToastService.ShowInfo("Cache was invalidated.");
+	}
+
+	private void RunVisitTransformer()
+	{
+		InstantJobRegistry.AddInstantJob<TransformBlogPostRecordsService>();
+		ToastService.ShowInfo("Transformer was started.");
 	}
 }

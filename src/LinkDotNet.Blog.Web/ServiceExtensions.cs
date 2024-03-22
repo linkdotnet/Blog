@@ -1,6 +1,7 @@
 ﻿using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.Web;
@@ -19,5 +20,7 @@ public static class ServiceExtensions
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheTokenProvider>(s => s.GetRequiredService<CacheService>());
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
+
+        services.AddBackgroundServices();
     }
 }

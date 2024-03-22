@@ -2,6 +2,7 @@ using Blazored.Toast.Services;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.Settings;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.NCronJob;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -16,6 +17,7 @@ public class SettingsPageTests : BunitContext
         Services.AddScoped(_ => cacheInvalidator);
         Services.AddScoped(_ => Options.Create<ApplicationConfiguration>(new()));
         Services.AddScoped(_ => Substitute.For<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         var cut = Render<SettingsPage>();
         var invalidateCacheButton = cut.Find("#invalidate-cache");
         

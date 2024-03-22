@@ -38,7 +38,6 @@ public class Program
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
         builder.Services.AddResponseCompression();
-        builder.Services.AddBackgroundServices();
 
         builder.Services.AddHealthChecks()
             .AddCheck<DatabaseHealthCheck>("Database");
