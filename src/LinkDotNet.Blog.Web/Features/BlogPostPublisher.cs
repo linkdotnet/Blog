@@ -5,38 +5,28 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Services;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using LinkDotNet.NCronJob;
 using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public sealed partial class BlogPostPublisher : BackgroundService
+public sealed partial class BlogPostPublisher : IJob
 {
-    private readonly IServiceProvider serviceProvider;
     private readonly ILogger<BlogPostPublisher> logger;
+    private readonly IRepository<BlogPost> repository;
     private readonly ICacheInvalidator cacheInvalidator;
 
-    public BlogPostPublisher(IServiceProvider serviceProvider, ICacheInvalidator cacheInvalidator, ILogger<BlogPostPublisher> logger)
+    public BlogPostPublisher(IRepository<BlogPost> repository, ICacheInvalidator cacheInvalidator, ILogger<BlogPostPublisher> logger)
     {
-        this.serviceProvider = serviceProvider;
+        this.repository = repository;
         this.cacheInvalidator = cacheInvalidator;
         this.logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task RunAsync(JobExecutionContext context, CancellationToken token)
     {
         LogPublishStarting();
-
-        using var timer = new PeriodicTimer(TimeSpan.FromMinutes(1));
-
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await PublishScheduledBlogPostsAsync();
-
-            await timer.WaitForNextTickAsync(stoppingToken);
-        }
-
+        await PublishScheduledBlogPostsAsync();
         LogPublishStopping();
     }
 
@@ -44,10 +34,7 @@ public sealed partial class BlogPostPublisher : BackgroundService
     {
         LogCheckingForScheduledBlogPosts();
 
-        using var scope = serviceProvider.CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
-
-        var blogPostsToPublish = await GetScheduledBlogPostsAsync(repository);
+        var blogPostsToPublish = await GetScheduledBlogPostsAsync();
         foreach (var blogPost in blogPostsToPublish)
         {
             blogPost.Publish();
@@ -61,7 +48,7 @@ public sealed partial class BlogPostPublisher : BackgroundService
         }
     }
 
-    private async Task<IPagedList<BlogPost>> GetScheduledBlogPostsAsync(IRepository<BlogPost> repository)
+    private async Task<IPagedList<BlogPost>> GetScheduledBlogPostsAsync()
     {
         var now = DateTime.UtcNow;
         var scheduledBlogPosts = await repository.GetAllAsync(

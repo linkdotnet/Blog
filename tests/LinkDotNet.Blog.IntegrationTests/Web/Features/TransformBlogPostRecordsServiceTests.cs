@@ -24,13 +24,12 @@ public class TransformBlogPostRecordsServiceTests : SqlDatabaseTestBase<BlogPost
             new Repository<BlogPostRecord>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostRecord>>>());
         userRecordRepository =
             new Repository<UserRecord>(DbContextFactory, Substitute.For<ILogger<Repository<UserRecord>>>());
-
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped(_ => Repository);
-        serviceCollection.AddScoped(_ => blogPostRecordRepository);
-        serviceCollection.AddScoped(_ => userRecordRepository);
         
-        sut = new TransformBlogPostRecordsService(serviceCollection.BuildServiceProvider(), Substitute.For<ILogger<TransformBlogPostRecordsService>>());
+        sut = new TransformBlogPostRecordsService(
+            Repository,
+            userRecordRepository,
+            blogPostRecordRepository,
+            Substitute.For<ILogger<TransformBlogPostRecordsService>>());
     }
     
     [Fact]
@@ -58,7 +57,7 @@ public class TransformBlogPostRecordsServiceTests : SqlDatabaseTestBase<BlogPost
         await userRecordRepository.StoreBulkAsync(userRecords);
 
         // Act
-        await sut.StartAsync(default);
+        await sut.RunAsync(new(null), default);
 
         // Assert
         var afterUserRecords = await userRecordRepository.GetAllAsync();

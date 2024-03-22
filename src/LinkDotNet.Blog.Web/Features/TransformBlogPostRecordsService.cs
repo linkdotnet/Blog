@@ -5,35 +5,34 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using LinkDotNet.NCronJob;
 using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public sealed partial class TransformBlogPostRecordsService : BackgroundService
+public sealed partial class TransformBlogPostRecordsService : IJob
 {
-    private readonly IServiceProvider services;
+    private readonly IRepository<BlogPost> blogPostRepository;
+    private readonly IRepository<UserRecord> userRecordRepository;
+    private readonly IRepository<BlogPostRecord> blogPostRecordRepository;
     private readonly ILogger<TransformBlogPostRecordsService> logger;
 
-    public TransformBlogPostRecordsService(IServiceProvider services, ILogger<TransformBlogPostRecordsService> logger)
+    public TransformBlogPostRecordsService(
+        IRepository<BlogPost> blogPostRepository,
+        IRepository<UserRecord> userRecordRepository,
+        IRepository<BlogPostRecord> blogPostRecordRepository,
+        ILogger<TransformBlogPostRecordsService> logger)
     {
-        this.services = services;
+        this.blogPostRepository = blogPostRepository;
+        this.userRecordRepository = userRecordRepository;
+        this.blogPostRecordRepository = blogPostRecordRepository;
         this.logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    public async Task RunAsync(JobExecutionContext context, CancellationToken token)
     {
         LogTransformStarted();
-
-        using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            await TransformRecordsAsync();
-
-            await timer.WaitForNextTickAsync(stoppingToken);
-        }
-
+        await TransformRecordsAsync();
         LogTransformStopped();
     }
 
@@ -85,11 +84,6 @@ public sealed partial class TransformBlogPostRecordsService : BackgroundService
 
     private async Task TransformRecordsAsync()
     {
-        using var scope = services.CreateScope();
-        var blogPostRepository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
-        var userRecordRepository = scope.ServiceProvider.GetRequiredService<IRepository<UserRecord>>();
-        var blogPostRecordRepository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPostRecord>>();
-
         var blogPosts = await blogPostRepository.GetAllAsync();
         var userRecords = await userRecordRepository.GetAllAsync(
             filter: r => r.UrlClicked.StartsWith("blogPost/"));

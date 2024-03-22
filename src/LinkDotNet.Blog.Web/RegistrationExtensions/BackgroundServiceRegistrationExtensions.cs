@@ -1,4 +1,5 @@
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.NCronJob;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -13,7 +14,9 @@ public static class BackgroundServiceRegistrationExtensions
             options.ServicesStartConcurrently = true;
             options.ServicesStopConcurrently = true;
         });
-        services.AddHostedService<BlogPostPublisher>();
-        services.AddHostedService<TransformBlogPostRecordsService>();
+
+        services.AddNCronJob();
+        services.AddCronJob<BlogPostPublisher>(p => p.CronExpression = "* * * * *");
+        services.AddCronJob<TransformBlogPostRecordsService>(p => p.CronExpression = "0 * * * *");
     }
 }
