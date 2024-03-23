@@ -77,6 +77,11 @@ public sealed partial class TransformBlogPostRecordsService : IJob
         foreach (var userRecord in userRecords)
         {
             var id = userRecord.UrlClicked.Replace("blogPost/", string.Empty, StringComparison.OrdinalIgnoreCase);
+            var suffix = id.IndexOf('/', StringComparison.InvariantCultureIgnoreCase);
+            if (suffix != -1)
+            {
+                id = id[..suffix];
+            }
             var key = (id, userRecord.DateClicked);
             clicksPerDay.TryGetValue(key, out var count);
             clicksPerDay[key] = count + 1;

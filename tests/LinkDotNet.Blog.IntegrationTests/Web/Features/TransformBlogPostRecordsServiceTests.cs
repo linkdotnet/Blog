@@ -49,7 +49,7 @@ public class TransformBlogPostRecordsServiceTests : SqlDatabaseTestBase<BlogPost
         var userRecords = new List<UserRecord>
         {
             new() { Id = "A", DateClicked = someDate, UrlClicked = $"blogPost/{blogPosts[0].Id}" },
-            new() { Id = "B", DateClicked = someDate, UrlClicked = $"blogPost/{blogPosts[0].Id}" },
+            new() { Id = "B", DateClicked = someDate, UrlClicked = $"blogPost/{blogPosts[0].Id}/suffix" },
             new() { Id = "C", DateClicked = someDate.AddDays(-3), UrlClicked = $"blogPost/{blogPosts[1].Id}" },
             new() { Id = "D", DateClicked = someDate.AddDays(-3), UrlClicked = $"blogPost/{blogPosts[1].Id}" },
             new() { Id = "E", DateClicked = someDate.AddDays(-2), UrlClicked = $"blogPost/{blogPosts[2].Id}" }
