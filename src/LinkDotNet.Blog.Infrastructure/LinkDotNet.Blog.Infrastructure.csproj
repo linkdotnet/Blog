@@ -11,7 +11,7 @@
       <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="8.0.3" />
       <PackageReference Include="MongoDB.Driver" Version="2.24.0" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-      <PackageReference Include="RavenDB.Client" Version="6.0.100" />
+      <PackageReference Include="RavenDB.Client" Version="6.0.101" />
     </ItemGroup>
 
     <ItemGroup>

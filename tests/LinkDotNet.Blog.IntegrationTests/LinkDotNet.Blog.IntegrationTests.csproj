@@ -10,7 +10,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-        <PackageReference Include="RavenDB.TestDriver" Version="6.0.100" />
+        <PackageReference Include="RavenDB.TestDriver" Version="6.0.101" />
     </ItemGroup>
 
     <ItemGroup>
