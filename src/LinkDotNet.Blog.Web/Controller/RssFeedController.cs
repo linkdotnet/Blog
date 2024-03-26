@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web.Controller;
 
+[Route("feed.rss")]
 public sealed class RssFeedController : ControllerBase
 {
     private static readonly XmlWriterSettings Settings = CreateXmlWriterSettings();
@@ -38,7 +39,6 @@ public sealed class RssFeedController : ControllerBase
 
     [ResponseCache(Duration = 1200)]
     [HttpGet]
-    [Route("feed.rss")]
     public async Task<IActionResult> GetRssFeed()
     {
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
