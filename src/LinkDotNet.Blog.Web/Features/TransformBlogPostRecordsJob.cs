@@ -57,39 +57,23 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
         IEnumerable<BlogPost> blogPosts,
         IEnumerable<UserRecord> userRecords)
     {
-        var clicksPerDay = GetClicksPerDay(userRecords);
-
         return blogPosts
-            .SelectMany(blogPost => clicksPerDay.Keys.Where(k => k.blogPostId == blogPost.Id),
-                (blogPost, date) => new BlogPostRecord
+            .SelectMany(blogPost => userRecords
+                .Where(userRecord => GetBlogPostId(userRecord) == blogPost.Id)
+                .GroupBy(userRecord => userRecord.DateClicked)
+                .Select(group => new BlogPostRecord
                 {
-                    Id = blogPost.Id, BlogPostId = blogPost.Id, DateClicked = date.date, Clicks = clicksPerDay[date],
-                }).ToArray();
-    }
-
-    private static Dictionary<(string blogPostId, DateOnly date), int> GetClicksPerDay(IEnumerable<UserRecord> userRecords)
-    {
-        var clicksPerDay = new Dictionary<(string blogPostId, DateOnly date), int>();
-
-        foreach (var userRecord in userRecords)
-        {
-            var id = userRecord.UrlClicked.Replace("blogPost/", string.Empty, StringComparison.OrdinalIgnoreCase);
-            var suffix = id.IndexOf('/', StringComparison.InvariantCultureIgnoreCase);
-            if (suffix != -1)
-            {
-                id = id[..suffix];
-            }
-            var key = (id, userRecord.DateClicked);
-            clicksPerDay.TryGetValue(key, out var count);
-            clicksPerDay[key] = count + 1;
-        }
-
-        return clicksPerDay;
+                    Id = blogPost.Id,
+                    BlogPostId = blogPost.Id,
+                    DateClicked = group.Key,
+                    Clicks = group.Count()
+                }))
+            .ToArray();
     }
 
     private static IEnumerable<BlogPostRecord> MergeRecords(
-        IEnumerable<BlogPostRecord> newBlogPostRecords,
-        IEnumerable<BlogPostRecord> oldBlogPostRecords)
+        IEnumerable<BlogPostRecord> oldBlogPostRecords,
+        IEnumerable<BlogPostRecord> newBlogPostRecords)
     {
         return oldBlogPostRecords.Concat(newBlogPostRecords)
             .GroupBy(x => new { x.BlogPostId, x.DateClicked })
@@ -99,6 +83,13 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
                 DateClicked = g.Key.DateClicked,
                 Clicks = g.Sum(x => x.Clicks),
             });
+    }
+
+    private static string GetBlogPostId(UserRecord userRecord)
+    {
+        var id = userRecord.UrlClicked.Replace("blogPost/", string.Empty, StringComparison.OrdinalIgnoreCase);
+        var suffix = id.IndexOf('/', StringComparison.InvariantCultureIgnoreCase);
+        return suffix != -1 ? id[..suffix] : id;
     }
 
     private async Task TransformRecordsAsync()
@@ -116,7 +107,7 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
         var earliestDate = newBlogPostRecords.MinBy(r => r.DateClicked).DateClicked;
         var oldBlogPostRecords = await blogPostRecordRepository.GetAllAsync(f => f.DateClicked >= earliestDate);
 
-        var mergedRecords = MergeRecords(newBlogPostRecords, oldBlogPostRecords);
+        var mergedRecords = MergeRecords(oldBlogPostRecords, newBlogPostRecords);
 
         await blogPostRecordRepository.DeleteBulkAsync(oldBlogPostRecords.Select(o => o.Id).ToArray());
         await blogPostRecordRepository.StoreBulkAsync(mergedRecords.ToArray());
