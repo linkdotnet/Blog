@@ -15,8 +15,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
 public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
 {
     private readonly TransformBlogPostRecordsJob sut;
-    private readonly IRepository<BlogPostRecord> blogPostRecordRepository;
-    private readonly IRepository<UserRecord> userRecordRepository;
+    private readonly Repository<BlogPostRecord> blogPostRecordRepository;
+    private readonly Repository<UserRecord> userRecordRepository;
 
     public TransformBlogPostRecordsJobTests()
     {
@@ -37,23 +37,23 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
     {
         // Arrange
         var someDate = new DateOnly(2023, 08, 13);
-        var blogPosts = new List<BlogPost>
-        {
+        List<BlogPost> blogPosts =
+        [
             new BlogPostBuilder().Build(),
             new BlogPostBuilder().Build(),
             new BlogPostBuilder().Build(),
             new BlogPostBuilder().Build(),
-        };
+        ];
 
         await Repository.StoreBulkAsync(blogPosts);
-        var userRecords = new List<UserRecord>
-        {
+        List<UserRecord> userRecords =
+        [
             new() { Id = "A", DateClicked = someDate, UrlClicked = $"blogPost/{blogPosts[0].Id}" },
             new() { Id = "B", DateClicked = someDate, UrlClicked = $"blogPost/{blogPosts[0].Id}/suffix" },
             new() { Id = "C", DateClicked = someDate.AddDays(-3), UrlClicked = $"blogPost/{blogPosts[1].Id}" },
             new() { Id = "D", DateClicked = someDate.AddDays(-3), UrlClicked = $"blogPost/{blogPosts[1].Id}" },
             new() { Id = "E", DateClicked = someDate.AddDays(-2), UrlClicked = $"blogPost/{blogPosts[2].Id}" }
-        };
+        ];
         await userRecordRepository.StoreBulkAsync(userRecords);
 
         // Act
