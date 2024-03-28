@@ -12,24 +12,24 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
 
-public class TransformBlogPostRecordsServiceTests : SqlDatabaseTestBase<BlogPost>
+public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
 {
-    private readonly TransformBlogPostRecordsService sut;
+    private readonly TransformBlogPostRecordsJob sut;
     private readonly IRepository<BlogPostRecord> blogPostRecordRepository;
     private readonly IRepository<UserRecord> userRecordRepository;
 
-    public TransformBlogPostRecordsServiceTests()
+    public TransformBlogPostRecordsJobTests()
     {
         blogPostRecordRepository =
             new Repository<BlogPostRecord>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostRecord>>>());
         userRecordRepository =
             new Repository<UserRecord>(DbContextFactory, Substitute.For<ILogger<Repository<UserRecord>>>());
         
-        sut = new TransformBlogPostRecordsService(
+        sut = new TransformBlogPostRecordsJob(
             Repository,
             userRecordRepository,
             blogPostRecordRepository,
-            Substitute.For<ILogger<TransformBlogPostRecordsService>>());
+            Substitute.For<ILogger<TransformBlogPostRecordsJob>>());
     }
     
     [Fact]
@@ -77,5 +77,39 @@ public class TransformBlogPostRecordsServiceTests : SqlDatabaseTestBase<BlogPost
         var post3Record = transformedBlogPostRecords.FirstOrDefault(r => r.BlogPostId == blogPosts[2].Id);
         post3Record.Should().NotBeNull();
         post3Record.Clicks.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ShouldMergeRecordsWhenThereAreAlreadyEntries()
+    {
+        // Arrange
+        var someDate = new DateOnly(2023, 08, 13);
+        var blogPost = new BlogPostBuilder().WithUpdatedDate(someDate.ToDateTime(default)).Build();
+
+        await Repository.StoreAsync(blogPost);
+        List<UserRecord> userRecords =
+        [
+            new() { Id = "A", DateClicked = someDate, UrlClicked = $"blogPost/{blogPost.Id}" },
+            new() { Id = "B", DateClicked = someDate, UrlClicked = $"blogPost/{blogPost.Id}" },
+            new() { Id = "C", DateClicked = someDate.AddDays(1), UrlClicked = $"blogPost/{blogPost.Id}" },
+        ];
+        await userRecordRepository.StoreBulkAsync(userRecords);
+
+        List<BlogPostRecord> blogPostRecords =
+        [
+            new() { BlogPostId = blogPost.Id, DateClicked = someDate.AddDays(-1), Clicks = 1 },
+            new() { BlogPostId = blogPost.Id, DateClicked = someDate, Clicks = 1 },
+        ];
+        await blogPostRecordRepository.StoreBulkAsync(blogPostRecords);
+        
+        // Act
+        await sut.RunAsync(new(null), default);
+
+        // Assert
+        var records = await blogPostRecordRepository.GetAllAsync();
+        records.Count.Should().Be(3);
+        records[0].Clicks.Should().Be(1);
+        records[1].Clicks.Should().Be(3);
+        records[2].Clicks.Should().Be(1);
     }
 }

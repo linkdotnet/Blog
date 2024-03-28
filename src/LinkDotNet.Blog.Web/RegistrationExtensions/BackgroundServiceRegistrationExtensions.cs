@@ -18,6 +18,6 @@ public static class BackgroundServiceRegistrationExtensions
 
         services.AddNCronJob(p => p.TimerInterval = TimeSpan.FromSeconds(30));
         services.AddCronJob<BlogPostPublisher>(p => p.CronExpression = "* * * * *");
-        services.AddCronJob<TransformBlogPostRecordsService>(p => p.CronExpression = "0 * * * *");
+        services.AddCronJob<TransformBlogPostRecordsJob>(p => p.CronExpression = "0 * * * *");
     }
 }

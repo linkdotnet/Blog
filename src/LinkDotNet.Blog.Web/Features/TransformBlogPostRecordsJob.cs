@@ -10,19 +10,19 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public sealed partial class TransformBlogPostRecordsService : IJob
+public sealed partial class TransformBlogPostRecordsJob : IJob
 {
     private static readonly SemaphoreSlim Semaphore = new(1, 1);
     private readonly IRepository<BlogPost> blogPostRepository;
     private readonly IRepository<UserRecord> userRecordRepository;
     private readonly IRepository<BlogPostRecord> blogPostRecordRepository;
-    private readonly ILogger<TransformBlogPostRecordsService> logger;
+    private readonly ILogger<TransformBlogPostRecordsJob> logger;
 
-    public TransformBlogPostRecordsService(
+    public TransformBlogPostRecordsJob(
         IRepository<BlogPost> blogPostRepository,
         IRepository<UserRecord> userRecordRepository,
         IRepository<BlogPostRecord> blogPostRecordRepository,
-        ILogger<TransformBlogPostRecordsService> logger)
+        ILogger<TransformBlogPostRecordsJob> logger)
     {
         this.blogPostRepository = blogPostRepository;
         this.userRecordRepository = userRecordRepository;
@@ -110,8 +110,14 @@ public sealed partial class TransformBlogPostRecordsService : IJob
         var userRecords = await userRecordRepository.GetAllAsync(
             filter: r => r.UrlClicked.StartsWith("blogPost/"));
 
-        var newBlogPostRecords = GetBlogPostRecords(blogPosts, userRecords);
-        var oldBlogPostRecords = await blogPostRecordRepository.GetAllAsync();
+        var newBlogPostRecords = GetBlogPostRecords(blogPosts, userRecords).ToArray();
+        if (newBlogPostRecords.Length == 0)
+        {
+            return;
+        }
+
+        var earliestDate = newBlogPostRecords.MinBy(r => r.DateClicked).DateClicked;
+        var oldBlogPostRecords = await blogPostRecordRepository.GetAllAsync(f => f.DateClicked >= earliestDate);
 
         var mergedRecords = MergeRecords(newBlogPostRecords, oldBlogPostRecords);
 
@@ -123,10 +129,10 @@ public sealed partial class TransformBlogPostRecordsService : IJob
         LogDeletedUserRecords();
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = $"{nameof(TransformBlogPostRecordsService)} is starting")]
+    [LoggerMessage(Level = LogLevel.Information, Message = $"{nameof(TransformBlogPostRecordsJob)} is starting")]
     private partial void LogTransformStarted();
 
-    [LoggerMessage(Level = LogLevel.Information, Message = $"{nameof(TransformBlogPostRecordsService)} is stopping")]
+    [LoggerMessage(Level = LogLevel.Information, Message = $"{nameof(TransformBlogPostRecordsJob)} is stopping")]
     private partial void LogTransformStopped();
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Deleting {RecordCount} records from UserRecord-Table")]
