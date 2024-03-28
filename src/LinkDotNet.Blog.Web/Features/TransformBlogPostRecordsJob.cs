@@ -53,21 +53,18 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
         }
     }
 
-    private static IEnumerable<BlogPostRecord> GetBlogPostRecords(
+    private static BlogPostRecord[] GetBlogPostRecords(
         IEnumerable<BlogPost> blogPosts,
         IEnumerable<UserRecord> userRecords)
     {
         var clicksPerDay = GetClicksPerDay(userRecords);
 
-        return from blogPost in blogPosts
-               from date in clicksPerDay.Keys.Where(k => k.blogPostId == blogPost.Id)
-               select new BlogPostRecord
-               {
-                   Id = blogPost.Id,
-                   BlogPostId = blogPost.Id,
-                   DateClicked = date.date,
-                   Clicks = clicksPerDay[date],
-               };
+        return blogPosts
+            .SelectMany(blogPost => clicksPerDay.Keys.Where(k => k.blogPostId == blogPost.Id),
+                (blogPost, date) => new BlogPostRecord
+                {
+                    Id = blogPost.Id, BlogPostId = blogPost.Id, DateClicked = date.date, Clicks = clicksPerDay[date],
+                }).ToArray();
     }
 
     private static Dictionary<(string blogPostId, DateOnly date), int> GetClicksPerDay(IEnumerable<UserRecord> userRecords)
@@ -110,7 +107,7 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
         var userRecords = await userRecordRepository.GetAllAsync(
             filter: r => r.UrlClicked.StartsWith("blogPost/"));
 
-        var newBlogPostRecords = GetBlogPostRecords(blogPosts, userRecords).ToArray();
+        var newBlogPostRecords = GetBlogPostRecords(blogPosts, userRecords);
         if (newBlogPostRecords.Length == 0)
         {
             return;
