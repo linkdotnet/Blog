@@ -107,9 +107,9 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
 
         // Assert
         var records = await blogPostRecordRepository.GetAllAsync();
-        records.Count.Should().Be(3);
-        records[0].Clicks.Should().Be(1);
-        records[1].Clicks.Should().Be(3);
-        records[2].Clicks.Should().Be(1);
+        var datesToClicks = records.ToDictionary(s => s.DateClicked, bp => bp.Clicks);
+        datesToClicks[someDate.AddDays(-1)].Should().Be(1);
+        datesToClicks[someDate].Should().Be(3);
+        datesToClicks[someDate.AddDays(1)].Should().Be(1);
     }
 }
