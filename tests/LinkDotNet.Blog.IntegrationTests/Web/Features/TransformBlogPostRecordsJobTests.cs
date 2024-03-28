@@ -39,10 +39,10 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         var someDate = new DateOnly(2023, 08, 13);
         var blogPosts = new List<BlogPost>
         {
-            new BlogPostBuilder().WithUpdatedDate(someDate.ToDateTime(default)).Build(),
-            new BlogPostBuilder().WithUpdatedDate(someDate.AddDays(-10).ToDateTime(default)).Build(),
-            new BlogPostBuilder().WithUpdatedDate(someDate.AddDays(-5).ToDateTime(default)).Build(),
-            new BlogPostBuilder().WithUpdatedDate(someDate.AddDays(-1).ToDateTime(default)).Build(),
+            new BlogPostBuilder().Build(),
+            new BlogPostBuilder().Build(),
+            new BlogPostBuilder().Build(),
+            new BlogPostBuilder().Build(),
         };
 
         await Repository.StoreBulkAsync(blogPosts);
@@ -84,7 +84,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
     {
         // Arrange
         var someDate = new DateOnly(2023, 08, 13);
-        var blogPost = new BlogPostBuilder().WithUpdatedDate(someDate.ToDateTime(default)).Build();
+        var blogPost = new BlogPostBuilder().Build();
 
         await Repository.StoreAsync(blogPost);
         List<UserRecord> userRecords =
