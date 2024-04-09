@@ -98,18 +98,12 @@ else
 	    isLoading = true;
         BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
         isLoading = false;
+        _ = UserRecordService.StoreUserRecordAsync();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
-
-        if (firstRender)
-        {
-            var userRecordTask = UserRecordService.StoreUserRecordAsync();
-            StateHasChanged();
-            await userRecordTask;
-        }
     }
 
     private async Task UpdateLikes(bool hasLiked)
