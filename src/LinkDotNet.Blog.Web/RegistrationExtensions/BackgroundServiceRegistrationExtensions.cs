@@ -16,8 +16,8 @@ public static class BackgroundServiceRegistrationExtensions
             options.ServicesStopConcurrently = true;
         });
 
-        services.AddNCronJob(p => p.TimerInterval = TimeSpan.FromSeconds(30));
+        services.AddNCronJob();
         services.AddCronJob<BlogPostPublisher>(p => p.CronExpression = "* * * * *");
-        services.AddCronJob<TransformBlogPostRecordsJob>(p => p.CronExpression = "0 * * * *");
+        services.AddCronJob<TransformBlogPostRecordsJob>(p => p.CronExpression = "* * * * *");
     }
 }

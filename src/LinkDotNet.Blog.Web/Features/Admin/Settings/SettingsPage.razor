@@ -47,7 +47,7 @@
 
 	private void RunVisitTransformer()
 	{
-		InstantJobRegistry.AddInstantJob<TransformBlogPostRecordsJob>();
+		InstantJobRegistry.RunInstantJob<TransformBlogPostRecordsJob>();
 		ToastService.ShowInfo("Transformer was started.");
 	}
 }
