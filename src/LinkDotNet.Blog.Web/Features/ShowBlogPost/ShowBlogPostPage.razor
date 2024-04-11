@@ -80,6 +80,7 @@ else
 }
 
 @code {
+	private string lastBlogPostId = null;
     [Parameter]
     public string BlogPostId { get; set; }
 
@@ -96,9 +97,15 @@ else
     protected override async Task OnParametersSetAsync()
     {
 	    isLoading = true;
-        BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
-        isLoading = false;
-        _ = UserRecordService.StoreUserRecordAsync();
+	    BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
+	    isLoading = false;
+
+	    if (lastBlogPostId != BlogPostId)
+	    {
+		    _ = UserRecordService.StoreUserRecordAsync();
+	    }
+
+	    lastBlogPostId = BlogPostId;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
