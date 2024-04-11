@@ -1,5 +1,4 @@
 @inject IJSRuntime JSRuntime
-@implements IAsyncDisposable
 
 <div class="progress-container" @ref="progressContainer">
     <svg class="progress-circle" viewBox="0 0 36 36">
@@ -21,10 +20,5 @@
 			await using var _ = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/ReadingIndicator.razor.js");
 			await JSRuntime.InvokeVoidAsync("initCircularReadingProgress", ContainerCssSelector, progressContainer);
 		}
-	}
-
-	public async ValueTask DisposeAsync()
-	{
-		await JSRuntime.InvokeVoidAsync("destroyCircularReadingProgress");
 	}
 }
