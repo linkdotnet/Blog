@@ -17,7 +17,7 @@ public static class BackgroundServiceRegistrationExtensions
         });
 
         services.AddNCronJob();
-        services.AddCronJob<BlogPostPublisher>(p => p.CronExpression = "* * * * *");
-        services.AddCronJob<TransformBlogPostRecordsJob>(p => p.CronExpression = "0 * * * *");
+        services.AddCronJob<BlogPostPublisher>(p => p.WithCronExpression("* * * * *"));
+        services.AddCronJob<TransformBlogPostRecordsJob>(p => p.WithCronExpression("0/10 * * * *"));
     }
 }
