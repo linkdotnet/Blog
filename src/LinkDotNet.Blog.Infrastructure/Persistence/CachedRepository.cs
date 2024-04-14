@@ -22,14 +22,12 @@ public sealed class CachedRepository<T> : IRepository<T>
 
     public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => repository.PerformHealthCheckAsync();
 
-    public async ValueTask<T> GetByIdAsync(string id)
-    {
-        return await memoryCache.GetOrCreateAsync(id, async entry =>
+    public async ValueTask<T> GetByIdAsync(string id) =>
+        await memoryCache.GetOrCreateAsync(id, async entry =>
         {
             entry.SlidingExpiration = TimeSpan.FromDays(7);
             return await repository.GetByIdAsync(id);
         });
-    }
 
     public async ValueTask<IPagedList<T>> GetAllAsync(
         Expression<Func<T, bool>> filter = null,

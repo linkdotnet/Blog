@@ -109,7 +109,7 @@ public sealed class CreateNewModel
     public BlogPost ToBlogPost()
     {
         var tagList = string.IsNullOrWhiteSpace(Tags)
-            ? Array.Empty<string>()
+            ? []
             : Tags.Split(",", StringSplitOptions.RemoveEmptyEntries);
         DateTime? updatedDate = ShouldUpdateDate || originalUpdatedDate == default
             ? null

@@ -399,6 +399,7 @@ dotnet_naming_rule.parameters_rule.severity             = warning
 
 # Microsoft - Code Analysis
 # https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/
+dotnet_diagnostic.CA1515.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1515.md
 dotnet_diagnostic.CA1707.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1707.md
 dotnet_diagnostic.CA2007.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA2007.md
 
@@ -416,8 +417,11 @@ dotnet_diagnostic.S3875.severity = none       # Remove this overload of 'operato
 
 # Visual Studio
 dotnet_diagnostic.IDE0005.severity = none # IDE0005: Using directive is unnecessary
+dotnet_diagnostic.IDE0021.severity = suggestion # IDE0021: Use expression body for constructor
+dotnet_diagnostic.IDE0022.severity = suggestion # IDE0022: Use expression body for method
 dotnet_diagnostic.IDE0058.severity = none # IDE0058: Expression value is never used
 dotnet_diagnostic.IDE0079.severity = warning # IDE0079: Remove unnecessary suppression
+dotnet_diagnostic.IDE0290.severity = none # IDE0290: Use primary constructor
 
 # AsyncFixer
 

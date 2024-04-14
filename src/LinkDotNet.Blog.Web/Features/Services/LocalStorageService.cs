@@ -12,18 +12,9 @@ public sealed class LocalStorageService : ILocalStorageService
         this.localStorage = localStorage;
     }
 
-    public async ValueTask<bool> ContainKeyAsync(string key)
-    {
-        return (await localStorage.GetAsync<object>(key)).Success;
-    }
+    public async ValueTask<bool> ContainKeyAsync(string key) => (await localStorage.GetAsync<object>(key)).Success;
 
-    public async ValueTask<T> GetItemAsync<T>(string key)
-    {
-        return (await localStorage.GetAsync<T>(key)).Value;
-    }
+    public async ValueTask<T> GetItemAsync<T>(string key) => (await localStorage.GetAsync<T>(key)).Value;
 
-    public async ValueTask SetItemAsync<T>(string key, T value)
-    {
-        await localStorage.SetAsync(key, value);
-    }
+    public async ValueTask SetItemAsync<T>(string key, T value) => await localStorage.SetAsync(key, value);
 }
