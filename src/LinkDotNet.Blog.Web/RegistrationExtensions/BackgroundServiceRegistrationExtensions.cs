@@ -16,8 +16,10 @@ public static class BackgroundServiceRegistrationExtensions
             options.ServicesStopConcurrently = true;
         });
 
-        services.AddNCronJob();
-        services.AddCronJob<BlogPostPublisher>(p => p.WithCronExpression("* * * * *"));
-        services.AddCronJob<TransformBlogPostRecordsJob>(p => p.WithCronExpression("0/10 * * * *"));
+        services.AddNCronJob(options =>
+        {
+            options.AddJob<BlogPostPublisher>(p => p.WithCronExpression("* * * * *"));
+            options.AddJob<TransformBlogPostRecordsJob>(p => p.WithCronExpression("0/10 * * * *"));
+        });
     }
 }
