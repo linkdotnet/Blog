@@ -57,7 +57,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         await userRecordRepository.StoreBulkAsync(userRecords);
 
         // Act
-        await sut.RunAsync(new(null), default);
+        await sut.RunAsync(new(typeof(TransformBlogPostRecordsJob), null), default);
 
         // Assert
         var afterUserRecords = await userRecordRepository.GetAllAsync();
@@ -103,7 +103,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         await blogPostRecordRepository.StoreBulkAsync(blogPostRecords);
         
         // Act
-        await sut.RunAsync(new(null), default);
+        await sut.RunAsync(new(typeof(TransformBlogPostRecordsJob), null), default);
 
         // Assert
         var records = await blogPostRecordRepository.GetAllAsync();

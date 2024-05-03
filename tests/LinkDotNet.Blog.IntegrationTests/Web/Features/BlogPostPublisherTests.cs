@@ -32,7 +32,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(bp2);
         await Repository.StoreAsync(bp3);
 
-        await sut.RunAsync(new(null), CancellationToken.None);
+        await sut.RunAsync(new(typeof(BlogPostPublisher), null), CancellationToken.None);
 
         (await Repository.GetByIdAsync(bp1.Id)).IsPublished.Should().BeTrue();
         (await Repository.GetByIdAsync(bp2.Id)).IsPublished.Should().BeTrue();
@@ -46,7 +46,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
         var bp1 = new BlogPostBuilder().WithScheduledPublishDate(now.AddHours(-3)).IsPublished(false).Build();
         await Repository.StoreAsync(bp1);
 
-        await sut.RunAsync(new(null), CancellationToken.None);
+        await sut.RunAsync(new(typeof(BlogPostPublisher), null), CancellationToken.None);
 
         cacheInvalidator.Received().Cancel();
     }
@@ -54,7 +54,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldNotInvalidateCacheWhenThereIsNothingToPublish()
     {
-        await sut.RunAsync(new(null), CancellationToken.None);
+        await sut.RunAsync(new(typeof(BlogPostPublisher), null), CancellationToken.None);
 
         cacheInvalidator.DidNotReceive().Cancel();
     }
