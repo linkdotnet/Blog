@@ -26,7 +26,12 @@ public class Program
     private static void RegisterServices(WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
-        builder.Services.AddServerSideBlazor();
+        builder.Services.AddServerSideBlazor(s =>
+        {
+#if DEBUG
+            s.DetailedErrors = true;
+#endif
+        });
         builder.Services.AddSignalR(options =>
         {
             options.MaximumReceiveMessageSize = 1024 * 1024;
