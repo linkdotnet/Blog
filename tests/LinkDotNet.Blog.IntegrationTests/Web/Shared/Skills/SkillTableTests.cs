@@ -44,7 +44,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         dialog.Find("#capability").Change("capability");
         dialog.Find("#proficiency").Change(ProficiencyLevel.Expert.Key);
 
-        dialog.Find("form").Submit();
+        await dialog.Find("form").SubmitAsync();
 
         var skillTag = cut.WaitForComponent<SkillTag>();
         skillTag.Find("span").Text().Should().Contain("C#");

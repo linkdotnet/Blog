@@ -13,7 +13,7 @@
       <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.0-preview.3.24172.13" />
       <PackageReference Include="MongoDB.Driver" Version="2.25.0" />
       <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.1" />
-      <PackageReference Include="RavenDB.Client" Version="6.0.102" />
+      <PackageReference Include="RavenDB.Client" Version="6.0.103" />
     </ItemGroup>
 
     <ItemGroup>
