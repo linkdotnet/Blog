@@ -1,6 +1,6 @@
 using System;
 using LinkDotNet.Blog.Web.Features;
-using LinkDotNet.NCronJob;
+using NCronJob;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

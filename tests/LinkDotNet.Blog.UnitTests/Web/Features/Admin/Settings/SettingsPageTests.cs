@@ -2,7 +2,7 @@ using Blazored.Toast.Services;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.Settings;
 using LinkDotNet.Blog.Web.Features.Services;
-using LinkDotNet.NCronJob;
+using NCronJob;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 

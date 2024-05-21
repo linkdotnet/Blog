@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.NCronJob;
+using NCronJob;
 using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.Web.Features;
