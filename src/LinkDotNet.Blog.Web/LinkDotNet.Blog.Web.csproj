@@ -10,9 +10,9 @@
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="all" />
         <PackageReference Include="NCronJob" Version="2.5.0" />
         <PackageReference Include="Markdig" Version="0.37.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-preview.3.24172.13" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-preview.3.24172.9" />
-        <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.0-preview.3.24172.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-preview.4.24267.6" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-preview.4.24266.19" />
+        <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.0-preview.4.24266.19" />
     </ItemGroup>
 
     <ItemGroup>
