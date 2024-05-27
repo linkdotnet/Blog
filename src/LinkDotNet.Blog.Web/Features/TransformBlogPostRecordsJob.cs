@@ -12,7 +12,6 @@ namespace LinkDotNet.Blog.Web.Features;
 
 public sealed partial class TransformBlogPostRecordsJob : IJob
 {
-    private static readonly SemaphoreSlim Semaphore = new(1, 1);
     private readonly IRepository<BlogPost> blogPostRepository;
     private readonly IRepository<UserRecord> userRecordRepository;
     private readonly IRepository<BlogPostRecord> blogPostRecordRepository;
@@ -32,25 +31,9 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
 
     public async Task RunAsync(JobExecutionContext context, CancellationToken token)
     {
-        // In the future version of NCronJob we don't need this here,
-        // but can configure it via the AddCronJob method or similar ways
-        var hasLock = await Semaphore.WaitAsync(0, token);
-        if (!hasLock)
-        {
-            LogSkippingRun();
-            return;
-        }
-
-        try
-        {
-            LogTransformStarted();
-            await TransformRecordsAsync();
-            LogTransformStopped();
-        }
-        finally
-        {
-            Semaphore.Release();
-        }
+        LogTransformStarted();
+        await TransformRecordsAsync();
+        LogTransformStopped();
     }
 
     private static BlogPostRecord[] GetBlogPostRecords(
