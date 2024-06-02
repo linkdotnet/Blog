@@ -451,6 +451,7 @@ dotnet_diagnostic.S1075.severity = suggestion # S1075: URIs should not be hardco
 dotnet_diagnostic.S1186.severity = suggestion # S1186: Methods should not be empty
 dotnet_diagnostic.S2292.severity = suggestion # S2292: Trivial properties should be auto-implemented
 dotnet_diagnostic.S4158.severity = none # BUGGY with C#9 code - doesnt understand local methods
+dotnet_diagnostic.S4456.severity = suggestion # S4456: Split this method into two, one handling parameters check and the other handling the iterator
 
 # Razor specific rules
 [*.{cs,razor}]

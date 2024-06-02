@@ -40,7 +40,7 @@ public class Program
         builder.Services.AddConfiguration();
 
         builder.Services.AddBlazoredToast();
-        builder.Services.RegisterServices();
+        builder.Services.RegisterServices(builder.Configuration);
         builder.Services.AddStorageProvider(builder.Configuration);
         builder.Services.AddResponseCompression();
 

@@ -15,6 +15,7 @@ public static class ConfigurationExtension
             .AddApplicationConfiguration()
             .AddAuthenticationConfigurations()
             .AddIntroductionConfigurations()
+            .AddAiConfigurations()
             .AddSocialConfigurations()
             .AddProfileInformationConfigurations()
             .AddGiscusConfiguration()
@@ -62,6 +63,18 @@ public static class ConfigurationExtension
             .Configure<IConfiguration>((settings, config) =>
             {
                 config.GetSection(Introduction.IntroductionSection).Bind(settings);
+            });
+        return services;
+    }
+
+    private static IServiceCollection AddAiConfigurations(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<AiSettings>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(AiSettings.AiSettingsSection).Bind(settings);
             });
         return services;
     }

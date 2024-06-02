@@ -1,0 +1,153 @@
+@using System.Threading
+@using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
+@implements IDisposable
+<ModalDialog @ref="Dialog" Title="AutoComplete Content">
+	<form>
+		<div class="mb-3">
+			<label for="systemMessage" class="form-label">Message</label>
+			<TextAreaWithShortcuts Class="form-control" Id="systemMessage" Rows="2" Placeholder="Enter message..." @bind-Value="@options.Prompt"></TextAreaWithShortcuts>
+		</div>
+
+		<div class="mb-3">
+			<small class="text-muted">Include the blog post's title in the AI input.</small>
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="includeTitle" @bind-value="@options.IncludeTitle">
+				<label class="form-check-label" for="includeTitle">Include Title</label>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<small class="text-muted">Include the blog post's short description in the AI input.</small>
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="includeShortDescription" @bind-value="@options.IncludeShortDescription">
+				<label class="form-check-label" for="includeShortDescription">Include Short Description</label>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<small class="text-muted">Include the blog post's tags in the AI input.</small>
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="includeTags" @bind-value="@options.IncludeTags">
+				<label class="form-check-label" for="includeTags">Include Tags</label>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<small class="text-muted">Include the blog post's content in the AI input.</small>
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="includeContent" @bind-value="@options.IncludeContent">
+				<label class="form-check-label" for="includeContent">Include Content</label>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<small class="text-muted">Keep original text and append AI-generated content, or allow AI to rewrite the content.</small>
+			<div class="form-check form-switch">
+				<input class="form-check-input" type="checkbox" id="keepOriginalText" @bind-value="@options.KeepOriginalText">
+				<label class="form-check-label" for="keepOriginalText">Keep Original Text</label>
+			</div>
+		</div>
+
+		<button type="button" class="btn btn-primary btn-sm" @onclick="Generate" disabled="@(!options.CanGenerate)">Generate</button>
+		<button type="button" class="btn btn-primary btn-sm" @onclick="Stop" disabled="@(options.CanGenerate)">Stop</button>
+
+		<div class="mt-3">
+			<label for="outputField" class="form-label">Output</label>
+			<textarea class="form-control" id="outputField" rows="6" readonly>@options.Content</textarea>
+		</div>
+
+		<div class="d-flex mt-3 justify-content-end gap-3">
+			<button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+			<button type="button" class="btn btn-success" @onclick="Save" disabled="@(!options.AllowSave)">Save</button>
+		</div>
+	</form>
+</ModalDialog>
+
+@code {
+	[Inject] private AutocompleteService AutocompleteService { get; set; }
+
+	[Parameter] public CreateNewModel Model { get; set; }
+	[Parameter] public EventCallback<string> ContentGenerated { get; set; }
+
+	private ModalDialog Dialog { get; set; }
+	private Options options = new ();
+	private CancellationTokenSource cts = new();
+
+	public void Open()
+	{
+		Dialog.Open();
+		StateHasChanged();
+	}
+
+	public void Dispose()
+	{
+		cts.Cancel();
+		cts.Dispose();
+	}
+
+	private void Cancel()
+	{
+		options = new();
+		cts.Cancel();
+		cts.Dispose();
+		cts = new();
+		Dialog.Close();
+	}
+
+	private async Task Generate()
+	{
+		options.CanGenerate = false;
+		options.Content = string.Empty;
+		var completeOptions = new AutocompleteOptions(
+			options.IncludeTitle ? Model.Title : string.Empty,
+			options.IncludeShortDescription ? Model.ShortDescription : string.Empty,
+			options.IncludeTags ? Model.Tags : string.Empty,
+			options.IncludeContent ? Model.Content : string.Empty,
+			options.Prompt,
+			options.KeepOriginalText);
+
+		await foreach (var token in AutocompleteService.GetAutocomplete(completeOptions, cts.Token))
+		{
+			if (string.IsNullOrEmpty(token))
+			{
+				continue;
+			}
+
+			options.Content += token;
+			StateHasChanged();
+		}
+
+		options.AllowSave = true;
+		options.CanGenerate = true;
+	}
+
+	private void Stop()
+	{
+		cts.Cancel();
+		cts.Dispose();
+		cts = new();
+		options.CanGenerate = true;
+		options.AllowSave = false;
+	}
+
+	private async Task Save()
+	{
+		await ContentGenerated.InvokeAsync(options.Content);
+		options = new();
+		Dialog.Close();
+	}
+
+	private sealed class Options
+	{
+		public string Prompt { get; set; }
+		public bool IncludeTitle { get; set; } = true;
+		public bool IncludeShortDescription { get; set; } = true;
+		public bool IncludeTags { get; set; } = true;
+		public bool IncludeContent { get; set; } = true;
+		public bool KeepOriginalText { get; set; }
+		public string Content { get; set; }
+
+		public bool AllowSave { get; set; }
+		public bool CanGenerate { get; set; } = true;
+	}
+}

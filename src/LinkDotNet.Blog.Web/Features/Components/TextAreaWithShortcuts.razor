@@ -1,6 +1,7 @@
 @inject IJSRuntime JsRuntime
 
 <textarea class="@Class" id="@Id" rows="@Rows"
+	placeholder="@Placeholder"
     @onkeyup="MarkShortDescription"
     @oninput="args => Value = args.Value.ToString()">@Value</textarea>
 
@@ -36,6 +37,9 @@
 
     [Parameter]
     public int Rows { get; set; }
+
+    [Parameter]
+    public string Placeholder { get; set; }
 
     private async Task MarkShortDescription(KeyboardEventArgs keyboardEventArgs)
     {

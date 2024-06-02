@@ -19,6 +19,12 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"BackgroundUrl": "assets/profile-background.webp",
 		"ProfilePictureUrl": "assets/profile-picture.webp"
 	},
+	"AI": {
+		"DeploymentName": "gpt-4o",
+		"EndpointUrl": "https://the-url",
+		"ModelId": "gpt-4o",
+		"ApiKey": "key"
+	},
 	"PersistenceProvider": "InMemory",
 	"ConnectionString": "",
 	"DatabaseName": "",
@@ -63,6 +69,11 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Introduction                                  |                | Is used for the introduction part of the blog                                                                                                                                     |
 | Description                                   | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text                                  |
 | BackgroundUrl                                 | string         | Url or path to the background image. (Optional)                                                                                                                                   |
+| AI                                            |                | The AI section used for Semantic Kernel                                                                                                                                           |
+| DeploymentName                                | string         | Name of the deployment                                                                                                                                                            |
+| EndpointUrl                                   | string         | Url to the endpoint                                                                                                                                                               |
+| ModelId                                       | string         | Model Id                                                                                                                                                                          |
+| ApiKey                                        | string         | Api Key                                                                                                                                                                           |
 | ProfilePictureUrl                             | string         | Url or path to your profile picture                                                                                                                                               |
 | PersistenceProvider                           | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `Sqlite`, `RavenDb`, `InMemory`, `MySql`). More in-depth explanation [here](./../Storage/Readme.md) |
 | ConnectionString                              | string         | Is used for connection to a database. Not used when `InMemoryStorageProvider` is used                                                                                             |

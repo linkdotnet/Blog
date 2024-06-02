@@ -21,6 +21,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Comments](./docs/Comments/Readme.md)
 -   [Storage Provider](./docs/Storage/Readme.md)
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
+-   [AI Autocomplete](./docs/Autocomplete/Readme.md)
 
 ## Installation
 

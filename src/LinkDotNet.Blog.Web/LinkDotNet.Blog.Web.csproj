@@ -8,6 +8,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
         <PackageReference Include="Blazored.Toast" Version="4.2.1" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.13.0" />
         <PackageReference Include="NCronJob" Version="2.7.3" />
         <PackageReference Include="Markdig" Version="0.37.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-preview.4.24267.6" />
@@ -18,5 +19,9 @@
     <ItemGroup>
         <ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
         <ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="my.db-wal" />
     </ItemGroup>
 </Project>
