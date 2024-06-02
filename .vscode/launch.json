@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/LinkDotNet.Blog.Web/bin/Debug/net8.0/LinkDotNet.Blog.Web.dll",
+            "program": "${workspaceFolder}/src/LinkDotNet.Blog.Web/bin/Debug/net9.0/LinkDotNet.Blog.Web.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/LinkDotNet.Blog.Web",
             "stopAtEntry": false,

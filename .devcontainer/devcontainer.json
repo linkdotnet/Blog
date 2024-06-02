@@ -1,0 +1,32 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+	"name": "C# (.NET)",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/dotnet/sdk:9.0-preview",
+	"features": {
+		"ghcr.io/devcontainers/features/dotnet:2": {
+			"version": "latest"
+		}
+	},
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-dotnettools.csdevkit",
+        		"yzhang.markdown-all-in-one",
+				"vscode-icons-team.vscode-icons",
+				"me-dutour-mathieu.vscode-github-actions"
+			]
+		}
+	},
+
+	"postCreateCommand": "dotnet dev-certs https --check --trust"
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}
