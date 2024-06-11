@@ -5,10 +5,13 @@
           Class="@Class"
           Value="@Value"
           ValueChanged="s => Value = s"
-          PreviewImagesInEditor="true" data-bs-theme="light"/>
+          MaxHeight="@Height"
+          PreviewImagesInEditor="true"/>
 
 @code {
     private string textContent = string.Empty;
+
+    private string Height => $"{Rows * 25 }px";
 
 #pragma warning disable BL0007
     [Parameter]
