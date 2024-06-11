@@ -1,0 +1,40 @@
+@using Blazorise.Markdown
+@inject IJSRuntime JsRuntime
+
+<Markdown ElementId="@Id"
+          Class="@Class"
+          Value="@Value"
+          ValueChanged="s => Value = s"
+          PreviewImagesInEditor="true" data-bs-theme="light"/>
+
+@code {
+    private string textContent = string.Empty;
+
+#pragma warning disable BL0007
+    [Parameter]
+    public string Value
+    {
+        get => textContent;
+        set
+        {
+            if (textContent != value)
+            {
+                textContent = value;
+                ValueChanged.InvokeAsync(value);
+            }
+        }
+    }
+#pragma warning restore
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public int Rows { get; set; }
+}

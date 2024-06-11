@@ -3,7 +3,9 @@ using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +15,8 @@ public class CreateNewBlogPostTests : BunitContext
 {
     public CreateNewBlogPostTests()
     {
-        ComponentFactories.AddStub<UploadFile>();
         JSInterop.SetupVoid("hljs.highlightAll");
+        ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
     }
 
     [Fact]

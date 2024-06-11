@@ -2,7 +2,9 @@ using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +17,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     public TalksTests()
     {
         ctx.Services.AddScoped(_ => Repository);
+        ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
     }
 
     [Fact]

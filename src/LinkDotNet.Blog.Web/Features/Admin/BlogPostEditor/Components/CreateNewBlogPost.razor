@@ -1,95 +1,76 @@
 ﻿@using LinkDotNet.Blog.Domain
-@using Microsoft.EntityFrameworkCore.Metadata.Internal
 @inject IJSRuntime JSRuntime
 
 <h3>@Title</h3>
 
-<div class="content-area">
-    <div class="new-content">
-        <EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
-            <DataAnnotationsValidator />
-            <div class="mb-3">
-                <label for="title">Title</label>
-	            <input class="form-control" id="title"
-	                   @oninput="args => model.Title = args.Value.ToString()" value="@model.Title"/>
-	            <ValidationMessage For="() => model.Title"></ValidationMessage>
-            </div>
-            <div class="mb-3">
-                <label for="short">Short Description</label>
-                <TextAreaWithShortcuts Id="short" Class="form-control" Rows="4"
-                                       @bind-Value="@model.ShortDescription"></TextAreaWithShortcuts>
-	            <small for="short" class="form-text text-body-secondary">You can use markdown to style your component</small>
-	             <ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
-            </div>
-            <div class="mb-3">
-                <label for="content">Content</label>
-                <TextAreaWithShortcuts Id="content" Class="form-control" Rows="10"
-                                       @bind-Value="@model.Content"></TextAreaWithShortcuts>
-                <small for="content" class="form-text text-body-secondary">You can use markdown to style your component. Additional features and keyboard shortcuts are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
-                <UploadFile OnFileUploaded="SetContentFromFile" id="content-upload"></UploadFile>
-	            <small for="content-upload" class="form-text text-body-secondary">Drag and drop markdown files to upload and
-		            insert them</small>
-	            <ValidationMessage For="() => model.Content"></ValidationMessage>
-            </div>
-            <div class="mb-3">
-                <label for="preview">Preview-Url</label>
-                <InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
-                <small for="preview" class="form-text text-body-secondary">The primary image which will be used.</small>
-	            <ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
-            </div>
-            <div class="mb-3">
-	            <label for="preview">Fallback Preview-Url</label>
-	            <InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
-	            <small for="fallback-preview" class="form-text text-body-secondary">Optional: Used as a fallback if the preview image can't be used by the browser.
-		            <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
-	            <ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
-            </div>
-            <div class="mb-3">
-	            <label for="scheduled">Scheduled Publish Date</label>
-	            <InputDate Type="InputDateType.DateTimeLocal"
-	                       class="form-control"
-	                       id="scheduled"
-	                       @bind-Value="model.ScheduledPublishDate"
-	                       @bind-Value:after="@(() => model.IsPublished &= !IsScheduled)"/>
-	            <small for="scheduled" class="form-text text-body-secondary">If set the blog post will be published at the given date.
-		            A blog post with a schedule date can't be set to published.</small>
-	            <ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
-            </div>
-            <div class="form-check">
-                <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished"/>
-                <label class="form-check-label" for="published">Publish</label><br/>
-                <small for="published" class="form-text text-body-secondary">If this blog post is only draft or it will be scheduled, uncheck the box.</small>
-                <ValidationMessage For="() => model.IsPublished"></ValidationMessage>
-            </div>
-            <div class="mb-3">
-	            <label for="tags">Tags</label>
-	            <InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
-            </div>
-            @if (BlogPost is not null && !IsScheduled)
-            {
-                <div class="form-check">
-                    <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
-                    <label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
-                    <small for="updatedate" class="form-text text-body-secondary">If set the publish date is set to now,
-                    otherwise its original date.</small>
-                </div>
-            }
-            <button class="btn btn-primary" type="submit" disabled="@(!canSubmit)">Submit</button>
-        </EditForm>
-    </div>
-    <div class="preview">
-        <div>
-            <header>
-                <h1>@model.Title</h1>
-            </header>
-            <div>
-                @(MarkdownConverter.ToMarkupString(model.ShortDescription))
-            </div>
-            <div>
-                @(MarkdownConverter.ToMarkupString(model.Content))
-            </div>
-        </div>
-    </div>
+<div class="container">
+	<EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
+		<DataAnnotationsValidator />
+		<div class="mb-3">
+			<label for="title">Title</label>
+			<input class="form-control" id="title"
+			       @oninput="args => model.Title = args.Value.ToString()" value="@model.Title"/>
+			<ValidationMessage For="() => model.Title"></ValidationMessage>
+		</div>
+		<div class="mb-3">
+			<label for="short">Short Description</label>
+			<MarkdownTextArea Id="short" Class="form-control" Rows="4"
+			                       @bind-Value="@model.ShortDescription"></MarkdownTextArea>
+			<small for="short" class="form-text text-body-secondary">You can use markdown to style your component</small>
+			<ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
+		</div>
+		<div class="mb-3">
+			<label for="content">Content</label>
+			<MarkdownTextArea Id="content" Class="form-control" Rows="10"
+			                       @bind-Value="@model.Content"></MarkdownTextArea>
+			<small for="content" class="form-text text-body-secondary">You can use markdown to style your component. Additional features and keyboard shortcuts are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
+			<ValidationMessage For="() => model.Content"></ValidationMessage>
+		</div>
+		<div class="mb-3">
+			<label for="preview">Preview-Url</label>
+			<InputText class="form-control" id="preview" @bind-Value="model.PreviewImageUrl"/>
+			<small for="preview" class="form-text text-body-secondary">The primary image which will be used.</small>
+			<ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
+		</div>
+		<div class="mb-3">
+			<label for="preview">Fallback Preview-Url</label>
+			<InputText class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback"/>
+			<small for="fallback-preview" class="form-text text-body-secondary">Optional: Used as a fallback if the preview image can't be used by the browser.
+				<br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
+			<ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
+		</div>
+		<div class="mb-3">
+			<label for="scheduled">Scheduled Publish Date</label>
+			<InputDate Type="InputDateType.DateTimeLocal"
+			           class="form-control"
+			           id="scheduled"
+			           @bind-Value="model.ScheduledPublishDate"
+			           @bind-Value:after="@(() => model.IsPublished &= !IsScheduled)"/>
+			<small for="scheduled" class="form-text text-body-secondary">If set the blog post will be published at the given date.
+				A blog post with a schedule date can't be set to published.</small>
+			<ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
+		</div>
+		<div class="form-check">
+			<InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished"/>
+			<label class="form-check-label" for="published">Publish</label><br/>
+			<small for="published" class="form-text text-body-secondary">If this blog post is only draft or it will be scheduled, uncheck the box.</small>
+			<ValidationMessage For="() => model.IsPublished"></ValidationMessage>
+		</div>
+		<div class="mb-3">
+			<label for="tags">Tags</label>
+			<InputText class="form-control" id="tags" @bind-Value="model.Tags"/>
+		</div>
+		@if (BlogPost is not null && !IsScheduled)
+		{
+			<div class="form-check">
+				<InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
+				<label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
+				<small for="updatedate" class="form-text text-body-secondary">If set the publish date is set to now,
+					otherwise its original date.</small>
+			</div>
+		}
+		<button class="btn btn-primary" type="submit" disabled="@(!canSubmit)">Submit</button>
+	</EditForm>
 </div>
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
 

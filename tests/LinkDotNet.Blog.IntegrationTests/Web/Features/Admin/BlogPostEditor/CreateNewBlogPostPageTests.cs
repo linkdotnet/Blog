@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
-using Microsoft.AspNetCore.Components.Forms;
+using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,13 +16,13 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldSaveBlogPostOnSave()
     {
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
+        ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         var toastService = Substitute.For<IToastService>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
-        ctx.ComponentFactories.AddStub<UploadFile>();
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         using var cut = ctx.Render<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
@@ -34,24 +35,6 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         toastService.Received(1).ShowInfo("Created BlogPost My Title", null);
     }
 
-    [Fact]
-    public async Task ShouldSetContentFromFile()
-    {
-        using var ctx = new BunitContext();
-        const string contentFromFile = "content";
-        ctx.JSInterop.SetupVoid("hljs.highlightAll");
-        ctx.AddAuthorization().SetAuthorized("some username");
-        ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
-        var args = SetupUploadFile(contentFromFile, ctx);
-        var cut = ctx.Render<CreateNewBlogPost>();
-        var uploadFile = cut.FindComponent<UploadFile>();
-
-        await uploadFile.InvokeAsync(() => cut.FindComponent<InputFile>().Instance.OnChange.InvokeAsync(args));
-
-        cut.Find("#content").TextContent.Should().Be(contentFromFile);
-    }
-
     private static void TriggerNewBlogPost(RenderedComponent<CreateNewBlogPost> cut)
     {
         cut.Find("#title").Input("My Title");
@@ -62,20 +45,5 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find("#tags").Change("Tag1,Tag2,Tag3");
 
         cut.Find("form").Submit();
-    }
-
-    private static InputFileChangeEventArgs SetupUploadFile(string contentFromFile, BunitContext ctx)
-    {
-        var file = Substitute.For<IBrowserFile>();
-        var fileProcessor = Substitute.For<IFileProcessor>();
-        fileProcessor.GetContentAsync(file).Returns(contentFromFile);
-        var args = new InputFileChangeEventArgs(new[]
-        {
-            file,
-        });
-        ctx.Services.AddScoped(_ => fileProcessor);
-        ctx.JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init")
-            .SetVoidResult();
-        return args;
     }
 }

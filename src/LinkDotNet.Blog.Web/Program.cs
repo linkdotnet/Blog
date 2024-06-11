@@ -1,4 +1,6 @@
 using Blazored.Toast;
+using Blazorise;
+using Blazorise.Bootstrap5;
 using HealthChecks.UI.Client;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
@@ -40,6 +42,10 @@ public class Program
         builder.Services.AddConfiguration();
 
         builder.Services.AddBlazoredToast();
+        builder.Services
+            .AddBlazorise()
+            .AddBootstrap5Providers();
+
         builder.Services.RegisterServices();
         builder.Services.AddStorageProvider(builder.Configuration);
         builder.Services.AddResponseCompression();
