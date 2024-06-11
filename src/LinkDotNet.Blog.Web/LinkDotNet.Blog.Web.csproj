@@ -21,9 +21,4 @@
         <ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
         <ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="my.db-wal" />
-      <None Remove="my.db-shm" />
-    </ItemGroup>
 </Project>
