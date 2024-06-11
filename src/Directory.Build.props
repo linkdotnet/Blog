@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<ItemGroup>
-      <PackageReference Include="SonarAnalyzer.CSharp" Version="9.26.0.92422">
+      <PackageReference Include="SonarAnalyzer.CSharp" Version="9.27.0.93347">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
