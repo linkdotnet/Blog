@@ -16,7 +16,6 @@
 			<label for="short">Short Description</label>
 			<MarkdownTextArea Id="short" Class="form-control" Rows="4"
 			                       @bind-Value="@model.ShortDescription"></MarkdownTextArea>
-			<small for="short" class="form-text text-body-secondary">You can use markdown to style your component</small>
 			<ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
 		</div>
 		<div class="mb-3">
