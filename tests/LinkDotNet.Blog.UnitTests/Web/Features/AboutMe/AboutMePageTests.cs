@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.AboutMe;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components;
@@ -15,6 +16,11 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.AboutMe;
 
 public class AboutMePageTests : BunitContext
 {
+    public AboutMePageTests()
+    {
+        ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
+    }
+    
     [Fact]
     public void ShouldPassIsAuthenticated()
     {
