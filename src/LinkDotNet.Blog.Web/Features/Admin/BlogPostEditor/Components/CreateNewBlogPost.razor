@@ -60,14 +60,20 @@
 		</div>
 		@if (BlogPost is not null && !IsScheduled)
 		{
-			<div class="form-check">
+			<div class="form-check mb-3">
 				<InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
 				<label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
 				<small for="updatedate" class="form-text text-body-secondary">If set the publish date is set to now,
 					otherwise its original date.</small>
 			</div>
 		}
-		<button class="btn btn-primary" type="submit" disabled="@(!canSubmit)">Submit</button>
+		<div class="mb-3">
+			<button class="btn btn-primary" type="submit" disabled="@(!canSubmit)">Submit</button>
+			<div class="text-muted form-text">
+				The first page of the blog is cached. Therefore, the blog post is not immediately visible.
+				Head over to <a href="/settings">settings</a> to invalidate the cache.
+			</div>
+		</div>
 	</EditForm>
 </div>
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
