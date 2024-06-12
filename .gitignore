@@ -1,6 +1,8 @@
 bin/
 obj/
 *.db
+*.db-shm
+*.db-wal
 Publish/
 /packages/
 riderModule.iml
