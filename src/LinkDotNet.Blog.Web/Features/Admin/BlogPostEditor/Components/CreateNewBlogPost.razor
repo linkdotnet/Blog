@@ -1,9 +1,8 @@
 ﻿@using LinkDotNet.Blog.Domain
 @inject IJSRuntime JSRuntime
 
-<h3>@Title</h3>
-
 <div class="container">
+	<h3 class="fw-bold">@Title</h3>
 	<EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
 		<DataAnnotationsValidator />
 		<div class="mb-3">
