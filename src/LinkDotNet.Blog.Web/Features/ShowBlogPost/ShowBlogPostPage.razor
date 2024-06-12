@@ -42,7 +42,7 @@ else
 		<div class="blog-container">
 			<div class="blog-inner-content">
 				<header class="text-center">
-					<h1>@BlogPost.Title</h1></header>
+					<h1 class="fw-bold">@BlogPost.Title</h1></header>
 				<div class="blogpost-metainformation d-flex flex-row flex-wrap gap-2">
 					<div><span class="date"></span><span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
