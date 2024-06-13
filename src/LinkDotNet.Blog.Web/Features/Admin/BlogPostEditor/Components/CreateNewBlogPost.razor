@@ -19,7 +19,7 @@
 		</div>
 		<div class="mb-3">
 			<label for="content">Content</label>
-			<MarkdownTextArea Id="content" Class="form-control" Rows="10"
+			<MarkdownTextArea Id="content" Class="form-control" Rows="15"
 			                       @bind-Value="@model.Content"></MarkdownTextArea>
 			<small for="content" class="form-text text-body-secondary">You can use markdown to style your component. Additional features and keyboard shortcuts are listed <a @onclick="@(() => FeatureDialog.Open())">here</a></small>
 			<ValidationMessage For="() => model.Content"></ValidationMessage>
