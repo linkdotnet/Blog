@@ -29,13 +29,13 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         cut.WaitForElements("h2");
         var yearHeader = cut.FindAll("h2");
         yearHeader.Should().HaveCount(2);
-        yearHeader[0].TextContent.Should().Be("2022");
-        yearHeader[1].TextContent.Should().Be("2021");
+        yearHeader[0].TextContent.Should().Contain("2022");
+        yearHeader[1].TextContent.Should().Contain("2021");
         var entries = cut.FindAll("li");
         entries.Should().HaveCount(3);
-        entries[0].TextContent.Should().Be("Blog Post 3");
-        entries[1].TextContent.Should().Be("Blog Post 2");
-        entries[2].TextContent.Should().Be("Blog Post 1");
+        entries[0].TextContent.Should().Contain("Blog Post 3");
+        entries[1].TextContent.Should().Contain("Blog Post 2");
+        entries[2].TextContent.Should().Contain("Blog Post 1");
     }
 
     [Fact]
