@@ -92,18 +92,21 @@
     display: inline-block;
     position: relative;
 }
-.blog-card .description .read-more a:after {
+.blog-card .description .read-more a:before {
     font-family: 'icons';
     content: '\ea42';
+		display: inline-block;
     font-weight: 900;
     text-decoration: none;
-    margin-left: -10px;
+    margin-right: -5px;
     opacity: 0;
     transition: margin 0.3s, opacity 0.3s;
+		vertical-align: bottom;
 }
-.blog-card .description .read-more a:hover:after {
-    margin-left: 5px;
+.blog-card .description .read-more a:hover:before {
+    margin-right: 8px;
     opacity: 1;
+		display: inline-block;
 }
 
 .blog-card .read-time:before {
