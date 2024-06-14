@@ -2,6 +2,7 @@
 @inject IJSRuntime JsRuntime
 
 <Markdown ElementId="@Id"
+          Placeholder="@Placeholder"
           Class="@Class"
           Value="@Value"
           ValueChanged="s => Value = s"
@@ -40,4 +41,6 @@
 
     [Parameter]
     public int Rows { get; set; }
+
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
 }
