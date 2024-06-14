@@ -19,12 +19,12 @@
 			@foreach (var yearGroup in blogPostsPerYear)
 			{
 				<div class="accordion-item">
-					<h2 class="accordion-header" id="heading">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="true" aria-controls="collapse@yearGroup.Key">
+					<h2 class="accordion-header" id="@HeadingKey(yearGroup.Key)">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@CollapseKeyIdentifier(yearGroup.Key)" aria-expanded="true" aria-controls="@CollapseKey(yearGroup.Key)">
 							@yearGroup.Key <span class="badge bg-primary ms-2">@yearGroup.Count()</span>
 						</button>
 					</h2>
-					<div id="collapse" class="accordion-collapse collapse show" aria-labelledby="heading" data-bs-parent="#archiveAccordion">
+					<div id="@CollapseKey(yearGroup.Key)" class="accordion-collapse collapse show" aria-labelledby="@HeadingKey(yearGroup.Key)" data-bs-parent="#archiveAccordion">
 						<div class="accordion-body">
 							<ul class="list-group">
 								@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
@@ -59,6 +59,10 @@
 			.OrderByDescending(r => r.Key)
 			.ToImmutableArray();
 	}
+
+	private static string HeadingKey(int year) => $"heading{year}";
+	private static string CollapseKey(int year) => $"collapse{year}";
+	private static string CollapseKeyIdentifier(int year) => $"#{CollapseKey(year)}";
 
 	private sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
 }
