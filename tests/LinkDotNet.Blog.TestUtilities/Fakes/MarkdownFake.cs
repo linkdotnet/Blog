@@ -19,6 +19,9 @@ public sealed class MarkdownFake : ComponentBase
 
     [Parameter]
     public int Rows { get; set; }
+    
+    [Parameter]
+    public string Placeholder { get; set; }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
