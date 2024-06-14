@@ -11,53 +11,54 @@
 
 	@if (blogPostsPerYear is null)
 	{
-	<Loading></Loading>
+		<Loading></Loading>
 	}
 	else
 	{
-	<div class="accordion" id="archiveAccordion">
-		@foreach (var yearGroup in blogPostsPerYear)
-		{
-		<div class="accordion-item">
-			<h2 class="accordion-header" id="heading">
-				<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="true" aria-controls="collapse@yearGroup.Key">
-					@yearGroup.Key <span class="badge bg-primary ms-2">@yearGroup.Count()</span>
-				</button>
-			</h2>
-			<div id="collapse" class="accordion-collapse collapse show" aria-labelledby="heading" data-bs-parent="#archiveAccordion">
-				<div class="accordion-body">
-					<ul class="list-group">
-						@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
-						{
-						<li class="list-group-item">
-							<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
-							<span class="text-muted small ps-2">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy"))</span>
-						</li>
-						}
-					</ul>
+		<div class="accordion" id="archiveAccordion">
+			@foreach (var yearGroup in blogPostsPerYear)
+			{
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="heading">
+						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="true" aria-controls="collapse@yearGroup.Key">
+							@yearGroup.Key <span class="badge bg-primary ms-2">@yearGroup.Count()</span>
+						</button>
+					</h2>
+					<div id="collapse" class="accordion-collapse collapse show" aria-labelledby="heading" data-bs-parent="#archiveAccordion">
+						<div class="accordion-body">
+							<ul class="list-group">
+								@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
+								{
+									<li class="list-group-item">
+										<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
+										<span class="text-muted small ps-2">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy"))</span>
+									</li>
+								}
+							</ul>
+						</div>
+					</div>
 				</div>
-			</div>
+			}
 		</div>
-		}
-	</div>
 	}
 </div>
 
 @code {
-private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
-private int blogPostCount;
+	private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
+	private int blogPostCount;
 
-protected override async Task OnInitializedAsync()
-{
-var blogPosts = await Repository.GetAllByProjectionAsync(
-p => new BlogPostPerYear(p.Id, p.Slug, p.Title, p.UpdatedDate),
-p => p.IsPublished);
-blogPostCount = blogPosts.Count;
-blogPostsPerYear = blogPosts
-.GroupBy(r => r.UpdatedDate.Year)
-.OrderByDescending(r => r.Key)
-.ToImmutableArray();
-}
+	protected override async Task OnInitializedAsync()
+	{
+		var blogPosts = await Repository.GetAllByProjectionAsync(
+			p => new BlogPostPerYear(p.Id, p.Slug, p.Title, p.UpdatedDate),
+			p => p.IsPublished);
 
-private sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
+		blogPostCount = blogPosts.Count;
+		blogPostsPerYear = blogPosts
+			.GroupBy(r => r.UpdatedDate.Year)
+			.OrderByDescending(r => r.Key)
+			.ToImmutableArray();
+	}
+
+	private sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
 }
