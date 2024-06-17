@@ -43,7 +43,7 @@
 				A blog post with a schedule date can't be set to published.</small>
 			<ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
 		</div>
-		<div class="form-check mb-3">
+		<div class="form-check form-switch mb-3">
 			<InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished"/>
 			<label class="form-check-label" for="published">Publish</label><br/>
 			<small for="published" class="form-text text-body-secondary">If this blog post is only draft or it will be scheduled, uncheck the box.</small>
@@ -55,16 +55,16 @@
 		</div>
 		@if (BlogPost is not null && !IsScheduled)
 		{
-		<div class="form-check mb-3">
-			<InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
-			<label class="form-check-label" for="updatedate">Update Publish Date?</label><br/>
+		<div class="form-check form-switch mb-3">
+			<InputCheckbox class="form-check-input" id="updatedate"  @bind-Value="model.ShouldUpdateDate" />
+			<label class="form-check-label" for="updatedate">Update Publish Date</label><br/>
 			<small for="updatedate" class="form-text text-body-secondary">If set the publish date is set to now,
 				otherwise its original date.</small>
 		</div>
 		}
 		<div class="mb-3">
-			<button class="btn btn-primary" type="submit" disabled="@(!canSubmit)">Submit</button>
-			<div class="text-muted form-text">
+			<button class="btn btn-primary position-relative" type="submit" disabled="@(!canSubmit)">Submit</button>
+			<div class="alert alert-info text-muted form-text  mt-3 mb-0">
 				The first page of the blog is cached. Therefore, the blog post is not immediately visible.
 				Head over to <a href="/settings">settings</a> to invalidate the cache.
 			</div>
