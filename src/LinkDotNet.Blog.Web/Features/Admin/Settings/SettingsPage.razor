@@ -22,8 +22,8 @@
 		<tr>
 			<td>Cache Duration (First Page)</td>
 			<td>Defines how long the first page remains cached before a refresh is required.<br/>
-				When a scheduled blog post is published, the cache is always invalidated.<br/>
-				The longer the cache lives, the longer it takes for the user to see updated content on the first page.</td>
+			The longer the cache lives, the longer it takes for the user to see updated content on the first page, but the faster the page loads.<br/>
+				You can manually invalidate the cache.</td>
 			<td>@ApplicationConfiguration.Value.FirstPageCacheDurationInMinutes Minutes</td>
 			<td><button class="btn btn-warning" id="invalidate-cache" @onclick="InvalidateCache">Invalidate Cache</button></td>
 		</tr>
