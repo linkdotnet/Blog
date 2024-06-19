@@ -24,7 +24,7 @@
 							@yearGroup.Key <span class="badge bg-primary ms-2">@yearGroup.Count()</span>
 						</button>
 					</h2>
-					<div id="@CollapseKey(yearGroup.Key)" class="accordion-collapse collapse show" aria-labelledby="@HeadingKey(yearGroup.Key)" data-bs-parent="#archiveAccordion">
+					<div id="@CollapseKey(yearGroup.Key)" class="accordion-collapse collapse show" aria-labelledby="@HeadingKey(yearGroup.Key)">
 						<div class="accordion-body">
 							<ul class="list-group">
 								@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
