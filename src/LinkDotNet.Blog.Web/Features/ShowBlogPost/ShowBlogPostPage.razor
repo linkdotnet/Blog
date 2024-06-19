@@ -47,10 +47,10 @@ else
 					<div><span class="date"></span><span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
-						<span class="blogpost-tag d-inline-block">
+						<span class="ms-2 blogpost-tag d-inline-flex align-items-center gap-2">
 							@foreach (var tag in BlogPost.Tags)
 							{
-								<a class="goto-tag ms-1 me-1" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+								<a class="goto-tag badge bg-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
 							}
 						</span>
 					}
