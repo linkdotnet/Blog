@@ -15,7 +15,6 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager NavigationManager
 
-
 <OgData Title="@(Markdown.ToPlainText(AppConfiguration.Value.BlogName))"
         AbsolutePreviewImageUrl="@ImageUrl"
         Description="@(Markdown.ToPlainText(Introduction.Value.Description))"></OgData>
