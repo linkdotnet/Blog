@@ -7,7 +7,7 @@
 }
 
 .blogpost-metainformation {
-    color: lightgrey;
+    color: var(--bs-nav-link-color);
 }
 
 .blogpost-tag:before {
