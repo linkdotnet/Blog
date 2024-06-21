@@ -6,10 +6,6 @@
     padding: 20px;
 }
 
-.blogpost-metainformation {
-    color: var(--bs-nav-link-color);
-}
-
 .blogpost-tag:before {
     font-family: 'icons';
     font-weight: 900;
