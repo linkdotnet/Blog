@@ -1,8 +1,8 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
-<div class="d-flex flex-column flex-md-row gap-2 justify-content-start">
+<div class="d-flex flex-column flex-md-row gap-2 justify-content-start align-items-center">
     @if (AppConfiguration.Value.IsKofiEnabled)
     {
-        <div class="mb-2 mb-md-0 me-md-2">
+        <div>
             <Kofi KofiToken="@AppConfiguration.Value.KofiToken"></Kofi>
         </div>
     }
