@@ -10,7 +10,7 @@
         <PackageReference Include="Blazorise.Bootstrap5" Version="1.5.3" />
         <PackageReference Include="Blazorise.Markdown" Version="1.5.3" />
         <PackageReference Include="BuildBundlerMinifier" Version="3.2.449" PrivateAssets="all" />
-        <PackageReference Include="NCronJob" Version="2.8.2" />
+        <PackageReference Include="NCronJob" Version="2.8.3" />
         <PackageReference Include="Markdig" Version="0.37.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-preview.5.24306.11" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-preview.5.24306.7" />
