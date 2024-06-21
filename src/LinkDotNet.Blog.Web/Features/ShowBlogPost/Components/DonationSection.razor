@@ -2,21 +2,21 @@
 <div class="d-flex flex-column flex-md-row gap-2 justify-content-start align-items-center">
     @if (AppConfiguration.Value.IsKofiEnabled)
     {
-        <div>
+        <div class="mt-2">
             <Kofi KofiToken="@AppConfiguration.Value.KofiToken"></Kofi>
         </div>
     }
 
     @if (AppConfiguration.Value.IsGithubSponsorAvailable)
     {
-        <div class="mb-2 mb-md-0 me-md-2">
-            <GithubSponsor Name="@AppConfiguration.Value.GithubSponsorName"></GithubSponsor>
-        </div>
+	    <div class="mt-2">
+		    <GithubSponsor Name="@AppConfiguration.Value.GithubSponsorName"></GithubSponsor>
+	    </div>
     }
 
     @if (AppConfiguration.Value.IsPatreonEnabled)
     {
-        <div class="mb-2 mb-md-0 me-md-2">
+		<div class="mt-2">
             <Patreon PatreonName="@AppConfiguration.Value.PatreonName"></Patreon>
         </div>
     }
