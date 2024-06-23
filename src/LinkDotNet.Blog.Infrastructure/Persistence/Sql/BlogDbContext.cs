@@ -24,6 +24,8 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<BlogPostRecord> BlogPostRecords { get; set; }
 
+    public DbSet<SimilarBlogPost> SimilarBlogPosts { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);

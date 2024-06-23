@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NCronJob;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost;
 
@@ -121,5 +122,6 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         ctx.Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
+        ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
     }
 }

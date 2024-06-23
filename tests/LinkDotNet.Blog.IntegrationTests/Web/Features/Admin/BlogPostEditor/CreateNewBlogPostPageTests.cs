@@ -1,13 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities.Fakes;
+using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using NCronJob;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.BlogPostEditor;
 
@@ -19,11 +22,13 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         await using var ctx = new BunitContext();
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         var toastService = Substitute.For<IToastService>();
+        var instantRegistry = Substitute.For<IInstantJobRegistry>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
+        ctx.Services.AddScoped(_ => instantRegistry);
         using var cut = ctx.Render<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
@@ -33,6 +38,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromDb.Should().NotBeNull();
         blogPostFromDb.ShortDescription.Should().Be("My short Description");
         toastService.Received(1).ShowInfo("Created BlogPost My Title", null);
+        instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }
 
     private static void TriggerNewBlogPost(RenderedComponent<CreateNewBlogPost> cut)

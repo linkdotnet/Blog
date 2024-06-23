@@ -48,7 +48,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 	"KofiToken": "ABC123",
 	"GithubSponsorName": "your-tag-here",
 	"ShowReadingIndicator": true,
-	"PatreonName": "your-tag-here"
+	"PatreonName": "your-tag-here",
+	"SimlarBlogPosts": "true"
 }
 ```
 
@@ -85,3 +86,4 @@ The appsettings.json file has a lot of options to customize the content of the b
 | GithubSponsorName                             | string         | Enables the "Github Sponsor" button which redirects to GitHub. Only pass in the user name instead of the url.                                                                     |
 | ShowReadingIndicator                          | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                                      |
 | PatreonName                                   | string         | Enables the "Become a patreon" button that redirects to patreon.com. Only pass the user name (public profile) as user name.                                                       |
+| SimilarBlogPosts                              | boolean        | If set to `true` (default) similar blog posts are shown at the end of a blog post.                                                                                                |
