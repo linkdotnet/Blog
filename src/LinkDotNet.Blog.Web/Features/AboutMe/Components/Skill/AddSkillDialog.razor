@@ -1,5 +1,4 @@
 ﻿@using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Web.Features.Components
 @inject IToastService ToastService
 <ModalDialog @ref="Dialog" Title="Add Skill">
     <EditForm Model="@model" OnValidSubmit="CreateSkillItem">

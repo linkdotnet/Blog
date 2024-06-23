@@ -1,4 +1,3 @@
-using System;
 using LinkDotNet.Blog.Web.Features;
 using NCronJob;
 using Microsoft.Extensions.DependencyInjection;

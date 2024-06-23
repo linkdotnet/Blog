@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
 
