@@ -12,17 +12,31 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using NCronJob;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost;
 
 public class ShowBlogPostPageTests : BunitContext
 {
+    public ShowBlogPostPageTests()
+    {
+        ComponentFactories.AddStub<SimilarBlogPostSection>();
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
+        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
+        AddAuthorization();
+        ComponentFactories.AddStub<PageTitle>();
+        ComponentFactories.AddStub<Like>();
+        ComponentFactories.AddStub<CommentSection>();
+    }
+    
     [Fact]
     public void ShouldShowLoadingAnimation()
     {
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        SetupMocks();
         Services.AddScoped(_ => repositoryMock);
         repositoryMock.GetByIdAsync(blogPostId)
             .Returns(new ValueTask<BlogPost>(Task.Run(async () => 
@@ -45,7 +59,6 @@ public class ShowBlogPostPageTests : BunitContext
         var blogPost = new BlogPostBuilder().WithTitle("Title").Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
-        SetupMocks();
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -67,7 +80,6 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
-        SetupMocks();
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -84,7 +96,6 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
-        SetupMocks();
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -102,7 +113,6 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
-        SetupMocks();
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -124,7 +134,6 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
-        SetupMocks();
         Services.AddScoped(_ => Options.Create(appConfiguration));
 
         var cut = Render<ShowBlogPostPage>(
@@ -143,23 +152,10 @@ public class ShowBlogPostPageTests : BunitContext
         blogPost.Id = "1";
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
-        SetupMocks();
         
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
         
         cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.Should().Be("blogPost/1");
-    }
-
-    private void SetupMocks()
-    {
-        JSInterop.Mode = JSRuntimeMode.Loose;
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
-        Services.AddScoped(_ => Substitute.For<IToastService>());
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
-        this.AddAuthorization();
-        ComponentFactories.AddStub<PageTitle>();
-        ComponentFactories.AddStub<Like>();
-        ComponentFactories.AddStub<CommentSection>();
     }
 }

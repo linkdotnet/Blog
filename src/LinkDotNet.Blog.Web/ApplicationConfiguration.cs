@@ -17,6 +17,7 @@ public sealed record ApplicationConfiguration
     public bool IsAboutMeEnabled { get; set; }
 
     public bool IsGiscusEnabled { get; set; }
+
     public bool IsDisqusEnabled { get; set; }
 
     public string KofiToken { get; init; }
@@ -32,4 +33,6 @@ public sealed record ApplicationConfiguration
     public string PatreonName { get; init; }
 
     public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
+
+    public bool ShowSimilarPosts { get; init; }
 }

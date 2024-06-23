@@ -75,6 +75,10 @@ else
 				<ShareBlogPost></ShareBlogPost>
 			</div>
 			<DonationSection></DonationSection>
+			@if (AppConfiguration.Value.ShowSimilarPosts)
+			{
+				<SimilarBlogPostSection BlogPost="@BlogPost" />
+			}
 			<CommentSection></CommentSection>
 		</div>
 	</div>
@@ -109,11 +113,7 @@ else
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
-
-        if (firstRender)
-        {
-	        _ = UserRecordService.StoreUserRecordAsync();
-        }
+        _ = UserRecordService.StoreUserRecordAsync();
     }
 
     private async Task UpdateLikes(bool hasLiked)

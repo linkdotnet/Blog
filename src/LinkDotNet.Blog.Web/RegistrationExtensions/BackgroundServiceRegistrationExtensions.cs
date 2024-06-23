@@ -17,7 +17,10 @@ public static class BackgroundServiceRegistrationExtensions
 
         services.AddNCronJob(options =>
         {
-            options.AddJob<BlogPostPublisher>(p => p.WithCronExpression("* * * * *"));
+            options
+                .AddJob<BlogPostPublisher>(p => p.WithCronExpression("* * * * *"))
+                .ExecuteWhen(s => s.RunJob<SimilarBlogPostJob>());
+
             options.AddJob<TransformBlogPostRecordsJob>(p => p.WithCronExpression("0/10 * * * *"));
         });
     }

@@ -25,12 +25,15 @@ public sealed partial class BlogPostPublisher : IJob
 
     public async Task RunAsync(JobExecutionContext context, CancellationToken token)
     {
+        ArgumentNullException.ThrowIfNull(context);
+
         LogPublishStarting();
-        await PublishScheduledBlogPostsAsync();
+        var publishedPosts = await PublishScheduledBlogPostsAsync();
+        context.Output = publishedPosts;
         LogPublishStopping();
     }
 
-    private async Task PublishScheduledBlogPostsAsync()
+    private async Task<int> PublishScheduledBlogPostsAsync()
     {
         LogCheckingForScheduledBlogPosts();
 
@@ -46,6 +49,8 @@ public sealed partial class BlogPostPublisher : IJob
         {
             cacheInvalidator.Cancel();
         }
+
+        return blogPostsToPublish.Count;
     }
 
     private async Task<IPagedList<BlogPost>> GetScheduledBlogPostsAsync()

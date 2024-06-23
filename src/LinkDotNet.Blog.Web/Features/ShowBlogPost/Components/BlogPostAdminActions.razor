@@ -1,14 +1,16 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using NCronJob
 @inject NavigationManager NavigationManager
 @inject IToastService ToastService
 @inject IRepository<BlogPost> BlogPostRepository
+@inject IInstantJobRegistry InstantJobRegistry
 
 <AuthorizeView>
     <div class="blogpost-admin">
         <button id="edit-blogpost" type="button" class="btn btn-primary" @onclick="EditBlogPost" aria-label="edit">
             <i class="pencil"></i> Edit Blogpost</button>
-        <button id="delete-blogpost" type="button" class="btn btn-danger" @onclick="ShowConfirmDialog" aria-label="delete"><i class="bin2"></i> Delete 
+        <button id="delete-blogpost" type="button" class="btn btn-danger" @onclick="ShowConfirmDialog" aria-label="delete"><i class="bin2"></i> Delete
             Blogpost</button>
     </div>
     <ConfirmDialog @ref="ConfirmDialog" Title="Delete Blog Post" Content="Do you want to delete the Blog Post?" OnYesPressed="@DeleteBlogPostAsync">
@@ -18,16 +20,17 @@
 @code {
     [Parameter]
     public string BlogPostId { get; set; }
-    
+
     private ConfirmDialog ConfirmDialog { get; set; }
 
     private async Task DeleteBlogPostAsync()
     {
         await BlogPostRepository.DeleteAsync(BlogPostId);
+        InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(true);
         ToastService.ShowSuccess("The Blog Post was successfully deleted");
         NavigationManager.NavigateTo("/");
     }
-    
+
     private void ShowConfirmDialog()
     {
         ConfirmDialog.Open();

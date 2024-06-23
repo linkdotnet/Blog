@@ -5,21 +5,28 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using NCronJob;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Admin;
 
-public class BlogPostAdminActionsTests
+public class BlogPostAdminActionsTests : BunitContext
 {
+    public BlogPostAdminActionsTests()
+    {
+        Services.AddSingleton(Substitute.For<IRepository<BlogPost>>());
+        Services.AddSingleton(Substitute.For<IToastService>());
+        Services.AddSingleton(Substitute.For<IInstantJobRegistry>());
+        AddAuthorization().SetAuthorized("s");
+    }
+    
     [Fact]
     public async Task ShouldDeleteBlogPostWhenOkClicked()
     {
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        using var ctx = new BunitContext();
-        ctx.AddAuthorization().SetAuthorized("s");
-        ctx.Services.AddSingleton(repositoryMock);
-        ctx.Services.AddSingleton(Substitute.For<IToastService>());
-        var cut = ctx.Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
+        Services.AddSingleton(repositoryMock);
+        
+        var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
         cut.Find("#ok").Click();
@@ -32,11 +39,9 @@ public class BlogPostAdminActionsTests
     {
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        using var ctx = new BunitContext();
-        ctx.AddAuthorization().SetAuthorized("s");
-        ctx.Services.AddSingleton(repositoryMock);
-        ctx.Services.AddSingleton(Substitute.For<IToastService>());
-        var cut = ctx.Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
+        
+        Services.AddSingleton(repositoryMock);
+        var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         cut.Find("#delete-blogpost").Click();
 
         cut.Find("#cancel").Click();
@@ -48,13 +53,8 @@ public class BlogPostAdminActionsTests
     public void ShouldGoToEditPageOnEditClick()
     {
         const string blogPostId = "2";
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        using var ctx = new BunitContext();
-        ctx.AddAuthorization().SetAuthorized("s");
-        ctx.Services.AddSingleton(repositoryMock);
-        ctx.Services.AddSingleton(Substitute.For<IToastService>());
-        var navigationManager = ctx.Services.GetRequiredService<NavigationManager>();
-        var cut = ctx.Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
+        var navigationManager = Services.GetRequiredService<NavigationManager>();
+        var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
 
         cut.Find("#edit-blogpost").Click();
 
