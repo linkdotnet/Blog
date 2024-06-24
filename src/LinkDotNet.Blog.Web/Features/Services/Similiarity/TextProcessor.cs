@@ -15,7 +15,7 @@ public static partial class TextProcessor
     ];
 
     public static IReadOnlyCollection<string> TokenizeAndNormalize(IEnumerable<string> texts)
-        => texts.SelectMany(TokenizeAndNormalize).ToList();
+        => texts.SelectMany(TokenizeAndNormalize).ToArray();
 
     private static IReadOnlyCollection<string> TokenizeAndNormalize(string text)
     {
