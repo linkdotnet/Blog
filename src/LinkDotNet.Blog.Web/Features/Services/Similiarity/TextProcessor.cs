@@ -28,6 +28,6 @@ public static partial class TextProcessor
             .ToArray();
     }
 
-    [GeneratedRegex(@"[^a-z0-9\s]")]
+    [GeneratedRegex(@"[^a-zA-Z\d\s]+")]
     private static partial Regex TokenRegex();
 }
