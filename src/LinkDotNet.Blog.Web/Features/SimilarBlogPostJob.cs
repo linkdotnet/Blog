@@ -45,7 +45,9 @@ public class SimilarBlogPostJob : IJob
             return;
         }
 
-        var blogPosts = await blogPostRepository.GetAllByProjectionAsync(bp => new BlogPostSimilarity(bp.Id, bp.Title, bp.Tags, bp.ShortDescription));
+        var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
+            bp => new BlogPostSimilarity(bp.Id, bp.Title, bp.Tags, bp.ShortDescription),
+            f => f.IsPublished);
         var documents = blogPosts.Select(bp => TextProcessor.TokenizeAndNormalize([bp.Title, bp.ShortDescription, ..bp.Tags])).ToList();
 
         var similarities = blogPosts.Select(bp => GetSimilarityForBlogPost(bp, documents, blogPosts)).ToArray();
