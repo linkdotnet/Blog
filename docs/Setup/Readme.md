@@ -12,3 +12,6 @@ through the possibilities.
 
 -   [Configurations](Configuration.md)
 -   [Docker](Docker.md)
+
+### Updates
+Going from one version to another can introduce major breaking changes. The [release page](https://github.com/linkdotnet/Blog/releases) or [`MIGRATION.md`](../../MIGRATION.md) will show the steps to migrate.
