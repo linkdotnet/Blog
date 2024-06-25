@@ -9,9 +9,9 @@
     [Parameter]
     public BlogPost BlogPost { get; set; }
 
-    [Parameter] 
+    [Parameter]
     public EventCallback<bool> OnBlogPostLiked { get; set; }
-    
+
     private bool HasLiked { get; set; }
 
     private string BtnClass => HasLiked ? "clap-active" : string.Empty;
@@ -33,7 +33,7 @@
         {
             return;
         }
-        
+
         HasLiked = !HasLiked;
         await OnBlogPostLiked.InvokeAsync(HasLiked);
         await LocalStorage.SetItemAsync($"hasLiked/{BlogPost.Id}", HasLiked);

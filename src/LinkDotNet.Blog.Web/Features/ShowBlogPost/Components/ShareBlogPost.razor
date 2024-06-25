@@ -1,9 +1,27 @@
 ﻿@inject NavigationManager NavigationManager
 
-<div class="flex-row" style="font-size: 1.5em">
-    <a class="text-decoration-none" id="share-linkedin" href="@LinkedInShare" target="_blank" rel="noreferrer"><i class="linkedin"></i></a>
-    <a class="text-decoration-none" id="share-clipboard" href="javascript:void(0)" onclick="navigator.clipboard.writeText('@LinkedInShare')"><i class="copy"></i></a>
+<div class="dropdown">
+	<button class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false"><i class="share2"></i></button>
+	<ul class="dropdown-menu">
+		<li>
+			<a id="share-clipboard" class="dropdown-item" href="javascript:void(0)" onclick="navigator.clipboard.writeText('@NavigationManager.Uri')">
+				<i class="copy me-3"></i>Copy To Clipboard
+			</a>
+		</li>
+		<li><hr class="dropdown-divider"></li>
+		<li>
+			<a id="share-linkedin" class="dropdown-item" href="@LinkedInShare" target="_blank" rel="noreferrer">
+				<i class="linkedin me-3"></i>Share on LinkedIn
+			</a>
+		</li>
+		<li>
+			<a id="share-x" class="dropdown-item" href="@XShare" target="_blank" rel="noreferrer">
+				<i class="twitter me-3"></i>Share on X
+			</a>
+		</li>
+	</ul>
 </div>
 @code {
     private string LinkedInShare => $"https://www.linkedin.com/shareArticle?mini=true&url={NavigationManager.Uri}";
+    private string XShare => $"https://twitter.com/intent/tweet?url={NavigationManager.Uri}";
 }

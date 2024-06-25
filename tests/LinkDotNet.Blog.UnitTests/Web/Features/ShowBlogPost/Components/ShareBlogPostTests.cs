@@ -32,4 +32,15 @@ public class ShareBlogPostTests : BunitContext
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin");
         linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
     }
+    
+    [Fact]
+    public void ShouldShareToX()
+    {
+        Services.GetRequiredService<BunitNavigationManager>().NavigateTo("blogPost/1");
+
+        var cut = Render<ShareBlogPost>();
+
+        var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-x");
+        linkedInShare.Href.Should().Be("https://twitter.com/intent/tweet?url=http://localhost/blogPost/1");
+    }
 }

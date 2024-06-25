@@ -96,3 +96,6 @@ i, .icomoon-liga {
 .contrast:before {
   content: "\e9d5";
  }
+.share2:before {
+	content: "\ea82";
+}
