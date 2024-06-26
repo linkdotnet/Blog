@@ -2,7 +2,7 @@
 @inject IOptions<Introduction> Introduction
 @inject IOptions<Social> Social
 
-<div style="--profile-background: url(@Introduction.Value.BackgroundUrl)" class="@IntroductionClass">
+<div style="@IntroductionStyle" class="@IntroductionClass">
     <div class="introduction-container">
         <div class="profile-picture" style="--profile-image: url(@Introduction.Value.ProfilePictureUrl)">
         </div>
@@ -16,4 +16,8 @@
     private string IntroductionClass => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
         ? "introduction-background"
         : string.Empty;
+
+    private string IntroductionStyle => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
+		? $"-profile-background: url({Introduction.Value.BackgroundUrl})"
+		: string.Empty;
 }
