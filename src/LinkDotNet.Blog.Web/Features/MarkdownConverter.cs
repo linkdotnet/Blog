@@ -10,7 +10,6 @@ public static class MarkdownConverter
         .UseAdvancedExtensions()
         .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
         .UseEmojiAndSmiley()
-        .UseCitations()
         .UseBootstrap()
         .Build();
 
