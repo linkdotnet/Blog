@@ -16,7 +16,7 @@ public class LikeTests : BunitContext
         var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
-        var label = cut.Find("div").TextContent;
+        var label = cut.Find("#like-counter").TextContent;
 
         label.Should().Contain("1");
     }

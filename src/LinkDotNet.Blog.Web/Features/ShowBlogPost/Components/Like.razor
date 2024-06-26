@@ -1,9 +1,9 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Web.Features.Services
 @inject ILocalStorageService LocalStorage
-<div class="d-flex align-items-center">
-    <span class="clap-btn @BtnClass" @onclick="LikeBlogPost"></span> @BlogPost.Likes
-</div>
+<button class="d-flex align-items-center btn btn-outline-secondary gap-2 rounded-pill" @onclick="LikeBlogPost">
+	<span class="clap-btn @BtnClass"></span><div class="vr"></div><span class="px-2" id="like-counter">@BlogPost.Likes</span>
+</button>
 
 @code {
     [Parameter]
