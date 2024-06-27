@@ -77,7 +77,7 @@ public class Program
 
         app.UseResponseCompression();
         app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        app.MapStaticAssets();
 
         app.MapHealthChecks("/health", new HealthCheckOptions
         {
