@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -50,14 +51,14 @@ public class BlogPostAdminActionsTests : BunitContext
     }
 
     [Fact]
-    public void ShouldGoToEditPageOnEditClick()
+    public void ShouldGoToEditPageForEdit()
     {
         const string blogPostId = "2";
-        var navigationManager = Services.GetRequiredService<NavigationManager>();
+        
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
 
-        cut.Find("#edit-blogpost").Click();
-
-        navigationManager.Uri.Should().EndWith($"update/{blogPostId}");
+        var anchor = cut.Find("#edit-blogpost") as IHtmlAnchorElement;
+        anchor.Should().NotBeNull();
+        anchor.Href.Should().EndWith($"update/{blogPostId}");
     }
 }

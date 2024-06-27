@@ -8,10 +8,10 @@
 
 <AuthorizeView>
 	<div class="d-flex justify-content-start gap-2">
-		<button id="edit-blogpost" type="button" class="btn btn-primary d-flex align-items-center gap-2" @onclick="EditBlogPost" aria-label="edit">
+		<a id="edit-blogpost" type="button" class="btn btn-primary d-flex align-items-center gap-2" href="update/@BlogPostId" aria-label="edit">
 			<i class="pencil"></i>
 			<div class="vr"></div><span>Edit</span>
-		</button>
+		</a>
 		<button id="delete-blogpost" type="button" class="btn btn-danger d-flex align-items-center gap-2" @onclick="ShowConfirmDialog" aria-label="delete">
 			<i class="bin2"></i>
 			<div class="vr"></div><span>Delete</span>
@@ -38,10 +38,5 @@
     private void ShowConfirmDialog()
     {
         ConfirmDialog.Open();
-    }
-
-    private void EditBlogPost()
-    {
-        NavigationManager.NavigateTo($"update/{BlogPostId}");
     }
 }
