@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
-public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable
 {
     private readonly WebApplicationFactory<Program> factory;
 
@@ -17,11 +17,13 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
             builder.UseSetting("PersistenceProvider", PersistenceProvider.InMemory.Key);
         });
     }
+    
+    public void Dispose() => factory.Dispose();
 
     [Fact]
     public async Task ShouldBootUpApplication()
     {
-        var client = factory.CreateClient();
+        using var client = factory.CreateClient();
 
         var result = await client.GetAsync("/");
 
@@ -31,7 +33,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task ShouldBootUpWithSqlDatabase()
     {
-        var client = factory.WithWebHostBuilder(builder =>
+        using var client = factory.WithWebHostBuilder(builder =>
         {
             builder.UseSetting("PersistenceProvider", PersistenceProvider.Sqlite.Key);
             builder.UseSetting("ConnectionString", "DataSource=file::memory:?cache=shared");
@@ -45,7 +47,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task ShouldAllowDotsForTagSearch()
     {
-        var client = factory.CreateClient();
+        using var client = factory.CreateClient();
 
         var result = await client.GetAsync("/searchByTag/.NET5");
 
@@ -55,7 +57,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task ShouldAllowDotsForFreeTextSearch()
     {
-        var client = factory.CreateClient();
+        using var client = factory.CreateClient();
 
         var result = await client.GetAsync("/search/.NET5");
 
