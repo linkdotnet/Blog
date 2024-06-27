@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
-public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable, IAsyncDisposable
+public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> factory;
 
@@ -61,14 +61,4 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
 
         result.IsSuccessStatusCode.Should().BeTrue();
     }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (factory is not null)
-        {
-            await factory.DisposeAsync();
-        }
-    }
-    
-    public void Dispose() => factory?.Dispose();
 }
