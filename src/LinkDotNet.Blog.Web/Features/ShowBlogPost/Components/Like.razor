@@ -18,11 +18,8 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            HasLiked = await GetHasLiked();
-            StateHasChanged();
-        }
+        HasLiked = await GetHasLiked();
+        StateHasChanged();
     }
 
     private async Task LikeBlogPost()
