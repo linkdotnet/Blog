@@ -12,14 +12,29 @@
     [Parameter]
     public EventCallback<bool> OnBlogPostLiked { get; set; }
 
+    private bool shouldBeUpdated;
+
     private bool HasLiked { get; set; }
 
     private string BtnClass => HasLiked ? "clap-active" : string.Empty;
 
+    protected override void OnParametersSet()
+    {
+	    base.OnParametersSet();
+	    shouldBeUpdated = true;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        HasLiked = await GetHasLiked();
-        StateHasChanged();
+	    // As we are using static prerendering, we can only issue JS Interop in OnAfterRender
+	    // As the page might be updated (click a related blog post inside a blog post), we need to update the like status
+	    // But we only want to do this once
+	    if (shouldBeUpdated)
+	    {
+	        HasLiked = await GetHasLiked();
+	        shouldBeUpdated = false;
+	        StateHasChanged();
+	    }
     }
 
     private async Task LikeBlogPost()
