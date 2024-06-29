@@ -6,6 +6,7 @@
 @using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IJSRuntime JsRuntime
+@inject NavigationManager NavigationManager
 @inject IUserRecordService UserRecordService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
@@ -64,6 +65,10 @@ else
 
 				<div class="pt-2">
 					<BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
+				</div>
+
+				<div class="pt-2">
+					<TableOfContents Content="@BlogPost.Content" CurrentUri="@NavigationManager.Uri"></TableOfContents>
 				</div>
 
 				<div class="blogpost-content">

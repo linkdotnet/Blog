@@ -1,0 +1,44 @@
+<div class="accordion" id="tocAccordion">
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="toc-header">
+			<button class="accordion-button collapsed d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#toc-accordion-body" aria-expanded="false" aria-controls="toc-accordion-body">
+				<i class="list"></i><div class="vr"></div><span>Table of Contents</span>
+			</button>
+		</h2>
+		<div id="toc-accordion-body" class="accordion-collapse collapse" aria-labelledby="toc-header">
+			<nav class="nav flex-column p-2">
+				@foreach (var item in MarkdownConverter.GenerateToc(Content))
+				{
+					@TocLink(item)
+				}
+			</nav>
+		</div>
+	</div>
+</div>
+
+@code {
+	[Parameter] public string CurrentUri { get; set; }
+
+	[Parameter] public string Content { get; set; }
+
+	private string GetAnchorUrl(string anchor)
+	{
+		if (CurrentUri.Contains('#'))
+		{
+			var parts = CurrentUri.Split('#');
+			return $"{parts[0]}#{anchor}";
+		}
+
+		return $"{CurrentUri}#{anchor}";
+	}
+
+	private RenderFragment TocLink(TocItem item) => builder =>
+	{
+		var topDistance = item.Level <= 2 ? item.Level : 0;
+		builder.OpenElement(0, "a");
+		builder.AddAttribute(1, "href", GetAnchorUrl(item.Id));
+		builder.AddAttribute(2, "class", $"anchor nav-link ps-{item.Level} pt-{topDistance}");
+		builder.AddContent(3, item.Text);
+		builder.CloseElement();
+	};
+}
