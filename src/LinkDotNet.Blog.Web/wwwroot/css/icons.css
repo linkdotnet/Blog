@@ -99,3 +99,7 @@ i, .icomoon-liga {
 .share2:before {
 	content: "\ea82";
 }
+
+.list:before {
+	content: "\e901";
+}
