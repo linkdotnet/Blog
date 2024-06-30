@@ -52,4 +52,17 @@ public class TableOfContentsTests : BunitContext
         links[0].GetAttribute("href").Should().Be("https://localhost#header-1");
         links[1].GetAttribute("href").Should().Be("https://localhost#header-2");
     }
+    
+    [Fact]
+    public void ShouldCreateCorrectTocWithCodeInHeadings()
+    {
+        const string content = "# This is `Header` 1";
+        
+        var cut = Render<TableOfContents>(p => p
+            .Add(x => x.Content, content)
+            .Add(x => x.CurrentUri, "https://localhost"));
+        
+        var link = cut.Find("nav a");
+        link.TextContent.Should().Be("This is Header 1");
+    }
 }
