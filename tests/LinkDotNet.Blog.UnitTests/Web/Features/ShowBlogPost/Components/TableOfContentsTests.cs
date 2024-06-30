@@ -65,4 +65,17 @@ public class TableOfContentsTests : BunitContext
         var link = cut.Find("nav a");
         link.TextContent.Should().Be("This is Header 1");
     }
+    
+    [Fact]
+    public void ShouldCreateCorrectTocWithLinkInHeadings()
+    {
+        const string content = "# [This is a link](https://link.com)";
+        
+        var cut = Render<TableOfContents>(p => p
+            .Add(x => x.Content, content)
+            .Add(x => x.CurrentUri, "https://localhost"));
+        
+        var link = cut.Find("nav a");
+        link.TextContent.Should().Be("This is a link");
+    }
 }

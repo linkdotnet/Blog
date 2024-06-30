@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
+using Markdig.Helpers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -51,14 +52,14 @@ public static class MarkdownConverter
         var current = inline.FirstChild;
         while (current is not null)
         {
-            if (current is CodeInline cd)
+            var text = current switch
             {
-                sb.Append(cd.Content);
-            }
-            else
-            {
-                sb.Append(current);
-            }
+                CodeInline cd => cd.Content,
+                LinkInline link => link.FirstChild?.ToString(),
+                _ => current.ToString()
+            };
+
+            sb.Append(text);
 
             current = current.NextSibling;
         }
