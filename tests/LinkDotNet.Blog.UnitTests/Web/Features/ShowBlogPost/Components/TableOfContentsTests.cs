@@ -57,6 +57,7 @@ public class TableOfContentsTests : BunitContext
     [InlineData("# This is `Header` 1", "This is Header 1")]
     [InlineData("# [This is a link](https://link.com)", "This is a link")]
     [InlineData("# **What** *if*", "What if")]
+    [InlineData("# *[Link](link)*", "Link")]
     public void ShouldCreateCorrectToc(string markdown, string expectedToc)
     {
         var cut = Render<TableOfContents>(p => p

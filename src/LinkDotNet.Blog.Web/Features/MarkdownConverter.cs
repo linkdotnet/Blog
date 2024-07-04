@@ -4,6 +4,7 @@ using System.Text;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Helpers;
+using Markdig.Parsers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
@@ -42,30 +43,54 @@ public static class MarkdownConverter
         return document
             .Descendants<HeadingBlock>()
             .Where(h => h.Inline?.FirstChild is not null)
-            .Select(heading => new TocItem { Level = heading.Level, Text = InlineToString(heading.Inline), Id = heading.GetAttributes().Id })
+            .Select(heading => new TocItem
+            {
+                Level = heading.Level, Text = InlineToString(heading.Inline), Id = heading.GetAttributes().Id
+            })
             .ToArray();
     }
 
     private static string InlineToString(ContainerInline inline)
     {
         var sb = new StringBuilder();
-        var current = inline.FirstChild;
-        while (current is not null)
-        {
-            var text = current switch
-            {
-                CodeInline cd => cd.Content,
-                LinkInline link => link.FirstChild?.ToString(),
-                EmphasisInline em => em.FirstChild?.ToString(),
-                _ => current.ToString()
-            };
-
-            sb.Append(text);
-
-            current = current.NextSibling;
-        }
-
+        ProcessInlineDelegate(inline, sb);
         return sb.ToString();
+
+        static void ProcessInlineDelegate(Inline inline, StringBuilder stringBuilder)
+        {
+            if (inline is null)
+            {
+                return;
+            }
+
+            var current = inline;
+            while (current is not null)
+            {
+                switch (current)
+                {
+                    case CodeInline cd:
+                        stringBuilder.Append(cd.Content);
+                        break;
+                    case LinkInline link:
+                        ProcessInlineDelegate(link.FirstChild, stringBuilder);
+                        break;
+                    case EmphasisInline em:
+                        ProcessInlineDelegate(em.FirstChild, stringBuilder);
+                        break;
+                    case LiteralInline literal:
+                        stringBuilder.Append(literal.Content);
+                        break;
+                    case ContainerInline container:
+                        ProcessInlineDelegate(container.FirstChild, stringBuilder);
+                        break;
+                    default:
+                        stringBuilder.Append(current);
+                        break;
+                }
+
+                current = current.NextSibling;
+            }
+        }
     }
 }
 
