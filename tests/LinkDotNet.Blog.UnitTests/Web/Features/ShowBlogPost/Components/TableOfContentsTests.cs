@@ -53,29 +53,17 @@ public class TableOfContentsTests : BunitContext
         links[1].GetAttribute("href").Should().Be("https://localhost#header-2");
     }
     
-    [Fact]
-    public void ShouldCreateCorrectTocWithCodeInHeadings()
+    [Theory]
+    [InlineData("# This is `Header` 1", "This is Header 1")]
+    [InlineData("# [This is a link](https://link.com)", "This is a link")]
+    [InlineData("# **What** *if*", "What if")]
+    public void ShouldCreateCorrectToc(string markdown, string expectedToc)
     {
-        const string content = "# This is `Header` 1";
-        
         var cut = Render<TableOfContents>(p => p
-            .Add(x => x.Content, content)
+            .Add(x => x.Content, markdown)
             .Add(x => x.CurrentUri, "https://localhost"));
         
         var link = cut.Find("nav a");
-        link.TextContent.Should().Be("This is Header 1");
-    }
-    
-    [Fact]
-    public void ShouldCreateCorrectTocWithLinkInHeadings()
-    {
-        const string content = "# [This is a link](https://link.com)";
-        
-        var cut = Render<TableOfContents>(p => p
-            .Add(x => x.Content, content)
-            .Add(x => x.CurrentUri, "https://localhost"));
-        
-        var link = cut.Find("nav a");
-        link.TextContent.Should().Be("This is a link");
+        link.TextContent.Should().Be(expectedToc);
     }
 }

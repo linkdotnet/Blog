@@ -56,6 +56,7 @@ public static class MarkdownConverter
             {
                 CodeInline cd => cd.Content,
                 LinkInline link => link.FirstChild?.ToString(),
+                EmphasisInline em => em.FirstChild?.ToString(),
                 _ => current.ToString()
             };
 
