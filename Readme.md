@@ -33,6 +33,8 @@ This project is released under the terms of the [MIT License](./LICENSE).
 
 ## Support & Contributing
 
+[![GitHub repo Good Issues for newbies](https://img.shields.io/github/issues/linkdotnet/Blog/good%20first%20issue?style=flat&logo=github&logoColor=green&label=Good%20First%20issues)](https://github.com/linkdotnet/Blog/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) [![GitHub Help Wanted issues](https://img.shields.io/github/issues/linkdotnet/Blog/help%20wanted?style=flat&logo=github&logoColor=b545d1&label=%22Help%20Wanted%22%20issues)](https://github.com/linkdotnet/Blog/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![GitHub Help Wanted PRs](https://img.shields.io/github/issues-pr/linkdotnet/Blog/help%20wanted?style=flat&logo=github&logoColor=b545d1&label=%22Help%20Wanted%22%20PRs)](https://github.com/linkdotnet/Blog/pulls?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) [![GitHub repo Issues](https://img.shields.io/github/issues/linkdotnet/Blog?style=flat&logo=github&logoColor=red&label=Issues)](https://github.com/linkdotnet/Blog/issues?q=is%3Aopen)
+
 Thanks to all [contributors](https://github.com/linkdotnet/Blog/graphs/contributors) and people that are creating bug-reports and valuable input:
 
 <a href="https://github.com/linkdotnet/blog/graphs/contributors">
