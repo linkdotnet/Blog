@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
-public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable
+public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> factory;
 
@@ -17,8 +16,6 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
             builder.UseSetting("PersistenceProvider", PersistenceProvider.InMemory.Key);
         });
     }
-    
-    public void Dispose() => factory.Dispose();
 
     [Fact]
     public async Task ShouldBootUpApplication()
