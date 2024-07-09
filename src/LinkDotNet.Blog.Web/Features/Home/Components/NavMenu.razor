@@ -21,19 +21,19 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
-                <li class="nav-item active"><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
-                <li class="nav-item active"><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
+                <li><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
+                <li><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
                 @if (Configuration.Value.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="AboutMe"><i class="profile"></i> About
                             me</a></li>
                 }
-                <li class="nav-item active"><a class="nav-link" href="/feed.rss"><i class="rss2"></i> RSS</a></li>
+                <li><a class="nav-link" href="/feed.rss"><i class="rss2"></i> RSS</a></li>
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
-                <li class="nav-item"><ThemeToggler Class="nav-link"></ThemeToggler></li>
-                <li class="nav-item d-flex">
+                <li><ThemeToggler Class="nav-link"></ThemeToggler></li>
+                <li class="d-flex">
 	                <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
             </ul>
@@ -65,5 +65,4 @@
         currentUri = e.Location;
         StateHasChanged();
     }
-
 }
