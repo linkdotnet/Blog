@@ -13,7 +13,7 @@
         <PackageReference Include="NCronJob" Version="2.8.4" />
         <PackageReference Include="Markdig" Version="0.37.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-preview.5.24306.11" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-preview.5.24306.7" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-preview.6.24327.7" />
         <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.0-preview.5.24306.7" />
     </ItemGroup>
 
