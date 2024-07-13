@@ -19,7 +19,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
     {
         var blogPost = new BlogPostBuilder().WithTitle("I was clicked").WithLikes(2).Build();
         await Repository.StoreAsync(blogPost);
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         RegisterRepositories(ctx);
         await SaveBlogPostArticleClicked(blogPost.Id, 10);
 
@@ -52,7 +52,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         { BlogPostId = blogPost1.Id, DateClicked = new DateOnly(2021, 1, 1), Clicks = 1 };
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
         await DbContext.SaveChangesAsync();
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         ctx.ComponentFactories.AddStub<DateRangeSelector>();
         RegisterRepositories(ctx);
         var cut = ctx.Render<VisitCountPerPage>();
@@ -84,13 +84,35 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
             { BlogPostId = blogPost2.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3);
         await DbContext.SaveChangesAsync();
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         RegisterRepositories(ctx);
 
         var cut = ctx.Render<VisitCountPerPage>();
 
         cut.WaitForElement("td");
         cut.Find("#total-clicks").TextContent.Should().Be("4 clicks in total");
+    }
+
+    [Fact]
+    public async Task GivenDeletedBlogPostWhenEncounteringBlogPostRecordThenNoError()
+    {
+        var blogPost1 = new BlogPostBuilder().WithTitle("1").WithLikes(2).Build();
+        await Repository.StoreAsync(blogPost1);
+        var clicked1 = new BlogPostRecord
+            { BlogPostId = blogPost1.Id, DateClicked = new DateOnly(2020, 1, 1), Clicks = 2 };
+        var clicked2 = new BlogPostRecord
+            { BlogPostId = blogPost1.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
+        var clicked3 = new BlogPostRecord
+            { BlogPostId = Guid.NewGuid().ToString(), DateClicked = DateOnly.MinValue, Clicks = 1 };
+        await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3);
+        await DbContext.SaveChangesAsync();
+        await using var ctx = new BunitContext();
+        RegisterRepositories(ctx);
+
+        var cut = ctx.Render<VisitCountPerPage>();
+
+        cut.WaitForElement("td");
+        cut.Find("#total-clicks").TextContent.Should().Be("2 clicks in total");
     }
 
     private void RegisterRepositories(BunitContext ctx)
