@@ -95,6 +95,7 @@
 	    var blogPostDictionary = blogPosts.ToDictionary(bp => bp.Id, bp => bp);
 	    var loadBlogPostInformation = userRecords
 		    .GroupBy(s => s.BlogPostId)
+		    .Where(s => blogPostDictionary.ContainsKey(s.Key))
 		    .Select(s => new
 		    {
 			    Count = s.Sum(l => l.Clicks),
