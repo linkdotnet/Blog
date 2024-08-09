@@ -29,7 +29,7 @@ public class SimilarBlogPostJob : IJob
         showSimilarPosts = applicationConfiguration.Value.ShowSimilarPosts;
     }
 
-    public async Task RunAsync(JobExecutionContext context, CancellationToken token)
+    public async Task RunAsync(IJobExecutionContext context, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(context);
 

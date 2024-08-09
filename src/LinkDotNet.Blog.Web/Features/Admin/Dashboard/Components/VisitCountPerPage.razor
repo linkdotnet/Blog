@@ -63,8 +63,9 @@
 		IRepository<BlogPost> blogPostRepository,
 		Filter filter)
 	{
-		Expression<Func<BlogPost, bool>> blogPostFilter = bp =>
-			!filter.EndDate.HasValue || bp.UpdatedDate.Date <= filter.EndDate.Value.ToDateTime(default);
+		Expression<Func<BlogPost, bool>> blogPostFilter = filter.EndDate.HasValue
+			? bp => bp.UpdatedDate.Date <= filter.EndDate.Value.ToDateTime(default)
+			: null;
 
 		return await blogPostRepository.GetAllByProjectionAsync(
 			s => new BlogPostVisitData(s.Id, s.Title, s.Likes),

@@ -23,7 +23,7 @@ public sealed partial class BlogPostPublisher : IJob
         this.logger = logger;
     }
 
-    public async Task RunAsync(JobExecutionContext context, CancellationToken token)
+    public async Task RunAsync(IJobExecutionContext context, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(context);
 
