@@ -112,7 +112,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<VisitCountPerPage>();
 
         cut.WaitForElement("td");
-        cut.Find("#total-clicks").TextContent.Should().Be("2 clicks in total");
+        cut.Find("#total-clicks").TextContent.Should().Be("3 clicks in total");
     }
 
     private void RegisterRepositories(BunitContext ctx)

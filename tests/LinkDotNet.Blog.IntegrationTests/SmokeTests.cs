@@ -1,11 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
-public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, IDisposable, IAsyncDisposable
 {
     private readonly WebApplicationFactory<Program> factory;
 
@@ -59,5 +60,15 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>
         var result = await client.GetAsync("/search/.NET5");
 
         result.IsSuccessStatusCode.Should().BeTrue();
+    }
+
+    public void Dispose() => factory?.Dispose();
+
+    public async ValueTask DisposeAsync()
+    {
+        if (factory != null)
+        {
+            await factory.DisposeAsync();
+        }
     }
 }
