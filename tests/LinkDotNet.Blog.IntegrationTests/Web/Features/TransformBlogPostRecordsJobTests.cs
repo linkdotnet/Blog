@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.Extensions.Logging;
+using NCronJob;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
 
@@ -55,7 +56,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         await userRecordRepository.StoreBulkAsync(userRecords);
 
         // Act
-        await sut.RunAsync(new(typeof(TransformBlogPostRecordsJob), null), default);
+        await sut.RunAsync(Substitute.For<IJobExecutionContext>(), default);
 
         // Assert
         var afterUserRecords = await userRecordRepository.GetAllAsync();
@@ -101,7 +102,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         await blogPostRecordRepository.StoreBulkAsync(blogPostRecords);
         
         // Act
-        await sut.RunAsync(new(typeof(TransformBlogPostRecordsJob), null), default);
+        await sut.RunAsync(Substitute.For<IJobExecutionContext>(), default);
 
         // Assert
         var records = await blogPostRecordRepository.GetAllAsync();

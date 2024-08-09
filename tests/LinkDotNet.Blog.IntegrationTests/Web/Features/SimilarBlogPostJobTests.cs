@@ -33,7 +33,9 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         var config = Options.Create(new ApplicationConfiguration { ShowSimilarPosts = true });
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, config);
-        await job.RunAsync(new JobExecutionContext(typeof(SimilarBlogPostJob), true), CancellationToken.None);
+        var context = Substitute.For<IJobExecutionContext>();
+        context.Parameter.Returns(true);
+        await job.RunAsync(context, CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
         similarBlogPosts.Should().HaveCount(3);
@@ -51,7 +53,9 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         var config = Options.Create(new ApplicationConfiguration { ShowSimilarPosts = false });
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, config);
-        await job.RunAsync(new JobExecutionContext(typeof(SimilarBlogPostJob), true), CancellationToken.None);
+        var context = Substitute.For<IJobExecutionContext>();
+        context.Parameter.Returns(true);
+        await job.RunAsync(context, CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
         similarBlogPosts.Should().BeEmpty();
@@ -69,7 +73,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         var config = Options.Create(new ApplicationConfiguration { ShowSimilarPosts = true });
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, config);
-        await job.RunAsync(new JobExecutionContext(typeof(SimilarBlogPostJob), null), CancellationToken.None);
+        await job.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
         similarBlogPosts.Should().BeEmpty();

@@ -80,6 +80,9 @@ public static class MarkdownConverter
                     case ContainerInline container:
                         ProcessInlineDelegate(container.FirstChild, stringBuilder);
                         break;
+                    case HtmlEntityInline htmlEntity:
+                        stringBuilder.Append(htmlEntity.Transcoded);
+                        break;
                     default:
                         stringBuilder.Append(current);
                         break;
