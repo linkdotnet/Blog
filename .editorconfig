@@ -417,6 +417,7 @@ dotnet_diagnostic.S3875.severity = none       # Remove this overload of 'operato
 
 # Visual Studio
 dotnet_diagnostic.IDE0005.severity = none # IDE0005: Using directive is unnecessary
+dotnet_diagnostic.IDE0035.severity = warning # IDE0035: Remove unreachable code
 dotnet_diagnostic.IDE0021.severity = suggestion # IDE0021: Use expression body for constructor
 dotnet_diagnostic.IDE0022.severity = suggestion # IDE0022: Use expression body for method
 dotnet_diagnostic.IDE0055.severity = none # IDE0055: Fix formatting
