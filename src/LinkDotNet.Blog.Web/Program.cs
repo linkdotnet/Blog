@@ -82,11 +82,11 @@ public class Program
         app.MapHealthChecks("/health", new HealthCheckOptions
         {
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-        });
+        })
+        .RequireAuthorization();
 
         app.UseRouting();
 
-        app.UseCookiePolicy();
         app.UseAuthentication();
         app.UseAuthorization();
 
