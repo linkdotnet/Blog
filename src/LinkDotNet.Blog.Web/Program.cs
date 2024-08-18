@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Blazored.Toast;
 using Blazorise;
 using Blazorise.Bootstrap5;
@@ -14,15 +15,15 @@ namespace LinkDotNet.Blog.Web;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
         RegisterServices(builder);
 
-        var app = builder.Build();
+        await using var app = builder.Build();
         ConfigureApp(app);
 
-        app.Run();
+        await app.RunAsync();
     }
 
     private static void RegisterServices(WebApplicationBuilder builder)
