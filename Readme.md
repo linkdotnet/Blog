@@ -7,7 +7,7 @@ This is a blog software completely written in C# / Blazor. The aim is to have it
 
 ## How does it work
 
-The basic idea is that the content creator writes his posts in markdown language (like this readme file).
+The basic idea is that the content creator writes their posts in markdown language (like this readme file).
 The markdown will then be translated into HTML and displayed to the client. This gives an easy entry to writing posts with all the flexibility markdown has.
 This also includes source code snippets. Highlighting is done via [highlight.js](https://highlightjs.org/) with the GitHub theme.
 
