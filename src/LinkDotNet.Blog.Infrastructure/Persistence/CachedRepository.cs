@@ -23,24 +23,23 @@ public sealed class CachedRepository<T> : IRepository<T>
     public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => repository.PerformHealthCheckAsync();
 
     public async ValueTask<T> GetByIdAsync(string id) =>
-        await memoryCache.GetOrCreateAsync(id, async entry =>
+        (await memoryCache.GetOrCreateAsync(id, async entry =>
         {
             entry.SlidingExpiration = TimeSpan.FromDays(7);
             return await repository.GetByIdAsync(id);
-        });
+        }))!;
 
-    public async ValueTask<IPagedList<T>> GetAllAsync(
-        Expression<Func<T, bool>> filter = null,
-        Expression<Func<T, object>> orderBy = null,
+    public async ValueTask<IPagedList<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
+        Expression<Func<T, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue) =>
         await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<T, TProjection>> selector,
-        Expression<Func<T, bool>> filter = null,
-        Expression<Func<T, object>> orderBy = null,
+        Expression<Func<T, TProjection>>? selector,
+        Expression<Func<T, bool>>? filter = null,
+        Expression<Func<T, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue) =>

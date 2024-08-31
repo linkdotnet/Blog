@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <AssemblyName>LinkDotNet.Blog.Infrastructure</AssemblyName>
         <RootNamespace>LinkDotNet.Blog.Infrastructure</RootNamespace>
+			  <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

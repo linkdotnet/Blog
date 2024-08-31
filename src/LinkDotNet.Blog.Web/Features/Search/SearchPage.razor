@@ -22,7 +22,7 @@
     {
         var term = Uri.UnescapeDataString(SearchTerm);
         blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
-                                                                                 || t.Tags.Any(tag => tag == term)),
+                                                                                || t.Tags.Any(tag => tag == term)),
             b => b.UpdatedDate);
     }
 }
