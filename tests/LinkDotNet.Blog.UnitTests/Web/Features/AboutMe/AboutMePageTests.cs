@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.AboutMe;
@@ -25,7 +26,7 @@ public class AboutMePageTests : BunitContext
     public void ShouldPassIsAuthenticated()
     {
         AddAuthorization().SetAuthorized("test");
-        var config = new ProfileInformation { ProfilePictureUrl = string.Empty };
+        var config = new ProfileInformationBuilder().Build();
         
         var applicationConfiguration = new ApplicationConfiguration
         {
@@ -44,8 +45,8 @@ public class AboutMePageTests : BunitContext
     [Fact]
     public void ShouldNotShowWhenEnabledFalse()
     {
-        this.AddAuthorization().SetNotAuthorized();
-        var config = new ProfileInformation();
+        AddAuthorization().SetNotAuthorized();
+        var config = new ProfileInformationBuilder().Build();
         
         var applicationConfiguration = new ApplicationConfiguration
         {
@@ -63,12 +64,11 @@ public class AboutMePageTests : BunitContext
     [Fact]
     public void ShouldSetOgData()
     {
-        this.AddAuthorization().SetNotAuthorized();
-        var profileInformation = new ProfileInformation
-        {
-            Name = "My Name",
-            ProfilePictureUrl = "someurl",
-        };
+        AddAuthorization().SetNotAuthorized();
+        var profileInformation = new ProfileInformationBuilder()
+            .WithName("My Name")
+            .WithProfilePictureUrl("someurl")
+            .Build();
         var applicationConfiguration = new ApplicationConfiguration
         {
             IsAboutMeEnabled = true

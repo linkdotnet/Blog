@@ -10,10 +10,6 @@ public abstract class Enumeration<TEnumeration>
    where TEnumeration : Enumeration<TEnumeration>
 #pragma warning restore
 {
-    protected Enumeration()
-    {
-    }
-
     protected Enumeration(string key)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(key);
@@ -35,7 +31,7 @@ public abstract class Enumeration<TEnumeration>
 
     public override int GetHashCode() => Key.GetHashCode(StringComparison.Ordinal);
 
-    public override bool Equals(object obj) => obj?.GetType() == typeof(TEnumeration) && ((TEnumeration)obj).Key == Key;
+    public override bool Equals(object? obj) => obj?.GetType() == typeof(TEnumeration) && ((TEnumeration)obj).Key == Key;
 
     public override string ToString() => Key;
 
@@ -46,7 +42,7 @@ public abstract class Enumeration<TEnumeration>
         return enumerationType
             .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly)
             .Where(info => info.FieldType == typeof(TEnumeration))
-            .Select(info => (TEnumeration)info.GetValue(null))
+            .Select(info => (TEnumeration)info.GetValue(null)!)
             .ToFrozenSet();
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
@@ -75,7 +76,7 @@ public class ApplicationConfigurationTests
         configuration.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(disqusConfiguration);
         disqusConfiguration.Shortname.Should().Be("blog");
         
-        var profileInformation = new ProfileInformation();
+        var profileInformation = new ProfileInformationBuilder().Build();
         configuration.GetSection(ProfileInformation.ProfileInformationSection).Bind(profileInformation);
         profileInformation.Name.Should().Be("Steven");
         profileInformation.Heading.Should().Be("Dev");
@@ -89,8 +90,8 @@ public class ApplicationConfigurationTests
         social.HasLinkedinAccount.Should().BeTrue();
         social.TwitterAccountUrl.Should().Be("twitter");
         social.HasTwitterAccount.Should().BeTrue();
-        
-        var introduction = new Introduction();
+
+        var introduction = new IntroductionBuilder().Build();
         configuration.GetSection(Introduction.IntroductionSection).Bind(introduction);
         introduction.BackgroundUrl.Should().Be("someurl");
         introduction.ProfilePictureUrl.Should().Be("anotherurl");

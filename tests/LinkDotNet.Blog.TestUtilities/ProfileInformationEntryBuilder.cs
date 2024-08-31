@@ -9,7 +9,7 @@ public class ProfileInformationEntryBuilder
 
     public ProfileInformationEntryBuilder WithContent(string key)
     {
-        this.content = key;
+        content = key;
         return this;
     }
 

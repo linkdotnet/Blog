@@ -1,4 +1,5 @@
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,10 +12,7 @@ public class FooterTests : BunitContext
     [Fact]
     public void ShouldSetCopyrightInformation()
     {
-        var profileInfoConfig = Options.Create(new ProfileInformation
-        {
-            Name = "Steven",
-        });
+        var profileInfoConfig = Options.Create(new ProfileInformationBuilder().WithName("Steven").Build());
         Services.AddScoped(_ => profileInfoConfig);
 
         var appConfig = Options.Create(new ApplicationConfiguration

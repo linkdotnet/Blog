@@ -5,23 +5,22 @@ namespace LinkDotNet.Blog.TestUtilities.Fakes;
 
 public sealed class MarkdownFake : ComponentBase
 {
-    [Parameter]
-    public string Value { get; set; }
+    [Parameter] public string Value { get; set; } = string.Empty;
 
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 
     [Parameter]
-    public string Class { get; set; }
+    public string Class { get; set; } = string.Empty;
 
     [Parameter]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
     [Parameter]
     public int Rows { get; set; }
     
     [Parameter]
-    public string Placeholder { get; set; }
+    public string Placeholder { get; set; } = string.Empty;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
@@ -31,7 +30,7 @@ public sealed class MarkdownFake : ComponentBase
         builder.AddAttribute(3, "rows", Rows);
         builder.AddAttribute(4, "oninput", EventCallback.Factory.Create<ChangeEventArgs>(this, async args =>
         {
-            Value = args.Value.ToString();
+            Value = args.Value!.ToString()!;
             await ValueChanged.InvokeAsync(Value);
         }));
         builder.AddContent(5, Value);

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.AspNetCore.Components;
@@ -20,7 +21,7 @@ public class NavMenuTests : BunitContext
     public void ShouldNavigateToSearchPage()
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
-        this.AddAuthorization();
+        AddAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
         var cut = Render<NavMenu>();
         cut.FindComponent<SearchInput>().Find("input").Change("Text");
@@ -38,7 +39,7 @@ public class NavMenuTests : BunitContext
             IsAboutMeEnabled = true
         });
         Services.AddScoped(_ => config);
-        this.AddAuthorization();
+        AddAuthorization();
 
         var cut = Render<NavMenu>();
 
@@ -51,9 +52,9 @@ public class NavMenuTests : BunitContext
     [Fact]
     public void ShouldPassCorrectUriToComponent()
     {
-        var config = Options.Create(new ProfileInformation());
+        var config = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => config);
-        this.AddAuthorization();
+        AddAuthorization();
         var cut = Render<NavMenu>();
 
         Services.GetRequiredService<NavigationManager>().NavigateTo("test");
@@ -70,10 +71,10 @@ public class NavMenuTests : BunitContext
         });
         Services.AddScoped(_ => config);
         
-        var profileInfoConfig = Options.Create(new ProfileInformation());
+        var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => profileInfoConfig);
 
-        this.AddAuthorization();
+        AddAuthorization();
 
         var cut = Render<NavMenu>();
 
@@ -95,10 +96,10 @@ public class NavMenuTests : BunitContext
         });
         Services.AddScoped(_ => config);
         
-        var profileInfoConfig = Options.Create(new ProfileInformation());
+        var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => profileInfoConfig);
         
-        this.AddAuthorization();
+        AddAuthorization();
 
         var cut = Render<NavMenu>();
 

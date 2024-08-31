@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <Nullable>disable</Nullable>
+        <Nullable>enable</Nullable>
         <AssemblyName>LinkDotNet.Blog.Domain</AssemblyName>
         <RootNamespace>LinkDotNet.Blog.Domain</RootNamespace>
     </PropertyGroup>

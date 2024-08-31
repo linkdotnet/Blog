@@ -8,7 +8,7 @@ public class AccessControlTests : BunitContext
     [Fact]
     public void ShouldShowLoginAndHideAdminWhenNotLoggedIn()
     {
-        this.AddAuthorization();
+        AddAuthorization();
 
         var cut = Render<AccessControl>();
 
@@ -19,7 +19,7 @@ public class AccessControlTests : BunitContext
     [Fact]
     public void ShouldShowLogoutAndAdminWhenLoggedIn()
     {
-        this.AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven");
 
         var cut = Render<AccessControl>();
 
@@ -31,7 +31,7 @@ public class AccessControlTests : BunitContext
     public void LoginShouldHaveCurrentUriAsRedirectUri()
     {
         const string currentUri = "http://localhost/test";
-        this.AddAuthorization();
+        AddAuthorization();
 
         var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
@@ -43,7 +43,7 @@ public class AccessControlTests : BunitContext
     public void LogoutShouldHaveCurrentUriAsRedirectUri()
     {
         const string currentUri = "http://localhost/test";
-        this.AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven");
 
         var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));

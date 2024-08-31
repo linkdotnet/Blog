@@ -10,25 +10,21 @@ namespace LinkDotNet.Blog.Domain;
 
 public sealed partial class BlogPost : Entity
 {
-    private BlogPost()
-    {
-    }
+    public string Title { get; private set; } = default!;
 
-    public string Title { get; private set; }
+    public string ShortDescription { get; private set; } = default!;
 
-    public string ShortDescription { get; private set; }
+    public string Content { get; private set; } = default!;
 
-    public string Content { get; private set; }
+    public string PreviewImageUrl { get; private set; } = default!;
 
-    public string PreviewImageUrl { get; private set; }
-
-    public string PreviewImageUrlFallback { get; private set; }
+    public string? PreviewImageUrlFallback { get; private set; }
 
     public DateTime UpdatedDate { get; private set; }
 
     public DateTime? ScheduledPublishDate { get; private set; }
 
-    public IList<string> Tags { get; private set; }
+    public IList<string> Tags { get; private set; } = [];
 
     public bool IsPublished { get; private set; }
 
@@ -36,7 +32,7 @@ public sealed partial class BlogPost : Entity
 
     public bool IsScheduled => ScheduledPublishDate is not null;
 
-    public string TagsAsString => string.Join(",", Tags ?? []);
+    public string TagsAsString => string.Join(",", Tags);
 
     public int ReadingTimeInMinutes { get; private set; }
 
@@ -95,8 +91,8 @@ public sealed partial class BlogPost : Entity
         bool isPublished,
         DateTime? updatedDate = null,
         DateTime? scheduledPublishDate = null,
-        IEnumerable<string> tags = null,
-        string previewImageUrlFallback = null)
+        IEnumerable<string>? tags = null,
+        string? previewImageUrlFallback = null)
     {
         if (scheduledPublishDate is not null && isPublished)
         {

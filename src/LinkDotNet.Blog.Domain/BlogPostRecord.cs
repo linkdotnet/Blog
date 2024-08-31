@@ -4,7 +4,7 @@ namespace LinkDotNet.Blog.Domain;
 
 public class BlogPostRecord : Entity
 {
-    public string BlogPostId { get; init; }
+    public required string BlogPostId { get; init; }
 
     public DateOnly DateClicked { get; init; }
 

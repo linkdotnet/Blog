@@ -13,7 +13,7 @@ public class SitemapPageTests : BunitContext
     [Fact]
     public async Task ShouldSaveSitemap()
     {
-        this.AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven");
         var sitemapMock = Substitute.For<ISitemapService>();
         Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet();
@@ -28,7 +28,7 @@ public class SitemapPageTests : BunitContext
     [Fact]
     public void ShouldDisplaySitemap()
     {
-        this.AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven");
         var sitemapMock = Substitute.For<ISitemapService>();
         Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet
@@ -51,7 +51,7 @@ public class SitemapPageTests : BunitContext
     [Fact]
     public void ShouldShowLoadingWhenGenerating()
     {
-        this.AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven");
         var sitemapMock = Substitute.For<ISitemapService>();
         Services.AddScoped(_ => sitemapMock);
         var sitemap = new SitemapUrlSet
