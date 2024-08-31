@@ -2,6 +2,6 @@
     <i class="github"></i> Sponsors
 </a>
 @code {
-    [Parameter]
-    public string Name { get; set; }
+    [Parameter, EditorRequired]
+    public required string Name { get; set; }
 }

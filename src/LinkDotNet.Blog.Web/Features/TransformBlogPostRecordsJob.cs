@@ -87,7 +87,7 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
             return;
         }
 
-        var earliestDate = newBlogPostRecords.MinBy(r => r.DateClicked).DateClicked;
+        var earliestDate = newBlogPostRecords.MinBy(r => r.DateClicked)?.DateClicked ?? DateOnly.MinValue;
         var oldBlogPostRecords = await blogPostRecordRepository.GetAllAsync(f => f.DateClicked >= earliestDate);
 
         var mergedRecords = MergeRecords(oldBlogPostRecords, newBlogPostRecords);

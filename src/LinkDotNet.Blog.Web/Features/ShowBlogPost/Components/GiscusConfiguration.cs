@@ -4,11 +4,11 @@ public sealed record GiscusConfiguration
 {
     public const string GiscusConfigurationSection = "Giscus";
 
-    public string Repository { get; init; }
+    public required string Repository { get; init; }
 
-    public string RepositoryId { get; init; }
+    public required string RepositoryId { get; init; }
 
-    public string Category { get; init; }
+    public required string Category { get; init; }
 
-    public string CategoryId { get; init; }
+    public required string CategoryId { get; init; }
 }

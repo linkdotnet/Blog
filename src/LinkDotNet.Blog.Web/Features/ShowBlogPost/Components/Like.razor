@@ -6,8 +6,8 @@
 </button>
 
 @code {
-    [Parameter]
-    public BlogPost BlogPost { get; set; }
+    [Parameter, EditorRequired]
+    public required BlogPost BlogPost { get; set; }
 
     [Parameter]
     public EventCallback<bool> OnBlogPostLiked { get; set; }

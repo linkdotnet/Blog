@@ -29,8 +29,8 @@
     [Parameter]
     public EventCallback TalkDeleted { get; set; }
 
-    [Parameter]
-    public Talk Talk { get; set; }
+    [Parameter, EditorRequired]
+    public required Talk Talk { get; set; }
 
 	public override Task SetParametersAsync(ParameterView parameters)
 	{

@@ -12,11 +12,11 @@ else
 }
 
 @code {
-    [Parameter]
-    public string PreviewImageUrl { get; set; }
+    [Parameter, EditorRequired]
+    public required string PreviewImageUrl { get; set; }
 
     [Parameter]
-    public string PreviewImageUrlFallback { get; set; }
+    public string? PreviewImageUrlFallback { get; set; }
 
     [Parameter]
     public bool LazyLoadImage { get; set; }
@@ -31,7 +31,7 @@ else
 	    Provider.Mappings.TryAdd(".avif", "image/avif");
     }
 
-    private string GetMimeType()
+    private string? GetMimeType()
     {
         Provider.TryGetContentType(PreviewImageUrl, out var contentType);
         return contentType;

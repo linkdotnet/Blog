@@ -7,12 +7,11 @@ else
     <a class="@CssClass" href="@Href">@ChildContent</a>
 }
 @code {
-    [Parameter]
-    public string CssClass { get; set; }
+	[Parameter] public string CssClass { get; set; } = string.Empty;
 
     [Parameter]
-    public string Href { get; set; }
+    public string? Href { get; set; }
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
 }

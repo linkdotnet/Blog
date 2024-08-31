@@ -44,7 +44,7 @@
 </div>
 
 @code {
-	private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>> blogPostsPerYear;
+	private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>> blogPostsPerYear = [];
 	private int blogPostCount;
 
 	protected override async Task OnInitializedAsync()

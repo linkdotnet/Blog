@@ -6,8 +6,8 @@ namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 public sealed class SitemapUrl
 {
     [XmlElement(ElementName = "loc")]
-    public string Location { get; set; }
+    public required string Location { get; set; }
 
     [XmlElement(ElementName = "lastmod")]
-    public string LastModified { get; set; }
+    public string? LastModified { get; set; }
 }

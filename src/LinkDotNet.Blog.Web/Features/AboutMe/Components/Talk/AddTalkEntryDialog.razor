@@ -31,7 +31,8 @@
     [Parameter]
     public EventCallback<Talk> TalkCreated { get; set; }
 
-    private ModalDialog Dialog { get; set; }
+    private ModalDialog Dialog { get; set; } = default!;
+
     private AddTalkEntryModel model = new();
 
     public void Open()
@@ -42,6 +43,10 @@
 
     private async Task CreateTalk()
     {
+	    ArgumentNullException.ThrowIfNull(model.PresentationTitle);
+	    ArgumentNullException.ThrowIfNull(model.Place);
+	    ArgumentNullException.ThrowIfNull(model.Description);
+
         var talk = Talk.Create(model.PresentationTitle, model.Place, model.Description, model.PublishedDate);
         await TalkCreated.InvokeAsync(talk);
         model = new AddTalkEntryModel();

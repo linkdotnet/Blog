@@ -36,7 +36,7 @@
     public EventCallback<Skill> SkillAdded { get; set; }
 
     private AddSkillModel model = new();
-    private ModalDialog Dialog { get; set; }
+    private ModalDialog Dialog { get; set; } = default!;
 
     public void Open()
     {
@@ -46,6 +46,9 @@
 
     private async Task CreateSkillItem()
     {
+	    ArgumentNullException.ThrowIfNull(model.Skill);
+	    ArgumentNullException.ThrowIfNull(model.Capability);
+
         var skill = Skill.Create(model.Skill, model.ImageUrl, model.Capability, model.Proficiency);
         await SkillAdded.InvokeAsync(skill);
         model = new AddSkillModel();

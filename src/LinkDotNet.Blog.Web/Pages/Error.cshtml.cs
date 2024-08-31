@@ -8,7 +8,7 @@ namespace LinkDotNet.Blog.Web.Pages;
 [IgnoreAntiforgeryToken]
 public sealed partial class ErrorModel : PageModel
 {
-    public string RequestId { get; set; }
+    public string? RequestId { get; set; }
 
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 

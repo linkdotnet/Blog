@@ -124,7 +124,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
                 var currentBatchIds = idList.Skip(batch * batchSize).Take(batchSize).ToList();
 
                 await blogDbContext.Set<TEntity>()
-                    .Where(s => currentBatchIds.Contains(s.Id!))
+                    .Where(s => currentBatchIds.Contains(s.Id))
                     .ExecuteDeleteAsync();
 
                 LogDeleteBatch(batch + 1, (batch + 1) * batchSize);

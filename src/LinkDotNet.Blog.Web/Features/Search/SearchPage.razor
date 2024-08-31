@@ -13,8 +13,8 @@
     }
 </div>
 @code {
-    [Parameter]
-    public string SearchTerm { get; set; }
+    [Parameter, EditorRequired]
+    public required string SearchTerm { get; set; }
 
     private IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
 

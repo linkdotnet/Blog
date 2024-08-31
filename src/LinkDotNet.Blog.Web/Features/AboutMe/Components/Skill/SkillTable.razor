@@ -58,11 +58,11 @@
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
-    private AddSkillDialog AddSkillDialog { get; set; }
+    private AddSkillDialog AddSkillDialog { get; set; } = default!;
 
     private List<Skill> skills = [];
 
-    private Skill currentDragItem;
+    private Skill? currentDragItem;
 
     protected override async Task OnInitializedAsync()
     {

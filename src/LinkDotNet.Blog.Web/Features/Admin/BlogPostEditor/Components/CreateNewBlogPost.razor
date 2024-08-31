@@ -9,7 +9,7 @@
 		<DataAnnotationsValidator />
 		<div class="form-floating mb-3">
 			<input type="text" class="form-control" id="title" placeholder="Title"
-			       @oninput="args => model.Title = args.Value.ToString()" value="@model.Title"/>
+			       @oninput="args => model.Title = args.Value!.ToString()!" value="@model.Title"/>
 			<label for="title">Title</label>
 			<ValidationMessage For="() => model.Title"></ValidationMessage>
 		</div>
@@ -79,10 +79,10 @@
 <NavigationLock ConfirmExternalNavigation="@model.IsDirty" OnBeforeInternalNavigation="PreventNavigationWhenDirty"></NavigationLock>
 @code {
     [Parameter]
-    public BlogPost BlogPost { get; set; }
+    public BlogPost? BlogPost { get; set; }
 
-    [Parameter]
-    public string Title { get; set; }
+    [Parameter, EditorRequired]
+    public required string Title { get; set; }
 
     [Parameter]
     public EventCallback<BlogPost> OnBlogPostCreated { get; set; }
@@ -90,7 +90,7 @@
     [Parameter]
     public bool ClearAfterCreated { get; set; } = true;
 
-    private FeatureInfoDialog FeatureDialog { get; set; }
+    private FeatureInfoDialog FeatureDialog { get; set; } = default!;
 
     private CreateNewModel model = new();
 

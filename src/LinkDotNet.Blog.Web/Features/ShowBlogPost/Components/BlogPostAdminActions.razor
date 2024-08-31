@@ -22,10 +22,10 @@
 </AuthorizeView>
 
 @code {
-    [Parameter]
-    public string BlogPostId { get; set; }
+    [Parameter, EditorRequired]
+    public required string BlogPostId { get; set; }
 
-    private ConfirmDialog ConfirmDialog { get; set; }
+    private ConfirmDialog ConfirmDialog { get; set; } = default!;
 
     private async Task DeleteBlogPostAsync()
     {

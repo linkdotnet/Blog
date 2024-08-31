@@ -61,13 +61,13 @@
 		// This cache can be manually invalidated in the Admin UI (settings)
 	    if (Page == 1)
 	    {
-		    currentPage = await MemoryCache.GetOrCreateAsync(firstPageCacheKey, async entry =>
+		    currentPage = (await MemoryCache.GetOrCreateAsync(firstPageCacheKey, async entry =>
 		    {
 			    var cacheDuration = TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes);
 			    entry.AbsoluteExpirationRelativeToNow = cacheDuration;
 			    entry.AddExpirationToken(new CancellationChangeToken(CacheTokenProvider.Token));
 			    return await GetAllForPageAsync(1);
-		    });
+		    }))!;
 		    return;
 	    }
 

@@ -24,7 +24,7 @@ else if (!isLoading && BlogPost is null)
 		<p>Go back to <a href="/">safety</a></p>
 	</div>
 }
-else
+else if (BlogPost is not null)
 {
     <PageTitle>@BlogPost.Title</PageTitle>
 	<OgData Title="@BlogPost.Title"
@@ -95,18 +95,18 @@ else
 }
 
 @code {
-    [Parameter]
-    public string BlogPostId { get; set; }
+    [Parameter, EditorRequired]
+    public required string BlogPostId { get; set; }
 
     [Parameter]
-    public string Slug { get; set; }
+    public string? Slug { get; set; }
 
     private bool isLoading;
 
-	private string OgDataImage => BlogPost.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
-	private string BlogPostCanoncialUrl => $"blogPost/{BlogPost.Id}";
+	private string OgDataImage => BlogPost!.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
+	private string BlogPostCanoncialUrl => $"blogPost/{BlogPost?.Id}";
 
-    private BlogPost BlogPost { get; set; }
+	private BlogPost? BlogPost { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {

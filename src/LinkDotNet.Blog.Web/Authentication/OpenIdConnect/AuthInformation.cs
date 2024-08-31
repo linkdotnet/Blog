@@ -6,13 +6,13 @@ public sealed record AuthInformation
 
     public const string AuthInformationSection = "Authentication";
 
-    public string Provider { get; set; }
+    public required string Provider { get; set; }
 
-    public string Domain { get; init; }
+    public required string Domain { get; init; }
 
-    public string ClientId { get; init; }
+    public required string ClientId { get; init; }
 
-    public string ClientSecret { get; init; }
+    public required string ClientSecret { get; init; }
 
     public string LogoutUri
     {
