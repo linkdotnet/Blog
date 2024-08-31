@@ -39,21 +39,20 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask<TEntity> GetByIdAsync(string id)
     {
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        return await blogDbContext.Set<TEntity>().SingleOrDefaultAsync(b => b.Id == id);
+        return await blogDbContext.Set<TEntity>().FirstAsync(b => b.Id == id);
     }
 
-    public ValueTask<IPagedList<TEntity>> GetAllAsync(
-        Expression<Func<TEntity, bool>> filter = null,
-        Expression<Func<TEntity, object>> orderBy = null,
+    public ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue) =>
         GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<TEntity, TProjection>> selector,
-        Expression<Func<TEntity, bool>> filter = null,
-        Expression<Func<TEntity, object>> orderBy = null,
+        Expression<Func<TEntity, TProjection>>? selector,
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue)
@@ -125,7 +124,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
                 var currentBatchIds = idList.Skip(batch * batchSize).Take(batchSize).ToList();
 
                 await blogDbContext.Set<TEntity>()
-                    .Where(s => currentBatchIds.Contains(s.Id))
+                    .Where(s => currentBatchIds.Contains(s.Id!))
                     .ExecuteDeleteAsync();
 
                 LogDeleteBatch(batch + 1, (batch + 1) * batchSize);

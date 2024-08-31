@@ -105,8 +105,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         public ValueTask<BlogPost> GetByIdAsync(string id) => throw new NotImplementedException();
 
-        public ValueTask<IPagedList<BlogPost>> GetAllAsync(
-            Expression<Func<BlogPost, bool>> filter = null,
+        public ValueTask<IPagedList<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null,
             Expression<Func<BlogPost, object>> orderBy = null,
             bool descending = true,
             int page = 1,

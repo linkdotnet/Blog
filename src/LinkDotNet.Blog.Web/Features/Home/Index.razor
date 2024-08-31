@@ -78,6 +78,5 @@
 		=> BlogPostRepository.GetAllAsync(
 		p => p.IsPublished,
 		b => b.UpdatedDate,
-		pageSize: AppConfiguration.Value.BlogPostsPerPage,
-		page: page);
+		page: page, pageSize: AppConfiguration.Value.BlogPostsPerPage);
 }

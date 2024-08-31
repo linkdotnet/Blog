@@ -15,17 +15,16 @@ public interface IRepository<TEntity>
     ValueTask<TEntity> GetByIdAsync(string id);
 
     ValueTask<IPagedList<TEntity>> GetAllAsync(
-        Expression<Func<TEntity, bool>> filter = null,
-        Expression<Func<TEntity,
-            object>> orderBy = null,
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue);
 
     ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<TEntity, TProjection>> selector,
-        Expression<Func<TEntity, bool>> filter = null,
-        Expression<Func<TEntity, object>> orderBy = null,
+        Expression<Func<TEntity, TProjection>>? selector,
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue);

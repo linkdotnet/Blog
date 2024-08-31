@@ -39,18 +39,17 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         return await session.LoadAsync<TEntity>(id);
     }
 
-    public ValueTask<IPagedList<TEntity>> GetAllAsync(
-        Expression<Func<TEntity, bool>> filter = null,
-        Expression<Func<TEntity, object>> orderBy = null,
+    public ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue) =>
         GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<TEntity, TProjection>> selector,
-        Expression<Func<TEntity, bool>> filter = null,
-        Expression<Func<TEntity, object>> orderBy = null,
+        Expression<Func<TEntity, TProjection>>? selector,
+        Expression<Func<TEntity, bool>>? filter = null,
+        Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue)
