@@ -15,10 +15,9 @@ public class FooterTests : BunitContext
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().WithName("Steven").Build());
         Services.AddScoped(_ => profileInfoConfig);
 
-        var appConfig = Options.Create(new ApplicationConfiguration
-        {
-             IsAboutMeEnabled= true,
-        });
+        var appConfig = Options.Create(new ApplicationConfigurationBuilder()
+            .WithIsAboutMeEnabled(true)
+            .Build());
         Services.AddScoped(_ => appConfig);
         
         var cut = Render<Footer>();
@@ -29,7 +28,7 @@ public class FooterTests : BunitContext
     [Fact]
     public void ShouldNotSetNameIfAboutMeIsNotEnabled()
     {
-        var appConfig = new ApplicationConfiguration();
+        var appConfig = new ApplicationConfigurationBuilder().Build();
         Services.AddScoped(_ => Options.Create(appConfig));
 
         var cut = Render<Footer>();

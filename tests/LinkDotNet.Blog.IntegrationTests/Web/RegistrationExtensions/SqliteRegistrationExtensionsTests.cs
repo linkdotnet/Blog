@@ -1,5 +1,6 @@
 ﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.Options;
@@ -13,10 +14,9 @@ public class SqliteRegistrationExtensionsTests
     public void ShouldGetValidRepository()
     {
         var serviceCollection = new ServiceCollection();
-        var appConfig = Options.Create(new ApplicationConfiguration()
-        {
-            ConnectionString = "Filename=:memory:",
-        });
+        var appConfig = Options.Create(new ApplicationConfigurationBuilder()
+            .WithConnectionString("Filename=:memory:")
+            .Build());
         serviceCollection.AddScoped(_ => appConfig);
         serviceCollection.AddLogging();
 

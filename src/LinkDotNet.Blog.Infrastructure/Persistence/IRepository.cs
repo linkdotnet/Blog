@@ -12,7 +12,7 @@ public interface IRepository<TEntity>
 {
     ValueTask<HealthCheckResult> PerformHealthCheckAsync();
 
-    ValueTask<TEntity> GetByIdAsync(string id);
+    ValueTask<TEntity?> GetByIdAsync(string id);
 
     ValueTask<IPagedList<TEntity>> GetAllAsync(
         Expression<Func<TEntity, bool>>? filter = null,

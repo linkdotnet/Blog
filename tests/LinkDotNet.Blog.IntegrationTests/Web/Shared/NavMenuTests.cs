@@ -20,7 +20,7 @@ public class NavMenuTests : BunitContext
     [Fact]
     public void ShouldNavigateToSearchPage()
     {
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
         AddAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
         var cut = Render<NavMenu>();
@@ -34,10 +34,9 @@ public class NavMenuTests : BunitContext
     [Fact]
     public void ShouldDisplayAboutMePage()
     {
-        var config = Options.Create(new ApplicationConfiguration
-        {
-            IsAboutMeEnabled = true
-        });
+        var config = Options.Create(new ApplicationConfigurationBuilder()
+            .WithIsAboutMeEnabled(true)
+            .Build());
         Services.AddScoped(_ => config);
         AddAuthorization();
 
@@ -65,10 +64,9 @@ public class NavMenuTests : BunitContext
     [Fact]
     public void ShouldShowBrandImageIfAvailable()
     {
-        var config = Options.Create(new ApplicationConfiguration
-        {
-            BlogBrandUrl = "http://localhost/img.png",
-        });
+        var config = Options.Create(new ApplicationConfigurationBuilder()
+            .WithBlogBrandUrl("http://localhost/img.png")
+            .Build());
         Services.AddScoped(_ => config);
         
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
@@ -89,11 +87,10 @@ public class NavMenuTests : BunitContext
     [InlineData("")]
     public void ShouldShowBlogNameWhenNotBrand(string brandUrl)
     {
-        var config = Options.Create(new ApplicationConfiguration
-        {
-            BlogBrandUrl = brandUrl,
-            BlogName = "Steven",
-        });
+        var config = Options.Create(new ApplicationConfigurationBuilder()
+            .WithBlogBrandUrl(brandUrl)
+            .WithBlogName("Steven")
+            .Build());
         Services.AddScoped(_ => config);
         
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
@@ -106,6 +103,6 @@ public class NavMenuTests : BunitContext
         var brandImage = cut.Find(".nav-brand");
         var image = brandImage as IHtmlAnchorElement;
         image.Should().NotBeNull();
-        image.TextContent.Should().Be("Steven");
+        image!.TextContent.Should().Be("Steven");
     }
 }

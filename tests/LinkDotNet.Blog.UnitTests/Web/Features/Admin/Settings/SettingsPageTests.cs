@@ -1,4 +1,5 @@
 using Blazored.Toast.Services;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.Settings;
 using LinkDotNet.Blog.Web.Features.Services;
@@ -15,7 +16,7 @@ public class SettingsPageTests : BunitContext
     {
         var cacheInvalidator = Substitute.For<ICacheInvalidator>();
         Services.AddScoped(_ => cacheInvalidator);
-        Services.AddScoped(_ => Options.Create<ApplicationConfiguration>(new()));
+        Services.AddScoped(_ => Options.Create<ApplicationConfiguration>(new ApplicationConfigurationBuilder().Build()));
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         var cut = Render<SettingsPage>();

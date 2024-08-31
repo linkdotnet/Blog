@@ -25,7 +25,7 @@ public class ShowBlogPostPageTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
         AddAuthorization();
         ComponentFactories.AddStub<PageTitle>();
         ComponentFactories.AddStub<Like>();
@@ -125,10 +125,9 @@ public class ShowBlogPostPageTests : BunitContext
     [InlineData(false)]
     public void ShowReadingIndicatorWhenEnabled(bool isEnabled)
     {
-        var appConfiguration = new ApplicationConfiguration
-        {
-            ShowReadingIndicator = isEnabled,
-        };
+        var appConfiguration = new ApplicationConfigurationBuilder()
+            .WithShowReadingIndicator(isEnabled)
+            .Build();
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()
             .Build();

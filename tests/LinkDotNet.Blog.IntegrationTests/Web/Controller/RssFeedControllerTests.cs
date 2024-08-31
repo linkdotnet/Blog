@@ -28,10 +28,9 @@ public class RssFeedControllerTests
         {
             HttpContext = httpContext,
         };
-        var config = Options.Create(new ApplicationConfiguration
-        {
-            BlogName = "Test"
-        });
+        var config = Options.Create(new ApplicationConfigurationBuilder()
+            .WithBlogName("Test")
+            .Build());
 
         var introduction = new IntroductionBuilder()
             .WithDescription("Description")

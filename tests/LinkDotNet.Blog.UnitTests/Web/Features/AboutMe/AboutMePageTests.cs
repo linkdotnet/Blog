@@ -28,10 +28,9 @@ public class AboutMePageTests : BunitContext
         AddAuthorization().SetAuthorized("test");
         var config = new ProfileInformationBuilder().Build();
         
-        var applicationConfiguration = new ApplicationConfiguration
-        {
-            IsAboutMeEnabled = true
-        };
+        var applicationConfiguration = new ApplicationConfigurationBuilder()
+            .WithIsAboutMeEnabled(true)
+            .Build();
         
         SetupMocks(config, applicationConfiguration);
 
@@ -48,10 +47,9 @@ public class AboutMePageTests : BunitContext
         AddAuthorization().SetNotAuthorized();
         var config = new ProfileInformationBuilder().Build();
         
-        var applicationConfiguration = new ApplicationConfiguration
-        {
-            IsAboutMeEnabled = false
-        };
+        var applicationConfiguration = new ApplicationConfigurationBuilder()
+            .WithIsAboutMeEnabled(false)
+            .Build();
         
         SetupMocks(config, applicationConfiguration);
 
@@ -69,10 +67,9 @@ public class AboutMePageTests : BunitContext
             .WithName("My Name")
             .WithProfilePictureUrl("someurl")
             .Build();
-        var applicationConfiguration = new ApplicationConfiguration
-        {
-            IsAboutMeEnabled = true
-        };
+        var applicationConfiguration = new ApplicationConfigurationBuilder()
+            .WithIsAboutMeEnabled(true)
+            .Build();
         SetupMocks(profileInformation, applicationConfiguration);
 
         var cut = Render<AboutMePage>();

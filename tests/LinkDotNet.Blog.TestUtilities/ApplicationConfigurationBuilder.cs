@@ -17,6 +17,7 @@ public class ApplicationConfigurationBuilder
     private bool showReadingIndicator;
     private string? patreonName;
     private bool showSimilarPosts;
+    private string? blogBrandUrl;
 
     public ApplicationConfigurationBuilder WithBlogName(string blogName)
     {
@@ -96,6 +97,12 @@ public class ApplicationConfigurationBuilder
         return this;
     }
     
+    public ApplicationConfigurationBuilder WithBlogBrandUrl(string blogBrandUrl)
+    {
+        this.blogBrandUrl = blogBrandUrl;
+        return this;
+    }
+    
     public ApplicationConfiguration Build()
     {
         return new ApplicationConfiguration
@@ -113,6 +120,7 @@ public class ApplicationConfigurationBuilder
             ShowReadingIndicator = showReadingIndicator,
             PatreonName = patreonName,
             ShowSimilarPosts = showSimilarPosts,
+            BlogBrandUrl = blogBrandUrl,
         };
     }
 }

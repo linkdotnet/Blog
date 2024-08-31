@@ -15,10 +15,10 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
 
     public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => ValueTask.FromResult(HealthCheckResult.Healthy());
 
-    public ValueTask<TEntity> GetByIdAsync(string id)
+    public ValueTask<TEntity?> GetByIdAsync(string id)
     {
-        var entity = entities.First(b => b.Id == id);
-        return new ValueTask<TEntity>(entity);
+        var entity = entities.Find(b => b.Id == id);
+        return new ValueTask<TEntity?>(entity);
     }
 
     public ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,

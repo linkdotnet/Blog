@@ -33,7 +33,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public async ValueTask<TEntity> GetByIdAsync(string id)
+    public async ValueTask<TEntity?> GetByIdAsync(string id)
     {
         using var session = documentStore.OpenAsyncSession();
         return await session.LoadAsync<TEntity>(id);

@@ -48,7 +48,7 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = new ApplicationConfiguration();
+        var appConfiguration = new ApplicationConfigurationBuilder().Build();
         var profileInfoSection = configuration.GetSection(ProfileInformation.ProfileInformationSection);
         appConfiguration.IsAboutMeEnabled = profileInfoSection.Exists();
         configuration.Bind(appConfiguration);
@@ -65,14 +65,14 @@ public class ApplicationConfigurationTests
         appConfiguration.PatreonName.Should().Be("linkdotnet");
         appConfiguration.IsPatreonEnabled.Should().BeTrue();
         
-        var giscusConfiguration = new GiscusConfiguration();
+        var giscusConfiguration = new GiscusConfigurationBuilder().Build();
         configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);
         giscusConfiguration.Repository.Should().Be("repo");
         giscusConfiguration.RepositoryId.Should().Be("repoid");
         giscusConfiguration.Category.Should().Be("general");
         giscusConfiguration.CategoryId.Should().Be("generalid");
         
-        var disqusConfiguration = new DisqusConfiguration();
+        var disqusConfiguration = new DisqusConfigurationBuilder().Build();
         configuration.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(disqusConfiguration);
         disqusConfiguration.Shortname.Should().Be("blog");
         
@@ -97,7 +97,7 @@ public class ApplicationConfigurationTests
         introduction.ProfilePictureUrl.Should().Be("anotherurl");
         introduction.Description.Should().Be("desc");
         
-        var authInformation = new AuthInformation();
+        var authInformation = new AuthInformationBuilder().Build();
         configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
         authInformation.Provider.Should().Be("Auth0");
         authInformation.ClientId.Should().Be("123");
@@ -152,7 +152,7 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = new ApplicationConfiguration();
+        var appConfiguration = new ApplicationConfigurationBuilder().Build();
         configuration.Bind(appConfiguration);
 
         appConfiguration.IsAboutMeEnabled.Should().BeFalse();
@@ -171,7 +171,7 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var appConfiguration = new ApplicationConfiguration();
+        var appConfiguration = new ApplicationConfigurationBuilder().Build();
         configuration.Bind(appConfiguration);
 
         appConfiguration.IsGiscusEnabled.Should().BeFalse();
@@ -185,7 +185,7 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(new Dictionary<string, string>())
             .Build();
 
-        var appConfiguration = new ApplicationConfiguration();
+        var appConfiguration = new ApplicationConfigurationBuilder().Build();
         configuration.Bind(appConfiguration);
 
         appConfiguration.BlogPostsPerPage.Should().Be(10);
@@ -202,7 +202,7 @@ public class ApplicationConfigurationTests
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        var authInformation = new AuthInformation();
+        var authInformation = new AuthInformationBuilder().Build();
         configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
 
         authInformation.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");

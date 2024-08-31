@@ -22,7 +22,7 @@ public sealed class CachedRepository<T> : IRepository<T>
 
     public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => repository.PerformHealthCheckAsync();
 
-    public async ValueTask<T> GetByIdAsync(string id) =>
+    public async ValueTask<T?> GetByIdAsync(string id) =>
         (await memoryCache.GetOrCreateAsync(id, async entry =>
         {
             entry.SlidingExpiration = TimeSpan.FromDays(7);
