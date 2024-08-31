@@ -178,10 +178,10 @@ public class ProfileTests : BunitContext
     }
 
     private RenderedComponent<Profile> RenderProfileWithEmptyInformation()
-        => Render<Profile>(p => p.Add(s => s.ProfileInformation, new()));
+        => Render<Profile>(p => p.Add(s => s.ProfileInformation, new ProfileInformationBuilder().Build()));
 
     private RenderedComponent<Profile> RenderProfileInAdmin()
         => Render<Profile>(p => p
-            .Add(s => s.ProfileInformation, new())
+            .Add(s => s.ProfileInformation, new ProfileInformationBuilder().Build())
             .Add(s => s.ShowAdminActions, true));
 }

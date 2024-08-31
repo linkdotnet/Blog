@@ -28,15 +28,15 @@ public class RssFeedControllerTests
         {
             HttpContext = httpContext,
         };
-        var config = Options.Create<ApplicationConfiguration>(new ApplicationConfiguration
+        var config = Options.Create(new ApplicationConfiguration
         {
             BlogName = "Test"
         });
-        
-        var introductionConfig = Options.Create<Introduction>(new Introduction
-        {
-            Description = "Description",
-        });
+
+        var introduction = new IntroductionBuilder()
+            .WithDescription("Description")
+            .Build();
+        var introductionConfig = Options.Create(introduction);
         var blogPost1 = new BlogPostBuilder()
             .WithTitle("1")
             .WithShortDescription("Short 1")

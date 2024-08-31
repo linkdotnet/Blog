@@ -9,9 +9,9 @@ public class BlogPostBuilder
     private string shortDescription = "Some Text";
     private string content = "Some Content";
     private string previewImageUrl = "localhost";
-    private string previewImageUrlFallback;
+    private string? previewImageUrlFallback;
     private bool isPublished = true;
-    private string[] tags;
+    private string[] tags = [];
     private int likes;
     private DateTime? updateDate;
     private DateTime? scheduledPublishDate;

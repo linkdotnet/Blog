@@ -1,6 +1,7 @@
 using System.Linq;
 using AngleSharp.Css.Dom;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options; 
@@ -12,10 +13,7 @@ public class IntroductionCardTests : BunitContext
     [Fact]
     public void ShouldSetBackgroundWhenSet()
     {
-        var introduction = new Introduction
-        {
-            BackgroundUrl = "something_but_null",
-        };
+        var introduction = new IntroductionBuilder().WithBackgroundUrl("something_but_null").Build();
         
         Services.AddScoped(_ => Options.Create(introduction));
 
@@ -32,10 +30,7 @@ public class IntroductionCardTests : BunitContext
     [InlineData("")]
     public void ShouldNotSetBackgroundWhenNotSet(string url)
     {
-        var introduction = new Introduction
-        {
-            BackgroundUrl = url,
-        };
+        var introduction = new IntroductionBuilder().WithBackgroundUrl(url).Build();
 
         Services.AddScoped(_ => Options.Create(introduction));
 
