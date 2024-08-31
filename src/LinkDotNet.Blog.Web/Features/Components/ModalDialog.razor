@@ -19,11 +19,11 @@
 }
 
 @code {
-    [Parameter]
-    public string Title { get; set; }
+    [Parameter, EditorRequired]
+    public required string Title { get; set; }
 
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
 
     private string modalDisplay = "none;";
     private string modalClass = "";

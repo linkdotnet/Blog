@@ -20,20 +20,22 @@ else
 }
 
 @code {
-    [Parameter]
-    public string BlogPostId { get; set; }
+    [Parameter, EditorRequired]
+    public required string BlogPostId { get; set; }
 
-    private BlogPost blogPostFromDb;
+    private BlogPost? blogPostFromDb;
 
     protected override async Task OnParametersSetAsync()
     {
-        ArgumentException.ThrowIfNullOrEmpty(BlogPostId, nameof(BlogPostId));
+        ArgumentException.ThrowIfNullOrEmpty(BlogPostId);
 
         blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
     }
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
+	    ArgumentNullException.ThrowIfNull(blogPostFromDb);
+
         blogPostFromDb.Update(blogPost);
         await BlogPostRepository.StoreAsync(blogPostFromDb);
         ToastService.ShowInfo($"Updated BlogPost {blogPost.Title}");

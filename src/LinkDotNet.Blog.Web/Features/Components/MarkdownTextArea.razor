@@ -33,11 +33,9 @@
     [Parameter]
     public EventCallback<string> ValueChanged { get; set; }
 
-    [Parameter]
-    public string Class { get; set; }
+    [Parameter] public string Class { get; set; } = string.Empty;
 
-    [Parameter]
-    public string Id { get; set; }
+    [Parameter] public string Id { get; set; } = string.Empty;
 
     [Parameter]
     public int Rows { get; set; }

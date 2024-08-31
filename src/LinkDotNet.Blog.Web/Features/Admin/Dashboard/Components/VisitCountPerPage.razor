@@ -52,7 +52,7 @@
 
 @code {
     private Filter filter = new();
-    private IReadOnlyCollection<VisitCountPageData> visitData;
+    private IReadOnlyCollection<VisitCountPageData> visitData = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -63,7 +63,7 @@
 		IRepository<BlogPost> blogPostRepository,
 		Filter filter)
 	{
-		Expression<Func<BlogPost, bool>> blogPostFilter = filter.EndDate.HasValue
+		Expression<Func<BlogPost, bool>>? blogPostFilter = filter.EndDate.HasValue
 			? bp => bp.UpdatedDate.Date <= filter.EndDate.Value.ToDateTime(default)
 			: null;
 

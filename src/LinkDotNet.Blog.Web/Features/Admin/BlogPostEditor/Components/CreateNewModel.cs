@@ -7,15 +7,15 @@ namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 public sealed class CreateNewModel
 {
     private DateTime originalUpdatedDate;
-    private string id;
-    private string title;
-    private string shortDescription;
-    private string content;
-    private string previewImageUrl;
+    private string id = string.Empty;
+    private string title = string.Empty;
+    private string shortDescription = string.Empty;
+    private string content = string.Empty;
+    private string previewImageUrl = string.Empty;
     private bool isPublished = true;
     private bool shouldUpdateDate;
-    private string tags;
-    private string previewImageUrlFallback;
+    private string tags = string.Empty;
+    private string previewImageUrlFallback = string.Empty;
     private DateTime? scheduledPublishDate;
 
     [Required]
@@ -100,7 +100,7 @@ public sealed class CreateNewModel
             IsPublished = blogPost.IsPublished,
             PreviewImageUrl = blogPost.PreviewImageUrl,
             originalUpdatedDate = blogPost.UpdatedDate,
-            PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback,
+            PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback ?? string.Empty,
             ScheduledPublishDate = blogPost.ScheduledPublishDate,
             IsDirty = false,
         };

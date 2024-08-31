@@ -13,8 +13,8 @@
     <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
 }
 @code {
-    [Parameter]
-    public string Tag { get; set; }
+    [Parameter, EditorRequired]
+    public required string Tag { get; set; }
 
     IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
     protected override async Task OnParametersSetAsync()

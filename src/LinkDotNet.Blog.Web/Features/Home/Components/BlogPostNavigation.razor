@@ -12,8 +12,8 @@
     </nav>
 
 @code {
-    [Parameter]
-    public IPagedList<T> PageList { get; set; }
+    [Parameter, EditorRequired]
+    public required IPagedList<T> PageList { get; set; }
 
     private string PreviousPageLink => PageList.IsFirstPage ? string.Empty : $"/{PageList.PageNumber - 1}";
     private string NextPageLink => PageList.IsLastPage ? string.Empty : $"/{PageList.PageNumber + 1}";

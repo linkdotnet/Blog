@@ -6,7 +6,7 @@ namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 [AttributeUsage(AttributeTargets.Property)]
 public sealed class PublishedWithScheduledDateValidationAttribute : ValidationAttribute
 {
-    protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         ArgumentNullException.ThrowIfNull(validationContext);
 

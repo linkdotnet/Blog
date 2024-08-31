@@ -50,13 +50,13 @@ OnYesPressed="DeleteItem"></ConfirmDialog>
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
-	[Parameter]
-	public ProfileInformation ProfileInformation { get; set; }
+	[Parameter, EditorRequired]
+	public required ProfileInformation ProfileInformation { get; set; }
 
     private List<ProfileInformationEntry> profileInformationEntries = [];
-    private ConfirmDialog Dialog { get; set; }
-    private string currentDeleteKey;
-    private ProfileInformationEntry currentDragItem;
+    private ConfirmDialog Dialog { get; set; } = default!;
+    private string? currentDeleteKey;
+    private ProfileInformationEntry? currentDragItem;
 
     protected override async Task OnInitializedAsync()
     {

@@ -60,7 +60,7 @@
         NavigationManager.LocationChanged -= UpdateUri;
     }
 
-    private void UpdateUri(object sender, LocationChangedEventArgs e)
+    private void UpdateUri(object? sender, LocationChangedEventArgs e)
     {
         currentUri = e.Location;
         StateHasChanged();

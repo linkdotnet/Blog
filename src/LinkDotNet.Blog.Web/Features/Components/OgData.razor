@@ -27,23 +27,23 @@
 </HeadContent>
 @code {
 
-    [Parameter]
-    public string Title { get; set; }
+    [Parameter, EditorRequired]
+    public required string Title { get; set; }
 
     [Parameter]
-    public string AbsolutePreviewImageUrl { get; set; }
+    public string? AbsolutePreviewImageUrl { get; set; }
 
     [Parameter]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [Parameter]
-    public string Keywords { get; set; }
+    public string? Keywords { get; set; }
 
     [Parameter]
-    public string CanonicalRelativeUrl { get; set; }
+    public string? CanonicalRelativeUrl { get; set; }
 
 	[Parameter]
-	public RenderFragment ChildContent { get; set; }
+	public RenderFragment? ChildContent { get; set; }
 
 	private string GetCanoncialUri()
     {

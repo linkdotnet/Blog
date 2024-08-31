@@ -8,8 +8,8 @@
 </div>
 
 @code {
-	[Parameter]
-	public string ContainerCssSelector { get; set; }
+	[Parameter, EditorRequired]
+	public required string ContainerCssSelector { get; set; }
 
 	private ElementReference progressContainer;
 

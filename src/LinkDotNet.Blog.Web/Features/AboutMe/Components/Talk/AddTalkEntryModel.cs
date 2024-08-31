@@ -7,14 +7,14 @@ public sealed class AddTalkEntryModel
 {
     [Required]
     [MaxLength(256)]
-    public string PresentationTitle { get; set; }
+    public string? PresentationTitle { get; set; }
 
     [Required]
     [MaxLength(256)]
-    public string Place { get; set; }
+    public string? Place { get; set; }
 
     [Required]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [Required]
     public DateTime PublishedDate { get; set; } = DateTime.Now;

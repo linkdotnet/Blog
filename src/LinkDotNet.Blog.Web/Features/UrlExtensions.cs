@@ -12,7 +12,7 @@ public static class UrlExtensions
         }
 
         var successful = Uri.TryCreate(new Uri(baseUrl, UriKind.Absolute), new Uri(url, UriKind.RelativeOrAbsolute), out var uri);
-        return successful ? uri.ToString() : url;
+        return successful ? uri!.ToString() : url;
     }
 
     private static bool IsAbsoluteUrl(string url) => Uri.TryCreate(url, UriKind.Absolute, out _);

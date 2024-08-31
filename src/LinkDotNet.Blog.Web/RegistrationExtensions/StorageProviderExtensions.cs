@@ -15,7 +15,8 @@ public static class StorageProviderExtensions
 
         services.AddMemoryCache();
 
-        var persistenceProvider = PersistenceProvider.Create(configuration["PersistenceProvider"]);
+        var provider = configuration["PersistenceProvider"] ?? throw new InvalidOperationException("No persistence provider configured");
+        var persistenceProvider = PersistenceProvider.Create(provider);
 
         if (persistenceProvider == PersistenceProvider.InMemory)
         {

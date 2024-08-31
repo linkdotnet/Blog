@@ -10,6 +10,6 @@
 </a>
 
 @code {
-	[Parameter]
-	public string PatreonName { get; set; }
+	[Parameter, EditorRequired]
+	public required string PatreonName { get; set; }
 }

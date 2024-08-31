@@ -7,6 +7,7 @@ using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
 using Microsoft.AspNetCore.Components;
+using MongoDB.Driver.Linq;
 
 namespace LinkDotNet.Blog.Web.Features;
 
@@ -26,7 +27,7 @@ public static class MarkdownConverter
             : (MarkupString)Markdown.ToHtml(markdown, MarkdownPipeline);
     }
 
-    public static string ToPlainString(string markdown)
+    public static string? ToPlainString(string markdown)
     {
         return string.IsNullOrEmpty(markdown)
             ? default
@@ -42,18 +43,20 @@ public static class MarkdownConverter
             .Where(h => h.Inline?.FirstChild is not null)
             .Select(heading => new TocItem
             {
-                Level = heading.Level, Text = InlineToString(heading.Inline), Id = heading.GetAttributes().Id
+                Level = heading.Level,
+                Text = InlineToString(heading.Inline),
+                Id = heading.GetAttributes().Id!
             })
             .ToArray();
     }
 
-    private static string InlineToString(ContainerInline inline)
+    private static string InlineToString(ContainerInline? inline)
     {
         var sb = new StringBuilder();
         ProcessInlineDelegate(inline, sb);
         return sb.ToString();
 
-        static void ProcessInlineDelegate(Inline inline, StringBuilder stringBuilder)
+        static void ProcessInlineDelegate(Inline? inline, StringBuilder stringBuilder)
         {
             if (inline is null)
             {
@@ -97,6 +100,6 @@ public static class MarkdownConverter
 public class TocItem
 {
     public int Level { get; set; }
-    public string Text { get; set; }
-    public string Id { get; set; }
+    public required string Text { get; set; }
+    public required string Id { get; set; }
 }

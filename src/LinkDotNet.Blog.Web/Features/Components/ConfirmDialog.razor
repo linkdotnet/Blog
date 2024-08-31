@@ -1,22 +1,22 @@
 ﻿<ModalDialog @ref="ModalDialog" Title="@Title">
     <h3>@Content</h3>
     <div class="actions">
-        <button id="ok" @onclick="OnYesButtonPressed" type="button" class="btn btn-primary">Ok</button> 
-        <button id="cancel" @onclick="OnNoButtonPressed" type="button" class="btn btn-secondary">Cancel</button> 
+        <button id="ok" @onclick="OnYesButtonPressed" type="button" class="btn btn-primary">Ok</button>
+        <button id="cancel" @onclick="OnNoButtonPressed" type="button" class="btn btn-secondary">Cancel</button>
     </div>
 </ModalDialog>
 
 @code {
-    [Parameter]
-    public string Title { get; set; }
-    
-    [Parameter]
-    public string Content { get; set; }
-    
+    [Parameter, EditorRequired]
+    public required string Title { get; set; }
+
+    [Parameter, EditorRequired]
+    public required string Content { get; set; }
+
     [Parameter]
     public EventCallback OnYesPressed { get; set; }
 
-    private ModalDialog ModalDialog { get; set; }
+    private ModalDialog ModalDialog { get; set; } = default!;
 
     private async Task OnYesButtonPressed()
     {

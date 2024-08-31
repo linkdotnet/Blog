@@ -4,5 +4,5 @@ public sealed record DisqusConfiguration
 {
     public const string DisqusConfigurationSection = "Disqus";
 
-    public string Shortname { get; init; }
+    public required string Shortname { get; init; }
 }

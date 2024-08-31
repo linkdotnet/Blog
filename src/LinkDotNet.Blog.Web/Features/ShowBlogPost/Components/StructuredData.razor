@@ -4,20 +4,20 @@
 <script suppress-error="BL9992" type="application/ld+json">@StructuredDataJson</script>
 
 @code {
-	[Parameter]
-	public string Headline { get; set; }
+	[Parameter, EditorRequired]
+	public required string Headline { get; set; }
+
+	[Parameter, EditorRequired]
+	public required string PreviewImage { get; set; }
 
 	[Parameter]
-	public string PreviewImage { get; set; }
+	public string? PreviewFallbackImage { get; set; }
 
-	[Parameter]
-	public string PreviewFallbackImage { get; set; }
-
-	[Parameter]
+	[Parameter, EditorRequired]
 	public DateTime PublishedDate { get; set; }
 
-	[Parameter]
-	public string Author { get; set; }
+	[Parameter, EditorRequired]
+	public required string Author { get; set; }
 
 	private MarkupString StructuredDataJson { get; set; }
 
@@ -49,24 +49,24 @@
 	private class NewsArticle
 	{
 		[JsonPropertyName("@context")]
-		public string Context { get; set; }
+		public required string Context { get; set; }
 
 		[JsonPropertyName("@type")]
-		public string Type { get; set; }
+		public required string Type { get; set; }
 
 		[JsonPropertyName("headline")]
-		public string Headline { get; set; }
+		public required string Headline { get; set; }
 
 		[JsonPropertyName("author")]
-		public string Author { get; set; }
+		public required string Author { get; set; }
 
 		[JsonPropertyName("image")]
-		public List<string> Image { get; set; }
+		public List<string> Image { get; set; } = [];
 
 		[JsonPropertyName("datePublished")]
-		public string DatePublished { get; set; }
+		public required string DatePublished { get; set; }
 
 		[JsonPropertyName("dateModified")]
-		public string DateModified { get; set; }
+		public required string DateModified { get; set; }
 	}
 }

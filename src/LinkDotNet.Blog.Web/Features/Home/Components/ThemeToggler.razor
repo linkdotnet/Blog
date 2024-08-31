@@ -9,7 +9,7 @@
 	public string Class { get; set; } = string.Empty;
 
 	private const string StorageKey = "preferred-theme";
-	private string currentTheme;
+	private string? currentTheme;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
