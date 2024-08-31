@@ -138,19 +138,19 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".blog-card").Count.Should().Be(10);
     }
 
-    private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction) CreateSampleAppConfiguration(string profilePictureUri = null)
+    private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction)
+        CreateSampleAppConfiguration(string profilePictureUri = null)
     {
-        return (new ApplicationConfiguration
+        return (new ApplicationConfigurationBuilder()
+                .WithBlogName(string.Empty)
+                .WithBlogPostsPerPage(10)
+                .Build(),
+            new Introduction
             {
-            BlogName = string.Empty,
-            BlogPostsPerPage = 10,
-        },
-        new Introduction
-        {
-            Description = string.Empty,
-            BackgroundUrl = string.Empty,
-            ProfilePictureUrl = profilePictureUri ?? string.Empty,
-        });
+                Description = string.Empty,
+                BackgroundUrl = string.Empty,
+                ProfilePictureUrl = profilePictureUri ?? string.Empty,
+            });
     }
 
     private async Task CreatePublishedBlogPosts(int amount)

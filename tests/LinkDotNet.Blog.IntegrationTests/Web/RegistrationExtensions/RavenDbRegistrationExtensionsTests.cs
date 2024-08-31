@@ -1,5 +1,6 @@
 ﻿using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +14,10 @@ public class RavenDbRegistrationExtensionsTests
     public void ShouldGetValidRepository()
     {
         var serviceCollection = new ServiceCollection();
-        var appConfig = Options.Create(new ApplicationConfiguration
-        {
-            ConnectionString = "http://localhost",
-            DatabaseName = "Blog",
-        });
+        var appConfig = Options.Create(new ApplicationConfigurationBuilder()
+            .WithBlogName("Blog")
+            .WithConnectionString("http://localhost")
+            .Build());
         serviceCollection.AddScoped(_ => appConfig);
 
         serviceCollection.UseRavenDbAsStorageProvider();

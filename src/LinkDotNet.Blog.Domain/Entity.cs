@@ -2,5 +2,5 @@
 
 public abstract class Entity
 {
-    public string Id { get; set; } = string.Empty;
+    public string Id { get; set; } = default!;
 }

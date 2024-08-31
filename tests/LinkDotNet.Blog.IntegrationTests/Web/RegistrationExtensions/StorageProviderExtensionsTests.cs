@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +49,10 @@ public class StorageProviderExtensionsTests
         var collection = new ServiceCollection();
         var config = Substitute.For<IConfiguration>();
         config["PersistenceProvider"].Returns("Sqlite");
-        collection.AddScoped(_ => Options.Create(new ApplicationConfiguration { ConnectionString = "Filename=:memory:" }));
+        collection.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder()
+            .WithConnectionString("Filename=:memory:")
+            .Build()));
+        
         collection.AddLogging();
 
         collection.AddStorageProvider(config);

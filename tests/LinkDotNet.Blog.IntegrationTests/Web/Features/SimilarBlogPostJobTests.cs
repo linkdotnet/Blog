@@ -30,7 +30,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
-        var config = Options.Create(new ApplicationConfiguration { ShowSimilarPosts = true });
+        var config = Options.Create(new ApplicationConfigurationBuilder().WithShowSimilarPosts(true).Build());
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, config);
         var context = Substitute.For<IJobExecutionContext>();
@@ -50,7 +50,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
-        var config = Options.Create(new ApplicationConfiguration { ShowSimilarPosts = false });
+        var config = Options.Create(new ApplicationConfigurationBuilder().WithShowSimilarPosts(false).Build());
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, config);
         var context = Substitute.For<IJobExecutionContext>();
@@ -70,7 +70,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
-        var config = Options.Create(new ApplicationConfiguration { ShowSimilarPosts = true });
+        var config = Options.Create(new ApplicationConfigurationBuilder().WithShowSimilarPosts(true).Build());
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, config);
         await job.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);

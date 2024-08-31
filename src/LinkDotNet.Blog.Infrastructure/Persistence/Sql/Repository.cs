@@ -36,10 +36,10 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         }
     }
 
-    public async ValueTask<TEntity> GetByIdAsync(string id)
+    public async ValueTask<TEntity?> GetByIdAsync(string id)
     {
         var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        return await blogDbContext.Set<TEntity>().FirstAsync(b => b.Id == id);
+        return await blogDbContext.Set<TEntity>().FirstOrDefaultAsync(b => b.Id == id);
     }
 
     public ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,

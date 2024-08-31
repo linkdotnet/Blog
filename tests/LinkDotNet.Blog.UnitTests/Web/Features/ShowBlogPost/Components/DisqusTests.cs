@@ -1,4 +1,5 @@
 using System.Linq;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,12 +12,13 @@ public class DisqusTests : BunitContext
     [Fact]
     public void ShouldLoadJavascript()
     {
-        var disqusData = new DisqusConfiguration()
-        {
-            Shortname = "blog",
-        };
+        var disqusData = new DisqusConfigurationBuilder()
+            .WithShortName("blog")
+            .Build();
         Services.AddScoped(_ => Options.Create(disqusData));
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration { IsDisqusEnabled = true }));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder()
+            .WithIsDisqusEnabled(true)
+            .Build()));
         JSInterop.SetupModule("./Features/ShowBlogPost/Components/Disqus.razor.js");
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -30,7 +32,7 @@ public class DisqusTests : BunitContext
     [Fact]
     public void ShouldNotInitDisqusWhenNoInformationProvided()
     {
-        Services.AddScoped(_ => Options.Create(new ApplicationConfiguration()));
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
 
         Render<Disqus>();
 
