@@ -54,7 +54,7 @@ public static class SqlRegistrationExtensions
         {
             var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
             var connectionString = configuration.Value.ConnectionString;
-            builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+            builder.UseMySQL(connectionString)
 #if DEBUG
                 .EnableDetailedErrors()
 #endif
