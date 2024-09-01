@@ -6,6 +6,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,11 +16,13 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components
 
 public class CreateNewBlogPostTests : BunitContext
 {
+    private readonly CacheService cacheService = new CacheService();
     public CreateNewBlogPostTests()
     {
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
+        Services.AddScoped<ICacheInvalidator>(_ => cacheService);
     }
 
     [Fact]
@@ -248,5 +251,22 @@ public class CreateNewBlogPostTests : BunitContext
 
         var element = cut.Find("#published") as IHtmlInputElement;
         element.IsChecked.Should().BeFalse();
+    }
+    
+    [Fact]
+    public void GivenBlogPost_WhenCacheInvalidatedOptionIsSet_CacheIsInvalidated()
+    {
+        var cut = Render<CreateNewBlogPost>();
+        var token = cacheService.Token;
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
+        cut.Find("#preview").Change("My preview url");
+        cut.Find("#published").Change(false);
+        cut.Find("#invalidate-cache").Change(true);
+
+        cut.Find("form").Submit();
+
+        token.IsCancellationRequested.Should().BeTrue();
     }
 }

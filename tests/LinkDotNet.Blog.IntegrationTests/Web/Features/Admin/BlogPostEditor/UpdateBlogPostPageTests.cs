@@ -9,6 +9,7 @@ using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,6 +26,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         var toastService = Substitute.For<IToastService>();
+        ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         var instantRegistry = Substitute.For<IInstantJobRegistry>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);
@@ -53,6 +55,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
+        ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
 
         Action act = () => ctx.Render<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, null));

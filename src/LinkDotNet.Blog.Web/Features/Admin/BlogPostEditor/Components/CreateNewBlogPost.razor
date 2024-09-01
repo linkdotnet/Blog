@@ -1,6 +1,8 @@
 ﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Services
 @using NCronJob
 @inject IJSRuntime JSRuntime
+@inject ICacheInvalidator CacheInvalidator
 @inject IInstantJobRegistry InstantJobRegistry
 
 <div class="container">
@@ -66,9 +68,15 @@
 		}
 		<div class="mb-3">
 			<button class="btn btn-primary position-relative" type="submit" disabled="@(!canSubmit)">Submit</button>
-			<div class="alert alert-info text-muted form-text  mt-3 mb-0">
+			<div class="alert alert-info text-muted form-text mt-3 mb-3">
 				The first page of the blog is cached. Therefore, the blog post is not immediately visible.
-				Head over to <a href="/settings">settings</a> to invalidate the cache.
+				Head over to <a href="/settings">settings</a> to invalidate the cache or enable the checkmark.
+				<br>
+				The option should be enabled if you want to publish the blog post immediately and it should be visible on the first page.
+			</div>
+			<div class="form-check form-switch mb-3">
+				<InputCheckbox class="form-check-input" id="invalidate-cache" @bind-Value="model.ShouldInvalidateCache"/>
+				<label class="form-check-label" for="invalidate-cache">Invalidate Cache</label><br/>
 			</div>
 		</div>
 	</EditForm>
@@ -121,6 +129,11 @@
     {
 	    canSubmit = false;
         await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
+        if (model.ShouldInvalidateCache)
+		{
+			CacheInvalidator.Cancel();
+		}
+
         InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
         ClearModel();
 	    canSubmit = true;

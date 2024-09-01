@@ -14,6 +14,7 @@ public sealed class CreateNewModel
     private string previewImageUrl = string.Empty;
     private bool isPublished = true;
     private bool shouldUpdateDate;
+    private bool shouldInvalidateCache;
     private string tags = string.Empty;
     private string previewImageUrlFallback = string.Empty;
     private DateTime? scheduledPublishDate;
@@ -82,6 +83,12 @@ public sealed class CreateNewModel
     {
         get => previewImageUrlFallback;
         set => SetProperty(out previewImageUrlFallback, value);
+    }
+
+    public bool ShouldInvalidateCache
+    {
+        get => shouldInvalidateCache;
+        set => SetProperty(out shouldInvalidateCache, value);
     }
 
     public bool IsDirty { get; private set; }
