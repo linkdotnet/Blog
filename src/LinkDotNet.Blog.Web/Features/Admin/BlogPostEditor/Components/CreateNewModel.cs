@@ -7,7 +7,7 @@ namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 public sealed class CreateNewModel
 {
     private DateTime originalUpdatedDate;
-    private string id = string.Empty;
+    private string id = default!;
     private string title = string.Empty;
     private string shortDescription = string.Empty;
     private string content = string.Empty;
