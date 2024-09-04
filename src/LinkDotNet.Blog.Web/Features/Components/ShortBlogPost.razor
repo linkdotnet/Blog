@@ -17,7 +17,7 @@
 				{
 					<li class="draft">Draft</li>
 				}
-				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span></li>
+				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToShortDateString()</span></li>
 				@if (BlogPost.Tags.Any())
 				{
 					<li class="tags me-4">
