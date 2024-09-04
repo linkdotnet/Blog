@@ -43,6 +43,11 @@ public sealed class RssFeedController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetRssFeed([FromQuery] bool withContent = false)
     {
+        if (ModelState.IsValid is false)
+        {
+            return BadRequest(ModelState);
+        }
+
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
         var introductionDescription = MarkdownConverter.ToPlainString(description);
         var feed = new SyndicationFeed(blogName, introductionDescription, new Uri(url))
