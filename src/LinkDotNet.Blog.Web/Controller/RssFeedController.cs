@@ -43,7 +43,7 @@ public sealed class RssFeedController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetRssFeed([FromQuery] bool withContent = false, [FromQuery] int? numberOfBlogPosts = null)
     {
-        if (ModelState.IsValid is false)
+        if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
