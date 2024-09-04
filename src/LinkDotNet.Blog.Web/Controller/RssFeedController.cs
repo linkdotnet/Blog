@@ -41,13 +41,15 @@ public sealed class RssFeedController : ControllerBase
 
     [ResponseCache(Duration = 1200)]
     [HttpGet]
-    public async Task<IActionResult> GetRssFeed()
+    public async Task<IActionResult> GetRssFeed([FromQuery] bool withContent = false)
     {
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
         var introductionDescription = MarkdownConverter.ToPlainString(description);
         var feed = new SyndicationFeed(blogName, introductionDescription, new Uri(url))
         {
-            Items = await GetBlogPostItems(url),
+            Items = withContent
+            ? await GetBlogPostsItemsWithContent(url)
+            : await GetBlogPostItems(url),
         };
 
         using var stream = new MemoryStream();
@@ -79,10 +81,10 @@ public sealed class RssFeedController : ControllerBase
     private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPostRssInfo blogPost)
     {
         var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-        var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription);
+        var content = MarkdownConverter.ToPlainString(blogPost.ShortDescription ?? blogPost.Content ?? string.Empty);
         var item = new SyndicationItem(
             blogPost.Title,
-            shortDescription,
+            content,
             new Uri(blogPostUrl),
             blogPost.Id,
             blogPost.UpdatedDate)
@@ -107,16 +109,29 @@ public sealed class RssFeedController : ControllerBase
     private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
     {
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, null, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
             f => f.IsPublished,
             orderBy: post => post.UpdatedDate);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
     }
 
+    private async Task<IEnumerable<SyndicationItem>> GetBlogPostsItemsWithContent(string url)
+    {
+        var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
+            s => new BlogPostRssInfo(s.Id, s.Title, null,s.Content, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            f => f.IsPublished,
+            orderBy: post => post.UpdatedDate,
+            page: 1,
+            pageSize: blogPostsPerPage);
+        return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
+    }
+
+
     private sealed record BlogPostRssInfo(
         string Id,
         string Title,
-        string ShortDescription,
+        string? ShortDescription,
+        string? Content,
         DateTime UpdatedDate,
         string PreviewImageUrl,
         IEnumerable<string> Tags);
