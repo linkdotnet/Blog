@@ -41,19 +41,21 @@ public sealed class RssFeedController : ControllerBase
 
     [ResponseCache(Duration = 1200)]
     [HttpGet]
-    public async Task<IActionResult> GetRssFeed([FromQuery] bool withContent = false)
+    public async Task<IActionResult> GetRssFeed([FromQuery] bool withContent = false, [FromQuery] int? numberOfBlogPosts = null)
     {
         if (ModelState.IsValid is false)
         {
             return BadRequest(ModelState);
         }
 
+        numberOfBlogPosts ??= blogPostsPerPage;
+
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
         var introductionDescription = MarkdownConverter.ToPlainString(description);
         var feed = new SyndicationFeed(blogName, introductionDescription, new Uri(url))
         {
             Items = withContent
-            ? await GetBlogPostsItemsWithContent(url)
+            ? await GetBlogPostsItemsWithContent(url, numberOfBlogPosts.Value)
             : await GetBlogPostItems(url),
         };
 
@@ -120,14 +122,13 @@ public sealed class RssFeedController : ControllerBase
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
     }
 
-    private async Task<IEnumerable<SyndicationItem>> GetBlogPostsItemsWithContent(string url)
+    private async Task<IEnumerable<SyndicationItem>> GetBlogPostsItemsWithContent(string url, int numberOfBlogPosts)
     {
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
             s => new BlogPostRssInfo(s.Id, s.Title, null,s.Content, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
             f => f.IsPublished,
             orderBy: post => post.UpdatedDate,
-            page: 1,
-            pageSize: blogPostsPerPage);
+            pageSize: numberOfBlogPosts);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
     }
 
