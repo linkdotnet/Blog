@@ -22,6 +22,7 @@ public sealed class RssFeedController : ControllerBase
     private static readonly XmlWriterSettings Settings = CreateXmlWriterSettings();
     private readonly string description;
     private readonly string blogName;
+    private readonly int blogPostsPerPage;
     private readonly IRepository<BlogPost> blogPostRepository;
 
     public RssFeedController(
@@ -34,6 +35,7 @@ public sealed class RssFeedController : ControllerBase
 
         description = introductionConfiguration.Value.Description;
         blogName = applicationConfiguration.Value.BlogName;
+        blogPostsPerPage = applicationConfiguration.Value.BlogPostsPerPage;
         this.blogPostRepository = blogPostRepository;
     }
 
