@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Domain
 @using System.Collections.Immutable
+@using System.Globalization
 @inject IRepository<BlogPost> Repository
 
 <OgData Title="Archive" Description="Explore all blog posts."></OgData>
@@ -31,7 +32,7 @@
 								{
 									<li class="list-group-item">
 										<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
-										<span class="text-muted small ps-2">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy"))</span>
+										<span class="text-muted small ps-2">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy", CultureInfo.CurrentCulture))</span>
 									</li>
 								}
 							</ul>
