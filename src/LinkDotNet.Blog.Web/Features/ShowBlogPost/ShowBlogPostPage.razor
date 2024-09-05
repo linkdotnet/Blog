@@ -47,7 +47,7 @@ else if (BlogPost is not null)
 				<div class="text-dark-emphasis d-flex flex-wrap gap-2">
 					<div class="me-2">
 						<span class="date"></span>
-						<span class="ms-1">@BlogPost.UpdatedDate.ToString("dd/MM/yyyy")</span>
+						<span class="ms-1">@BlogPost.UpdatedDate.ToShortDateString()</span>
 					</div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
