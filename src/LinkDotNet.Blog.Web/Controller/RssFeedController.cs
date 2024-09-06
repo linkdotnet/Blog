@@ -13,6 +13,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using InvalidOperationException = System.InvalidOperationException;
 
 namespace LinkDotNet.Blog.Web.Controller;
 
@@ -22,6 +23,7 @@ public sealed class RssFeedController : ControllerBase
     private static readonly XmlWriterSettings Settings = CreateXmlWriterSettings();
     private readonly string description;
     private readonly string blogName;
+    private readonly int blogPostsPerPage;
     private readonly IRepository<BlogPost> blogPostRepository;
 
     public RssFeedController(
@@ -34,18 +36,26 @@ public sealed class RssFeedController : ControllerBase
 
         description = introductionConfiguration.Value.Description;
         blogName = applicationConfiguration.Value.BlogName;
+        blogPostsPerPage = applicationConfiguration.Value.BlogPostsPerPage;
         this.blogPostRepository = blogPostRepository;
     }
 
     [ResponseCache(Duration = 1200)]
     [HttpGet]
-    public async Task<IActionResult> GetRssFeed()
+    public async Task<IActionResult> GetRssFeed([FromQuery] bool withContent = false, [FromQuery] int? numberOfBlogPosts = null)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var url = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
         var introductionDescription = MarkdownConverter.ToPlainString(description);
         var feed = new SyndicationFeed(blogName, introductionDescription, new Uri(url))
         {
-            Items = await GetBlogPostItems(url),
+            Items = withContent
+                ? await GetBlogPostsItemsWithContent(url, numberOfBlogPosts)
+                : await GetBlogPostItems(url),
         };
 
         using var stream = new MemoryStream();
@@ -66,10 +76,7 @@ public sealed class RssFeedController : ControllerBase
     {
         var settings = new XmlWriterSettings
         {
-            Encoding = Encoding.UTF8,
-            NewLineHandling = NewLineHandling.Entitize,
-            Indent = true,
-            Async = true,
+            Encoding = Encoding.UTF8, NewLineHandling = NewLineHandling.Entitize, Indent = true, Async = true,
         };
         return settings;
     }
@@ -77,17 +84,20 @@ public sealed class RssFeedController : ControllerBase
     private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPostRssInfo blogPost)
     {
         var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-        var shortDescription = MarkdownConverter.ToPlainString(blogPost.ShortDescription);
+
+        var content = MarkdownConverter.ToMarkupString(blogPost.ShortDescription ?? blogPost.Content ??
+            throw new InvalidOperationException("Blog post must have either short description or content."));
+
         var item = new SyndicationItem(
             blogPost.Title,
-            shortDescription,
+            default(SyndicationContent),
             new Uri(blogPostUrl),
             blogPost.Id,
             blogPost.UpdatedDate)
         {
             PublishDate = blogPost.UpdatedDate,
             LastUpdatedTime = blogPost.UpdatedDate,
-            ElementExtensions = { new XElement("image", blogPost.PreviewImageUrl) },
+            ElementExtensions = { CreateCDataElement(content.Value), new XElement("image", blogPost.PreviewImageUrl), },
         };
 
         AddCategories(item.Categories, blogPost);
@@ -105,16 +115,39 @@ public sealed class RssFeedController : ControllerBase
     private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
     {
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, null, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
             f => f.IsPublished,
             orderBy: post => post.UpdatedDate);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
     }
 
+    private async Task<IEnumerable<SyndicationItem>> GetBlogPostsItemsWithContent(string url, int? numberOfBlogPosts)
+    {
+        numberOfBlogPosts ??= blogPostsPerPage;
+
+        var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
+            s => new BlogPostRssInfo(s.Id, s.Title, null, s.Content, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            f => f.IsPublished,
+            orderBy: post => post.UpdatedDate,
+            pageSize: numberOfBlogPosts.Value);
+        return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
+    }
+
+    private static XmlElement CreateCDataElement(string htmlContent)
+    {
+        var doc = new XmlDocument();
+        var cdataSection = doc.CreateCDataSection(htmlContent);
+        var element = doc.CreateElement("description");
+        element.AppendChild(cdataSection);
+        return element;
+    }
+
+
     private sealed record BlogPostRssInfo(
         string Id,
         string Title,
-        string ShortDescription,
+        string? ShortDescription,
+        string? Content,
         DateTime UpdatedDate,
         string PreviewImageUrl,
         IEnumerable<string> Tags);
