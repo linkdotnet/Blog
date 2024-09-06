@@ -88,17 +88,21 @@ public sealed class RssFeedController : ControllerBase
     private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPostRssInfo blogPost)
     {
         var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
-        var content = MarkdownConverter.ToPlainString(blogPost.ShortDescription ?? blogPost.Content ?? string.Empty);
+        var content = MarkdownConverter.ToMarkupString(blogPost.ShortDescription ?? blogPost.Content ?? string.Empty);
         var item = new SyndicationItem(
             blogPost.Title,
-            content,
+            default(SyndicationContent),
             new Uri(blogPostUrl),
             blogPost.Id,
             blogPost.UpdatedDate)
         {
             PublishDate = blogPost.UpdatedDate,
             LastUpdatedTime = blogPost.UpdatedDate,
-            ElementExtensions = { new XElement("image", blogPost.PreviewImageUrl) },
+            ElementExtensions =
+            {
+                CreateCDataElement(content.Value),
+                new XElement("image", blogPost.PreviewImageUrl),
+            },
         };
 
         AddCategories(item.Categories, blogPost);
@@ -130,6 +134,15 @@ public sealed class RssFeedController : ControllerBase
             orderBy: post => post.UpdatedDate,
             pageSize: numberOfBlogPosts);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
+    }
+
+    private static XmlElement CreateCDataElement(string htmlContent)
+    {
+        var doc = new XmlDocument();
+        var cdataSection = doc.CreateCDataSection(htmlContent);
+        var element = doc.CreateElement("description");
+        element.AppendChild(cdataSection);
+        return element;
     }
 
 
