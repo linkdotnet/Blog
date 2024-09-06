@@ -31,11 +31,12 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
     [Fact]
     public async Task ShouldBootUpWithSqlDatabase()
     {
-        using var client = factory.WithWebHostBuilder(builder =>
+        await using var sqlFactory = factory.WithWebHostBuilder(builder =>
         {
             builder.UseSetting("PersistenceProvider", PersistenceProvider.Sqlite.Key);
             builder.UseSetting("ConnectionString", "DataSource=file::memory:?cache=shared");
-        }).CreateClient();
+        });
+        using var client = sqlFactory.CreateClient();
 
         var result = await client.GetAsync("/");
 
