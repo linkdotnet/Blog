@@ -15,7 +15,7 @@ public class SkillBuilder
         return this;
     }
 
-    public SkillBuilder WithIconUrl(string iconUrl)
+    public SkillBuilder WithIconUrl(string? iconUrl)
     {
         this.iconUrl = iconUrl;
         return this;

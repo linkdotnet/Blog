@@ -28,7 +28,7 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public void ShouldCreateNewBlogPostWhenValidDataGiven()
     {
-        BlogPost blogPost = null;
+        BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
@@ -65,7 +65,7 @@ public class CreateNewBlogPostTests : BunitContext
             .WithContent("Content")
             .WithTags("tag1", "tag2")
             .Build();
-        BlogPost blogPostFromComponent = null;
+        BlogPost? blogPostFromComponent = null;
         var cut = Render<CreateNewBlogPost>(
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
@@ -85,7 +85,7 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public void ShouldNotDeleteModelWhenSet()
     {
-        BlogPost blogPost = null;
+        BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, true)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
@@ -105,7 +105,7 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public void ShouldNotDeleteModelWhenNotSet()
     {
-        BlogPost blogPost = null;
+        BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.ClearAfterCreated, false)
                 .Add(c => c.OnBlogPostCreated, post => blogPost = post));
@@ -127,7 +127,7 @@ public class CreateNewBlogPostTests : BunitContext
     {
         var someWhen = new DateTime(1991, 5, 17);
         var originalBlogPost = new BlogPostBuilder().WithUpdatedDate(someWhen).Build();
-        BlogPost blogPostFromComponent = null;
+        BlogPost? blogPostFromComponent = null;
         var cut = Render<CreateNewBlogPost>(
             p =>
                 p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
@@ -141,6 +141,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#updatedate").Change(false);
         cut.Find("form").Submit();
 
+        blogPostFromComponent.ShouldNotBeNull();
         blogPostFromComponent.UpdatedDate.ShouldBe(someWhen);
     }
 
@@ -157,7 +158,7 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public void ShouldAcceptInputWithoutLosingFocusOrEnter()
     {
-        BlogPost blogPost = null;
+        BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
@@ -224,7 +225,7 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public void GivenBlogPostWithSchedule_ShouldSetSchedule()
     {
-        BlogPost blogPost = null;
+        BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
@@ -236,13 +237,14 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("form").Submit();
 
+        blogPost.ShouldNotBeNull();
         blogPost.ScheduledPublishDate.ShouldBe(new DateTime(2099, 01, 01));
     }
 
     [Fact]
     public void GivenBlogPost_WhenEnteringScheduledDate_ThenIsPublishedSetToFalse()
     {
-        BlogPost blogPost = null;
+        BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
             p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
         cut.Find("#title").Input("My Title");
@@ -254,6 +256,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#scheduled").Change("01/01/2099 00:00");
 
         var element = cut.Find("#published") as IHtmlInputElement;
+        element.ShouldNotBeNull();
         element.IsChecked.ShouldBeFalse();
     }
     

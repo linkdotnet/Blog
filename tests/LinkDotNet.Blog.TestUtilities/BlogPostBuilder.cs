@@ -40,7 +40,7 @@ public class BlogPostBuilder
         return this;
     }
 
-    public BlogPostBuilder WithPreviewImageUrlFallback(string url)
+    public BlogPostBuilder WithPreviewImageUrlFallback(string? url)
     {
         previewImageUrlFallback = url;
         return this;

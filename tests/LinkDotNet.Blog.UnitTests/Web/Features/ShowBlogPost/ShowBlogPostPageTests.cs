@@ -38,7 +38,7 @@ public class ShowBlogPostPageTests : BunitContext
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         Services.AddScoped(_ => repositoryMock);
-        repositoryMock.GetByIdAsync(blogPostId)
+        repositoryMock.GetByIdAsync(blogPostId)!
             .Returns(new ValueTask<BlogPost>(Task.Run(async () => 
             {
                 await Task.Delay(250);
@@ -71,7 +71,7 @@ public class ShowBlogPostPageTests : BunitContext
     [Theory]
     [InlineData("url1", null, "url1")]
     [InlineData("url1", "url2", "url2")]
-    public void ShouldUseFallbackAsOgDataIfAvailable(string preview, string fallback, string expected)
+    public void ShouldUseFallbackAsOgDataIfAvailable(string preview, string? fallback, string expected)
     {
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         var blogPost = new BlogPostBuilder()

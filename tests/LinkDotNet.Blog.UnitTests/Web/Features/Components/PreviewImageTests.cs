@@ -49,7 +49,9 @@ public class PreviewImageTests : BunitContext
 
         var img = picture.Children[1] as IHtmlImageElement;
         img.ShouldNotBeNull();
-        img.Attributes.FirstOrDefault(a => a.Name == "loading").Value.ShouldBe(expectedLazy);
+        var loadingAttribute = img.Attributes.FirstOrDefault(a => a.Name == "loading");
+        loadingAttribute.ShouldNotBeNull();
+        loadingAttribute.Value.ShouldBe(expectedLazy);
     }
 
     [Theory]
@@ -63,7 +65,10 @@ public class PreviewImageTests : BunitContext
 
         var image = cut.Find("img") as IHtmlImageElement;
 
-        image.Attributes.FirstOrDefault(a => a.Name == "loading").Value.ShouldBe(expectedLazy);
+        image.ShouldNotBeNull();
+        var loadingAttribute = image.Attributes.FirstOrDefault(a => a.Name == "loading");
+        loadingAttribute.ShouldNotBeNull();
+        loadingAttribute.Value.ShouldBe(expectedLazy);
     }
 
     [Theory]
@@ -79,6 +84,7 @@ public class PreviewImageTests : BunitContext
         var picture = cut.Find("picture");
 
         var source = picture.Children[0] as IHtmlSourceElement;
+        source.ShouldNotBeNull();
         source.Type.ShouldBe(mimeType);
     }
 
@@ -96,7 +102,9 @@ public class PreviewImageTests : BunitContext
 
         var img = picture.Children[1] as IHtmlImageElement;
         img.ShouldNotBeNull();
-        img.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.ShouldBe(expectedBehaviour);
+        var decodingAttribute = img.Attributes.FirstOrDefault(a => a.Name == "decoding");
+        decodingAttribute.ShouldNotBeNull();
+        decodingAttribute.Value.ShouldBe(expectedBehaviour);
     }
 
     [Theory]
@@ -110,6 +118,9 @@ public class PreviewImageTests : BunitContext
 
         var image = cut.Find("img") as IHtmlImageElement;
 
-        image.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.ShouldBe(expectedBehaviour);
+        image.ShouldNotBeNull();
+        var decodingAttribute = image.Attributes.FirstOrDefault(a => a.Name == "decoding");
+        decodingAttribute.ShouldNotBeNull();
+        decodingAttribute.Value.ShouldBe(expectedBehaviour);
     }
 }

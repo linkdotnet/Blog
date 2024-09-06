@@ -55,9 +55,9 @@ public class EnumerationTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("  ")]
-    public void GivenNullOrEmptyKey_WhenCreating_ThenException(string key)
+    public void GivenNullOrEmptyKey_WhenCreating_ThenException(string? key)
     {
-        Action result = () => new TestEnumeration(key);
+        Action result = () => new TestEnumeration(key!);
 
         // Assert
         result.ShouldThrow<ArgumentException>();
@@ -66,7 +66,7 @@ public class EnumerationTests
     [Fact]
     public void NullEnumerationNeverEqual()
     {
-        var isEqual = null == (TestEnumeration)null;
+        var isEqual = null! == (TestEnumeration?)null;
 
         isEqual.ShouldBeFalse();
     }

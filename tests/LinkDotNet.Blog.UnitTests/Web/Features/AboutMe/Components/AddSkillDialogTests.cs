@@ -10,7 +10,7 @@ public class AddSkillDialogTests : BunitContext
     [Fact]
     public void ShouldCreateSkill()
     {
-        Skill addedSkill = null;
+        Skill? addedSkill = null;
         var toastServiceMock = Substitute.For<IToastService>();
         Services.AddScoped(_ => toastServiceMock);
         var cut = Render<AddSkillDialog>(p =>

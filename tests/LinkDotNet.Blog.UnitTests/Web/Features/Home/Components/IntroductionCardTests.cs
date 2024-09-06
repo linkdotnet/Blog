@@ -22,13 +22,13 @@ public class IntroductionCardTests : BunitContext
         var background = cut.FindAll(".introduction-background");
         background.ShouldNotBeNull().ShouldNotBeEmpty();
         background.ShouldHaveSingleItem();
-        background.Single().GetStyle().CssText.ShouldContain(introduction.BackgroundUrl);
+        background.Single().GetStyle().CssText.ShouldContain(introduction.BackgroundUrl!);
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void ShouldNotSetBackgroundWhenNotSet(string url)
+    public void ShouldNotSetBackgroundWhenNotSet(string? url)
     {
         var introduction = new IntroductionBuilder().WithBackgroundUrl(url).Build();
 

@@ -20,9 +20,9 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         [InlineData("NotALevel")]
         [InlineData("")]
         [InlineData(null)]
-        public void ShouldNotCreateInvalidLevels(string key)
+        public void ShouldNotCreateInvalidLevels(string? key)
         {
-            Action act = () => ProficiencyLevel.Create(key);
+            Action act = () => ProficiencyLevel.Create(key!);
 
             act.ShouldThrow<Exception>();
         }

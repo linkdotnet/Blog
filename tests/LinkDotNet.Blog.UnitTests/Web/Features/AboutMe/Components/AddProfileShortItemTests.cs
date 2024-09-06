@@ -7,7 +7,7 @@ public class AddProfileShortItemTests : BunitContext
     [Fact]
     public void ShouldAddShortItem()
     {
-        string addedItem = null;
+        string? addedItem = null;
         var cut = Render<AddProfileShortItem>(
             p => p.Add(s => s.ValueAdded, c => addedItem = c));
         cut.Find("input").Change("Key");
@@ -21,7 +21,7 @@ public class AddProfileShortItemTests : BunitContext
     [InlineData("")]
     [InlineData(" ")]
     [InlineData(null)]
-    public void ShouldNotAddItemWhenKeyOrValueIsEmpty(string content)
+    public void ShouldNotAddItemWhenKeyOrValueIsEmpty(string? content)
     {
         var wasInvoked = false;
         var cut = Render<AddProfileShortItem>(

@@ -8,7 +8,7 @@ public class DateRangeSelectorTests : BunitContext
     [Fact]
     public void ShouldSetBeginDateWhenSet()
     {
-        Filter filter = null;
+        Filter? filter = null;
         var cut = Render<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
         {
             filter = f;
@@ -24,7 +24,7 @@ public class DateRangeSelectorTests : BunitContext
     [Fact]
     public void ShouldSetEndDateWhenSet()
     {
-        Filter filter = null;
+        Filter? filter = null;
         var cut = Render<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
         {
             filter = f;
@@ -40,7 +40,7 @@ public class DateRangeSelectorTests : BunitContext
     [Fact]
     public void ShouldReset()
     {
-        Filter filter = null;
+        Filter? filter = null;
         var cut = Render<DateRangeSelector>(p => p.Add(s => s.FilterChanged, f =>
         {
             filter = f;
@@ -51,6 +51,7 @@ public class DateRangeSelectorTests : BunitContext
         cut.Find("#startDate").Change(string.Empty);
         cut.Find("#endDate").Change(string.Empty);
 
+        filter.ShouldNotBeNull();
         filter.StartDate.ShouldBeNull();
         filter.EndDate.ShouldBeNull();
     }

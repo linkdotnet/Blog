@@ -18,9 +18,9 @@ public class ProfileInformationEntryTests
     [InlineData("")]
     [InlineData(" ")]
     [InlineData(null)]
-    public void ShouldThrowExceptionWhenEmptyKeyOrValue(string content)
+    public void ShouldThrowExceptionWhenEmptyKeyOrValue(string? content)
     {
-        Action act = () => ProfileInformationEntry.Create(content, 0);
+        Action act = () => ProfileInformationEntry.Create(content!, 0);
 
         act.ShouldThrow<ArgumentException>();
     }

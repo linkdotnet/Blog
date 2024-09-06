@@ -26,9 +26,9 @@ public class TalkTests
     [InlineData("title", "place", null)]
     [InlineData("title", "place", "")]
     [InlineData("title", "place", " ")]
-    public void TalkWithInvalidInvariantShouldNotBeCreated(string title, string place, string desc)
+    public void TalkWithInvalidInvariantShouldNotBeCreated(string? title, string? place, string? desc)
     {
-        Action act = () => Talk.Create(title, place, desc, DateTime.MinValue);
+        Action act = () => Talk.Create(title!, place!, desc!, DateTime.MinValue);
 
         act.ShouldThrow<Exception>();
     }

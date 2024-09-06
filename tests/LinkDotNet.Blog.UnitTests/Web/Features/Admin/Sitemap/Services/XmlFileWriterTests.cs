@@ -32,6 +32,6 @@ public sealed class XmlFileWriterTests : IDisposable
 
     public class MyObject
     {
-        public string Property { get; set; }
+        public required string Property { get; set; }
     }
 }

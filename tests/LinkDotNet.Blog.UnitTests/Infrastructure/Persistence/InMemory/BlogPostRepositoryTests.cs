@@ -24,6 +24,7 @@ public class BlogPostRepositoryTests
 
         var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
 
+        blogPostFromRepo.ShouldNotBeNull();
         blogPostFromRepo.Title.ShouldBe("My Title");
     }
 
@@ -38,6 +39,7 @@ public class BlogPostRepositoryTests
         await sut.StoreAsync(blogPost);
 
         var blogPostFromRepository = await sut.GetByIdAsync(blogPost.Id);
+        blogPostFromRepository.ShouldNotBeNull();
         blogPostFromRepository.Title.ShouldBe("My new Title");
     }
 

@@ -12,9 +12,9 @@ public class SocialAccountTests : BunitContext
     [InlineData("github", null, null, true, false, false)]
     [InlineData(null, null, "twitter", false, false, true)]
     public void ShouldDisplayGithubAndLinkedInPageWhenOnlyWhenSet(
-        string github,
-        string linkedin,
-        string twitter,
+        string? github,
+        string? linkedin,
+        string? twitter,
         bool githubAvailable,
         bool linkedinAvailable,
         bool twitterAvailable)

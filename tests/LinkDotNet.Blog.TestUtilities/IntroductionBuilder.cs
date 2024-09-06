@@ -8,7 +8,7 @@ public class IntroductionBuilder
     private string profilePictureUrl = "ProfilePictureUrl";
     private string description = "Description";
 
-    public IntroductionBuilder WithBackgroundUrl(string backgroundUrl)
+    public IntroductionBuilder WithBackgroundUrl(string? backgroundUrl)
     {
         this.backgroundUrl = backgroundUrl;
         return this;

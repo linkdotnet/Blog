@@ -20,10 +20,10 @@ public abstract class Enumeration<TEnumeration>
 
     public string Key { get; }
 
-    public static bool operator ==(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b)
+    public static bool operator ==(Enumeration<TEnumeration>? a, Enumeration<TEnumeration>? b)
         => a is not null && b is not null && a.Key.Equals(b.Key, StringComparison.Ordinal);
 
-    public static bool operator !=(Enumeration<TEnumeration> a, Enumeration<TEnumeration> b) => !(a == b);
+    public static bool operator !=(Enumeration<TEnumeration>? a, Enumeration<TEnumeration>? b) => !(a == b);
 
     public static TEnumeration Create(string key)
         => All.SingleOrDefault(p => p.Key == key)

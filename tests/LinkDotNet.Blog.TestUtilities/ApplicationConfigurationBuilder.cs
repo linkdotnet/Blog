@@ -67,13 +67,13 @@ public class ApplicationConfigurationBuilder
         return this;
     }
 
-    public ApplicationConfigurationBuilder WithKofiToken(string kofiToken)
+    public ApplicationConfigurationBuilder WithKofiToken(string? kofiToken)
     {
         this.kofiToken = kofiToken;
         return this;
     }
 
-    public ApplicationConfigurationBuilder WithGithubSponsorName(string githubSponsorName)
+    public ApplicationConfigurationBuilder WithGithubSponsorName(string? githubSponsorName)
     {
         this.githubSponsorName = githubSponsorName;
         return this;
@@ -85,7 +85,7 @@ public class ApplicationConfigurationBuilder
         return this;
     }
 
-    public ApplicationConfigurationBuilder WithPatreonName(string patreonName)
+    public ApplicationConfigurationBuilder WithPatreonName(string? patreonName)
     {
         this.patreonName = patreonName;
         return this;

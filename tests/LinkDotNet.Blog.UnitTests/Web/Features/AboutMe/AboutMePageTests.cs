@@ -76,8 +76,10 @@ public class AboutMePageTests : BunitContext
 
         var ogData = cut.FindComponent<OgData>().Instance;
         ogData.AbsolutePreviewImageUrl.ShouldBe("http://localhost/someurl");
+        ogData.Keywords.ShouldNotBeNull();
         ogData.Keywords.ShouldContain("My Name");
         ogData.Title.ShouldContain("About Me - My Name");
+        ogData.Description.ShouldNotBeNull();
         ogData.Description.ShouldContain("About Me,My Name");
     }
 

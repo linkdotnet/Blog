@@ -78,6 +78,7 @@ public sealed class CachedRepositoryTests
 
         var latest = await sut.GetByIdAsync("id");
 
+        latest.ShouldNotBeNull();
         latest.Title.ShouldBe("new");
     }
 
@@ -109,10 +110,10 @@ public sealed class CachedRepositoryTests
     [Theory]
     [InlineData(null)]
     [InlineData("some_id")]
-    public async Task ShouldNotThrowExceptionWhenCallingStoreWithoutRetrievingKeyFirst(string id)
+    public async Task ShouldNotThrowExceptionWhenCallingStoreWithoutRetrievingKeyFirst(string? id)
     {
         var blogPost = new BlogPostBuilder().Build();
-        blogPost.Id = id;
+        blogPost.Id = id!;
         
         await sut.StoreAsync(blogPost);
         

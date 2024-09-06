@@ -12,7 +12,7 @@ public class DonationSectionTests : BunitContext
     [InlineData("linkdotnet", true)]
     [InlineData(null, false)]
 
-    public void ShouldShowKofiIfSet(string token, bool hasComponent)
+    public void ShouldShowKofiIfSet(string? token, bool hasComponent)
     {
         JSInterop.SetupVoid("myfunc", "myarg").SetVoidResult();
         var appConfig = new ApplicationConfigurationBuilder()
@@ -29,7 +29,7 @@ public class DonationSectionTests : BunitContext
     [InlineData("linkdotnet", true)]
     [InlineData(null, false)]
 
-    public void ShouldShowGithubSponsorIfSet(string account, bool hasComponent)
+    public void ShouldShowGithubSponsorIfSet(string? account, bool hasComponent)
     {
         var appConfig = new ApplicationConfigurationBuilder()
             .WithGithubSponsorName(account)
@@ -44,7 +44,7 @@ public class DonationSectionTests : BunitContext
     [Theory]
     [InlineData("linkdotnet", true)]
     [InlineData(null, false)]
-    public void ShouldShowPatreonSponsorIfSet(string account, bool hasComponent)
+    public void ShouldShowPatreonSponsorIfSet(string? account, bool hasComponent)
     {
         var appConfig = new ApplicationConfigurationBuilder()
             .WithPatreonName(account)

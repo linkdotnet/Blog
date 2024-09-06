@@ -13,7 +13,7 @@ public class ApplicationConfigurationTests
     [Fact]
     public void ShouldMapFromAppConfiguration()
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "BlogName", "UnitTest" },
             { "BlogBrandUrl", "http://localhost" },
@@ -111,14 +111,14 @@ public class ApplicationConfigurationTests
     [InlineData("github", null, null, true, false, false)]
     [InlineData(null, null, "twitter", false, false, true)]
     public void ShouldSetGithubLinkedAccountAccordingToValueSet(
-        string githubUrl,
-        string linkedInUrl,
-        string twitterUrl,
+        string? githubUrl,
+        string? linkedInUrl,
+        string? twitterUrl,
         bool githubAvailable,
         bool linkedInAvailable,
         bool twitterAvailable)
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "Introduction:BackgroundUrl", "someurl" },
             { "Introduction:ProfilePictureUrl", "anotherurl" },
@@ -142,7 +142,7 @@ public class ApplicationConfigurationTests
     [Fact]
     public void ShouldSetIsAboutMeEnabledToFalseWhenNoInformation()
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "Introduction:BackgroundUrl", "someurl" },
             { "Introduction:ProfilePictureUrl", "anotherurl" },
@@ -161,7 +161,7 @@ public class ApplicationConfigurationTests
     [Fact]
     public void ShouldSetCommentPluginsToFalseWhenNoInformation()
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "Introduction:BackgroundUrl", "someurl" },
             { "Introduction:ProfilePictureUrl", "anotherurl" },
@@ -182,7 +182,7 @@ public class ApplicationConfigurationTests
     public void ShouldSetDefaultBlogPostPerPageIfNotSet()
     {
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string>())
+            .AddInMemoryCollection(new Dictionary<string, string?>())
             .Build();
 
         var appConfiguration = new ApplicationConfigurationBuilder().Build();
@@ -194,7 +194,7 @@ public class ApplicationConfigurationTests
     [Fact]
     public void ShouldSetLogoutUriIfNotGiven()
     {
-        var inMemorySettings = new Dictionary<string, string>
+        var inMemorySettings = new Dictionary<string, string?>
         {
             { "Authentication:AuthenticationProvider", "Auth0" }, { "Authentication:Domain", "domain" }, { "Authentication:ClientId", "clientid" },
         };

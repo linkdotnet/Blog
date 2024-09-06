@@ -20,9 +20,9 @@ public class SkillTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void ShouldThrowWhenWhitespaceName(string name)
+    public void ShouldThrowWhenWhitespaceName(string? name)
     {
-        Action result = () => Skill.Create(name, "url", "backend", ProficiencyLevel.Expert.Key);
+        Action result = () => Skill.Create(name!, "url", "backend", ProficiencyLevel.Expert.Key);
 
         result.ShouldThrow<ArgumentException>();
     }
@@ -31,9 +31,9 @@ public class SkillTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void ShouldThrowWhenWhitespaceCapability(string capability)
+    public void ShouldThrowWhenWhitespaceCapability(string? capability)
     {
-        Action result = () => Skill.Create("name", "url", capability, ProficiencyLevel.Expert.Key);
+        Action result = () => Skill.Create("name", "url", capability!, ProficiencyLevel.Expert.Key);
 
         result.ShouldThrow<ArgumentException>();
     }
@@ -49,7 +49,7 @@ public class SkillTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
-    public void ShouldSetUrlToNullWhenWhitespace(string url)
+    public void ShouldSetUrlToNullWhenWhitespace(string? url)
     {
         var skill = Skill.Create("name", url, "cap", ProficiencyLevel.Expert.Key);
 
@@ -71,7 +71,7 @@ public class SkillTests
     {
         var skill = Skill.Create("name", null, "cap", ProficiencyLevel.Familiar.Key);
 
-        Action result = () => skill.SetProficiencyLevel(null);
+        Action result = () => skill.SetProficiencyLevel(null!);
 
         result.ShouldThrow<ArgumentNullException>();
     }

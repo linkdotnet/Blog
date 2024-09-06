@@ -31,7 +31,7 @@ public class UserRecordServiceTests : BunitContext
     {
         const string url = "http://localhost/subpart";
         fakeNavigationManager.NavigateTo(url);
-        UserRecord recordToDb = null;
+        UserRecord? recordToDb = null;
         repositoryMock.When(r => r.StoreAsync(Arg.Any<UserRecord>()))
             .Do(call => recordToDb = call.Arg<UserRecord>());
 
@@ -60,7 +60,7 @@ public class UserRecordServiceTests : BunitContext
     public async Task ShouldRemoveQueryStringIfPresent(string url, string expectedRecord)
     {
         fakeNavigationManager.NavigateTo(url);
-        UserRecord recordToDb = null;
+        UserRecord? recordToDb = null;
         repositoryMock.When(r => r.StoreAsync(Arg.Any<UserRecord>()))
             .Do(call => recordToDb = call.Arg<UserRecord>());
 
