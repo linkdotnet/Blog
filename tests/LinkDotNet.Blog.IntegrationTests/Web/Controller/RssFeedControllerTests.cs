@@ -245,4 +245,75 @@ public class RssFeedControllerTests
             </rss>
             """);
     }
+    
+    [Fact]
+    public async Task ShouldRespectBlogPostsPerPage()
+    {
+        var repository = new Repository<BlogPost>();
+        var request = Substitute.For<HttpRequest>();
+        request.Scheme.Returns("http");
+        request.Host.Returns(new HostString("localhost"));
+        request.PathBase.Returns(PathString.FromUriComponent("/"));
+        var httpContext = Substitute.For<HttpContext>();
+        httpContext.Request.Returns(request);
+        var controllerContext = new ControllerContext
+        {
+            HttpContext = httpContext,
+        };
+        var config = Options.Create(new ApplicationConfigurationBuilder()
+            .WithBlogName("Test")
+            .WithBlogPostsPerPage(1)
+            .Build());
+
+        var introduction = new IntroductionBuilder()
+            .WithDescription("Description")
+            .Build();
+        var introductionConfig = Options.Create(introduction);
+        var blogPost1 = new BlogPostBuilder()
+            .WithTitle("1")
+            .WithShortDescription("Short 1")
+            .WithPreviewImageUrl("preview1")
+            .WithUpdatedDate(new DateTime(2022, 5, 1))
+            .WithTags("C#", ".NET")
+            .Build();
+        blogPost1.Id = "1";
+        var blogPost2 = new BlogPostBuilder()
+            .WithTitle("2")
+            .WithContent("**Content 2**")
+            .WithPreviewImageUrl("preview2")
+            .WithUpdatedDate(new DateTime(2022, 6, 1))
+            .Build();
+        blogPost2.Id = "2";
+        await repository.StoreAsync(blogPost1);
+        await repository.StoreAsync(blogPost2);
+        var cut = new RssFeedController(introductionConfig, config, repository)
+        {
+            ControllerContext = controllerContext,
+        };
+
+        var xml = await cut.GetRssFeed(withContent: true) as FileContentResult;
+
+        xml.ShouldNotBeNull();
+        var content = Encoding.UTF8.GetString(xml.FileContents);
+        content.ShouldMatch(
+            """
+            .*
+            <rss version="2.0">
+              <channel>
+                <title>Test</title>
+                <link>http://localhost/</link>
+                <description>Description</description>
+                <item>
+                  <guid isPermaLink="false">2</guid>
+                  <link>http://localhost//blogPost/2</link>
+                  <title>2</title>
+                  <pubDate>Wed, 01 Jun 2022 00:00:00.*</pubDate>
+                  <description><!\[CDATA\[<p><strong>Content 2</strong></p>
+            ]]></description>
+                  <image>preview2</image>
+                </item>
+              </channel>
+            </rss>
+            """);
+    }
 }
