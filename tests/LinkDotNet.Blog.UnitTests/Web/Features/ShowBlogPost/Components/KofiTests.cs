@@ -10,6 +10,6 @@ public class KofiTests : BunitContext
     {
         var cut = Render<Kofi>(p => p.Add(s => s.KofiToken, "Token"));
 
-        ((IHtmlAnchorElement)cut.Find("a")).Href.Should().Contain("https://ko-fi.com/Token");
+        ((IHtmlAnchorElement)cut.Find("a")).Href.ShouldContain("https://ko-fi.com/Token");
     }
 }

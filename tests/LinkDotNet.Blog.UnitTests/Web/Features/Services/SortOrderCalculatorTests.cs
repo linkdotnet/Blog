@@ -21,7 +21,7 @@ public class SortOrderCalculatorTests
 
         var newSortOrder = sut.GetSortOrder(target, all);
 
-        newSortOrder.Should().Be(1500);
+        newSortOrder.ShouldBe(1500);
     }
 
     [Fact]
@@ -33,6 +33,6 @@ public class SortOrderCalculatorTests
 
         var newSortOrder = sut.GetSortOrder(target, all);
 
-        newSortOrder.Should().Be(1500);
+        newSortOrder.ShouldBe(1500);
     }
 }

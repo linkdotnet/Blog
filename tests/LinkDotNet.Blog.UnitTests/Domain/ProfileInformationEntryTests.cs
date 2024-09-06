@@ -10,8 +10,8 @@ public class ProfileInformationEntryTests
     {
         var result = ProfileInformationEntry.Create("key", 12);
 
-        result.Content.Should().Be("key");
-        result.SortOrder.Should().Be(12);
+        result.Content.ShouldBe("key");
+        result.SortOrder.ShouldBe(12);
     }
 
     [Theory]
@@ -22,7 +22,7 @@ public class ProfileInformationEntryTests
     {
         Action act = () => ProfileInformationEntry.Create(content, 0);
 
-        act.Should().Throw<ArgumentException>();
+        act.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -30,6 +30,6 @@ public class ProfileInformationEntryTests
     {
         var result = ProfileInformationEntry.Create("   key ", 0);
 
-        result.Content.Should().Be("key");
+        result.Content.ShouldBe("key");
     }
 }

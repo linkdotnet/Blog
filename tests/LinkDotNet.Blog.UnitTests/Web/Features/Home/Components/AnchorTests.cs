@@ -14,9 +14,9 @@ public class AnchorTests : BunitContext
             .Add(p => p.CssClass, "page"));
 
         var anchor = cut.Find("a") as IHtmlAnchorElement;
-        anchor.Should().NotBeNull();
-        anchor.Href.Should().Be("http://url/");
-        anchor.GetAttribute("class").Should().Be("page");
+        anchor.ShouldNotBeNull();
+        anchor.Href.ShouldBe("http://url/");
+        anchor.GetAttribute("class").ShouldBe("page");
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class AnchorTests : BunitContext
             .Add(p => p.CssClass, "page"));
 
         var anchor = cut.Find("a") as IHtmlAnchorElement;
-        anchor.Should().NotBeNull();
-        anchor.Attributes.Any(a => a.Name == "href").Should().BeFalse();
+        anchor.ShouldNotBeNull();
+        anchor.Attributes.Any(a => a.Name == "href").ShouldBeFalse();
     }
 }

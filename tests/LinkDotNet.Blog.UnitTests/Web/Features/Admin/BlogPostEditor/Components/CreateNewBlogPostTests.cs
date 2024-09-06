@@ -42,16 +42,18 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("form").Submit();
 
         cut.WaitForState(() => cut.Find("#title").TextContent == string.Empty);
-        blogPost.Should().NotBeNull();
-        blogPost.Title.Should().Be("My Title");
-        blogPost.ShortDescription.Should().Be("My short Description");
-        blogPost.Content.Should().Be("My content");
-        blogPost.PreviewImageUrl.Should().Be("My preview url");
-        blogPost.PreviewImageUrlFallback.Should().Be("My fallback preview url");
-        blogPost.IsPublished.Should().BeFalse();
-        blogPost.UpdatedDate.Should().NotBe(default);
-        blogPost.Tags.Should().HaveCount(3);
-        blogPost.Tags.Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
+        blogPost.ShouldNotBeNull();
+        blogPost.Title.ShouldBe("My Title");
+        blogPost.ShortDescription.ShouldBe("My short Description");
+        blogPost.Content.ShouldBe("My content");
+        blogPost.PreviewImageUrl.ShouldBe("My preview url");
+        blogPost.PreviewImageUrlFallback.ShouldBe("My fallback preview url");
+        blogPost.IsPublished.ShouldBeFalse();
+        blogPost.UpdatedDate.ShouldNotBe(default);
+        blogPost.Tags.Count.ShouldBe(3);
+        blogPost.Tags.ShouldContain("Tag1");
+        blogPost.Tags.ShouldContain("Tag2");
+        blogPost.Tags.ShouldContain("Tag3");
     }
 
     [Fact]
@@ -72,12 +74,12 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("form").Submit();
 
         cut.WaitForState(() => cut.Find("#title").TextContent == string.Empty);
-        blogPostFromComponent.Should().NotBeNull();
-        blogPostFromComponent.Title.Should().Be("Title");
-        blogPostFromComponent.ShortDescription.Should().Be("Desc");
-        blogPostFromComponent.Content.Should().Be("Content");
-        blogPostFromComponent.Tags.Should().Contain("tag1");
-        blogPostFromComponent.Tags.Should().Contain("tag2");
+        blogPostFromComponent.ShouldNotBeNull();
+        blogPostFromComponent.Title.ShouldBe("Title");
+        blogPostFromComponent.ShortDescription.ShouldBe("Desc");
+        blogPostFromComponent.Content.ShouldBe("Content");
+        blogPostFromComponent.Tags.ShouldContain("tag1");
+        blogPostFromComponent.Tags.ShouldContain("tag2");
     }
 
     [Fact]
@@ -97,7 +99,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("form").Submit();
 
-        blogPost.Should().BeNull();
+        blogPost.ShouldBeNull();
     }
 
     [Fact]
@@ -117,7 +119,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("form").Submit();
 
-        blogPost.Should().NotBeNull();
+        blogPost.ShouldNotBeNull();
     }
 
     [Fact]
@@ -139,7 +141,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#updatedate").Change(false);
         cut.Find("form").Submit();
 
-        blogPostFromComponent.UpdatedDate.Should().Be(someWhen);
+        blogPostFromComponent.UpdatedDate.ShouldBe(someWhen);
     }
 
     [Fact]
@@ -149,7 +151,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         var found = cut.FindAll("#updatedate");
 
-        found.Should().HaveCount(0);
+        found.ShouldBeEmpty();
     }
 
     [Fact]
@@ -168,14 +170,16 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("form").Submit();
 
         cut.WaitForState(() => cut.Find("#title").TextContent == string.Empty);
-        blogPost.Should().NotBeNull();
-        blogPost.Title.Should().Be("My Title");
-        blogPost.ShortDescription.Should().Be("My short Description");
-        blogPost.Content.Should().Be("My content");
-        blogPost.PreviewImageUrl.Should().Be("My preview url");
-        blogPost.IsPublished.Should().BeFalse();
-        blogPost.Tags.Should().HaveCount(3);
-        blogPost.Tags.Should().Contain(new[] { "Tag1", "Tag2", "Tag3" });
+        blogPost.ShouldNotBeNull();
+        blogPost.Title.ShouldBe("My Title");
+        blogPost.ShortDescription.ShouldBe("My short Description");
+        blogPost.Content.ShouldBe("My content");
+        blogPost.PreviewImageUrl.ShouldBe("My preview url");
+        blogPost.IsPublished.ShouldBeFalse();
+        blogPost.Tags.Count.ShouldBe(3);
+        blogPost.Tags.ShouldContain("Tag1");
+        blogPost.Tags.ShouldContain("Tag2");
+        blogPost.Tags.ShouldContain("Tag3");
     }
 
     [Fact]
@@ -185,7 +189,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("#title").Input("Hey");
 
-        cut.FindComponent<NavigationLock>().Instance.ConfirmExternalNavigation.Should().BeTrue();
+        cut.FindComponent<NavigationLock>().Instance.ConfirmExternalNavigation.ShouldBeTrue();
     }
 
     [Fact]
@@ -199,8 +203,8 @@ public class CreateNewBlogPostTests : BunitContext
 
         fakeNavigationManager.NavigateTo("/internal");
 
-        fakeNavigationManager.History.Count.Should().Be(1);
-        fakeNavigationManager.History.Single().State.Should().Be(NavigationState.Prevented);
+        fakeNavigationManager.History.Count.ShouldBe(1);
+        fakeNavigationManager.History.Single().State.ShouldBe(NavigationState.Prevented);
     }
 
     [Fact]
@@ -213,8 +217,8 @@ public class CreateNewBlogPostTests : BunitContext
 
         fakeNavigationManager.NavigateTo("/internal");
 
-        fakeNavigationManager.History.Count.Should().Be(1);
-        fakeNavigationManager.History.Single().State.Should().Be(NavigationState.Succeeded);
+        fakeNavigationManager.History.Count.ShouldBe(1);
+        fakeNavigationManager.History.Single().State.ShouldBe(NavigationState.Succeeded);
     }
 
     [Fact]
@@ -232,7 +236,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("form").Submit();
 
-        blogPost.ScheduledPublishDate.Should().Be(new DateTime(2099, 01, 01));
+        blogPost.ScheduledPublishDate.ShouldBe(new DateTime(2099, 01, 01));
     }
 
     [Fact]
@@ -250,7 +254,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#scheduled").Change("01/01/2099 00:00");
 
         var element = cut.Find("#published") as IHtmlInputElement;
-        element.IsChecked.Should().BeFalse();
+        element.IsChecked.ShouldBeFalse();
     }
     
     [Fact]
@@ -267,6 +271,6 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("form").Submit();
 
-        token.IsCancellationRequested.Should().BeTrue();
+        token.IsCancellationRequested.ShouldBeTrue();
     }
 }

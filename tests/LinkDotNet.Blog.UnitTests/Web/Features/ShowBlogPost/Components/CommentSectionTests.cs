@@ -17,7 +17,7 @@ public class CommentSectionTests : BunitContext
 
         var cut = Render<CommentSection>();
 
-        cut.FindComponents<Disqus>().Should().NotBeEmpty();
+        cut.FindComponents<Disqus>().ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class CommentSectionTests : BunitContext
 
         var cut = Render<CommentSection>();
 
-        cut.FindComponents<Giscus>().Should().NotBeEmpty();
+        cut.FindComponents<Giscus>().ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -45,6 +45,6 @@ public class CommentSectionTests : BunitContext
 
         var cut = Render<CommentSection>();
 
-        cut.FindAll(".alert-danger").Should().NotBeEmpty();
+        cut.FindAll(".alert-danger").ShouldNotBeEmpty();
     }
 }

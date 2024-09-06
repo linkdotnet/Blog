@@ -20,9 +20,9 @@ public class IntroductionCardTests : BunitContext
         var cut = Render<IntroductionCard>();
 
         var background = cut.FindAll(".introduction-background");
-        background.Should().NotBeNullOrEmpty();
-        background.Should().HaveCount(1);
-        background.Single().GetStyle().CssText.Should().Contain(introduction.BackgroundUrl);
+        background.ShouldNotBeNull().ShouldNotBeEmpty();
+        background.ShouldHaveSingleItem();
+        background.Single().GetStyle().CssText.ShouldContain(introduction.BackgroundUrl);
     }
 
     [Theory]
@@ -37,6 +37,6 @@ public class IntroductionCardTests : BunitContext
         var cut = Render<IntroductionCard>();
 
         var background = cut.FindAll(".introduction-background");
-        background.Should().BeNullOrEmpty();
+        background.ShouldBeEmpty();
     }
 }

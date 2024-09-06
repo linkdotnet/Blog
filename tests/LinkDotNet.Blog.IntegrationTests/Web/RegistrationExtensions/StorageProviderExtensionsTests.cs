@@ -28,7 +28,7 @@ public class StorageProviderExtensionsTests
         collection.AddStorageProvider(config);
 
         var enumerable = collection.Select(c => c.ServiceType).ToList();
-        enumerable.Should().Contain(typeof(IRepository<>));
+        enumerable.ShouldContain(typeof(IRepository<>));
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class StorageProviderExtensionsTests
 
         Action act = () => collection.AddStorageProvider(config);
 
-        act.Should().Throw<Exception>();
+        act.ShouldThrow<Exception>();
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class StorageProviderExtensionsTests
         collection.AddStorageProvider(config);
 
         var serviceProvider = collection.BuildServiceProvider();
-        serviceProvider.GetService<IRepository<BlogPost>>().Should().BeOfType<CachedRepository<BlogPost>>();
-        serviceProvider.GetService<IRepository<Skill>>().Should().NotBeOfType<CachedRepository<BlogPost>>();
+        serviceProvider.GetService<IRepository<BlogPost>>().ShouldBeOfType<CachedRepository<BlogPost>>();
+        serviceProvider.GetService<IRepository<Skill>>().ShouldNotBeOfType<CachedRepository<BlogPost>>();
     }
 }

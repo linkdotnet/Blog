@@ -25,8 +25,8 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         cut.WaitForComponent<SkillTag>().Find("button").Click();
 
         var items = await Repository.GetAllAsync();
-        items.Should().HaveCount(0);
-        cut.FindAll("td").Any(s => s.TextContent == "C#").Should().BeFalse();
+        items.ShouldBeEmpty();
+        cut.FindAll("td").Any(s => s.TextContent == "C#").ShouldBeFalse();
     }
 
     [Fact]
@@ -47,12 +47,12 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         await dialog.Find("form").SubmitAsync();
 
         var skillTag = cut.WaitForComponent<SkillTag>();
-        skillTag.Find("span").Text().Should().Contain("C#");
+        skillTag.Find("span").Text().ShouldContain("C#");
         var fromRepo = (await Repository.GetAllAsync())[0];
-        fromRepo.Name.Should().Be("C#");
-        fromRepo.IconUrl.Should().Be("Url");
-        fromRepo.Capability.Should().Be("capability");
-        fromRepo.ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
+        fromRepo.Name.ShouldBe("C#");
+        fromRepo.IconUrl.ShouldBe("Url");
+        fromRepo.Capability.ShouldBe("capability");
+        fromRepo.ProficiencyLevel.ShouldBe(ProficiencyLevel.Expert);
     }
 
     [Fact]
@@ -67,7 +67,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, false));
 
-        cut.WaitForComponent<SkillTag>().Instance.ShowAdminActions.Should().BeFalse();
+        cut.WaitForComponent<SkillTag>().Instance.ShowAdminActions.ShouldBeFalse();
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         cut.FindAll(".proficiency-level")[1].Drop();
 
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
-        skillFromDb.ProficiencyLevel.Should().Be(ProficiencyLevel.Proficient);
+        skillFromDb.ProficiencyLevel.ShouldBe(ProficiencyLevel.Proficient);
     }
 
     [Fact]
@@ -107,6 +107,6 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         cut.FindAll(".proficiency-level")[0].Drop();
 
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
-        skillFromDb.ProficiencyLevel.Should().Be(ProficiencyLevel.Familiar);
+        skillFromDb.ProficiencyLevel.ShouldBe(ProficiencyLevel.Familiar);
     }
 }

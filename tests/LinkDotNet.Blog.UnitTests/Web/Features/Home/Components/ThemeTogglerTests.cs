@@ -17,7 +17,7 @@ public class ThemeTogglerTests : BunitContext
 
         Render<ThemeToggler>();
 
-        setTheme.Invocations.Should().NotBeNullOrEmpty();
+        setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class ThemeTogglerTests : BunitContext
 
         Render<ThemeToggler>();
 
-        setTheme.Invocations.Should().NotBeNullOrEmpty();
+        setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class ThemeTogglerTests : BunitContext
 
         cut.Find("span").Click();
 
-        setTheme.Invocations.Should().NotBeNullOrEmpty();
+        setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
         await localStorage.Received(1).SetItemAsync("preferred-theme", "dark");
     }
 }

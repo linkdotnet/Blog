@@ -14,9 +14,9 @@ public class SkillTagTests : BunitContext
         var cut = Render<SkillTag>(p => p.Add(
             s => s.Skill, skill));
 
-        cut.Find("span").TextContent.Should().Contain("C#");
-        cut.Find("img").Attributes.Single(a => a.Name == "src").Value.Should().Be("test");
-        cut.FindAll("button").Should().HaveCount(0);
+        cut.Find("span").TextContent.ShouldContain("C#");
+        cut.Find("img").Attributes.Single(a => a.Name == "src").Value.ShouldBe("test");
+        cut.FindAll("button").ShouldBeEmpty();
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class SkillTagTests : BunitContext
         var cut = Render<SkillTag>(p => p.Add(
             s => s.Skill, skill));
 
-        cut.FindAll("img").Should().HaveCount(0);
+        cut.FindAll("img").ShouldBeEmpty();
     }
 
     [Fact]
@@ -43,6 +43,6 @@ public class SkillTagTests : BunitContext
 
         cut.Find("button").Click();
 
-        wasInvoked.Should().BeTrue();
+        wasInvoked.ShouldBeTrue();
     }
 }

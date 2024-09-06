@@ -28,8 +28,8 @@ public class SocialAccountTests : BunitContext
 
         var cut = Render<SocialAccounts>(s => s.Add(p => p.Social, social));
 
-        cut.FindAll("#github").Any().Should().Be(githubAvailable);
-        cut.FindAll("#linkedin").Any().Should().Be(linkedinAvailable);
-        cut.FindAll("#twitter").Any().Should().Be(twitterAvailable);
+        cut.FindAll("#github").Any().ShouldBe(githubAvailable);
+        cut.FindAll("#linkedin").Any().ShouldBe(linkedinAvailable);
+        cut.FindAll("#twitter").Any().ShouldBe(twitterAvailable);
     }
 }

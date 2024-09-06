@@ -13,7 +13,7 @@ public class SearchInputTests : BunitContext
 
         cut.Find("button").Click();
 
-        enteredString.Should().Be("Test");
+        enteredString.ShouldBe("Test");
     }
 
     [Theory]
@@ -28,7 +28,7 @@ public class SearchInputTests : BunitContext
 
         cut.Find("button").Click();
 
-        wasInvoked.Should().BeFalse();
+        wasInvoked.ShouldBeFalse();
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class SearchInputTests : BunitContext
 
         cut.Find("button").Click();
 
-        enteredString.Should().Be("Test 1");
+        enteredString.ShouldBe("Test 1");
     }
 
     [Theory]
@@ -55,6 +55,6 @@ public class SearchInputTests : BunitContext
 
         cut.Find("input").KeyUp(Key.Get(key));
 
-        wasInvoked.Should().Be(expectedInvoke);
+        wasInvoked.ShouldBe(expectedInvoke);
     }
 }

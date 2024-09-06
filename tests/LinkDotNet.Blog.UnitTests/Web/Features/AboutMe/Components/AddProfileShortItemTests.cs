@@ -14,7 +14,7 @@ public class AddProfileShortItemTests : BunitContext
 
         cut.Find("button").Click();
 
-        addedItem.Should().Be("Key");
+        addedItem.ShouldBe("Key");
     }
 
     [Theory]
@@ -30,7 +30,7 @@ public class AddProfileShortItemTests : BunitContext
 
         cut.Find("button").Click();
 
-        wasInvoked.Should().BeFalse();
+        wasInvoked.ShouldBeFalse();
     }
 
     [Fact]
@@ -41,6 +41,6 @@ public class AddProfileShortItemTests : BunitContext
 
         cut.Find("button").Click();
 
-        cut.Find("input").TextContent.Should().BeEmpty();
+        cut.Find("input").TextContent.ShouldBeEmpty();
     }
 }

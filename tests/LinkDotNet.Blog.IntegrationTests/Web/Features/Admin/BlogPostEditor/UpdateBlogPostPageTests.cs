@@ -41,8 +41,8 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         TriggerUpdate(newBlogPost);
 
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
-        blogPostFromDb.Should().NotBeNull();
-        blogPostFromDb.ShortDescription.Should().Be("My new Description");
+        blogPostFromDb.ShouldNotBeNull();
+        blogPostFromDb.ShortDescription.ShouldBe("My new Description");
         toastService.Received(1).ShowInfo("Updated BlogPost Title", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }
@@ -60,7 +60,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         Action act = () => ctx.Render<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, null));
 
-        act.Should().ThrowExactly<ArgumentNullException>();
+        act.ShouldThrow<ArgumentNullException>();
     }
 
     private static void TriggerUpdate(RenderedFragment cut)

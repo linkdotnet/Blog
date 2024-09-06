@@ -22,6 +22,6 @@ public class FileProcessorTests
 
         var content = await new FileProcessor().GetContentAsync(browserFile);
 
-        content.Should().Be(streamString);
+        content.ShouldBe(streamString);
     }
 }

@@ -33,7 +33,7 @@ public sealed class SitemapServiceTests : IDisposable
         await sut.SaveSitemapToFileAsync(urlSet);
 
         var lines = await File.ReadAllTextAsync(OutputFilename);
-        lines.Should().Be(
+        lines.ShouldBe(
             @"<?xml version=""1.0"" encoding=""utf-8""?>
 <urlset xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns=""http://www.sitemaps.org/schemas/sitemap/0.9"">
   <url>

@@ -16,11 +16,11 @@ public class PreviewImageTests : BunitContext
         var picture = cut.Find("picture");
 
         var source = picture.Children[0] as IHtmlSourceElement;
-        source.Should().NotBeNull();
-        source.SourceSet.Should().Be("http://image.png/");
+        source.ShouldNotBeNull();
+        source.SourceSet.ShouldBe("http://image.png/");
         var img = picture.Children[1] as IHtmlImageElement;
-        img.Should().NotBeNull();
-        img.Source.Should().Be("http://fallback.png/");
+        img.ShouldNotBeNull();
+        img.Source.ShouldBe("http://fallback.png/");
     }
 
     [Fact]
@@ -31,8 +31,8 @@ public class PreviewImageTests : BunitContext
 
         var image = cut.Find("img") as IHtmlImageElement;
 
-        image.Should().NotBeNull();
-        image.Source.Should().Be("http://image.png/");
+        image.ShouldNotBeNull();
+        image.Source.ShouldBe("http://image.png/");
     }
 
     [Theory]
@@ -48,8 +48,8 @@ public class PreviewImageTests : BunitContext
         var picture = cut.Find("picture");
 
         var img = picture.Children[1] as IHtmlImageElement;
-        img.Should().NotBeNull();
-        img.Attributes.FirstOrDefault(a => a.Name == "loading").Value.Should().Be(expectedLazy);
+        img.ShouldNotBeNull();
+        img.Attributes.FirstOrDefault(a => a.Name == "loading").Value.ShouldBe(expectedLazy);
     }
 
     [Theory]
@@ -63,7 +63,7 @@ public class PreviewImageTests : BunitContext
 
         var image = cut.Find("img") as IHtmlImageElement;
 
-        image.Attributes.FirstOrDefault(a => a.Name == "loading").Value.Should().Be(expectedLazy);
+        image.Attributes.FirstOrDefault(a => a.Name == "loading").Value.ShouldBe(expectedLazy);
     }
 
     [Theory]
@@ -79,7 +79,7 @@ public class PreviewImageTests : BunitContext
         var picture = cut.Find("picture");
 
         var source = picture.Children[0] as IHtmlSourceElement;
-        source.Type.Should().Be(mimeType);
+        source.Type.ShouldBe(mimeType);
     }
 
     [Theory]
@@ -95,8 +95,8 @@ public class PreviewImageTests : BunitContext
         var picture = cut.Find("picture");
 
         var img = picture.Children[1] as IHtmlImageElement;
-        img.Should().NotBeNull();
-        img.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.Should().Be(expectedBehaviour);
+        img.ShouldNotBeNull();
+        img.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.ShouldBe(expectedBehaviour);
     }
 
     [Theory]
@@ -110,6 +110,6 @@ public class PreviewImageTests : BunitContext
 
         var image = cut.Find("img") as IHtmlImageElement;
 
-        image.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.Should().Be(expectedBehaviour);
+        image.Attributes.FirstOrDefault(a => a.Name == "decoding").Value.ShouldBe(expectedBehaviour);
     }
 }

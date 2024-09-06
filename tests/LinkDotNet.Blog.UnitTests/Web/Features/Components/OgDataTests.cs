@@ -34,9 +34,9 @@ public class OgDataTests : BunitContext
         var cut = Render<OgData>(p => p
             .Add(s => s.Title, "Title"));
 
-        GetMetaTagExists(cut, "image").Should().BeFalse();
-        GetMetaTagExists(cut, "keywords").Should().BeFalse();
-        GetMetaTagExists(cut, "description").Should().BeFalse();
+        GetMetaTagExists(cut, "image").ShouldBeFalse();
+        GetMetaTagExists(cut, "keywords").ShouldBeFalse();
+        GetMetaTagExists(cut, "description").ShouldBeFalse();
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class OgDataTests : BunitContext
 
         var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
 
-        link.Href.Should().Be(expectedUri);
+        link.Href.ShouldBe(expectedUri);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class OgDataTests : BunitContext
             .Add(s => s.Title, "Title"));
 
         var link = cut.FindAll("link").FirstOrDefault(l => l.Attributes.Any(a => a.Name == "rel" && a.Value == "canonical")) as IHtmlLinkElement;
-        link.Href.Should().Be("https://localhost.com/site");
+        link.Href.ShouldBe("https://localhost.com/site");
     }
 
     private static void AssertMetaTagExistsWithValue(
@@ -75,12 +75,12 @@ public class OgDataTests : BunitContext
     {
         var metaTags = cut.FindAll("meta");
         var titleMeta = metaTags.SingleOrDefault(m => m.Attributes.Any(a => a.Value == metaTag));
-        titleMeta.Should().NotBeNull();
+        titleMeta.ShouldNotBeNull();
         var titleMetaTag = (IHtmlMetaElement)titleMeta;
-        titleMetaTag.Content.Should().Be(metaTagValue);
+        titleMetaTag.Content.ShouldBe(metaTagValue);
         if (ogPropertyName is not null)
         {
-            titleMetaTag.Attributes.Any(a => a.Value == ogPropertyName).Should().BeTrue();
+            titleMetaTag.Attributes.Any(a => a.Value == ogPropertyName).ShouldBeTrue();
         }
     }
 

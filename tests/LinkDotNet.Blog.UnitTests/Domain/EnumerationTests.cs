@@ -14,7 +14,7 @@ public class EnumerationTests
         var display = testEnum.ToString();
 
         // Assert
-        display.Should().Be(testEnum.Key);
+        display.ShouldBe(testEnum.Key);
     }
 
     [Fact]
@@ -24,8 +24,8 @@ public class EnumerationTests
         var all = TestEnumeration.All;
 
         // Assert
-        all.Should().Contain(TestEnumeration.One);
-        all.Should().Contain(TestEnumeration.Two);
+        all.ShouldContain(TestEnumeration.One);
+        all.ShouldContain(TestEnumeration.Two);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class EnumerationTests
         // Act
         var isEqual = enum1 == alsoEnum1;
 
-        isEqual.Should().BeTrue();
+        isEqual.ShouldBeTrue();
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class EnumerationTests
         Action result = () => TestEnumeration.Create("InvalidKey");
 
         // Assert
-        result.Should().Throw<InvalidOperationException>();
+        result.ShouldThrow<InvalidOperationException>();
     }
 
     [Theory]
@@ -60,7 +60,7 @@ public class EnumerationTests
         Action result = () => new TestEnumeration(key);
 
         // Assert
-        result.Should().Throw<ArgumentException>();
+        result.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class EnumerationTests
     {
         var isEqual = null == (TestEnumeration)null;
 
-        isEqual.Should().BeFalse();
+        isEqual.ShouldBeFalse();
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class EnumerationTests
     {
         var isEqual = TestEnumeration.One != TestEnumeration.Two;
 
-        isEqual.Should().BeTrue();
+        isEqual.ShouldBeTrue();
     }
 
     [Fact]
@@ -85,7 +85,7 @@ public class EnumerationTests
         var hashCode1 = TestEnumeration.One.GetHashCode();
         var hashCode2 = TestEnumeration.Create(TestEnumeration.One.Key).GetHashCode();
 
-        hashCode1.Should().Be(hashCode2);
+        hashCode1.ShouldBe(hashCode2);
     }
 
     [Fact]
@@ -93,7 +93,7 @@ public class EnumerationTests
     {
         var isEqual = TestEnumeration.One.Equals(null);
 
-        isEqual.Should().BeFalse();
+        isEqual.ShouldBeFalse();
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class EnumerationTests
     {
         var isEqual = TestEnumeration.One.Equals("string");
 
-        isEqual.Should().BeFalse();
+        isEqual.ShouldBeFalse();
     }
 
     [Fact]
@@ -109,6 +109,6 @@ public class EnumerationTests
     {
         var isEqual = TestEnumeration.One.Equals(TestEnumeration.One);
 
-        isEqual.Should().BeTrue();
+        isEqual.ShouldBeTrue();
     }
 }

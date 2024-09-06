@@ -30,15 +30,16 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
 
         var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
 
-        blogPostFromRepo.Should().NotBeNull();
-        blogPostFromRepo.Title.Should().Be("Title");
-        blogPostFromRepo.ShortDescription.Should().Be("Subtitle");
-        blogPostFromRepo.Content.Should().Be("Content");
-        blogPostFromRepo.PreviewImageUrl.Should().Be("url");
-        blogPostFromRepo.IsPublished.Should().BeTrue();
-        blogPostFromRepo.Tags.Should().HaveCount(2);
+        blogPostFromRepo.ShouldNotBeNull();
+        blogPostFromRepo.Title.ShouldBe("Title");
+        blogPostFromRepo.ShortDescription.ShouldBe("Subtitle");
+        blogPostFromRepo.Content.ShouldBe("Content");
+        blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
+        blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
-        tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
+        tagContent.ShouldContain("Tag 1");
+        tagContent.ShouldContain("Tag 2");
     }
 
     [Fact]
@@ -58,9 +59,9 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
             false);
 
         var retrievedPosts = blogPosts.ToList();
-        retrievedPosts.Exists(b => b.Id == filteredOutPost.Id).Should().BeFalse();
-        retrievedPosts[0].Id.Should().Be(olderPost.Id);
-        retrievedPosts[1].Id.Should().Be(newerPost.Id);
+        retrievedPosts.Exists(b => b.Id == filteredOutPost.Id).ShouldBeFalse();
+        retrievedPosts[0].Id.ShouldBe(olderPost.Id);
+        retrievedPosts[1].Id.ShouldBe(newerPost.Id);
     }
 
     [Fact]
@@ -77,8 +78,8 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
             descending: true);
 
         var retrievedPosts = blogPosts.ToList();
-        retrievedPosts[0].Id.Should().Be(newerPost.Id);
-        retrievedPosts[1].Id.Should().Be(olderPost.Id);
+        retrievedPosts[0].Id.ShouldBe(newerPost.Id);
+        retrievedPosts[1].Id.ShouldBe(olderPost.Id);
     }
 
     [Fact]
@@ -89,15 +90,16 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         await sut.StoreAsync(blogPost);
 
         var blogPostFromContext = await GetBlogPostByIdAsync(blogPost.Id);
-        blogPostFromContext.Should().NotBeNull();
-        blogPostFromContext.Title.Should().Be("Title");
-        blogPostFromContext.ShortDescription.Should().Be("Subtitle");
-        blogPostFromContext.Content.Should().Be("Content");
-        blogPostFromContext.IsPublished.Should().BeTrue();
-        blogPostFromContext.PreviewImageUrl.Should().Be("url");
-        blogPostFromContext.Tags.Should().HaveCount(2);
+        blogPostFromContext.ShouldNotBeNull();
+        blogPostFromContext.Title.ShouldBe("Title");
+        blogPostFromContext.ShortDescription.ShouldBe("Subtitle");
+        blogPostFromContext.Content.ShouldBe("Content");
+        blogPostFromContext.IsPublished.ShouldBeTrue();
+        blogPostFromContext.PreviewImageUrl.ShouldBe("url");
+        blogPostFromContext.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromContext.Tags;
-        tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
+        tagContent.ShouldContain("Tag 1");
+        tagContent.ShouldContain("Tag 2");
     }
 
     [Fact]
@@ -108,17 +110,18 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
 
         var blogPostsFromRepo = await sut.GetAllAsync();
 
-        blogPostsFromRepo.Should().NotBeNull();
-        blogPostsFromRepo.Should().HaveCount(1);
+        blogPostsFromRepo.ShouldNotBeNull();
+        blogPostsFromRepo.ShouldHaveSingleItem();
         var blogPostFromRepo = blogPostsFromRepo.Single();
-        blogPostFromRepo.Title.Should().Be("Title");
-        blogPostFromRepo.ShortDescription.Should().Be("Subtitle");
-        blogPostFromRepo.Content.Should().Be("Content");
-        blogPostFromRepo.PreviewImageUrl.Should().Be("url");
-        blogPostFromRepo.IsPublished.Should().BeTrue();
-        blogPostFromRepo.Tags.Should().HaveCount(2);
+        blogPostFromRepo.Title.ShouldBe("Title");
+        blogPostFromRepo.ShortDescription.ShouldBe("Subtitle");
+        blogPostFromRepo.Content.ShouldBe("Content");
+        blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
+        blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
-        tagContent.Should().Contain(new[] { "Tag 1", "Tag 2" });
+        tagContent.ShouldContain("Tag 1");
+        tagContent.ShouldContain("Tag 2");
     }
 
     [Fact]
@@ -128,12 +131,12 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         await SaveBlogPostAsync(blogPost);
         var blogPostFromDb = await sut.GetByIdAsync(blogPost.Id);
         var updater = new BlogPostBuilder().WithTitle("New Title").Build();
-        blogPostFromDb.Update(updater);
+        blogPostFromDb!.Update(updater);
 
         await sut.StoreAsync(blogPostFromDb);
 
         var blogPostAfterSave = await GetBlogPostByIdAsync(blogPost.Id);
-        blogPostAfterSave.Title.Should().Be("New Title");
+        blogPostAfterSave.Title.ShouldBe("New Title");
     }
 
     [Fact]
@@ -145,7 +148,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         await sut.DeleteAsync(blogPost.Id);
 
         using var session = store.OpenAsyncSession();
-        (await session.Query<BlogPost>().AnyAsync(b => b.Id == blogPost.Id)).Should().BeFalse();
+        (await session.Query<BlogPost>().AnyAsync(b => b.Id == blogPost.Id)).ShouldBeFalse();
     }
 
     public override void Dispose()

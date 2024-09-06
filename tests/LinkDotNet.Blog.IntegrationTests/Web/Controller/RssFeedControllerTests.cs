@@ -60,33 +60,35 @@ public class RssFeedControllerTests
 
         var xml = await cut.GetRssFeed() as FileContentResult;
 
-        xml.Should().NotBeNull();
+        xml.ShouldNotBeNull();
         var content = Encoding.UTF8.GetString(xml.FileContents);
-        content.Should().Match(
-@"*<rss version=""2.0"">
-  <channel>
-    <title>Test</title>
-    <link>http://localhost/</link>
-    <description>Description</description>
-    <item>
-      <guid isPermaLink=""false"">2</guid>
-      <link>http://localhost//blogPost/2</link>
-      <title>2</title>
-      <description>Short 2</description>
-      <pubDate>Wed, 01 Jun 2022 00:00:00*</pubDate>
-      <image>preview2</image>
-    </item>
-    <item>
-      <guid isPermaLink=""false"">1</guid>
-      <link>http://localhost//blogPost/1</link>
-      <category>C#</category>
-      <category>.NET</category>
-      <title>1</title>
-      <description>Short 1</description>
-      <pubDate>Sun, 01 May 2022 00:00:00*</pubDate>
-      <image>preview1</image>
-    </item>
-  </channel>
-</rss>");
+        content.ShouldMatch(
+            """
+            <rss version="2.0">
+              <channel>
+                <title>Test</title>
+                <link>http://localhost/</link>
+                <description>Description</description>
+                <item>
+                  <guid isPermaLink="false">2</guid>
+                  <link>http://localhost//blogPost/2</link>
+                  <title>2</title>
+                  <description>Short 2</description>
+                  <pubDate>Wed, 01 Jun 2022 00:00:00.*</pubDate>
+                  <image>preview2</image>
+                </item>
+                <item>
+                  <guid isPermaLink="false">1</guid>
+                  <link>http://localhost//blogPost/1</link>
+                  <category>C#</category>
+                  <category>.NET</category>
+                  <title>1</title>
+                  <description>Short 1</description>
+                  <pubDate>Sun, 01 May 2022 00:00:00.*</pubDate>
+                  <image>preview1</image>
+                </item>
+              </channel>
+            </rss>
+            """);
     }
 }

@@ -12,7 +12,7 @@ public class ReadingTimeCalculatorTests
 
         var result = ReadingTimeCalculator.CalculateReadingTime(content);
 
-        result.Should().Be(5);
+        result.ShouldBe(5);
     }
     [Fact]
     public void ShouldCountShortContent()
@@ -21,6 +21,6 @@ public class ReadingTimeCalculatorTests
 
         var result = ReadingTimeCalculator.CalculateReadingTime(content);
 
-        result.Should().Be(1);
+        result.ShouldBe(1);
     }
 }

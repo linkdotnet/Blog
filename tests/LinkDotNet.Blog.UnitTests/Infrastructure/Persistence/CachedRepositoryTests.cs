@@ -29,8 +29,8 @@ public sealed class CachedRepositoryTests
 
         var secondCall = await sut.GetByIdAsync("id");
 
-        firstCall.Should().Be(secondCall);
-        firstCall.Should().Be(blogPost);
+        firstCall.ShouldBe(secondCall);
+        firstCall.ShouldBe(blogPost);
         await repositoryMock.Received(1).GetByIdAsync("id");
     }
 
@@ -78,7 +78,7 @@ public sealed class CachedRepositoryTests
 
         var latest = await sut.GetByIdAsync("id");
 
-        latest.Title.Should().Be("new");
+        latest.Title.ShouldBe("new");
     }
 
     [Fact]

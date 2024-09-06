@@ -14,6 +14,6 @@ public class StructuredDataTests : BunitContext
                 .Add(p => p.PreviewFallbackImage, "url2"));
 
         var element = cut.Find("script");
-        element.Should().NotBeNull();
+        element.ShouldNotBeNull();
     }
 }

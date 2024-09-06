@@ -25,8 +25,8 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
 
         var allWithTag2 = await sut.GetAllAsync(f => f.Tags.Any(t => t == searchTerm));
 
-        allWithTag2.Count.Should().Be(1);
-        allWithTag2.Single().Tags.Single().Should().Be("tag 2");
+        allWithTag2.Count.ShouldBe(1);
+        allWithTag2.Single().Tags.Single().ShouldBe("tag 2");
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
 
         var db = await sut.GetAllAsync();
 
-        db.Single().Title.Should().Be("2");
+        db.Single().Title.ShouldBe("2");
     }
 
     [Fact]
@@ -58,6 +58,6 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
 
         var db = await sut.GetAllAsync();
 
-        db.Single().Title.Should().Be("2");
+        db.Single().Title.ShouldBe("2");
     }
 }

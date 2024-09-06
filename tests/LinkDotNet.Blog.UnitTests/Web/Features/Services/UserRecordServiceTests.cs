@@ -37,9 +37,9 @@ public class UserRecordServiceTests : BunitContext
 
         await sut.StoreUserRecordAsync();
 
-        recordToDb.Should().NotBeNull();
-        recordToDb.UrlClicked.Should().Be("subpart");
-        recordToDb.DateClicked.Should().Be(DateOnly.FromDateTime(DateTime.UtcNow));
+        recordToDb.ShouldNotBeNull();
+        recordToDb.UrlClicked.ShouldBe("subpart");
+        recordToDb.DateClicked.ShouldBe(DateOnly.FromDateTime(DateTime.UtcNow));
     }
 
     [Fact]
@@ -66,7 +66,7 @@ public class UserRecordServiceTests : BunitContext
 
         await sut.StoreUserRecordAsync();
 
-        recordToDb.Should().NotBeNull();
-        recordToDb.UrlClicked.Should().Be(expectedRecord);
+        recordToDb.ShouldNotBeNull();
+        recordToDb.UrlClicked.ShouldBe(expectedRecord);
     }
 }

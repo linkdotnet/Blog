@@ -49,7 +49,7 @@ public class ShowBlogPostPageTests : BunitContext
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPostId));
 
-        cut.FindComponents<Loading>().Count.Should().Be(1);
+        cut.FindComponents<Loading>().Count.ShouldBe(1);
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class ShowBlogPostPageTests : BunitContext
 
         var pageTitleStub = cut.FindComponent<PageTitleStub>();
         var pageTitle = Render(pageTitleStub.Instance.ChildContent!);
-        pageTitle.Markup.Should().Be("Title");
+        pageTitle.Markup.ShouldBe("Title");
     }
 
     [Theory]
@@ -84,7 +84,7 @@ public class ShowBlogPostPageTests : BunitContext
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
-        cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expected);
+        cut.FindComponent<OgData>().Instance.AbsolutePreviewImageUrl.ShouldBe(expected);
     }
 
     [Fact]
@@ -101,8 +101,8 @@ public class ShowBlogPostPageTests : BunitContext
             p => p.Add(s => s.BlogPostId, "1"));
 
         var aElement = cut.Find(".goto-tag") as IHtmlAnchorElement;
-        aElement.Should().NotBeNull();
-        aElement.Href.Should().Contain("/searchByTag/tag1");
+        aElement.ShouldNotBeNull();
+        aElement.Href.ShouldContain("/searchByTag/tag1");
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class ShowBlogPostPageTests : BunitContext
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
-        cut.FindAll(".goto-tag").Should().BeEmpty();
+        cut.FindAll(".goto-tag").ShouldBeEmpty();
     }
 
     [Theory]
@@ -138,7 +138,7 @@ public class ShowBlogPostPageTests : BunitContext
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
 
-        cut.HasComponent<ReadingIndicator>().Should().Be(isEnabled);
+        cut.HasComponent<ReadingIndicator>().ShouldBe(isEnabled);
     }
 
     [Fact]
@@ -155,6 +155,6 @@ public class ShowBlogPostPageTests : BunitContext
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
         
-        cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.Should().Be("blogPost/1");
+        cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.ShouldBe("blogPost/1");
     }
 }

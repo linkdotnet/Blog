@@ -28,14 +28,14 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         cut.WaitForElements("h2");
         var yearHeader = cut.FindAll("h2");
-        yearHeader.Should().HaveCount(2);
-        yearHeader[0].TextContent.Should().Contain("2022");
-        yearHeader[1].TextContent.Should().Contain("2021");
+        yearHeader.Count.ShouldBe(2);
+        yearHeader[0].TextContent.ShouldContain("2022");
+        yearHeader[1].TextContent.ShouldContain("2021");
         var entries = cut.FindAll("li");
-        entries.Should().HaveCount(3);
-        entries[0].TextContent.Should().Contain("Blog Post 3");
-        entries[1].TextContent.Should().Contain("Blog Post 2");
-        entries[2].TextContent.Should().Contain("Blog Post 1");
+        entries.Count.ShouldBe(3);
+        entries[0].TextContent.ShouldContain("Blog Post 3");
+        entries[1].TextContent.ShouldContain("Blog Post 2");
+        entries[2].TextContent.ShouldContain("Blog Post 1");
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<ArchivePage>();
 
         cut.WaitForElements("h2");
-        cut.FindAll("h2").Should().HaveCount(1);
+        cut.FindAll("h2").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<ArchivePage>();
 
         cut.WaitForElements("h2");
-        cut.Find("h3").TextContent.Should().Be("Archive (2 posts)");
+        cut.Find("h3").TextContent.ShouldBe("Archive (2 posts)");
     }
 
     [Fact]
@@ -76,7 +76,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<ArchivePage>();
 
-        cut.FindComponents<Loading>().Count.Should().Be(1);
+        cut.FindComponents<Loading>().Count.ShouldBe(1);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<ArchivePage>();
 
         var ogData = cut.FindComponent<OgData>().Instance;
-        ogData.Title.Should().Contain("Archive");
+        ogData.Title.ShouldContain("Archive");
     }
 
     private static BlogPost CreateBlogPost(DateTime date, string title)

@@ -10,10 +10,10 @@ public class SkillTests
     {
         var skill = Skill.Create(" C# ", "url", " Backend ", ProficiencyLevel.Expert.Key);
 
-        skill.Name.Should().Be("C#");
-        skill.IconUrl.Should().Be("url");
-        skill.Capability.Should().Be("Backend");
-        skill.ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
+        skill.Name.ShouldBe("C#");
+        skill.IconUrl.ShouldBe("url");
+        skill.Capability.ShouldBe("Backend");
+        skill.ProficiencyLevel.ShouldBe(ProficiencyLevel.Expert);
     }
 
     [Theory]
@@ -24,7 +24,7 @@ public class SkillTests
     {
         Action result = () => Skill.Create(name, "url", "backend", ProficiencyLevel.Expert.Key);
 
-        result.Should().Throw<ArgumentException>();
+        result.ShouldThrow<ArgumentException>();
     }
 
     [Theory]
@@ -35,14 +35,14 @@ public class SkillTests
     {
         Action result = () => Skill.Create("name", "url", capability, ProficiencyLevel.Expert.Key);
 
-        result.Should().Throw<ArgumentException>();
+        result.ShouldThrow<ArgumentException>();
     }
 
     [Fact]
     public void ShouldThrowWhenInvalidProficiencyLevel()
     {
         Action result = () => Skill.Create("name", "url", "cap", "null");
-        result.Should().Throw<Exception>();
+        result.ShouldThrow<Exception>();
     }
 
     [Theory]
@@ -53,7 +53,7 @@ public class SkillTests
     {
         var skill = Skill.Create("name", url, "cap", ProficiencyLevel.Expert.Key);
 
-        skill.IconUrl.Should().BeNull();
+        skill.IconUrl.ShouldBeNull();
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class SkillTests
 
         skill.SetProficiencyLevel(ProficiencyLevel.Proficient);
 
-        skill.ProficiencyLevel.Should().Be(ProficiencyLevel.Proficient);
+        skill.ProficiencyLevel.ShouldBe(ProficiencyLevel.Proficient);
     }
 
     [Fact]
@@ -73,6 +73,6 @@ public class SkillTests
 
         Action result = () => skill.SetProficiencyLevel(null);
 
-        result.Should().Throw<ArgumentNullException>();
+        result.ShouldThrow<ArgumentNullException>();
     }
 }

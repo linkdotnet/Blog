@@ -18,7 +18,7 @@ public class LikeTests : BunitContext
 
         var label = cut.Find("#like-counter").TextContent;
 
-        label.Should().Contain("1");
+        label.ShouldContain("1");
     }
 
     [Fact]
@@ -38,8 +38,8 @@ public class LikeTests : BunitContext
 
         cut.Find("span").Click();
 
-        wasClicked.Should().BeTrue();
-        wasLike.Should().BeTrue();
+        wasClicked.ShouldBeTrue();
+        wasLike.ShouldBeTrue();
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class LikeTests : BunitContext
 
         cut.Find("span").Click();
 
-        wasLike.Should().BeFalse();
+        wasLike.ShouldBeFalse();
     }
 
     [Fact]
@@ -92,6 +92,6 @@ public class LikeTests : BunitContext
 
         cut.Find("span").Click();
 
-        wasClicked.Should().BeFalse();
+        wasClicked.ShouldBeFalse();
     }
 }

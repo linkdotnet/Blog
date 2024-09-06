@@ -51,13 +51,13 @@ public class SitemapServiceTests : BunitContext
 
         var sitemap = await sut.CreateSitemapAsync();
 
-        sitemap.Urls.Should().HaveCount(6);
-        sitemap.Urls[0].Location.Should().Be($"{fakeNavigationManager.BaseUri}");
-        sitemap.Urls[1].Location.Should().Be($"{fakeNavigationManager.BaseUri}archive");
-        sitemap.Urls[2].Location.Should().Be($"{fakeNavigationManager.BaseUri}blogPost/id1");
-        sitemap.Urls[3].Location.Should().Be($"{fakeNavigationManager.BaseUri}blogPost/id2");
-        sitemap.Urls[4].Location.Should().Be($"{fakeNavigationManager.BaseUri}searchByTag/tag1");
-        sitemap.Urls[5].Location.Should().Be($"{fakeNavigationManager.BaseUri}searchByTag/tag2");
+        sitemap.Urls.Count.ShouldBe(6);
+        sitemap.Urls[0].Location.ShouldBe($"{fakeNavigationManager.BaseUri}");
+        sitemap.Urls[1].Location.ShouldBe($"{fakeNavigationManager.BaseUri}archive");
+        sitemap.Urls[2].Location.ShouldBe($"{fakeNavigationManager.BaseUri}blogPost/id1");
+        sitemap.Urls[3].Location.ShouldBe($"{fakeNavigationManager.BaseUri}blogPost/id2");
+        sitemap.Urls[4].Location.ShouldBe($"{fakeNavigationManager.BaseUri}searchByTag/tag1");
+        sitemap.Urls[5].Location.ShouldBe($"{fakeNavigationManager.BaseUri}searchByTag/tag2");
     }
 
     [Fact]

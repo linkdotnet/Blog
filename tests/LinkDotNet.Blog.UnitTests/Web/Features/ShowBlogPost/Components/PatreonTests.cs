@@ -13,7 +13,7 @@ public class PatreonTests : BunitContext
 
         var anchor = cut.Find("a") as IHtmlAnchorElement;
 
-        anchor.Should().NotBeNull();
-        anchor.Href.Should().Be("https://www.patreon.com/linkdotnet");
+        anchor.ShouldNotBeNull();
+        anchor.Href.ShouldBe("https://www.patreon.com/linkdotnet");
     }
 }

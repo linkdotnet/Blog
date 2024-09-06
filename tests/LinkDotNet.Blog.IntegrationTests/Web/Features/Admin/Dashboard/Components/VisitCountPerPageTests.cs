@@ -26,13 +26,13 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<VisitCountPerPage>();
 
         var elements = cut.WaitForElements("td");
-        elements.Count.Should().Be(3);
+        elements.Count.ShouldBe(3);
         var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
-        titleData.Should().NotBeNull();
-        titleData.InnerHtml.Should().Be(blogPost.Title);
-        titleData.Href.Should().Contain($"blogPost/{blogPost.Id}");
-        elements[1].InnerHtml.Should().Be("10");
-        elements[2].InnerHtml.Should().Be("2");
+        titleData.ShouldNotBeNull();
+        titleData.InnerHtml.ShouldBe(blogPost.Title);
+        titleData.Href.ShouldContain($"blogPost/{blogPost.Id}");
+        elements[1].InnerHtml.ShouldBe("10");
+        elements[2].InnerHtml.ShouldBe("2");
     }
 
     [Fact]
@@ -61,12 +61,12 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await cut.InvokeAsync(() => cut.FindComponent<DateRangeSelectorStub>().Instance.FilterChanged.InvokeAsync(filter));
 
         var elements = cut.WaitForElements("td");
-        elements.Count.Should().Be(3);
+        elements.Count.ShouldBe(3);
         var titleData = elements[0].ChildNodes.Single() as IHtmlAnchorElement;
-        titleData.Should().NotBeNull();
-        titleData.InnerHtml.Should().Be(blogPost1.Title);
-        titleData.Href.Should().Contain($"blogPost/{blogPost1.Id}");
-        cut.WaitForAssertion(() => elements[1].InnerHtml.Should().Be("1"));
+        titleData.ShouldNotBeNull();
+        titleData.InnerHtml.ShouldBe(blogPost1.Title);
+        titleData.Href.ShouldContain($"blogPost/{blogPost1.Id}");
+        cut.WaitForAssertion(() => elements[1].InnerHtml.ShouldBe("1"));
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<VisitCountPerPage>();
 
         cut.WaitForElement("td");
-        cut.Find("#total-clicks").TextContent.Should().Be("4 clicks in total");
+        cut.Find("#total-clicks").TextContent.ShouldBe("4 clicks in total");
     }
 
     [Fact]
@@ -112,7 +112,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<VisitCountPerPage>();
 
         cut.WaitForElement("td");
-        cut.Find("#total-clicks").TextContent.Should().Be("3 clicks in total");
+        cut.Find("#total-clicks").TextContent.ShouldBe("3 clicks in total");
     }
 
     private void RegisterRepositories(BunitContext ctx)

@@ -37,8 +37,8 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         TriggerNewBlogPost(newBlogPost);
 
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Title == "My Title");
-        blogPostFromDb.Should().NotBeNull();
-        blogPostFromDb.ShortDescription.Should().Be("My short Description");
+        blogPostFromDb.ShouldNotBeNull();
+        blogPostFromDb.ShortDescription.ShouldBe("My short Description");
         toastService.Received(1).ShowInfo("Created BlogPost My Title", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }

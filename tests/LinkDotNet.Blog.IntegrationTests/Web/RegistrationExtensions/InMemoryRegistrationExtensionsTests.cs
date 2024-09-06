@@ -15,7 +15,7 @@ public class InMemoryRegistrationExtensionsTests
         serviceCollection.UseInMemoryAsStorageProvider();
 
         var serviceProvider = serviceCollection.BuildServiceProvider();
-        serviceProvider.GetService<IRepository<BlogPost>>().Should().NotBeNull();
-        serviceProvider.GetService<IRepository<Skill>>().Should().NotBeNull();
+        serviceProvider.GetService<IRepository<BlogPost>>().ShouldNotBeNull();
+        serviceProvider.GetService<IRepository<Skill>>().ShouldNotBeNull();
     }
 }

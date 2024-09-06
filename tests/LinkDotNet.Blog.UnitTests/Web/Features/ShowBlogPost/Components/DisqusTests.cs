@@ -25,8 +25,7 @@ public class DisqusTests : BunitContext
         Render<Disqus>();
 
         var init = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "initDisqus");
-        init.Should().NotBeNull();
-        init.Arguments.Should().Contain(disqusData);
+        init.Arguments.ShouldContain(disqusData);
     }
 
     [Fact]
@@ -36,6 +35,6 @@ public class DisqusTests : BunitContext
 
         Render<Disqus>();
 
-        JSInterop.Invocations.Should().BeEmpty();
+        JSInterop.Invocations.ShouldBeEmpty();
     }
 }

@@ -16,9 +16,9 @@ public class DateRangeSelectorTests : BunitContext
 
         cut.Find("#startDate").Change(new DateOnly(2020, 1, 1));
 
-        filter.Should().NotBeNull();
-        filter.StartDate.Should().Be(new DateOnly(2020, 1, 1));
-        filter.EndDate.Should().BeNull();
+        filter.ShouldNotBeNull();
+        filter.StartDate.ShouldBe(new DateOnly(2020, 1, 1));
+        filter.EndDate.ShouldBeNull();
     }
 
     [Fact]
@@ -32,9 +32,9 @@ public class DateRangeSelectorTests : BunitContext
 
         cut.Find("#endDate").Change(new DateOnly(2020, 1, 1));
 
-        filter.Should().NotBeNull();
-        filter.EndDate.Should().Be(new DateOnly(2020, 1, 1));
-        filter.StartDate.Should().BeNull();
+        filter.ShouldNotBeNull();
+        filter.EndDate.ShouldBe(new DateOnly(2020, 1, 1));
+        filter.StartDate.ShouldBeNull();
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class DateRangeSelectorTests : BunitContext
         cut.Find("#startDate").Change(string.Empty);
         cut.Find("#endDate").Change(string.Empty);
 
-        filter.StartDate.Should().BeNull();
-        filter.EndDate.Should().BeNull();
+        filter.StartDate.ShouldBeNull();
+        filter.EndDate.ShouldBeNull();
     }
 }

@@ -17,9 +17,9 @@ public sealed class XmlFileWriterTests : IDisposable
         await new XmlFileWriter().WriteObjectToXmlFileAsync(myObj, OutputFilename);
 
         var content = await File.ReadAllTextAsync(OutputFilename);
-        content.Should().NotBeNull();
-        content.Should().Contain("<MyObject");
-        content.Should().Contain("<Property>Prop</Property>");
+        content.ShouldNotBeNull();
+        content.ShouldContain("<MyObject");
+        content.ShouldContain("<Property>Prop</Property>");
     }
 
     public void Dispose()

@@ -38,7 +38,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await job.RunAsync(context, CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
-        similarBlogPosts.Should().HaveCount(3);
+        similarBlogPosts.Count.ShouldBe(3);
     }
     
     [Fact]
@@ -58,7 +58,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await job.RunAsync(context, CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
-        similarBlogPosts.Should().BeEmpty();
+        similarBlogPosts.ShouldBeEmpty();
     }
     
     [Fact]
@@ -76,6 +76,6 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await job.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
-        similarBlogPosts.Should().BeEmpty();
+        similarBlogPosts.ShouldBeEmpty();
     }
 }

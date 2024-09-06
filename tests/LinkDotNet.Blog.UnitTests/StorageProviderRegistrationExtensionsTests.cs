@@ -24,6 +24,6 @@ public class StorageProviderRegistrationExtensionsTests
 
         Action actualAct = () => act(services);
 
-        actualAct.Should().Throw<NotSupportedException>();
+        actualAct.ShouldThrow<NotSupportedException>();
     }
 }

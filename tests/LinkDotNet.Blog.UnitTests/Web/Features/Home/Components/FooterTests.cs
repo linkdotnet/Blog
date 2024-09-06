@@ -22,7 +22,7 @@ public class FooterTests : BunitContext
         
         var cut = Render<Footer>();
 
-        cut.Find("span").TextContent.Should().Contain("Steven");
+        cut.Find("span").TextContent.ShouldContain("Steven");
     }
 
     [Fact]
@@ -33,6 +33,6 @@ public class FooterTests : BunitContext
 
         var cut = Render<Footer>();
 
-        cut.Find("span").TextContent.Should().Contain("©");
+        cut.Find("span").TextContent.ShouldContain("©");
     }
 }

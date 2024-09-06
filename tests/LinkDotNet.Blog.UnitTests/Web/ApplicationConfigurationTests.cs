@@ -53,56 +53,56 @@ public class ApplicationConfigurationTests
         appConfiguration.IsAboutMeEnabled = profileInfoSection.Exists();
         configuration.Bind(appConfiguration);
 
-        appConfiguration.BlogName.Should().Be("UnitTest");
-        appConfiguration.BlogBrandUrl.Should().Be("http://localhost");
-        appConfiguration.ConnectionString.Should().Be("cs");
-        appConfiguration.DatabaseName.Should().Be("db");
-        appConfiguration.BlogPostsPerPage.Should().Be(5);
-        appConfiguration.IsAboutMeEnabled.Should().BeTrue();
-        appConfiguration.KofiToken.Should().Be("ABC");
-        appConfiguration.GithubSponsorName.Should().Be("linkdotnet");
-        appConfiguration.ShowReadingIndicator.Should().BeTrue();
-        appConfiguration.PatreonName.Should().Be("linkdotnet");
-        appConfiguration.IsPatreonEnabled.Should().BeTrue();
+        appConfiguration.BlogName.ShouldBe("UnitTest");
+        appConfiguration.BlogBrandUrl.ShouldBe("http://localhost");
+        appConfiguration.ConnectionString.ShouldBe("cs");
+        appConfiguration.DatabaseName.ShouldBe("db");
+        appConfiguration.BlogPostsPerPage.ShouldBe(5);
+        appConfiguration.IsAboutMeEnabled.ShouldBeTrue();
+        appConfiguration.KofiToken.ShouldBe("ABC");
+        appConfiguration.GithubSponsorName.ShouldBe("linkdotnet");
+        appConfiguration.ShowReadingIndicator.ShouldBeTrue();
+        appConfiguration.PatreonName.ShouldBe("linkdotnet");
+        appConfiguration.IsPatreonEnabled.ShouldBeTrue();
         
         var giscusConfiguration = new GiscusConfigurationBuilder().Build();
         configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);
-        giscusConfiguration.Repository.Should().Be("repo");
-        giscusConfiguration.RepositoryId.Should().Be("repoid");
-        giscusConfiguration.Category.Should().Be("general");
-        giscusConfiguration.CategoryId.Should().Be("generalid");
+        giscusConfiguration.Repository.ShouldBe("repo");
+        giscusConfiguration.RepositoryId.ShouldBe("repoid");
+        giscusConfiguration.Category.ShouldBe("general");
+        giscusConfiguration.CategoryId.ShouldBe("generalid");
         
         var disqusConfiguration = new DisqusConfigurationBuilder().Build();
         configuration.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(disqusConfiguration);
-        disqusConfiguration.Shortname.Should().Be("blog");
+        disqusConfiguration.Shortname.ShouldBe("blog");
         
         var profileInformation = new ProfileInformationBuilder().Build();
         configuration.GetSection(ProfileInformation.ProfileInformationSection).Bind(profileInformation);
-        profileInformation.Name.Should().Be("Steven");
-        profileInformation.Heading.Should().Be("Dev");
-        profileInformation.ProfilePictureUrl.Should().Be("Url");
+        profileInformation.Name.ShouldBe("Steven");
+        profileInformation.Heading.ShouldBe("Dev");
+        profileInformation.ProfilePictureUrl.ShouldBe("Url");
         
         var social = new Social();
         configuration.GetSection(Social.SocialSection).Bind(social);
-        social.GithubAccountUrl.Should().Be("github");
-        social.HasGithubAccount.Should().BeTrue();
-        social.LinkedinAccountUrl.Should().Be("linkedIn");
-        social.HasLinkedinAccount.Should().BeTrue();
-        social.TwitterAccountUrl.Should().Be("twitter");
-        social.HasTwitterAccount.Should().BeTrue();
+        social.GithubAccountUrl.ShouldBe("github");
+        social.HasGithubAccount.ShouldBeTrue();
+        social.LinkedinAccountUrl.ShouldBe("linkedIn");
+        social.HasLinkedinAccount.ShouldBeTrue();
+        social.TwitterAccountUrl.ShouldBe("twitter");
+        social.HasTwitterAccount.ShouldBeTrue();
 
         var introduction = new IntroductionBuilder().Build();
         configuration.GetSection(Introduction.IntroductionSection).Bind(introduction);
-        introduction.BackgroundUrl.Should().Be("someurl");
-        introduction.ProfilePictureUrl.Should().Be("anotherurl");
-        introduction.Description.Should().Be("desc");
+        introduction.BackgroundUrl.ShouldBe("someurl");
+        introduction.ProfilePictureUrl.ShouldBe("anotherurl");
+        introduction.Description.ShouldBe("desc");
         
         var authInformation = new AuthInformationBuilder().Build();
         configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
-        authInformation.Provider.Should().Be("Auth0");
-        authInformation.ClientId.Should().Be("123");
-        authInformation.ClientSecret.Should().Be("qwe");
-        authInformation.Domain.Should().Be("example.com");
+        authInformation.Provider.ShouldBe("Auth0");
+        authInformation.ClientId.ShouldBe("123");
+        authInformation.ClientSecret.ShouldBe("qwe");
+        authInformation.Domain.ShouldBe("example.com");
     }
 
     [Theory]
@@ -134,9 +134,9 @@ public class ApplicationConfigurationTests
         var socialConfiguration = new Social();
         configuration.GetSection(Social.SocialSection).Bind(socialConfiguration);
 
-        socialConfiguration.HasGithubAccount.Should().Be(githubAvailable);
-        socialConfiguration.HasLinkedinAccount.Should().Be(linkedInAvailable);
-        socialConfiguration.HasTwitterAccount.Should().Be(twitterAvailable);
+        socialConfiguration.HasGithubAccount.ShouldBe(githubAvailable);
+        socialConfiguration.HasLinkedinAccount.ShouldBe(linkedInAvailable);
+        socialConfiguration.HasTwitterAccount.ShouldBe(twitterAvailable);
     }
 
     [Fact]
@@ -155,7 +155,7 @@ public class ApplicationConfigurationTests
         var appConfiguration = new ApplicationConfigurationBuilder().Build();
         configuration.Bind(appConfiguration);
 
-        appConfiguration.IsAboutMeEnabled.Should().BeFalse();
+        appConfiguration.IsAboutMeEnabled.ShouldBeFalse();
     }
 
     [Fact]
@@ -174,8 +174,8 @@ public class ApplicationConfigurationTests
         var appConfiguration = new ApplicationConfigurationBuilder().Build();
         configuration.Bind(appConfiguration);
 
-        appConfiguration.IsGiscusEnabled.Should().BeFalse();
-        appConfiguration.IsDisqusEnabled.Should().BeFalse();
+        appConfiguration.IsGiscusEnabled.ShouldBeFalse();
+        appConfiguration.IsDisqusEnabled.ShouldBeFalse();
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public class ApplicationConfigurationTests
         var appConfiguration = new ApplicationConfigurationBuilder().Build();
         configuration.Bind(appConfiguration);
 
-        appConfiguration.BlogPostsPerPage.Should().Be(10);
+        appConfiguration.BlogPostsPerPage.ShouldBe(10);
     }
 
     [Fact]
@@ -205,6 +205,6 @@ public class ApplicationConfigurationTests
         var authInformation = new AuthInformationBuilder().Build();
         configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
 
-        authInformation.LogoutUri.Should().Be("https://domain/v2/logout?client_id=clientid");
+        authInformation.LogoutUri.ShouldBe("https://domain/v2/logout?client_id=clientid");
     }
 }

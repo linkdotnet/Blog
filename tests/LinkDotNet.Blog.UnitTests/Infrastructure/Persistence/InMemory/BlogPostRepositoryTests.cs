@@ -24,7 +24,7 @@ public class BlogPostRepositoryTests
 
         var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
 
-        blogPostFromRepo.Title.Should().Be("My Title");
+        blogPostFromRepo.Title.ShouldBe("My Title");
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class BlogPostRepositoryTests
         await sut.StoreAsync(blogPost);
 
         var blogPostFromRepository = await sut.GetByIdAsync(blogPost.Id);
-        blogPostFromRepository.Title.Should().Be("My new Title");
+        blogPostFromRepository.Title.ShouldBe("My new Title");
     }
 
     [Fact]
@@ -57,9 +57,9 @@ public class BlogPostRepositoryTests
             false);
 
         var retrievedPosts = blogPosts.ToList();
-        retrievedPosts.Exists(b => b.Id == filteredOutPost.Id).Should().BeFalse();
-        retrievedPosts[0].Id.Should().Be(olderPost.Id);
-        retrievedPosts[1].Id.Should().Be(newerPost.Id);
+        retrievedPosts.Exists(b => b.Id == filteredOutPost.Id).ShouldBeFalse();
+        retrievedPosts[0].Id.ShouldBe(olderPost.Id);
+        retrievedPosts[1].Id.ShouldBe(newerPost.Id);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class BlogPostRepositoryTests
 
         var blogPosts = await sut.GetAllAsync();
 
-        blogPosts.Count.Should().Be(3);
+        blogPosts.Count.ShouldBe(3);
     }
 
     [Fact]
@@ -87,8 +87,8 @@ public class BlogPostRepositoryTests
 
         var blogPosts = await sut.GetAllAsync(orderBy: bp => bp.UpdatedDate, descending: true);
 
-        blogPosts[0].Should().Be(newerPost);
-        blogPosts[1].Should().Be(olderPost);
+        blogPosts[0].ShouldBe(newerPost);
+        blogPosts[1].ShouldBe(olderPost);
     }
 
     [Fact]
@@ -99,6 +99,6 @@ public class BlogPostRepositoryTests
 
         await sut.DeleteAsync(blogPost.Id);
 
-        (await sut.GetByIdAsync(blogPost.Id)).Should().BeNull();
+        (await sut.GetByIdAsync(blogPost.Id)).ShouldBeNull();
     }
 }

@@ -28,7 +28,7 @@ public class NavMenuTests : BunitContext
 
         cut.FindComponent<SearchInput>().Find("button").Click();
 
-        navigationManager.Uri.Should().EndWith("search/Text");
+        navigationManager.Uri.ShouldEndWith("search/Text");
     }
 
     [Fact]
@@ -45,7 +45,7 @@ public class NavMenuTests : BunitContext
         cut
             .FindAll(".nav-link").ToList()
             .Cast<IHtmlAnchorElement>()
-            .Count(a => a.Href.Contains("AboutMe")).Should().Be(1);
+            .Count(a => a.Href.Contains("AboutMe")).ShouldBe(1);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class NavMenuTests : BunitContext
 
         Services.GetRequiredService<NavigationManager>().NavigateTo("test");
 
-        cut.FindComponent<AccessControl>().Instance.CurrentUri.Should().Contain("test");
+        cut.FindComponent<AccessControl>().Instance.CurrentUri.ShouldContain("test");
     }
 
     [Fact]
@@ -78,8 +78,8 @@ public class NavMenuTests : BunitContext
 
         var brandImage = cut.Find(".nav-brand img");
         var image = brandImage as IHtmlImageElement;
-        image.Should().NotBeNull();
-        image.Source.Should().Be("http://localhost/img.png");
+        image.ShouldNotBeNull();
+        image.Source.ShouldBe("http://localhost/img.png");
     }
 
     [Theory]
@@ -102,7 +102,7 @@ public class NavMenuTests : BunitContext
 
         var brandImage = cut.Find(".nav-brand");
         var image = brandImage as IHtmlAnchorElement;
-        image.Should().NotBeNull();
-        image!.TextContent.Should().Be("Steven");
+        image.ShouldNotBeNull();
+        image!.TextContent.ShouldBe("Steven");
     }
 }

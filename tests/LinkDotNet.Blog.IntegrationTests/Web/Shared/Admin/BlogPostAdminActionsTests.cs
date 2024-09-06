@@ -58,7 +58,7 @@ public class BlogPostAdminActionsTests : BunitContext
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
 
         var anchor = cut.Find("#edit-blogpost") as IHtmlAnchorElement;
-        anchor.Should().NotBeNull();
-        anchor.Href.Should().EndWith($"update/{blogPostId}");
+        anchor.ShouldNotBeNull();
+        anchor.Href.ShouldEndWith($"update/{blogPostId}");
     }
 }

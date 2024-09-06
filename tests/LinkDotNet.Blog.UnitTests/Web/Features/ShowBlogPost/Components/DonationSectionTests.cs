@@ -22,7 +22,7 @@ public class DonationSectionTests : BunitContext
 
         var cut = Render<DonationSection>();
 
-        cut.HasComponent<Kofi>().Should().Be(hasComponent);
+        cut.HasComponent<Kofi>().ShouldBe(hasComponent);
     }
 
     [Theory]
@@ -38,7 +38,7 @@ public class DonationSectionTests : BunitContext
 
         var cut = Render<DonationSection>();
 
-        cut.HasComponent<GithubSponsor>().Should().Be(hasComponent);
+        cut.HasComponent<GithubSponsor>().ShouldBe(hasComponent);
     }
 
     [Theory]
@@ -53,6 +53,6 @@ public class DonationSectionTests : BunitContext
 
         var cut = Render<DonationSection>();
 
-        cut.HasComponent<Patreon>().Should().Be(hasComponent);
+        cut.HasComponent<Patreon>().ShouldBe(hasComponent);
     }
 }

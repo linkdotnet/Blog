@@ -34,9 +34,9 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         cut.Find("form").Submit();
 
         var entry = cut.WaitForComponent<TalkEntry>();
-        entry.Find("#talk-display-content strong").TextContent.Should().Be("title");
-        entry.Find("#talk-place").TextContent.Should().Be("Zurich");
-        entry.Find("#talk-description p").TextContent.Should().Be("text");
+        entry.Find("#talk-display-content strong").TextContent.ShouldBe("title");
+        entry.Find("#talk-place").TextContent.ShouldBe("Zurich");
+        entry.Find("#talk-description p").TextContent.ShouldBe("text");
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 
         var cut = ctx.Render<Talks>();
 
-        cut.WaitForComponents<TalkEntry>().Count.Should().Be(2);
+        cut.WaitForComponents<TalkEntry>().Count.ShouldBe(2);
     }
 
     [Fact]
@@ -60,8 +60,8 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         cut.WaitForComponent<TalkEntry>().Find("#talk-delete").Click();
 
         cut.WaitForState(() => !cut.HasComponent<TalkEntry>());
-        cut.HasComponent<TalkEntry>().Should().BeFalse();
-        (await DbContext.Talks.AnyAsync()).Should().BeFalse();
+        cut.HasComponent<TalkEntry>().ShouldBeFalse();
+        (await DbContext.Talks.AnyAsync()).ShouldBeFalse();
     }
 
     [Fact]
@@ -74,9 +74,9 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
             p => p.Add(s => s.ShowAdminActions, true));
 
         var talks = cut.WaitForComponents<TalkEntry>();
-        talks.Count.Should().Be(2);
-        talks[0].Instance.Talk.PublishedDate.Should().Be(new DateTime(2022, 1, 1));
-        talks[1].Instance.Talk.PublishedDate.Should().Be(new DateTime(2021, 1, 1));
+        talks.Count.ShouldBe(2);
+        talks[0].Instance.Talk.PublishedDate.ShouldBe(new DateTime(2022, 1, 1));
+        talks[1].Instance.Talk.PublishedDate.ShouldBe(new DateTime(2021, 1, 1));
     }
 
     public void Dispose()

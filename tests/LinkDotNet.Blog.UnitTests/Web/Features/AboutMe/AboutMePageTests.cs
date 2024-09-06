@@ -36,9 +36,9 @@ public class AboutMePageTests : BunitContext
 
         var cut = Render<AboutMePage>();
 
-        cut.FindComponent<Profile>().Instance.ShowAdminActions.Should().BeTrue();
-        cut.FindComponent<SkillTable>().Instance.ShowAdminActions.Should().BeTrue();
-        cut.FindComponent<Talks>().Instance.ShowAdminActions.Should().BeTrue();
+        cut.FindComponent<Profile>().Instance.ShowAdminActions.ShouldBeTrue();
+        cut.FindComponent<SkillTable>().Instance.ShowAdminActions.ShouldBeTrue();
+        cut.FindComponent<Talks>().Instance.ShowAdminActions.ShouldBeTrue();
     }
 
     [Fact]
@@ -55,8 +55,8 @@ public class AboutMePageTests : BunitContext
 
         var cut = Render<AboutMePage>();
 
-        cut.FindComponents<Profile>().Any().Should().BeFalse();
-        cut.FindComponents<SkillTable>().Any().Should().BeFalse();
+        cut.FindComponents<Profile>().Any().ShouldBeFalse();
+        cut.FindComponents<SkillTable>().Any().ShouldBeFalse();
     }
 
     [Fact]
@@ -75,10 +75,10 @@ public class AboutMePageTests : BunitContext
         var cut = Render<AboutMePage>();
 
         var ogData = cut.FindComponent<OgData>().Instance;
-        ogData.AbsolutePreviewImageUrl.Should().Be("http://localhost/someurl");
-        ogData.Keywords.Should().Contain("My Name");
-        ogData.Title.Should().Contain("About Me - My Name");
-        ogData.Description.Should().Contain("About Me,My Name");
+        ogData.AbsolutePreviewImageUrl.ShouldBe("http://localhost/someurl");
+        ogData.Keywords.ShouldContain("My Name");
+        ogData.Title.ShouldContain("About Me - My Name");
+        ogData.Description.ShouldContain("About Me,My Name");
     }
 
     private void SetupMocks(ProfileInformation config, ApplicationConfiguration applicationConfiguration)

@@ -34,7 +34,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         likeComponent.Find("span").Click();
 
         var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
-        fromDb.Likes.Should().Be(3);
+        fromDb.Likes.ShouldBe(3);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         likeComponent.Find("span").Click();
 
         var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
-        fromDb.Likes.Should().Be(1);
+        fromDb.Likes.ShouldBe(1);
     }
 
     [Fact]
@@ -75,7 +75,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         var ogData = cut.FindComponent<OgData>();
 
-        ogData.Instance.Keywords.Should().Be("Tag1,Tag2");
+        ogData.Instance.Keywords.ShouldBe("Tag1,Tag2");
     }
 
     [Fact]
@@ -97,9 +97,9 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         var structuredData = cut.FindComponent<StructuredData>();
 
-        structuredData.Instance.Headline.Should().Be("Title");
-        structuredData.Instance.PreviewImage.Should().Be("image1");
-        structuredData.Instance.PreviewFallbackImage.Should().Be("image2");
+        structuredData.Instance.Headline.ShouldBe("Title");
+        structuredData.Instance.PreviewImage.ShouldBe("image1");
+        structuredData.Instance.PreviewFallbackImage.ShouldBe("image2");
     }
 
     [Fact]
@@ -111,8 +111,8 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<ShowBlogPostPage>();
 
-        cut.FindAll(".blogpost-content").Should().HaveCount(0);
-        cut.FindAll("#no-blog-post-error").Should().HaveCount(1);
+        cut.FindAll(".blogpost-content").ShouldBeEmpty();
+        cut.FindAll("#no-blog-post-error").ShouldHaveSingleItem();
     }
 
     private void RegisterComponents(BunitContext ctx, ILocalStorageService localStorageService = null)

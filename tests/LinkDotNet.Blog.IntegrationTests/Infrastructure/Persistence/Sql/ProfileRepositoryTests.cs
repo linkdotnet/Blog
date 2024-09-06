@@ -16,8 +16,8 @@ public class ProfileRepositoryTests : SqlDatabaseTestBase<ProfileInformationEntr
 
         var items = await Repository.GetAllAsync();
 
-        items[0].Content.Should().Be("key1");
-        items[1].Content.Should().Be("key2");
+        items[0].Content.ShouldBe("key1");
+        items[1].Content.ShouldBe("key2");
     }
 
     [Fact]
@@ -31,8 +31,8 @@ public class ProfileRepositoryTests : SqlDatabaseTestBase<ProfileInformationEntr
         await Repository.DeleteAsync(item1.Id);
 
         var items = await Repository.GetAllAsync();
-        items.Should().HaveCount(1);
-        items[0].Id.Should().Be(item2.Id);
+        items.ShouldHaveSingleItem();
+        items[0].Id.ShouldBe(item2.Id);
     }
 
     [Fact]
@@ -43,6 +43,6 @@ public class ProfileRepositoryTests : SqlDatabaseTestBase<ProfileInformationEntr
 
         await Repository.DeleteAsync("SomeIdWhichHopefullyDoesNotExist");
 
-        (await Repository.GetAllAsync()).Should().HaveCount(1);
+        (await Repository.GetAllAsync()).ShouldHaveSingleItem();
     }
 }

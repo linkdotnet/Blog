@@ -16,10 +16,10 @@ public class ShareBlogPostTests : BunitContext
 
         var element = cut.Find("#share-clipboard") as IHtmlAnchorElement;
 
-        element.Should().NotBeNull();
+        element.ShouldNotBeNull();
         var onclick = element!.Attributes.FirstOrDefault(a => a.Name.Equals("onclick", StringComparison.InvariantCultureIgnoreCase));
-        onclick.Should().NotBeNull();
-        onclick!.Value.Should().Contain("blogPost/1");
+        onclick.ShouldNotBeNull();
+        onclick!.Value.ShouldContain("blogPost/1");
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class ShareBlogPostTests : BunitContext
         var cut = Render<ShareBlogPost>();
 
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-linkedin");
-        linkedInShare.Href.Should().Be("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
+        linkedInShare.Href.ShouldBe("https://www.linkedin.com/shareArticle?mini=true&url=http://localhost/blogPost/1");
     }
     
     [Fact]
@@ -41,6 +41,6 @@ public class ShareBlogPostTests : BunitContext
         var cut = Render<ShareBlogPost>();
 
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-x");
-        linkedInShare.Href.Should().Be("https://twitter.com/intent/tweet?url=http://localhost/blogPost/1");
+        linkedInShare.Href.ShouldBe("https://twitter.com/intent/tweet?url=http://localhost/blogPost/1");
     }
 }

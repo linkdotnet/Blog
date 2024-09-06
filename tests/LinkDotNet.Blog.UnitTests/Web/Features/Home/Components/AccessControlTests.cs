@@ -12,8 +12,8 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("a:contains('Admin')").Should().HaveCount(0);
-        cut.FindAll("a:contains('Log in')").Should().HaveCount(1);
+        cut.FindAll("a:contains('Admin')").ShouldBeEmpty();
+        cut.FindAll("a:contains('Log in')").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -23,8 +23,8 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("a:contains('Admin')").Should().HaveCount(1);
-        cut.FindAll("a:contains('Log out')").Should().HaveCount(1);
+        cut.FindAll("a:contains('Admin')").ShouldHaveSingleItem();
+        cut.FindAll("a:contains('Log out')").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public class AccessControlTests : BunitContext
         var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.Should().Contain(currentUri);
+        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.ShouldContain(currentUri);
     }
 
     [Fact]
@@ -48,6 +48,6 @@ public class AccessControlTests : BunitContext
         var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.Should().Contain(currentUri);
+        ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.ShouldContain(currentUri);
     }
 }

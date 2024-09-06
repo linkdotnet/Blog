@@ -20,19 +20,19 @@ public class TableOfContentsTests : BunitContext
             .Add(x => x.CurrentUri, "https://localhost"));
 
         var links = cut.FindAll("nav a");
-        links.Should().HaveCount(3);
+        links.Count.ShouldBe(3);
         var firstLink = links[0];
-        firstLink.TextContent.Should().Be("Header 1");
-        firstLink.GetAttribute("href").Should().Be("https://localhost#header-1");
-        firstLink.ClassList.Should().Contain("ps-1");
+        firstLink.TextContent.ShouldBe("Header 1");
+        firstLink.GetAttribute("href").ShouldBe("https://localhost#header-1");
+        firstLink.ClassList.ShouldContain("ps-1");
         var secondLink = links[1];
-        secondLink.TextContent.Should().Be("Subheader 1.1");
-        secondLink.GetAttribute("href").Should().Be("https://localhost#subheader-1.1");
-        secondLink.ClassList.Should().Contain("ps-2");
+        secondLink.TextContent.ShouldBe("Subheader 1.1");
+        secondLink.GetAttribute("href").ShouldBe("https://localhost#subheader-1.1");
+        secondLink.ClassList.ShouldContain("ps-2");
         var thirdLink = links[2];
-        thirdLink.TextContent.Should().Be("Header 2");
-        thirdLink.GetAttribute("href").Should().Be("https://localhost#header-2");
-        thirdLink.ClassList.Should().Contain("ps-1");
+        thirdLink.TextContent.ShouldBe("Header 2");
+        thirdLink.GetAttribute("href").ShouldBe("https://localhost#header-2");
+        thirdLink.ClassList.ShouldContain("ps-1");
     }
     
     [Fact]
@@ -48,9 +48,9 @@ public class TableOfContentsTests : BunitContext
             .Add(x => x.CurrentUri, "https://localhost#header-1"));
         
         var links = cut.FindAll("nav a");
-        links.Should().HaveCount(2);
-        links[0].GetAttribute("href").Should().Be("https://localhost#header-1");
-        links[1].GetAttribute("href").Should().Be("https://localhost#header-2");
+        links.Count.ShouldBe(2);
+        links[0].GetAttribute("href").ShouldBe("https://localhost#header-1");
+        links[1].GetAttribute("href").ShouldBe("https://localhost#header-2");
     }
     
     [Theory]
@@ -66,6 +66,6 @@ public class TableOfContentsTests : BunitContext
             .Add(x => x.CurrentUri, "https://localhost"));
         
         var link = cut.Find("nav a");
-        link.TextContent.Should().Be(expectedToc);
+        link.TextContent.ShouldBe(expectedToc);
     }
 }

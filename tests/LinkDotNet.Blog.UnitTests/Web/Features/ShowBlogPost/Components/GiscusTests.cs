@@ -27,9 +27,8 @@ public class GiscusTests : BunitContext
         Render<Giscus>();
 
         var init = JSInterop.Invocations.SingleOrDefault(i => i.Identifier == "initGiscus");
-        init.Should().NotBeNull();
-        init.Arguments.Should().Contain("giscus");
-        init.Arguments.Should().Contain(giscusData);
+        init.Arguments.ShouldContain("giscus");
+        init.Arguments.ShouldContain(giscusData);
     }
 
     [Fact]
@@ -39,6 +38,6 @@ public class GiscusTests : BunitContext
 
         Render<Giscus>();
 
-        JSInterop.Invocations.Should().BeEmpty();
+        JSInterop.Invocations.ShouldBeEmpty();
     }
 }

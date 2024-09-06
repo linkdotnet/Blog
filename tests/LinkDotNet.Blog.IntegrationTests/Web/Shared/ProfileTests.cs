@@ -25,23 +25,23 @@ public class ProfileTests : BunitContext
 
         var items = cut.FindAll(".profile-keypoints li");
 
-        items.Should().HaveCount(2);
-        items[0].TextContent.Should().Contain("key 1");
-        items[1].TextContent.Should().Contain("key 2");
+        items.Count.ShouldBe(2);
+        items[0].TextContent.ShouldContain("key 1");
+        items[1].TextContent.ShouldContain("key 2");
     }
 
     [Fact]
     public void ShouldNotShowAdminActions()
     {
         RegisterServices();
-        RenderProfileWithEmptyInformation().FindComponents<AddProfileShortItem>().Should().HaveCount(0);
+        RenderProfileWithEmptyInformation().FindComponents<AddProfileShortItem>().ShouldBeEmpty();
     }
 
     [Fact]
     public void ShouldShowAdminActionsWhenLoggedIn()
     {
         RegisterServices();
-        RenderProfileInAdmin().FindComponents<AddProfileShortItem>().Should().HaveCount(1);
+        RenderProfileInAdmin().FindComponents<AddProfileShortItem>().ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -57,9 +57,9 @@ public class ProfileTests : BunitContext
 
         addShortItemComponent.Find("button").Click();
 
-        entryToDb.Should().NotBeNull();
-        entryToDb.Content.Should().Be("key");
-        entryToDb.SortOrder.Should().Be(1000);
+        entryToDb.ShouldNotBeNull();
+        entryToDb.Content.ShouldBe("key");
+        entryToDb.SortOrder.ShouldBe(1000);
     }
 
     [Fact]
@@ -109,9 +109,9 @@ public class ProfileTests : BunitContext
 
         addShortItemComponent.Find("button").Click();
 
-        entryToDb.Should().NotBeNull();
-        entryToDb.Content.Should().Be("key");
-        entryToDb.SortOrder.Should().Be(1001);
+        entryToDb.ShouldNotBeNull();
+        entryToDb.Content.ShouldBe("key");
+        entryToDb.SortOrder.ShouldBe(1001);
     }
 
     [Fact]
@@ -130,8 +130,8 @@ public class ProfileTests : BunitContext
         cut.FindAll("li")[1].Drag();
         cut.FindAll("li")[0].Drop();
 
-        source.SortOrder.Should().Be(150);
-        entryToDb.Should().Be(source);
+        source.SortOrder.ShouldBe(150);
+        entryToDb.ShouldBe(source);
     }
 
     [Fact]
@@ -145,7 +145,7 @@ public class ProfileTests : BunitContext
         cut.FindAll("li")[0].Drag();
         cut.FindAll("li")[0].Drop();
 
-        source.SortOrder.Should().Be(200);
+        source.SortOrder.ShouldBe(200);
     }
 
     private static void SetupGetAll(

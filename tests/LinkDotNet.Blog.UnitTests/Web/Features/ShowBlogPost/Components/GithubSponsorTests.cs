@@ -12,7 +12,7 @@ public class GithubSponsorTests : BunitContext
             p => p.Add(g => g.Name, "linkdotnet"));
 
         var anchor = cut.Find("a") as IHtmlAnchorElement;
-        anchor.Should().NotBeNull();
-        anchor.Href.Should().Be("https://github.com/sponsors/linkdotnet");
+        anchor.ShouldNotBeNull();
+        anchor.Href.ShouldBe("https://github.com/sponsors/linkdotnet");
     }
 }

@@ -24,7 +24,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 
         var tags = cut.FindAll(".blog-card");
 
-        tags.Should().HaveCount(2);
+        tags.Count.ShouldBe(2);
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 
         var tags = cut.FindAll(".blog-card");
 
-        tags.Should().HaveCount(1);
+        tags.ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 
         var pageTitleStub = cut.FindComponent<PageTitleStub>();
         var pageTitle = ctx.Render(pageTitleStub.Instance.ChildContent!);
-        pageTitle.Markup.Should().Be("Search for tag: Tag");
+        pageTitle.Markup.ShouldBe("Search for tag: Tag");
     }
 
     private async Task AddBlogPostWithTagAsync(string tag, bool isPublished = true)

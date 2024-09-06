@@ -16,7 +16,7 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.FindAll("a").Cast<IHtmlAnchorElement>().Last().Href.Should().EndWith("/3");
+        cut.FindAll("a").Cast<IHtmlAnchorElement>().Last().Href.ShouldEndWith("/3");
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.FindAll("a").Cast<IHtmlAnchorElement>().First().Href.Should().EndWith("/1");
+        cut.FindAll("a").Cast<IHtmlAnchorElement>().First().Href.ShouldEndWith("/1");
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.Find("li:last-child").ClassList.Should().Contain("disabled");
+        cut.Find("li:last-child").ClassList.ShouldContain("disabled");
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.Find("li:first-child").ClassList.Should().Contain("disabled");
+        cut.Find("li:first-child").ClassList.ShouldContain("disabled");
     }
 
     [Fact]
@@ -57,8 +57,8 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.Find("li:first-child").ClassList.Should().Contain("disabled");
-        cut.Find("li:last-child").ClassList.Should().Contain("disabled");
+        cut.Find("li:first-child").ClassList.ShouldContain("disabled");
+        cut.Find("li:last-child").ClassList.ShouldContain("disabled");
     }
 
     private static IPagedList<BlogPost> CreatePagedList(int currentPage, int pageCount)

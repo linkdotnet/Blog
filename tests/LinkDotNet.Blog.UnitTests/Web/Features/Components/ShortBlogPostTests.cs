@@ -17,7 +17,7 @@ public class ShortBlogPostTests : BunitContext
 
         var readMore = cut.Find(".read-more a");
 
-        readMore.Attributes.Single(a => a.Name == "href").Value.Should().Be("/blogPost/SomeId/blogpost");
+        readMore.Attributes.Single(a => a.Name == "href").Value.ShouldBe("/blogPost/SomeId/blogpost");
     }
 
     [Fact]
@@ -29,7 +29,7 @@ public class ShortBlogPostTests : BunitContext
 
         var searchByTagLink = cut.Find(".goto-tag");
 
-        searchByTagLink.Attributes.Single(a => a.Name == "href").Value.Should().Be("/searchByTag/Tag%201");
+        searchByTagLink.Attributes.Single(a => a.Name == "href").Value.ShouldBe("/searchByTag/Tag%201");
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class ShortBlogPostTests : BunitContext
         var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
-        cut.FindAll(".goto-tag").Should().BeEmpty();
+        cut.FindAll(".goto-tag").ShouldBeEmpty();
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class ShortBlogPostTests : BunitContext
         var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
-        cut.Find(".schedule").Should().NotBeNull();
+        cut.Find(".schedule").ShouldNotBeNull();
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class ShortBlogPostTests : BunitContext
         var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
-        cut.Find(".draft").Should().NotBeNull();
+        cut.Find(".draft").ShouldNotBeNull();
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class ShortBlogPostTests : BunitContext
         var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
 
-        cut.FindAll(".draft").Should().BeEmpty();
-        cut.FindAll(".scheduled").Should().BeEmpty();
+        cut.FindAll(".draft").ShouldBeEmpty();
+        cut.FindAll(".scheduled").ShouldBeEmpty();
     }
 }

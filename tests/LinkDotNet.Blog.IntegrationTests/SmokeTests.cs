@@ -25,7 +25,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
 
         var result = await client.GetAsync("/");
 
-        result.IsSuccessStatusCode.Should().BeTrue();
+        result.IsSuccessStatusCode.ShouldBeTrue();
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
 
         var result = await client.GetAsync("/");
 
-        result.IsSuccessStatusCode.Should().BeTrue();
+        result.IsSuccessStatusCode.ShouldBeTrue();
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
 
         var result = await client.GetAsync("/searchByTag/.NET5");
 
-        result.IsSuccessStatusCode.Should().BeTrue();
+        result.IsSuccessStatusCode.ShouldBeTrue();
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
 
         var result = await client.GetAsync("/search/.NET5");
 
-        result.IsSuccessStatusCode.Should().BeTrue();
+        result.IsSuccessStatusCode.ShouldBeTrue();
     }
 
     public void Dispose() => factory?.Dispose();

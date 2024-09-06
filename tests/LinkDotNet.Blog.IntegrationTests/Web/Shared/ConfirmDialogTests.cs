@@ -16,6 +16,6 @@ public class ConfirmDialogTests
 
         cut.Find("#ok").Click();
 
-        okWasClicked.Should().BeTrue();
+        okWasClicked.ShouldBeTrue();
     }
 }

@@ -13,7 +13,7 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         {
             var level = ProficiencyLevel.Create(key);
 
-            level.Should().NotBeNull();
+            level.ShouldNotBeNull();
         }
 
         [Theory]
@@ -24,7 +24,7 @@ namespace LinkDotNet.Blog.UnitTests.Domain
         {
             Action act = () => ProficiencyLevel.Create(key);
 
-            act.Should().Throw<Exception>();
+            act.ShouldThrow<Exception>();
         }
     }
 }

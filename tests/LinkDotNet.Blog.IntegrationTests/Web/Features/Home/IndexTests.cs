@@ -28,9 +28,9 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
-        blogPosts.Should().HaveCount(2);
-        blogPosts[0].Find(".description h1").InnerHtml.Should().Be("New");
-        blogPosts[1].Find(".description h1").InnerHtml.Should().Be("Old");
+        blogPosts.Count.ShouldBe(2);
+        blogPosts[0].Find(".description h1").InnerHtml.ShouldBe("New");
+        blogPosts[1].Find(".description h1").InnerHtml.ShouldBe("Old");
     }
 
     [Fact]
@@ -48,8 +48,8 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
-        blogPosts.Should().HaveCount(1);
-        blogPosts[0].Find(".description h1").InnerHtml.Should().Be("Published");
+        blogPosts.ShouldHaveSingleItem();
+        blogPosts[0].Find(".description h1").InnerHtml.ShouldBe("Published");
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
-        blogPosts.Count.Should().Be(10);
+        blogPosts.Count.ShouldBe(10);
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         cut.WaitForElement(".blog-card");
         var blogPosts = cut.FindComponents<ShortBlogPost>();
-        blogPosts.Should().HaveCount(1);
+        blogPosts.ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -100,11 +100,11 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         var tags = cut.FindComponent<ShortBlogPost>().FindAll(".goto-tag");
 
-        tags.Should().HaveCount(2);
-        tags.Select(t => t.TextContent).Should().Contain("C Sharp");
-        tags.Select(t => t.TextContent).Should().Contain("Tag2");
-        tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).Should().Contain("/searchByTag/C%20Sharp");
-        tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).Should().Contain("/searchByTag/Tag2");
+        tags.Count.ShouldBe(2);
+        tags.Select(t => t.TextContent).ShouldContain("C Sharp");
+        tags.Select(t => t.TextContent).ShouldContain("Tag2");
+        tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).ShouldContain("/searchByTag/C%20Sharp");
+        tags.Select(t => t.Attributes.Single(a => a.Name == "href").Value).ShouldContain("/searchByTag/Tag2");
     }
 
     [Theory]
@@ -117,7 +117,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<Index>();
 
-        cut.WaitForComponent<OgData>().Instance.AbsolutePreviewImageUrl.Should().Be(expectedUri);
+        cut.WaitForComponent<OgData>().Instance.AbsolutePreviewImageUrl.ShouldBe(expectedUri);
     }
 
     [Theory]
@@ -135,7 +135,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
             i => i.Page, page));
 
         cut.WaitForElement(".blog-card");
-        cut.FindAll(".blog-card").Count.Should().Be(10);
+        cut.FindAll(".blog-card").Count.ShouldBe(10);
     }
 
     private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction)

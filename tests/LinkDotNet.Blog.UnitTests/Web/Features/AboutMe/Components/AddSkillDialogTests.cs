@@ -22,11 +22,11 @@ public class AddSkillDialogTests : BunitContext
 
         cut.Find("form").Submit();
 
-        addedSkill.Should().NotBeNull();
-        addedSkill.Name.Should().Be("C#");
-        addedSkill.IconUrl.Should().Be("Url");
-        addedSkill.Capability.Should().Be("capability");
-        addedSkill.ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
+        addedSkill.ShouldNotBeNull();
+        addedSkill.Name.ShouldBe("C#");
+        addedSkill.IconUrl.ShouldBe("Url");
+        addedSkill.Capability.ShouldBe("capability");
+        addedSkill.ProficiencyLevel.ShouldBe(ProficiencyLevel.Expert);
         toastServiceMock.Received(1).ShowSuccess(
             "Created Skill C# in capability capability with level Expert");
     }

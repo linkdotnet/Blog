@@ -22,7 +22,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "Title 1"));
 
         var blogPosts = cut.WaitForComponent<ShortBlogPost>();
-        blogPosts.Find(".description h1").TextContent.Should().Be("Title 1");
+        blogPosts.Find(".description h1").TextContent.ShouldBe("Title 1");
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "Cat"));
 
         var blogPost = cut.WaitForComponent<ShortBlogPost>();
-        blogPost.Find(".description h1").TextContent.Should().Be("Title 1");
+        blogPost.Find(".description h1").TextContent.ShouldBe("Title 1");
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "Title%201"));
 
         var blogPosts = cut.WaitForComponent<ShortBlogPost>();
-        blogPosts.Find(".description h1").TextContent.Should().Be("Title 1");
+        blogPosts.Find(".description h1").TextContent.ShouldBe("Title 1");
     }
 
     private void RegisterServices(BunitContext ctx)

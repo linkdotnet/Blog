@@ -44,8 +44,8 @@ public class SitemapPageTests : BunitContext
         cut.Find("button").Click();
 
         var row = cut.WaitForElements("tr").Last();
-        row.Children.First().InnerHtml.Should().Be("loc");
-        row.Children.Last().InnerHtml.Should().Be("Now");
+        row.Children.First().InnerHtml.ShouldBe("loc");
+        row.Children.Last().InnerHtml.ShouldBe("Now");
     }
 
     [Fact]
@@ -71,8 +71,8 @@ public class SitemapPageTests : BunitContext
 
         cut.Find("button").Click();
 
-        cut.FindComponents<Loading>().Count.Should().Be(1);
+        cut.FindComponents<Loading>().Count.ShouldBe(1);
         var btn = cut.Find("button");
-        btn.Attributes.Any(a => a.Name == "disabled").Should().BeTrue();
+        btn.Attributes.Any(a => a.Name == "disabled").ShouldBeTrue();
     }
 }

@@ -18,11 +18,11 @@ public class SkillRepositoryTests : SqlDatabaseTestBase<Skill>
 
         var items = await Repository.GetAllAsync();
 
-        items.Should().HaveCount(1);
-        items[0].Name.Should().Be("C#");
-        items[0].IconUrl.Should().Be("url");
-        items[0].Capability.Should().Be("Backend");
-        items[0].ProficiencyLevel.Should().Be(ProficiencyLevel.Expert);
+        items.ShouldHaveSingleItem();
+        items[0].Name.ShouldBe("C#");
+        items[0].IconUrl.ShouldBe("url");
+        items[0].Capability.ShouldBe("Backend");
+        items[0].ProficiencyLevel.ShouldBe(ProficiencyLevel.Expert);
     }
 
     [Fact]
@@ -36,8 +36,8 @@ public class SkillRepositoryTests : SqlDatabaseTestBase<Skill>
         await Repository.DeleteAsync(skill1.Id);
 
         var items = await Repository.GetAllAsync();
-        items.Should().HaveCount(1);
-        items[0].Id.Should().Be(skill2.Id);
+        items.ShouldHaveSingleItem();
+        items[0].Id.ShouldBe(skill2.Id);
     }
 
     [Fact]
@@ -48,6 +48,6 @@ public class SkillRepositoryTests : SqlDatabaseTestBase<Skill>
 
         await Repository.DeleteAsync("SomeIdWhichHopefullyDoesNotExist");
 
-        (await Repository.GetAllAsync()).Should().HaveCount(1);
+        (await Repository.GetAllAsync()).ShouldHaveSingleItem();
     }
 }

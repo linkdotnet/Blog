@@ -60,22 +60,22 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
 
         // Assert
         var afterUserRecords = await userRecordRepository.GetAllAsync();
-        afterUserRecords.Should().BeEmpty();
+        afterUserRecords.ShouldBeEmpty();
 
         var transformedBlogPostRecords = await blogPostRecordRepository.GetAllAsync();
-        transformedBlogPostRecords.Count.Should().Be(3);
+        transformedBlogPostRecords.Count.ShouldBe(3);
         
         var post1Record = transformedBlogPostRecords.FirstOrDefault(r => r.BlogPostId == blogPosts[0].Id);
-        post1Record.Should().NotBeNull();
-        post1Record.Clicks.Should().Be(2);
+        post1Record.ShouldNotBeNull();
+        post1Record.Clicks.ShouldBe(2);
 
         var post2Record = transformedBlogPostRecords.FirstOrDefault(r => r.BlogPostId == blogPosts[1].Id);
-        post2Record.Should().NotBeNull();
-        post2Record.Clicks.Should().Be(2);
+        post2Record.ShouldNotBeNull();
+        post2Record.Clicks.ShouldBe(2);
 
         var post3Record = transformedBlogPostRecords.FirstOrDefault(r => r.BlogPostId == blogPosts[2].Id);
-        post3Record.Should().NotBeNull();
-        post3Record.Clicks.Should().Be(1);
+        post3Record.ShouldNotBeNull();
+        post3Record.Clicks.ShouldBe(1);
     }
 
     [Fact]
@@ -107,8 +107,8 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         // Assert
         var records = await blogPostRecordRepository.GetAllAsync();
         var datesToClicks = records.ToDictionary(s => s.DateClicked, bp => bp.Clicks);
-        datesToClicks[someDate.AddDays(-1)].Should().Be(1);
-        datesToClicks[someDate].Should().Be(3);
-        datesToClicks[someDate.AddDays(1)].Should().Be(1);
+        datesToClicks[someDate.AddDays(-1)].ShouldBe(1);
+        datesToClicks[someDate].ShouldBe(3);
+        datesToClicks[someDate.AddDays(1)].ShouldBe(1);
     }
 }
