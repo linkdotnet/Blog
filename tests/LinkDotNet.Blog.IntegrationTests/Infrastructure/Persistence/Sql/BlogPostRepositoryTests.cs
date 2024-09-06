@@ -82,7 +82,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.SaveChangesAsync();
         var blogPostFromDb = await Repository.GetByIdAsync(blogPost.Id);
         var updater = new BlogPostBuilder().WithTitle("New Title").Build();
-        blogPostFromDb.Update(updater);
+        blogPostFromDb!.Update(updater);
 
         await Repository.StoreAsync(blogPostFromDb);
 
@@ -130,11 +130,12 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         await sut.StoreAsync(bp);
         var updateBp = new BlogPostBuilder().WithTags("tag 2").Build();
         var bpFromCache = await sut.GetByIdAsync(bp.Id);
-        bpFromCache.Update(updateBp);
+        bpFromCache!.Update(updateBp);
         await sut.StoreAsync(bpFromCache);
 
         var bpFromDb = await sut.GetByIdAsync(bp.Id);
 
+        bpFromDb.ShouldNotBeNull();
         bpFromDb.Tags.Single().ShouldBe("tag 2");
     }
 }

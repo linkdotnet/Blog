@@ -103,18 +103,18 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     {
         public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => throw new NotImplementedException();
 
-        public ValueTask<BlogPost> GetByIdAsync(string id) => throw new NotImplementedException();
+        public ValueTask<BlogPost?> GetByIdAsync(string id) => throw new NotImplementedException();
 
-        public ValueTask<IPagedList<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>> filter = null,
-            Expression<Func<BlogPost, object>> orderBy = null,
+        public ValueTask<IPagedList<BlogPost>> GetAllAsync(Expression<Func<BlogPost, bool>>? filter = null,
+            Expression<Func<BlogPost, object>>? orderBy = null,
             bool descending = true,
             int page = 1,
             int pageSize = int.MaxValue) => throw new NotImplementedException();
 
         public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-            Expression<Func<BlogPost, TProjection>> selector,
-            Expression<Func<BlogPost, bool>> filter = null,
-            Expression<Func<BlogPost, object>> orderBy = null,
+            Expression<Func<BlogPost, TProjection>>? selector,
+            Expression<Func<BlogPost, bool>>? filter = null,
+            Expression<Func<BlogPost, object>>? orderBy = null,
             bool descending = true,
             int page = 1,
             int pageSize = int.MaxValue)

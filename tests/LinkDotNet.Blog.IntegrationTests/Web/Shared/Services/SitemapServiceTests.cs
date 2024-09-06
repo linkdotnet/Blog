@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
+using Microsoft.AspNetCore.Components;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Services;
 
@@ -16,7 +17,7 @@ public sealed class SitemapServiceTests : IDisposable
     public SitemapServiceTests()
     {
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        sut = new SitemapService(repositoryMock, null, new XmlFileWriter());
+        sut = new SitemapService(repositoryMock, Substitute.For<NavigationManager>(), new XmlFileWriter());
         Directory.CreateDirectory("wwwroot");
     }
 

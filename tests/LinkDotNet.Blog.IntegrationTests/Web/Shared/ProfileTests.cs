@@ -48,7 +48,7 @@ public class ProfileTests : BunitContext
     public void ShouldAddEntry()
     {
         var (repo, _) = RegisterServices();
-        ProfileInformationEntry entryToDb = null;
+        ProfileInformationEntry? entryToDb = null;
         repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
             .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
         var cut = RenderProfileInAdmin();
@@ -100,7 +100,7 @@ public class ProfileTests : BunitContext
         var (repo, _) = RegisterServices();
         var entry = new ProfileInformationEntryBuilder().WithSortOrder(1).Build();
         SetupGetAll(repo, entry);
-        ProfileInformationEntry entryToDb = null;
+        ProfileInformationEntry? entryToDb = null;
         repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
             .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
         var cut = RenderProfileInAdmin();
@@ -121,7 +121,7 @@ public class ProfileTests : BunitContext
         var source = new ProfileInformationEntryBuilder().WithSortOrder(200).Build();
         var (repo, calculator) = RegisterServices();
         SetupGetAll(repo, target, source);
-        ProfileInformationEntry entryToDb = null;
+        ProfileInformationEntry? entryToDb = null;
         repo.When(r => r.StoreAsync(Arg.Any<ProfileInformationEntry>()))
             .Do(call => entryToDb = call.Arg<ProfileInformationEntry>());
         var cut = RenderProfileInAdmin();

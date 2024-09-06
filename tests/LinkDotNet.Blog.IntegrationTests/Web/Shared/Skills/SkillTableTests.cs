@@ -87,6 +87,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         cut.FindAll(".proficiency-level")[1].Drop();
 
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
+        skillFromDb.ShouldNotBeNull();
         skillFromDb.ProficiencyLevel.ShouldBe(ProficiencyLevel.Proficient);
     }
 
@@ -107,6 +108,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         cut.FindAll(".proficiency-level")[0].Drop();
 
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
+        skillFromDb.ShouldNotBeNull();
         skillFromDb.ProficiencyLevel.ShouldBe(ProficiencyLevel.Familiar);
     }
 }

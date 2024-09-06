@@ -97,7 +97,7 @@ public class ApplicationConfigurationBuilder
         return this;
     }
     
-    public ApplicationConfigurationBuilder WithBlogBrandUrl(string blogBrandUrl)
+    public ApplicationConfigurationBuilder WithBlogBrandUrl(string? blogBrandUrl)
     {
         this.blogBrandUrl = blogBrandUrl;
         return this;

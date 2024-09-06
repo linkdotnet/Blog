@@ -139,7 +139,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     }
 
     private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction)
-        CreateSampleAppConfiguration(string profilePictureUri = null)
+        CreateSampleAppConfiguration(string? profilePictureUri = null)
     {
         return (new ApplicationConfigurationBuilder()
                 .WithBlogName(string.Empty)
@@ -162,7 +162,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         }
     }
 
-    private void RegisterComponents(BunitContext ctx, string profilePictureUri = null)
+    private void RegisterComponents(BunitContext ctx, string? profilePictureUri = null)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).ApplicationConfiguration));

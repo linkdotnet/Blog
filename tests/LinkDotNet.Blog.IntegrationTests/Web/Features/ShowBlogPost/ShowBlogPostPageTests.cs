@@ -91,7 +91,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.AddAuthorization();
         RegisterComponents(ctx);
-        ctx.ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent));
+        ctx.ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent)!);
         var cut = ctx.Render<ShowBlogPostPage>(
             p => p.Add(b => b.BlogPostId, post.Id));
 
@@ -115,7 +115,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll("#no-blog-post-error").ShouldHaveSingleItem();
     }
 
-    private void RegisterComponents(BunitContext ctx, ILocalStorageService localStorageService = null)
+    private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());

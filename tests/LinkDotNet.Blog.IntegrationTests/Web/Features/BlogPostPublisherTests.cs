@@ -35,9 +35,9 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
 
         await sut.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
 
-        (await Repository.GetByIdAsync(bp1.Id)).IsPublished.ShouldBeTrue();
-        (await Repository.GetByIdAsync(bp2.Id)).IsPublished.ShouldBeTrue();
-        (await Repository.GetByIdAsync(bp3.Id)).IsPublished.ShouldBeFalse();
+        (await Repository.GetByIdAsync(bp1.Id))!.IsPublished.ShouldBeTrue();
+        (await Repository.GetByIdAsync(bp2.Id))!.IsPublished.ShouldBeTrue();
+        (await Repository.GetByIdAsync(bp3.Id))!.IsPublished.ShouldBeFalse();
     }
     
     [Fact]
