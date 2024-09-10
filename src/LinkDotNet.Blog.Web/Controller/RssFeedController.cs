@@ -12,12 +12,14 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
 using InvalidOperationException = System.InvalidOperationException;
 
 namespace LinkDotNet.Blog.Web.Controller;
 
 [Route("feed.rss")]
+[EnableRateLimiting("ip")]
 public sealed class RssFeedController : ControllerBase
 {
     private static readonly XmlWriterSettings Settings = CreateXmlWriterSettings();

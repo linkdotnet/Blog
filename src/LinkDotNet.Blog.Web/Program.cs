@@ -1,3 +1,5 @@
+using System;
+using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 using Blazored.Toast;
 using Blazorise;
@@ -8,6 +10,7 @@ using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -38,6 +41,17 @@ public class Program
         builder.Services.AddSignalR(options =>
         {
             options.MaximumReceiveMessageSize = 1024 * 1024;
+        });
+
+        builder.Services.AddRateLimiter(options =>
+        {
+            options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.AddPolicy<string>("ip", httpContext =>
+
+                RateLimitPartition.GetFixedWindowLimiter(
+                    httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty,
+                    _ => new FixedWindowRateLimiterOptions { PermitLimit = 15, Window = TimeSpan.FromMinutes(1) })
+            );
         });
 
         builder.Services.AddConfiguration();
@@ -91,6 +105,7 @@ public class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseRateLimiter();
         app.MapControllers();
         app.MapBlazorHub();
         app.MapFallbackToPage("/_Host");

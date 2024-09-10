@@ -63,13 +63,26 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
         result.IsSuccessStatusCode.ShouldBeTrue();
     }
 
+    [Fact]
+    public async Task RssFeedShouldBeRateLimited()
+    {
+        const int numberOfRequests = 16;
+        using var client = factory.CreateClient();
+        
+        for (var i = 0; i < numberOfRequests - 1; i++)
+        {
+            var result = await client.GetAsync("/feed.rss");
+            result.IsSuccessStatusCode.ShouldBeTrue();
+        }
+        
+        var lastResult = await client.GetAsync("/feed.rss");
+        lastResult.IsSuccessStatusCode.ShouldBeFalse();
+    }
+
     public void Dispose() => factory?.Dispose();
 
     public async ValueTask DisposeAsync()
     {
-        if (factory is not null)
-        {
-            await factory.DisposeAsync();
-        }
+        await factory.DisposeAsync();
     }
 }
