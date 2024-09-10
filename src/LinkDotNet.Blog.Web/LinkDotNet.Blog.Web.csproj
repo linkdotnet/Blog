@@ -12,9 +12,9 @@
         <PackageReference Include="Blazorise.Markdown" Version="1.6.1" />
         <PackageReference Include="NCronJob" Version="3.0.2-preview" />
         <PackageReference Include="Markdig" Version="0.37.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-preview.7.24406.2" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-preview.7.24405.7" />
-        <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.0-preview.7.24405.7" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-rc.1.24452.1" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-rc.1.24431.7" />
+        <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.0-rc.1.24431.7" />
     </ItemGroup>
 
     <ItemGroup>
