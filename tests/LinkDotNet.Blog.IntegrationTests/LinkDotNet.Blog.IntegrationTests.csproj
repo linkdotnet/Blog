@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.0-rc.1.24452.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0-rc.1.24431.7" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-rc.1.24431.7" />
-        <PackageReference Include="RavenDB.TestDriver" Version="6.0.105" />
+         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+         <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+         <PackageReference Include="Microsoft.Extensions.Options" />
+         <PackageReference Include="RavenDB.TestDriver" />
     </ItemGroup>
 
     <ItemGroup>

@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.1.24451.1" />
-	    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-rc.1.24451.1" />
-	    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-rc.1.24451.1" />
-      <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.0-rc.1.24452.1" />
-      <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
-      <PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.5" />
-      <PackageReference Include="RavenDB.Client" Version="6.0.105" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
+	    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+      <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
+      <PackageReference Include="MongoDB.Driver" />
+      <PackageReference Include="MySql.EntityFrameworkCore" />
+      <PackageReference Include="RavenDB.Client" />
     </ItemGroup>
 
     <ItemGroup>

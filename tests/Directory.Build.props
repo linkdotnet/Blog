@@ -7,28 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.generators" Version="2.0.24-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-    <PackageReference Include="bunit" Version="2.0.24-preview" />
-    <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="NSubstitute" Version="5.1.0" />
-    <PackageReference Include="xunit" Version="2.9.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+    <PackageReference Include="bunit.generators" />
+    <PackageReference Include="bunit" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk"  />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.collector" Version="6.0.2">
+    <PackageReference Include="coverlet.collector">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167">
+    <PackageReference Include="coverlet.msbuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

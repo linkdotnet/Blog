@@ -6,15 +6,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
-        <PackageReference Include="Blazored.Toast" Version="4.2.1" />
-        <PackageReference Include="Blazorise.Bootstrap5" Version="1.6.1" />
-        <PackageReference Include="Blazorise.Markdown" Version="1.6.1" />
-        <PackageReference Include="NCronJob" Version="3.0.2-preview" />
-        <PackageReference Include="Markdig" Version="0.37.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0-rc.1.24452.1" />
-        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0-rc.1.24431.7" />
-        <PackageReference Include="System.ServiceModel.Syndication" Version="9.0.0-rc.1.24431.7" />
+         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+         <PackageReference Include="Blazored.Toast" />
+         <PackageReference Include="Blazorise.Bootstrap5" />
+         <PackageReference Include="Blazorise.Markdown" />
+         <PackageReference Include="NCronJob" />
+         <PackageReference Include="Markdig" />
+         <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+         <PackageReference Include="Microsoft.Extensions.Options" />
+         <PackageReference Include="System.ServiceModel.Syndication" />
     </ItemGroup>
 
     <ItemGroup>
