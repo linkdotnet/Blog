@@ -12,7 +12,9 @@ public static class RavenDbConnectionProvider
             Database = databaseName,
             Conventions = { IdentityPartsSeparator = '-' },
         };
+#pragma warning disable IDISP004 // Handled by the DI Container
         documentStore.Initialize();
+#pragma warning restore
         return documentStore;
     }
 }

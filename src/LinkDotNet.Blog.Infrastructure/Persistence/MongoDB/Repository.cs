@@ -39,7 +39,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask<TEntity?> GetByIdAsync(string id)
     {
         var filter = Builders<TEntity>.Filter.Eq(e => e.Id, id);
-        var result = await Collection.FindAsync(filter);
+        using var result = await Collection.FindAsync(filter);
         return await result.FirstOrDefaultAsync();
     }
 

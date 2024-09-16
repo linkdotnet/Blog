@@ -26,7 +26,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     {
         try
         {
-            var db = await dbContextFactory.CreateDbContextAsync();
+            await using var db = await dbContextFactory.CreateDbContextAsync();
             await db.Database.ExecuteSqlRawAsync("SELECT 1");
             return HealthCheckResult.Healthy();
         }
@@ -38,7 +38,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask<TEntity?> GetByIdAsync(string id)
     {
-        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         return await blogDbContext.Set<TEntity>().FirstOrDefaultAsync(b => b.Id == id);
     }
 
@@ -58,7 +58,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         int pageSize = int.MaxValue)
     {
         ArgumentNullException.ThrowIfNull(selector);
-        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var entity = blogDbContext.Set<TEntity>().AsNoTracking().AsQueryable();
 
         if (filter is not null)
@@ -80,7 +80,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     {
         ArgumentNullException.ThrowIfNull(entity);
 
-        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         if (string.IsNullOrEmpty(entity.Id))
         {
             await blogDbContext.Set<TEntity>().AddAsync(entity);
@@ -98,7 +98,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         var entityToDelete = await GetByIdAsync(id);
         if (entityToDelete is not null)
         {
-            var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+            await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
             blogDbContext.Remove(entityToDelete);
             await blogDbContext.SaveChangesAsync();
         }
@@ -106,7 +106,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
 
     public async ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids)
     {
-        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var strategy = blogDbContext.Database.CreateExecutionStrategy();
 
         await strategy.ExecuteAsync(DeleteBulkAsyncInBatchesAsync);
@@ -138,7 +138,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     {
         ArgumentNullException.ThrowIfNull(records);
 
-        var blogDbContext = await dbContextFactory.CreateDbContextAsync();
+        await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
         var strategy = blogDbContext.Database.CreateExecutionStrategy();
 
         await strategy.ExecuteAsync(StoreBulkAsyncInBatchesAsync);
