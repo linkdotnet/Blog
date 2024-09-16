@@ -49,7 +49,7 @@ public static class AuthExtensions
 
             options.Events = new OpenIdConnectEvents
             {
-                OnRedirectToIdentityProviderForSignOut = context => HandleRedirect(authInformation.Value, context),
+                OnRedirectToIdentityProviderForSignOut = async context => await HandleRedirect(authInformation.Value, context),
             };
         });
 

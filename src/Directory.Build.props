@@ -9,6 +9,10 @@
 			  <Nullable>enable</Nullable>
     </PropertyGroup>
 
+	<ItemGroup Label="Code Analyzers">
+		<PackageReference Include="IDisposableAnalyzers" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
+	</ItemGroup>
+
     <PropertyGroup Condition="'$(Configuration)' == 'Release'">
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
