@@ -29,4 +29,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -c Release
     - name: Test
-      run: dotnet test -c Release --collect:"XPlat Code Coverage" --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      run: dotnet test -c Release --no-build -p:VSTestUseMSBuildOutput=false
