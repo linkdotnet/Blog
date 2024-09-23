@@ -5,6 +5,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.RavenDb;
 using LinkDotNet.Blog.TestUtilities;
 using Raven.Client.Documents;
+using Raven.Embedded;
 using Raven.TestDriver;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
@@ -166,6 +167,11 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
             {
                 DataDirectory = "./RavenDbTest/",
                 FrameworkVersion = null,
+                Licensing = new ServerOptions.LicensingOptions
+                {
+                    EulaAccepted = true,
+                    DisableAutoUpdate = true,
+                },
             });
         }
     }
