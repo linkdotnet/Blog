@@ -17,7 +17,7 @@ public class SkillTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     public void ShouldThrowWhenWhitespaceName(string? name)
@@ -28,7 +28,7 @@ public class SkillTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     public void ShouldThrowWhenWhitespaceCapability(string? capability)
@@ -46,7 +46,7 @@ public class SkillTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData(" ")]
     public void ShouldSetUrlToNullWhenWhitespace(string? url)

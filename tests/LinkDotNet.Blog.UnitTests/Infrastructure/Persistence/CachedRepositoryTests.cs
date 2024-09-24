@@ -108,7 +108,7 @@ public sealed class CachedRepositoryTests
     }
     
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("some_id")]
     public async Task ShouldNotThrowExceptionWhenCallingStoreWithoutRetrievingKeyFirst(string? id)
     {

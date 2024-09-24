@@ -52,7 +52,7 @@ public class EnumerationTests
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     [InlineData("  ")]
     public void GivenNullOrEmptyKey_WhenCreating_ThenException(string? key)

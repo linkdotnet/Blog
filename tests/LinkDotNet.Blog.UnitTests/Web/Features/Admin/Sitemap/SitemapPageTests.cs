@@ -5,6 +5,7 @@ using LinkDotNet.Blog.Web.Features.Admin.Sitemap;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Sitemap;
 
@@ -63,7 +64,7 @@ public class SitemapPageTests : BunitContext
         };
         sitemapMock.CreateSitemapAsync().Returns(Task.Run(async () =>
         {
-            await Task.Delay(1000);
+            await Task.Delay(1000, TestContext.Current.CancellationToken);
             return sitemap;
         }));
 

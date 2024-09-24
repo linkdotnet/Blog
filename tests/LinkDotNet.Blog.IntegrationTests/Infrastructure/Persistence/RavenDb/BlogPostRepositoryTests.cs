@@ -7,6 +7,7 @@ using LinkDotNet.Blog.TestUtilities;
 using Raven.Client.Documents;
 using Raven.Embedded;
 using Raven.TestDriver;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
 
@@ -149,7 +150,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         await sut.DeleteAsync(blogPost.Id);
 
         using var session = store.OpenAsyncSession();
-        (await session.Query<BlogPost>().AnyAsync(b => b.Id == blogPost.Id)).ShouldBeFalse();
+        (await session.Query<BlogPost>().AnyAsync(b => b.Id == blogPost.Id, TestContext.Current.CancellationToken)).ShouldBeFalse();
     }
 
     public override void Dispose()

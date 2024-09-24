@@ -20,7 +20,7 @@ public class AddProfileShortItemTests : BunitContext
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
-    [InlineData(null)]
+    [InlineData(null!)]
     public void ShouldNotAddItemWhenKeyOrValueIsEmpty(string? content)
     {
         var wasInvoked = false;

@@ -9,6 +9,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.Dashboard.Components;
 
@@ -51,7 +52,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var clicked4 = new BlogPostRecord
         { BlogPostId = blogPost1.Id, DateClicked = new DateOnly(2021, 1, 1), Clicks = 1 };
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         await using var ctx = new BunitContext();
         ctx.ComponentFactories.AddStub<DateRangeSelector>();
         RegisterRepositories(ctx);
@@ -83,7 +84,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var clicked3 = new BlogPostRecord
             { BlogPostId = blogPost2.Id, DateClicked = DateOnly.MinValue, Clicks = 1 };
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         await using var ctx = new BunitContext();
         RegisterRepositories(ctx);
 
@@ -105,7 +106,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         var clicked3 = new BlogPostRecord
             { BlogPostId = Guid.NewGuid().ToString(), DateClicked = DateOnly.MinValue, Clicks = 1 };
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         await using var ctx = new BunitContext();
         RegisterRepositories(ctx);
 

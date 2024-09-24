@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NCronJob;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.BlogPostEditor;
 
@@ -40,7 +41,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         TriggerUpdate(newBlogPost);
 
-        var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id);
+        var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id, TestContext.Current.CancellationToken);
         blogPostFromDb.ShouldNotBeNull();
         blogPostFromDb.ShortDescription.ShouldBe("My new Description");
         toastService.Received(1).ShowInfo("Updated BlogPost Title", null);

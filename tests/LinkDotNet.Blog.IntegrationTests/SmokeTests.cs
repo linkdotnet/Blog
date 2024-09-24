@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
@@ -23,7 +24,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
     {
         using var client = factory.CreateClient();
 
-        var result = await client.GetAsync("/");
+        var result = await client.GetAsync("/", cancellationToken: TestContext.Current.CancellationToken);
 
         result.IsSuccessStatusCode.ShouldBeTrue();
     }
@@ -38,7 +39,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
         });
         using var client = sqlFactory.CreateClient();
 
-        var result = await client.GetAsync("/");
+        var result = await client.GetAsync("/", cancellationToken: TestContext.Current.CancellationToken);
 
         result.IsSuccessStatusCode.ShouldBeTrue();
     }
@@ -48,7 +49,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
     {
         using var client = factory.CreateClient();
 
-        var result = await client.GetAsync("/searchByTag/.NET5");
+        var result = await client.GetAsync("/searchByTag/.NET5", cancellationToken: TestContext.Current.CancellationToken);
 
         result.IsSuccessStatusCode.ShouldBeTrue();
     }
@@ -58,7 +59,7 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
     {
         using var client = factory.CreateClient();
 
-        var result = await client.GetAsync("/search/.NET5");
+        var result = await client.GetAsync("/search/.NET5", cancellationToken: TestContext.Current.CancellationToken);
 
         result.IsSuccessStatusCode.ShouldBeTrue();
     }
@@ -71,11 +72,11 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
         
         for (var i = 0; i < numberOfRequests - 1; i++)
         {
-            var result = await client.GetAsync("/feed.rss");
+            var result = await client.GetAsync("/feed.rss", cancellationToken: TestContext.Current.CancellationToken);
             result.IsSuccessStatusCode.ShouldBeTrue();
         }
         
-        var lastResult = await client.GetAsync("/feed.rss");
+        var lastResult = await client.GetAsync("/feed.rss", cancellationToken: TestContext.Current.CancellationToken);
         lastResult.IsSuccessStatusCode.ShouldBeFalse();
     }
 

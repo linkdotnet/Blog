@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
-public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDisposable
+public abstract class SqlDatabaseTestBase<TEntity> : IAsyncDisposable
     where TEntity : Entity
 {
     protected SqlDatabaseTestBase()
@@ -30,17 +30,7 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncLifetime, IAsyncDispo
     protected BlogDbContext DbContext { get; }
 
     protected IDbContextFactory<BlogDbContext> DbContextFactory { get; }
-
-    public Task InitializeAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    async Task IAsyncLifetime.DisposeAsync()
-    {
-        await DisposeAsync();
-    }
-
+    
     public async ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);

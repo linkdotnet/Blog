@@ -5,6 +5,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql;
 
@@ -14,8 +15,8 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldLoadBlogPost()
     {
         var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
-        await DbContext.BlogPosts.AddAsync(blogPost);
-        await DbContext.SaveChangesAsync();
+        await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var blogPostFromRepo = await Repository.GetByIdAsync(blogPost.Id);
 
@@ -38,7 +39,10 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
 
         await Repository.StoreAsync(blogPost);
 
-        var blogPostFromContext = await DbContext.BlogPosts.AsNoTracking().SingleOrDefaultAsync(s => s.Id == blogPost.Id);
+        var blogPostFromContext = await DbContext
+            .BlogPosts
+            .AsNoTracking()
+            .SingleOrDefaultAsync(s => s.Id == blogPost.Id, TestContext.Current.CancellationToken);
         blogPostFromContext.ShouldNotBeNull();
         blogPostFromContext.Title.ShouldBe("Title");
         blogPostFromContext.ShortDescription.ShouldBe("Subtitle");
@@ -55,8 +59,8 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldGetAllBlogPosts()
     {
         var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
-        await DbContext.BlogPosts.AddAsync(blogPost);
-        await DbContext.SaveChangesAsync();
+        await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
         var blogPostsFromRepo = await Repository.GetAllAsync();
 
@@ -78,15 +82,15 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldBeUpdateable()
     {
         var blogPost = new BlogPostBuilder().Build();
-        await DbContext.BlogPosts.AddAsync(blogPost);
-        await DbContext.SaveChangesAsync();
+        await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         var blogPostFromDb = await Repository.GetByIdAsync(blogPost.Id);
         var updater = new BlogPostBuilder().WithTitle("New Title").Build();
         blogPostFromDb!.Update(updater);
 
         await Repository.StoreAsync(blogPostFromDb);
 
-        var blogPostAfterSave = await DbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == blogPostFromDb.Id);
+        var blogPostAfterSave = await DbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == blogPostFromDb.Id, TestContext.Current.CancellationToken);
         blogPostAfterSave.Title.ShouldBe("New Title");
     }
 
@@ -119,7 +123,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
 
         await Repository.DeleteAsync(blogPost.Id);
 
-        (await DbContext.BlogPosts.AsNoTracking().AnyAsync(b => b.Id == blogPost.Id)).ShouldBeFalse();
+        (await DbContext.BlogPosts.AsNoTracking().AnyAsync(b => b.Id == blogPost.Id, TestContext.Current.CancellationToken)).ShouldBeFalse();
     }
     
     [Fact]

@@ -17,7 +17,7 @@ public class ProfileInformationEntryTests
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
-    [InlineData(null)]
+    [InlineData(null!)]
     public void ShouldThrowExceptionWhenEmptyKeyOrValue(string? content)
     {
         Action act = () => ProfileInformationEntry.Create(content!, 0);

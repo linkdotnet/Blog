@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.AboutMe.Components;
 
@@ -61,7 +62,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 
         cut.WaitForState(() => !cut.HasComponent<TalkEntry>());
         cut.HasComponent<TalkEntry>().ShouldBeFalse();
-        (await DbContext.Talks.AnyAsync()).ShouldBeFalse();
+        (await DbContext.Talks.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).ShouldBeFalse();
     }
 
     [Fact]

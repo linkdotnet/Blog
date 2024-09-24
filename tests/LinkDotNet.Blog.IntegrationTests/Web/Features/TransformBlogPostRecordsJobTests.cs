@@ -8,6 +8,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.Extensions.Logging;
 using NCronJob;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
 
@@ -56,7 +57,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         await userRecordRepository.StoreBulkAsync(userRecords);
 
         // Act
-        await sut.RunAsync(Substitute.For<IJobExecutionContext>(), default);
+        await sut.RunAsync(Substitute.For<IJobExecutionContext>(), TestContext.Current.CancellationToken);
 
         // Assert
         var afterUserRecords = await userRecordRepository.GetAllAsync();
@@ -102,7 +103,7 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
         await blogPostRecordRepository.StoreBulkAsync(blogPostRecords);
         
         // Act
-        await sut.RunAsync(Substitute.For<IJobExecutionContext>(), default);
+        await sut.RunAsync(Substitute.For<IJobExecutionContext>(), TestContext.Current.CancellationToken);
 
         // Assert
         var records = await blogPostRecordRepository.GetAllAsync();

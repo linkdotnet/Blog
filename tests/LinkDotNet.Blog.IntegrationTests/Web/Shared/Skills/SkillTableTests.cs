@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 using Microsoft.Extensions.DependencyInjection;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Skills;
 
@@ -75,8 +76,8 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     {
         using var ctx = new BunitContext();
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
-        await DbContext.AddAsync(skill);
-        await DbContext.SaveChangesAsync();
+        await DbContext.AddAsync(skill, TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
@@ -96,8 +97,8 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     {
         using var ctx = new BunitContext();
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
-        await DbContext.AddAsync(skill);
-        await DbContext.SaveChangesAsync();
+        await DbContext.AddAsync(skill, TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
