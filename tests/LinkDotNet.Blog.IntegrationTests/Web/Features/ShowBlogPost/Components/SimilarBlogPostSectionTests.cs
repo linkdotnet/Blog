@@ -7,6 +7,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost.Components;
 
@@ -26,8 +27,8 @@ public class SimilarBlogPostSectionTests : SqlDatabaseTestBase<BlogPost>
             Id = blogPost1.Id,
             SimilarBlogPostIds = [blogPost2.Id, blogPost3.Id]
         };
-        await DbContext.SimilarBlogPosts.AddAsync(similarBlogPost1);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SimilarBlogPosts.AddAsync(similarBlogPost1, TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         await using var context = new BunitContext();
         context.Services.AddScoped<IRepository<SimilarBlogPost>>(_ =>
             new Repository<SimilarBlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<SimilarBlogPost>>>()));

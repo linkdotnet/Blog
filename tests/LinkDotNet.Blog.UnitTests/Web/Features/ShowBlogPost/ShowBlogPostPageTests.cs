@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost;
 
@@ -41,7 +42,7 @@ public class ShowBlogPostPageTests : BunitContext
         repositoryMock.GetByIdAsync(blogPostId)!
             .Returns(new ValueTask<BlogPost>(Task.Run(async () => 
             {
-                await Task.Delay(250);
+                await Task.Delay(250, cancellationToken: TestContext.Current.CancellationToken);
                 return new BlogPostBuilder().Build();
             })));
 

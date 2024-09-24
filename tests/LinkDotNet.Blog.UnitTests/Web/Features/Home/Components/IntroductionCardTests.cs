@@ -26,7 +26,7 @@ public class IntroductionCardTests : BunitContext
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     public void ShouldNotSetBackgroundWhenNotSet(string? url)
     {

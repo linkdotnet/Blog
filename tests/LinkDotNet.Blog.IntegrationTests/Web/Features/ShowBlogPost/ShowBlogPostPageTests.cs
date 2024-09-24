@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
+using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost;
 
@@ -33,7 +34,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         likeComponent.Find("span").Click();
 
-        var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
+        var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id, TestContext.Current.CancellationToken);
         fromDb.Likes.ShouldBe(3);
     }
 
@@ -57,7 +58,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         likeComponent.Find("span").Click();
 
-        var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id);
+        var fromDb = await DbContext.BlogPosts.AsNoTracking().SingleAsync(d => d.Id == publishedPost.Id, TestContext.Current.CancellationToken);
         fromDb.Likes.ShouldBe(1);
     }
 

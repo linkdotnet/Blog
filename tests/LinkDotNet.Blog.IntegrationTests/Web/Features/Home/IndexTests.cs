@@ -121,7 +121,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData(0)]
     [InlineData(-1)]
     public async Task ShouldSetPageToFirstIfOutOfRange(int? page)

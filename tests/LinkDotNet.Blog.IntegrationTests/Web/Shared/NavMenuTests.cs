@@ -83,7 +83,7 @@ public class NavMenuTests : BunitContext
     }
 
     [Theory]
-    [InlineData(null)]
+    [InlineData(null!)]
     [InlineData("")]
     public void ShouldShowBlogNameWhenNotBrand(string? brandUrl)
     {
