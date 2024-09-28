@@ -13,10 +13,13 @@ namespace LinkDotNet.Blog.IntegrationTests;
 public abstract class SqlDatabaseTestBase<TEntity> : IAsyncDisposable
     where TEntity : Entity
 {
+    private readonly DbConnection connection;
+
     protected SqlDatabaseTestBase()
     {
+        connection = CreateInMemoryConnection();
         var options = new DbContextOptionsBuilder()
-            .UseSqlite(CreateInMemoryConnection())
+            .UseSqlite(connection)
             .Options;
         DbContext = new BlogDbContext(options);
         DbContextFactory = Substitute.For<IDbContextFactory<BlogDbContext>>();
@@ -35,6 +38,7 @@ public abstract class SqlDatabaseTestBase<TEntity> : IAsyncDisposable
     {
         GC.SuppressFinalize(this);
         await DbContext.DisposeAsync();
+        await connection.DisposeAsync();
     }
 
     private static DbConnection CreateInMemoryConnection()
