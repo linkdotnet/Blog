@@ -9,7 +9,7 @@ namespace LinkDotNet.Blog.Web;
 
 public static class ConfigurationExtension
 {
-    public static void AddConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddConfiguration(this IServiceCollection services)
     {
         services
             .AddApplicationConfiguration()
@@ -19,6 +19,8 @@ public static class ConfigurationExtension
             .AddProfileInformationConfigurations()
             .AddGiscusConfiguration()
             .AddDisqusConfiguration();
+
+        return services;
     }
 
     private static IServiceCollection AddApplicationConfiguration(this IServiceCollection services)

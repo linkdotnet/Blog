@@ -9,7 +9,7 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions;
 
 public static class StorageProviderExtensions
 {
-    public static void AddStorageProvider(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddStorageProvider(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
@@ -48,6 +48,8 @@ public static class StorageProviderExtensions
             services.UseMongoDBAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
         }
+
+        return services;
     }
 
     private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
