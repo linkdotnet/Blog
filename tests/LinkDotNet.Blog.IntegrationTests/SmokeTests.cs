@@ -15,7 +15,8 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
     {
         this.factory = factory.WithWebHostBuilder(builder =>
         {
-            builder.UseSetting("PersistenceProvider", PersistenceProvider.InMemory.Key);
+            builder.UseSetting("PersistenceProvider", PersistenceProvider.Sqlite.Key);
+            builder.UseSetting("ConnectionString", "DataSource=file::memory:?cache=shared");
         });
     }
 

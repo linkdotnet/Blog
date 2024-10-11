@@ -18,12 +18,7 @@ public static class StorageProviderExtensions
         var provider = configuration["PersistenceProvider"] ?? throw new InvalidOperationException("No persistence provider configured");
         var persistenceProvider = PersistenceProvider.Create(provider);
 
-        if (persistenceProvider == PersistenceProvider.InMemory)
-        {
-            services.UseInMemoryAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.InMemory.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider == PersistenceProvider.RavenDb)
+        if (persistenceProvider == PersistenceProvider.RavenDb)
         {
             services.UseRavenDbAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();

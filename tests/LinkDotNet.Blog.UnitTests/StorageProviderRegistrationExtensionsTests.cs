@@ -10,7 +10,6 @@ public class StorageProviderRegistrationExtensionsTests
     {
         services => services.UseSqliteAsStorageProvider(),
         services => services.UseSqlAsStorageProvider(),
-        services => services.UseInMemoryAsStorageProvider(),
         services => services.UseRavenDbAsStorageProvider(),
         services => services.UseMySqlAsStorageProvider()
     };

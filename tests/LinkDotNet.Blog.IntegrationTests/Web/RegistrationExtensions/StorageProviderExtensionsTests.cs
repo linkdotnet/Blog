@@ -17,7 +17,7 @@ public class StorageProviderExtensionsTests
     [InlineData("SqlServer")]
     [InlineData("Sqlite")]
     [InlineData("RavenDb")]
-    [InlineData("InMemory")]
+    [InlineData("MongoDB")]
     [InlineData("MySql")]
     public void ShouldRegisterPersistenceProvider(string persistenceKey)
     {

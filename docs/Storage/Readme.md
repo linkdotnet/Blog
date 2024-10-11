@@ -2,13 +2,21 @@
 
 Currently, there are 5 Storage-Provider:
 
--   InMemory - Basically a list holding your data (per request). If the User hits a hard reload, the data is gone.
 -   RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
+-   MongoDB - Based on the official MongoDB driver. The database and collection are automatically created.
 -   Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
 -   SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
 -   MySql - Based on EF Core - also supports MariaDB.
 
-The default (when you clone the repository) is the `InMemory` option. That means every time you restart the service, all posts and related objects are gone.
+The default (when you clone the repository) is the `Sqlite` option with an in-memory database.
+That means every time you restart the service, all posts and related objects are gone. This is useful for testing. 
+If you want to persist the data with Sqlite, you can change the `appsettings.json` file to:
+
+```json
+{
+	"PersistenceProvider": "Sqlite",
+	"ConnectionString": "Data Source=blog.db",
+```
 
 Note the ConnectionString format of SQL Server needs to be consistent:
 
