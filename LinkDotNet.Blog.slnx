@@ -1,0 +1,22 @@
+﻿<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Readme.md" />
+    <File Path=".editorconfig" />
+    <File Path="MIGRATION.md" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
+    <Project Path="src\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
+    <Project Path="src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
+    <File Path="src\Directory.Build.props" />
+    <File Path="src\.editorconfig" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests\LinkDotNet.Blog.IntegrationTests\LinkDotNet.Blog.IntegrationTests.csproj" />
+    <Project Path="tests\LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj" />
+    <Project Path="tests\LinkDotNet.Blog.UnitTests\LinkDotNet.Blog.UnitTests.csproj" />
+    <File Path="tests\Directory.Build.props" />
+    <File Path="tests\.editorconfig" />
+  </Folder>
+</Solution>
