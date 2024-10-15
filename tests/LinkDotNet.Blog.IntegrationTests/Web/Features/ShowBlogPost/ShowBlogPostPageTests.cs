@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -116,6 +119,27 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll("#no-blog-post-error").ShouldHaveSingleItem();
     }
 
+    [Fact]
+    public async Task ShortCodesShouldBeReplacedByTheirContent()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization();
+        RegisterComponents(ctx);
+        var shortCodesRepository = Substitute.For<IRepository<ShortCode>>();
+        var shortCode = ShortCode.Create("ONE", "Content");
+        var returnValues = new PagedList<ShortCode>([shortCode], 1, 1, 1);
+        shortCodesRepository.GetAllAsync().Returns(returnValues);
+        ctx.Services.AddScoped(_ => shortCodesRepository);
+        var blogPost = new BlogPostBuilder().WithContent("This is a [[ONE]] shortcode").IsPublished().Build();
+        await Repository.StoreAsync(blogPost);
+        
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+        
+        cut.Find(".blogpost-content > p").TextContent.ShouldBe("This is a Content shortcode");
+    }
+
     private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null)
     {
         ctx.Services.AddScoped(_ => Repository);
@@ -124,5 +148,8 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         ctx.Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
+        ctx.Services.AddScoped(_ => shortCodeRepository);
     }
 }

@@ -1,9 +1,12 @@
 ﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure
+@using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
 @using NCronJob
 @inject IJSRuntime JSRuntime
 @inject ICacheInvalidator CacheInvalidator
 @inject IInstantJobRegistry InstantJobRegistry
+@inject IRepository<ShortCode> ShortCodeRepository
 
 <div class="container">
 	<h3 class="fw-bold">@Title</h3>
@@ -17,13 +20,33 @@
 		</div>
 		<div class="form-floating mb-3">
 			<MarkdownTextArea Id="short" Class="form-control" Rows="4" Placeholder="Short Description"
-			                  @bind-Value="@model.ShortDescription"></MarkdownTextArea>
+			                  @bind-Value="@model.ShortDescription"
+			                  PreviewFunction="ReplaceShortCodes"
+			                  ></MarkdownTextArea>
 			<ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
 		</div>
-		<div class="form-floating mb-3">
+		<div class="form-floating mb-3 relative">
 			<MarkdownTextArea Id="content" Class="form-control" Rows="20" Placeholder="Content"
+			                  PreviewFunction="ReplaceShortCodes"
 			                  @bind-Value="@model.Content"></MarkdownTextArea>
 			<ValidationMessage For="() => model.Content"></ValidationMessage>
+
+			<div class="btn-group position-absolute bottom-0 end-0 m-5 extra-buttons">
+				<button class="btn btn-primary btn-outlined btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+					More
+				</button>
+				<ul class="dropdown-menu">
+					@if (shortCodes.Count > 0)
+					{
+						<li>
+							<button type="button" @onclick="OpenShortCodeDialog" class="dropdown-item">
+								<span>Get shortcode</span>
+							</button>
+						</li>
+					}
+					<li><button type="button" class="dropdown-item" @onclick="FeatureDialog.Open">Experimental Features</button></li>
+				</ul>
+			</div>
 		</div>
 		<div class="form-floating mb-3">
 			<InputText type="url" class="form-control" id="preview" placeholder="Preview-Url" @bind-Value="model.PreviewImageUrl"/>
@@ -83,6 +106,7 @@
 </div>
 
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
+<ShortCodeDialog @ref="ShortCodeDialog" ShortCodes="shortCodes"></ShortCodeDialog>
 
 <NavigationLock ConfirmExternalNavigation="@model.IsDirty" OnBeforeInternalNavigation="PreventNavigationWhenDirty"></NavigationLock>
 @code {
@@ -99,14 +123,21 @@
     public bool ClearAfterCreated { get; set; } = true;
 
     private FeatureInfoDialog FeatureDialog { get; set; } = default!;
+    private ShortCodeDialog ShortCodeDialog { get; set; } = default!;
 
     private CreateNewModel model = new();
 
 	private bool canSubmit = true;
+	private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
 
 	private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
-    protected override void OnParametersSet()
+	protected override async Task OnInitializedAsync()
+	{
+		shortCodes = await ShortCodeRepository.GetAllAsync();
+	}
+
+	protected override void OnParametersSet()
     {
         if (BlogPost is null)
         {
@@ -160,5 +191,21 @@
         {
             context.PreventNavigation();
         }
+    }
+
+    private Task<string> ReplaceShortCodes(string markdown)
+    {
+	    foreach (var code in shortCodes)
+	    {
+		    markdown = markdown.Replace($"[[{code.Name}]]", code.MarkdownContent);
+	    }
+
+		return Task.FromResult(MarkdownConverter.ToMarkupString(markdown).Value);
+    }
+
+    private void OpenShortCodeDialog()
+    {
+	    ShortCodeDialog.Open();
+	    StateHasChanged();
     }
 }

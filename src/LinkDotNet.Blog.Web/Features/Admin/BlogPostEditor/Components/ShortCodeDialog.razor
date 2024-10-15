@@ -1,0 +1,62 @@
+@using LinkDotNet.Blog.Domain
+@inject IToastService ToastService
+@inject IJSRuntime JSRuntime
+<ModalDialog @ref="ModalDialog" Title="Select shortcode">
+	<div class="modal-body">
+		<div class="alert alert-info">
+			<p class="p-2">
+				Clicking on a shortcode, will put the shortcode into the clipboard.
+				So you can paste it into the markdown editor. Currently it isn't possible to insert it directly into the editor at the cursor position.
+			</p>
+		</div>
+		<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th scope="col">Name</th>
+					<th scope="col">Preview</th>
+				</tr>
+				</thead>
+				<tbody>
+				@foreach (var shortCode in ShortCodes)
+				{
+					<tr @onclick="() => AddShortCode(shortCode)" style="cursor: pointer;">
+						<td>@shortCode.Name</td>
+						<td>
+							<div style="max-height: 100px; overflow-y: auto;">
+								@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
+							</div>
+						</td>
+					</tr>
+				}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" @onclick="CloseDialog">Close</button>
+	</div>
+</ModalDialog>
+
+@code {
+	private ModalDialog ModalDialog { get; set; } = default!;
+	[Parameter] public IReadOnlyCollection<ShortCode> ShortCodes { get; set; } = [];
+
+	public void Open()
+	{
+		ModalDialog.Open();
+		StateHasChanged();
+	}
+
+	private async Task AddShortCode(ShortCode shortCode)
+	{
+		await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", $"[[{shortCode.Name}]]");
+		ToastService.ShowSuccess($"Shortcode {shortCode.Name} copied to clipboard");
+		CloseDialog();
+	}
+
+	private void CloseDialog()
+	{
+		ModalDialog.Close();
+	}
+}

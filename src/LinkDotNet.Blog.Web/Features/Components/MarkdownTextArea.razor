@@ -7,6 +7,7 @@
           Value="@Value"
           ValueChanged="s => Value = s"
           MaxHeight="@Height"
+          PreviewRender="PreviewFunction"
           PreviewImagesInEditor="true"/>
 
 @code {
@@ -41,4 +42,7 @@
     public int Rows { get; set; }
 
     [Parameter] public string Placeholder { get; set; } = string.Empty;
+
+    [Parameter] public Func<string, Task<string>> PreviewFunction { get; set; } =
+	    s => Task.FromResult(MarkdownConverter.ToMarkupString(s).Value);
 }

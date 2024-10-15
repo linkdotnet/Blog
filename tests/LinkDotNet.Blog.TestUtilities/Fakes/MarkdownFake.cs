@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
@@ -21,6 +23,9 @@ public sealed class MarkdownFake : ComponentBase
     
     [Parameter]
     public string Placeholder { get; set; } = string.Empty;
+    
+    [Parameter]
+    public Func<string, Task<string>> PreviewFunction { get; set; } = _ => Task.FromResult(string.Empty);
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
