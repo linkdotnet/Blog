@@ -1,10 +1,12 @@
 @page "/blogPost/{blogPostId}/{slug?}"
+@using System.Text
 @using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
 @using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components
 @inject IRepository<BlogPost> BlogPostRepository
+@inject IRepository<ShortCode> ShortCodeRepository
 @inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
 @inject IUserRecordService UserRecordService
@@ -72,7 +74,7 @@ else if (BlogPost is not null)
 				</div>
 
 				<div class="blogpost-content">
-					@(MarkdownConverter.ToMarkupString(BlogPost.Content))
+					@(EnrichWithShortCodes(BlogPost.Content))
 				</div>
 			</div>
 			<div class="d-flex justify-content-between py-2 border-top border-bottom align-items-center">
@@ -105,10 +107,16 @@ else if (BlogPost is not null)
 
 	private string OgDataImage => BlogPost!.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
 	private string BlogPostCanoncialUrl => $"blogPost/{BlogPost?.Id}";
+	private IReadOnlyCollection<ShortCode> shortCodes = [];
 
 	private BlogPost? BlogPost { get; set; }
 
-    protected override async Task OnParametersSetAsync()
+	protected override async Task OnInitializedAsync()
+	{
+		shortCodes = await ShortCodeRepository.GetAllAsync();
+	}
+
+	protected override async Task OnParametersSetAsync()
     {
 	    isLoading = true;
 	    BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
@@ -120,6 +128,22 @@ else if (BlogPost is not null)
         await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
         _ = UserRecordService.StoreUserRecordAsync();
     }
+
+    private MarkupString EnrichWithShortCodes(string content)
+	{
+		if (shortCodes.Count == 0)
+		{
+			return MarkdownConverter.ToMarkupString(content);
+		}
+
+		var sb = new StringBuilder(content);
+		foreach (var shortCode in shortCodes)
+		{
+			sb.Replace($"[[{shortCode.Name}]]", shortCode.MarkdownContent);
+		}
+
+		return MarkdownConverter.ToMarkupString(sb.ToString());
+	}
 
     private async Task UpdateLikes(bool hasLiked)
     {

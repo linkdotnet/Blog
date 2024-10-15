@@ -111,6 +111,9 @@ code {
 	content: "\e9d5";
 }
 
+.editor-toolbar {
+	background: #696969;
+}
 
 /* Template defined css */
 .valid.modified:not([type=checkbox]) {
@@ -124,7 +127,6 @@ code {
 .validation-message {
     color: red;
 }
-
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

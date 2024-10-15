@@ -1,10 +1,12 @@
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
@@ -23,6 +25,9 @@ public class ShowBlogPostPageTests : BunitContext
     {
         ComponentFactories.AddStub<SimilarBlogPostSection>();
         JSInterop.Mode = JSRuntimeMode.Loose;
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
+        Services.AddScoped(_ => shortCodeRepository);
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());

@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
@@ -32,6 +34,9 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
+        ctx.Services.AddScoped(_ => shortCodeRepository);
         using var cut = ctx.Render<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Linq;
 using AngleSharp.Html.Dom;
+using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
-using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using NCronJob;
@@ -17,12 +19,17 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components
 public class CreateNewBlogPostTests : BunitContext
 {
     private readonly CacheService cacheService = new CacheService();
+    
     public CreateNewBlogPostTests()
     {
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
+        Services.AddScoped(_ => shortCodeRepository);
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped<ICacheInvalidator>(_ => cacheService);
+        Services.AddScoped(_ => Substitute.For<IToastService>());
     }
 
     [Fact]
