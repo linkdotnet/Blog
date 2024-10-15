@@ -1,25 +1,35 @@
-<div class="accordion" id="tocAccordion">
-	<div class="accordion-item">
-		<h2 class="accordion-header" id="toc-header">
-			<button class="accordion-button collapsed d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#toc-accordion-body" aria-expanded="false" aria-controls="toc-accordion-body">
-				<i class="list"></i><div class="vr"></div><span>Table of Contents</span>
-			</button>
-		</h2>
-		<div id="toc-accordion-body" class="accordion-collapse collapse" aria-labelledby="toc-header">
-			<nav class="nav flex-column p-2">
-				@foreach (var item in MarkdownConverter.GenerateToc(Content))
-				{
-					@TocLink(item)
-				}
-			</nav>
+@if (toc?.Count > 0)
+{
+	<div class="accordion" id="tocAccordion">
+		<div class="accordion-item">
+			<h2 class="accordion-header" id="toc-header">
+				<button class="accordion-button collapsed d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#toc-accordion-body" aria-expanded="false" aria-controls="toc-accordion-body">
+					<i class="list"></i>
+					<div class="vr"></div><span>Table of Contents</span>
+				</button>
+			</h2>
+			<div id="toc-accordion-body" class="accordion-collapse collapse" aria-labelledby="toc-header">
+				<nav class="nav flex-column p-2">
+					@foreach (var item in MarkdownConverter.GenerateToc(Content))
+					{
+						@TocLink(item)
+					}
+				</nav>
+			</div>
 		</div>
 	</div>
-</div>
+}
 
 @code {
 	[Parameter, EditorRequired] public required string CurrentUri { get; set; }
-
 	[Parameter, EditorRequired] public required string Content { get; set; }
+
+	private IReadOnlyCollection<TocItem>? toc;
+
+	protected override void OnParametersSet()
+	{
+		toc = MarkdownConverter.GenerateToc(Content);
+	}
 
 	private string GetAnchorUrl(string anchor)
 	{

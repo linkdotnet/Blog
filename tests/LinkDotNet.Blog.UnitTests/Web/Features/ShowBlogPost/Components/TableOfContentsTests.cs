@@ -1,4 +1,5 @@
 using AngleSharp.Dom;
+using Blazorise;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 
@@ -67,5 +68,15 @@ public class TableOfContentsTests : BunitContext
         
         var link = cut.Find("nav a");
         link.TextContent.ShouldBe(expectedToc);
+    }
+
+    [Fact]
+    public void EmptyTocShouldNotBeDisplayed()
+    {
+        var cut = Render<TableOfContents>(p => p
+            .Add(x => x.Content, string.Empty)
+            .Add(x => x.CurrentUri, "https://localhost"));
+        
+        cut.Markup.ShouldBeEmpty();
     }
 }
