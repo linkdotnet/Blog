@@ -2,7 +2,7 @@
 
 This page lists some of the more advanced or less-used features of the blog software.
 
-### Shortcodes
+### Shortcodes
 Shortcodes are markdown content that can be shown inside blog posts (like templates that can be referenced).
 The idea is to reuse certain shortcodes across various blog posts.
 If you update the shortcode, it will be updated across all those blog posts as well.
