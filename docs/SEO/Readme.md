@@ -28,6 +28,10 @@ Furthermore, the following tags are set:
 | Title of the web page                    | Defined in AppConfiguration.BlogName | Title of the blogpost         |
 | &lt;meta name="keyword" content="" /&gt; | not set                              | Tags defined in the Blog Post |
 
-## RSS Feed
+### RSS Feed
 
 This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.org/feed/docs/rss2.html)), which can be consumed by your users or programs like Feedly. Just append `feed.rss` to your URL or click on the RSS feed icon in the navigation bar to get the feed. The RSS feed does not expose the whole content of a given blog post but its title and short description including some other tags like preview image, publishing date and so on.
+
+### Sitemap
+
+This blog offers to generate a [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) that lists all blog posts, the archive and pages of the blog. A sitemap can be generated in the Admin tab of the navigation bar under "Sitemap". This allows, especially new sites that don't have many inbound links, to be indexed easier by search engines.
