@@ -13,6 +13,9 @@ CREATE TABLE Shortcodes
 	Name [NVARCHAR(512)] NOT NULL,
 	MarkdownContent NVARCHAR(MAX) NOT NULL,
 )
+
+ALTER TABLE Shortcodes
+ADD CONSTRAINT PK_Shortcodes PRIMARY KEY (Id)
 ```
 
 ### Similiar blog posts
