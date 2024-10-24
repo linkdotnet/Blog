@@ -18,7 +18,7 @@ ALTER TABLE Shortcodes
 ADD CONSTRAINT PK_Shortcodes PRIMARY KEY (Id)
 ```
 
-### Similiar blog posts
+### Similiar blog posts
 
 A new `SimilarBlogPost` table is introduced to store similar blog posts.
 
