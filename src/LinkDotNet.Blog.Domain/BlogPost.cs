@@ -36,6 +36,8 @@ public sealed partial class BlogPost : Entity
 
     public int ReadingTimeInMinutes { get; private set; }
 
+    public bool IsMembersOnly { get; private set; }
+
     public string Slug => GenerateSlug();
 
     private string GenerateSlug()
@@ -89,6 +91,7 @@ public sealed partial class BlogPost : Entity
         string content,
         string previewImageUrl,
         bool isPublished,
+        bool isMembersOnly,
         DateTime? updatedDate = null,
         DateTime? scheduledPublishDate = null,
         IEnumerable<string>? tags = null,
@@ -113,6 +116,7 @@ public sealed partial class BlogPost : Entity
             IsPublished = isPublished,
             Tags = tags?.Select(t => t.Trim()).ToImmutableArray() ?? [],
             ReadingTimeInMinutes = ReadingTimeCalculator.CalculateReadingTime(content),
+            IsMembersOnly = isMembersOnly,
         };
 
         return blogPost;
@@ -141,6 +145,7 @@ public sealed partial class BlogPost : Entity
         PreviewImageUrl = from.PreviewImageUrl;
         PreviewImageUrlFallback = from.PreviewImageUrlFallback;
         IsPublished = from.IsPublished;
+        IsMembersOnly = from.IsMembersOnly;
         Tags = from.Tags;
         ReadingTimeInMinutes = from.ReadingTimeInMinutes;
     }

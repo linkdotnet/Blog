@@ -19,7 +19,7 @@ public class AccessControlTests : BunitContext
     [Fact]
     public void ShouldShowLogoutAndAdminWhenLoggedIn()
     {
-        AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven").SetRoles("Admin");
 
         var cut = Render<AccessControl>();
 
@@ -43,11 +43,23 @@ public class AccessControlTests : BunitContext
     public void LogoutShouldHaveCurrentUriAsRedirectUri()
     {
         const string currentUri = "http://localhost/test";
-        AddAuthorization().SetAuthorized("steven");
+        AddAuthorization().SetAuthorized("steven").SetRoles("Admin");
 
         var cut = Render<AccessControl>(
             p => p.Add(s => s.CurrentUri, currentUri));
 
         ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.ShouldContain(currentUri);
+    }
+
+    [Fact]
+    public void MembersDontHaveAdminUi()
+    {
+        const string currentUri = "http://localhost/test";
+        AddAuthorization().SetAuthorized("steven").SetRoles("Member");
+        
+        var cut = Render<AccessControl>(
+            p => p.Add(s => s.CurrentUri, currentUri));
+        
+        cut.FindAll("#admin-actions").ShouldBeEmpty();
     }
 }

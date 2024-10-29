@@ -32,7 +32,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var userIdentity = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User.Identity;
-	    isAuthenticated = userIdentity?.IsAuthenticated ?? false;
+	    var principal = (await AuthenticationStateProvider.GetAuthenticationStateAsync()).User;
+	    var userIdentity = principal.Identity;
+	    isAuthenticated = (userIdentity?.IsAuthenticated ?? false) && principal.IsInRole("Admin");
     }
 }

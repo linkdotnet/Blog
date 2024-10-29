@@ -72,6 +72,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     {
         await CreatePublishedBlogPosts(11);
         using var ctx = new BunitContext();
+        
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx);
 

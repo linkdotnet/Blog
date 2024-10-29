@@ -1,7 +1,7 @@
 ﻿@page "/Sitemap"
 @using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services
 @inject ISitemapService SitemapService
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Sitemap</PageTitle>
 
@@ -14,12 +14,12 @@
 			If you get a 404 there is currently no sitemap.xml</p>
 		<button class="btn btn-primary" @onclick="CreateSitemap" disabled="@isGenerating">Create Sitemap</button>
 
-		@if (isGenerating)
-		{
-			<Loading></Loading>
-		}
-		@if (sitemapUrlSet is not null)
-		{
+			@if (isGenerating)
+			{
+				<Loading></Loading>
+			}
+			@if (sitemapUrlSet is not null)
+			{
 			<table class="table table-striped table-hover h-50">
 				<thead>
 				<tr>

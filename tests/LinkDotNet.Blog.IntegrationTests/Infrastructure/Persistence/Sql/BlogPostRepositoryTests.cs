@@ -14,7 +14,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldLoadBlogPost()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, true, tags: new[] { "Tag 1", "Tag 2" });
         await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -26,6 +26,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromRepo.Content.ShouldBe("Content");
         blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
         blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.IsMembersOnly.ShouldBeTrue();
         blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");
@@ -35,7 +36,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldSaveBlogPost()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, true, tags: new[] { "Tag 1", "Tag 2" });
 
         await Repository.StoreAsync(blogPost);
 
@@ -48,6 +49,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromContext.ShortDescription.ShouldBe("Subtitle");
         blogPostFromContext.Content.ShouldBe("Content");
         blogPostFromContext.IsPublished.ShouldBeTrue();
+        blogPostFromContext.IsMembersOnly.ShouldBeTrue();
         blogPostFromContext.PreviewImageUrl.ShouldBe("url");
         blogPostFromContext.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromContext.Tags;
@@ -58,7 +60,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     [Fact]
     public async Task ShouldGetAllBlogPosts()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, true, tags: new[] { "Tag 1", "Tag 2" });
         await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -72,6 +74,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromRepo.Content.ShouldBe("Content");
         blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
         blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.IsMembersOnly.ShouldBeTrue();
         blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");

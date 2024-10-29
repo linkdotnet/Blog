@@ -16,7 +16,7 @@ public class BlogPostAdminActionsTests : BunitContext
         Services.AddSingleton(Substitute.For<IRepository<BlogPost>>());
         Services.AddSingleton(Substitute.For<IToastService>());
         Services.AddSingleton(Substitute.For<IInstantJobRegistry>());
-        AddAuthorization().SetAuthorized("s");
+        AddAuthorization().SetAuthorized("s").SetRoles("Admin");
     }
     
     [Fact]
