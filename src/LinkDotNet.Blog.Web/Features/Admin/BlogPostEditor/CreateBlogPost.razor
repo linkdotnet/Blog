@@ -1,5 +1,5 @@
 ﻿@page "/create"
-@attribute [Authorize]
+@attribute [Authorize(Roles = "Admin")]
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
