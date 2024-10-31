@@ -1,4 +1,6 @@
-﻿@inject IOptions<ApplicationConfiguration> Configuration
+@using LinkDotNet.Blog.Web.Features.SupportMe.Components
+@inject IOptions<ApplicationConfiguration> Configuration
+@inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject NavigationManager NavigationManager
 @implements IDisposable
 
@@ -26,24 +28,35 @@
                 @if (Configuration.Value.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="AboutMe"><i class="profile"></i> About
-                            me</a></li>
+                        <a class="nav-link" href="AboutMe">
+                            <i class="profile"></i> About me
+                        </a>
+                    </li>
+                }
+
+                @if (SupportConfiguration.Value.ShowSupportMePage)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="SupportMe">
+                            <i class="price-tags"></i> Support me
+                        </a>
+                    </li>
                 }
 
                 <li class="nav-item dropdown">
-	                <a class="nav-link dropdown-toggle" href="#" id="rssDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="RSS Selector">
-		                <i class="rss2"></i> RSS
-	                </a>
-	                <ul class="dropdown-menu" aria-labelledby="rssDropdown">
-		                <li><a class="dropdown-item" href="/feed.rss" aria-label="RSS with All Posts">All Posts (Summary)</a></li>
-		                <li><a class="dropdown-item" href="/feed.rss?withContent=true" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a></li>
-	                </ul>
+                    <a class="nav-link dropdown-toggle" href="#" id="rssDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="RSS Selector">
+                        <i class="rss2"></i> RSS
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="rssDropdown">
+                        <li><a class="dropdown-item" href="/feed.rss" aria-label="RSS with All Posts">All Posts (Summary)</a></li>
+                        <li><a class="dropdown-item" href="/feed.rss?withContent=true" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a></li>
+                    </ul>
                 </li>
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
                 <li><ThemeToggler Class="nav-link"></ThemeToggler></li>
                 <li class="d-flex">
-	                <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
+                    <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
             </ul>
         </div>

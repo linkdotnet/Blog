@@ -2,6 +2,7 @@ using System;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
+using LinkDotNet.Blog.Web.Features.SupportMe.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +19,8 @@ public static class ConfigurationExtension
             .AddSocialConfigurations()
             .AddProfileInformationConfigurations()
             .AddGiscusConfiguration()
-            .AddDisqusConfiguration();
+            .AddDisqusConfiguration()
+            .AddSupportMeConfiguration();
 
         return services;
     }
@@ -112,6 +114,18 @@ public static class ConfigurationExtension
             .Configure<IConfiguration>((settings, config) =>
             {
                 config.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(settings);
+            });
+        return services;
+    }
+
+    private static IServiceCollection AddSupportMeConfiguration(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<SupportMeConfiguration>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(SupportMeConfiguration.SupportMeConfigurationSection).Bind(settings);
             });
         return services;
     }

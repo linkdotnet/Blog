@@ -1,6 +1,8 @@
-﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.SupportMe.Components
 @inject IOptions<Introduction> Introduction
 @inject IOptions<Social> Social
+@inject IOptions<SupportMeConfiguration> SupportConfiguration
 
 <div style="@IntroductionStyle" class="@IntroductionClass">
     <div class="introduction-container">
@@ -9,6 +11,10 @@
         <div class="profile-text d-flex flex-column">
             <div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
             <SocialAccounts Social="@Social.Value"></SocialAccounts>
+            @if (SupportConfiguration.Value.ShowUnderIntroduction)
+            {
+                <LinkDotNet.Blog.Web.Features.SupportMe.Components.DonationSection />
+            }
         </div>
     </div>
 </div>
@@ -18,6 +24,6 @@
         : string.Empty;
 
     private string IntroductionStyle => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
-		? $"--profile-background: url({Introduction.Value.BackgroundUrl})"
-		: string.Empty;
+        ? $"--profile-background: url({Introduction.Value.BackgroundUrl})"
+        : string.Empty;
 }

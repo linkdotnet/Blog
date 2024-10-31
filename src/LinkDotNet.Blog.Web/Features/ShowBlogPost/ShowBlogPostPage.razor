@@ -1,5 +1,6 @@
 @page "/blogPost/{blogPostId}/{slug?}"
 @using System.Text
+@using LinkDotNet.Blog.Web.Features.SupportMe.Components
 @using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
@@ -12,6 +13,7 @@
 @inject IUserRecordService UserRecordService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
+@inject IOptions<SupportMeConfiguration> SupportConfiguration
 
 @if (isLoading)
 {
@@ -81,8 +83,11 @@ else if (BlogPost is not null)
 				<Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
 				<ShareBlogPost></ShareBlogPost>
 			</div>
-			<DonationSection></DonationSection>
-			@if (AppConfiguration.Value.ShowSimilarPosts)
+            @if (SupportConfiguration.Value.ShowUnderBlogPost)
+            {
+                <LinkDotNet.Blog.Web.Features.SupportMe.Components.DonationSection />   
+            }
+            @if (AppConfiguration.Value.ShowSimilarPosts)
 			{
 				<SimilarBlogPostSection BlogPost="@BlogPost" />
 			}

@@ -22,19 +22,7 @@ public sealed record ApplicationConfiguration
 
     public bool IsDisqusEnabled { get; set; }
 
-    public string? KofiToken { get; init; }
-
-    public bool IsKofiEnabled => !string.IsNullOrEmpty(KofiToken);
-
-    public string? GithubSponsorName { get; init; }
-
-    public bool IsGithubSponsorAvailable => !string.IsNullOrEmpty(GithubSponsorName);
-
     public bool ShowReadingIndicator { get; init; }
-
-    public string? PatreonName { get; init; }
-
-    public bool IsPatreonEnabled => !string.IsNullOrEmpty(PatreonName);
 
     public bool ShowSimilarPosts { get; init; }
 }

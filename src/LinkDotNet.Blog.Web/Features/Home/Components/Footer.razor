@@ -1,9 +1,17 @@
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.SupportMe.Components
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
+@inject IOptions<SupportMeConfiguration> SupportConfiguration
 
 <footer id="footer" class="text-center">
     <span class="py-2 mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
+    @if (SupportConfiguration.Value.ShowInFooter)
+    {
+        <div class="pb-2" style="display:flex;justify-content:center">
+            <LinkDotNet.Blog.Web.Features.SupportMe.Components.DonationSection />
+        </div>
+    }
 </footer>
 @code {
     private string CopyrightName => AppConfiguration.Value.IsAboutMeEnabled
