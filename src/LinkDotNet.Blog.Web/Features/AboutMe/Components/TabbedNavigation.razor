@@ -2,19 +2,19 @@
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk
 
 <div class="col-lg-9 col-md-8 tab-container">
-    <ul class="nav nav-tabs nav-justified mb-3" id="pills-tab" role="presentation">
+    <ul class="nav nav-pills nav-underline border-bottom justify-content-around" id="aboutMe" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active btn-primary btn-light" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Skills</button>
+            <button class="nav-link active btn-primary btn-light" id="pills-skills-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Skills</button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link btn-light" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Talks</button>
+            <button class="nav-link btn-primary btn-light" id="pills-talks-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Talks</button>
         </li>
     </ul>
-    <div class="tab-content" id="pills-tabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-skills-tab" tabindex="0">
             <SkillTable ShowAdminActions="@IsAuthenticated"></SkillTable>
         </div>
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-talks-tab" tabindex="0">
             <Talks ShowAdminActions="@IsAuthenticated"></Talks>
         </div>
     </div>
