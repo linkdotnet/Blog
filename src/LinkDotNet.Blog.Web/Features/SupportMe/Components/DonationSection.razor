@@ -1,0 +1,23 @@
+@inject IOptions<SupportMeConfiguration> SupportConfiguration
+<div class="d-flex flex-column flex-md-row gap-2 justify-content-start align-items-center">
+    @if (SupportConfiguration.Value.IsKofiEnabled)
+    {
+        <div class="mt-2">
+            <Kofi KofiToken="@SupportConfiguration.Value.KofiToken"></Kofi>
+        </div>
+    }
+
+    @if (SupportConfiguration.Value.IsGithubSponsorAvailable)
+    {
+	    <div class="mt-2">
+            <GithubSponsor Name="@SupportConfiguration.Value.GithubSponsorName"></GithubSponsor>
+	    </div>
+    }
+
+    @if (SupportConfiguration.Value.IsPatreonEnabled)
+    {
+		<div class="mt-2">
+            <Patreon PatreonName="@SupportConfiguration.Value.PatreonName"></Patreon>
+        </div>
+    }
+</div>

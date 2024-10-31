@@ -1,0 +1,26 @@
+@page "/SupportMe"
+@using LinkDotNet.Blog.Web.Features.AboutMe.Components
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.SupportMe.Components
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IOptions<SupportMeConfiguration> SupportConfiguration
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject IOptions<ProfileInformation> ProfileInformation
+
+@if (SupportConfiguration.Value.ShowSupportMePage)
+{
+    <OgData Title="@("Support Me - " + ProfileInformation.Value.Name)"
+            Description="@("Support Me," + ProfileInformation.Value.Name)"
+            Keywords="@ProfileInformation.Value.Name"
+            AbsolutePreviewImageUrl="@ImageUrl"></OgData>
+
+    <div class="container">
+        <div>@MarkdownConverter.ToMarkupString(SupportConfiguration.Value.SupportMePageDescription)</div>
+        <LinkDotNet.Blog.Web.Features.SupportMe.Components.DonationSection />
+    </div>
+}
+
+@code {
+    private string ImageUrl => ProfileInformation.Value.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
+}
