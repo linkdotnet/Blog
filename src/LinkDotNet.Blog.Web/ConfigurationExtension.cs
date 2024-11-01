@@ -74,7 +74,7 @@ public static class ConfigurationExtension
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        services.AddOptions<AuthInformation>()
+        services.AddOptions<Social>()
             .Configure<IConfiguration>((settings, config) =>
             {
                 config.GetSection(Social.SocialSection).Bind(settings);

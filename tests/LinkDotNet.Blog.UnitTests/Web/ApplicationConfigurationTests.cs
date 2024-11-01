@@ -100,7 +100,7 @@ public class ApplicationConfigurationTests
         configuration.GetSection(Social.SocialSection).Bind(social);
         social.GithubAccountUrl.ShouldBe("github");
         social.HasGithubAccount.ShouldBeTrue();
-        social.LinkedinAccountUrl.ShouldBe("linkedIn");
+        social.LinkedInAccountUrl.ShouldBe("linkedIn");
         social.HasLinkedinAccount.ShouldBeTrue();
         social.TwitterAccountUrl.ShouldBe("twitter");
         social.HasTwitterAccount.ShouldBeTrue();

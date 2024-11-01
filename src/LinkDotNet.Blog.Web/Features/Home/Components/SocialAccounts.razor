@@ -2,7 +2,7 @@
 <div class="d-flex flex-row justify-content-center" style="font-size: 1.25em;">
     @if (Social.HasLinkedinAccount)
     {
-        <a id="linkedin" class="nav-link px-3 py-2" target="_blank" href="@Social.LinkedinAccountUrl" aria-label="LinkedIn" rel="noreferrer">
+        <a id="linkedin" class="nav-link px-3 py-2" target="_blank" href="@Social.LinkedInAccountUrl" aria-label="LinkedIn" rel="noreferrer">
             <i class="linkedin"></i>
         </a>
     }
@@ -17,6 +17,13 @@
         <a id="twitter" class="nav-link px-3 py-2" target="_blank" href="@Social.TwitterAccountUrl" aria-label="Twitter" rel="noreferrer">
             <i class="twitter"></i>
         </a>
+    }
+
+    @if (Social.HasYoutubeAccount)
+    {
+	    <a id="youtube" class="nav-link px-3 py-2" target="_blank" href="@Social.YoutubeAccountUrl" aria-label="Youtube" rel="noreferrer">
+		    <i class="youtube"></i>
+	    </a>
     }
 </div>
 

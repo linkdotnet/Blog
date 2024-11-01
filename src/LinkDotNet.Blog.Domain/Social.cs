@@ -4,9 +4,9 @@ public sealed record Social
 {
     public const string SocialSection = "Social";
 
-    public string? LinkedinAccountUrl { get; init; }
+    public string? LinkedInAccountUrl { get; init; }
 
-    public bool HasLinkedinAccount => !string.IsNullOrEmpty(LinkedinAccountUrl);
+    public bool HasLinkedinAccount => !string.IsNullOrEmpty(LinkedInAccountUrl);
 
     public string? GithubAccountUrl { get; init; }
 
@@ -15,4 +15,8 @@ public sealed record Social
     public string? TwitterAccountUrl { get; init; }
 
     public bool HasTwitterAccount => !string.IsNullOrEmpty(TwitterAccountUrl);
+
+    public string? YoutubeAccountUrl { get; init; }
+
+    public bool HasYoutubeAccount => !string.IsNullOrEmpty(YoutubeAccountUrl);
 }
