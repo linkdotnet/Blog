@@ -1,12 +1,9 @@
 @page "/SupportMe"
-@using LinkDotNet.Blog.Web.Features.AboutMe.Components
 @using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Web.Features.SupportMe.Components
-@inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 @inject IOptions<ProfileInformation> ProfileInformation
+@namespace LinkDotNet.Blog.Web.Features.SupportMe.Components
 
 @if (SupportConfiguration.Value.ShowSupportMePage)
 {
@@ -17,7 +14,7 @@
 
     <div class="container">
         <div>@MarkdownConverter.ToMarkupString(SupportConfiguration.Value.SupportMePageDescription)</div>
-        <LinkDotNet.Blog.Web.Features.SupportMe.Components.DonationSection />
+        <DonationSection />
     </div>
 }
 
