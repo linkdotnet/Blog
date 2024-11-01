@@ -24,5 +24,5 @@ public class SupportMeConfiguration
 
     public bool ShowSupportMePage { get; init; }
 
-    public string SupportMePageDescription { get; init; }
+    public string? SupportMePageDescription { get; init; }
 }
