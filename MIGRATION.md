@@ -3,6 +3,31 @@ This document describes the changes that need to be made to migrate from one ver
 
 ## 8.0 to 9.0
 
+### Support / Donation section
+If you used the sponsor/donation mechanism in the `appsettings.json` like this:
+```json
+{
+  ...
+  "KofiToken": "TokenHere",
+  "GithubSponsorName": "namehere",
+  "PatreonName": "namehere",
+}
+```
+
+These moved to their own respective subsection:
+```json
+{
+	"SupportMe": {
+	  "KofiToken": "TokenHere",
+      "GithubSponsorName": "namehere",
+      "PatreonName": "namehere",
+	  "ShowUnderBlogPost": true,
+	}
+}
+```
+
+The `ShowUnderBlogPost` is neede to indicate that the part will be shown under each blog post. We also added more possibilities to customize this: Checkout the [Donation section in the documentation](docs/Donations/Readme.md).
+
 ### Shortcodes
 Shortcodes, a form a templating that can be adjusted dynamically, are introduced in this version. The following table has to be added to the database:
 
