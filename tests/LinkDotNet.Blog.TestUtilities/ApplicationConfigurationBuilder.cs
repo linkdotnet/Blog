@@ -12,10 +12,7 @@ public class ApplicationConfigurationBuilder
     private bool isAboutMeEnabled;
     private bool isGiscusEnabled;
     private bool isDisqusEnabled;
-    private string? kofiToken;
-    private string? githubSponsorName;
     private bool showReadingIndicator;
-    private string? patreonName;
     private bool showSimilarPosts;
     private string? blogBrandUrl;
 
@@ -67,27 +64,9 @@ public class ApplicationConfigurationBuilder
         return this;
     }
 
-    public ApplicationConfigurationBuilder WithKofiToken(string? kofiToken)
-    {
-        this.kofiToken = kofiToken;
-        return this;
-    }
-
-    public ApplicationConfigurationBuilder WithGithubSponsorName(string? githubSponsorName)
-    {
-        this.githubSponsorName = githubSponsorName;
-        return this;
-    }
-
     public ApplicationConfigurationBuilder WithShowReadingIndicator(bool showReadingIndicator)
     {
         this.showReadingIndicator = showReadingIndicator;
-        return this;
-    }
-
-    public ApplicationConfigurationBuilder WithPatreonName(string? patreonName)
-    {
-        this.patreonName = patreonName;
         return this;
     }
     
@@ -115,10 +94,7 @@ public class ApplicationConfigurationBuilder
             IsAboutMeEnabled = isAboutMeEnabled,
             IsGiscusEnabled = isGiscusEnabled,
             IsDisqusEnabled = isDisqusEnabled,
-            KofiToken = kofiToken,
-            GithubSponsorName = githubSponsorName,
             ShowReadingIndicator = showReadingIndicator,
-            PatreonName = patreonName,
             ShowSimilarPosts = showSimilarPosts,
             BlogBrandUrl = blogBrandUrl,
         };

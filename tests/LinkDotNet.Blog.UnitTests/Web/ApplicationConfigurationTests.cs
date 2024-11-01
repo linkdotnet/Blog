@@ -34,10 +34,15 @@ public class ApplicationConfigurationTests
             { "Giscus:Category", "general" },
             { "Giscus:CategoryId", "generalid" },
             { "Disqus:Shortname", "blog" },
-            { "KofiToken", "ABC" },
-            { "GithubSponsorName", "linkdotnet" },
             { "ShowReadingIndicator", "true" },
-            { "PatreonName", "linkdotnet" },
+            { "SupportMe:KofiToken", "ABC" },
+            { "SupportMe:PatreonName", "linkdotnet" },
+            { "SupportMe:GithubSponsorName", "linkdotnet" },
+            { "SupportMe:ShowUnderBlogPost", "true" },
+            { "SupportMe:ShowUnderIntroduction", "true" },
+            { "SupportMe:ShowInFooter", "true" },
+            { "SupportMe:ShowSupportMePage", "true" },
+            { "SupportMe:SupportMePageDescription", "Support me" },
             { "Authentication:Provider","Auth0"},
             { "Authentication:ClientId","123"},
             { "Authentication:ClientSecret","qwe"},
@@ -59,29 +64,38 @@ public class ApplicationConfigurationTests
         appConfiguration.DatabaseName.ShouldBe("db");
         appConfiguration.BlogPostsPerPage.ShouldBe(5);
         appConfiguration.IsAboutMeEnabled.ShouldBeTrue();
-        appConfiguration.KofiToken.ShouldBe("ABC");
-        appConfiguration.GithubSponsorName.ShouldBe("linkdotnet");
         appConfiguration.ShowReadingIndicator.ShouldBeTrue();
-        appConfiguration.PatreonName.ShouldBe("linkdotnet");
-        appConfiguration.IsPatreonEnabled.ShouldBeTrue();
-        
+
         var giscusConfiguration = new GiscusConfigurationBuilder().Build();
         configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);
         giscusConfiguration.Repository.ShouldBe("repo");
         giscusConfiguration.RepositoryId.ShouldBe("repoid");
         giscusConfiguration.Category.ShouldBe("general");
         giscusConfiguration.CategoryId.ShouldBe("generalid");
-        
+
         var disqusConfiguration = new DisqusConfigurationBuilder().Build();
         configuration.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(disqusConfiguration);
         disqusConfiguration.Shortname.ShouldBe("blog");
-        
+
+        var supportMeConfiguration = new SupportMeConfigurationBuilder().Build();
+        supportMeConfiguration.KofiToken.ShouldBe("ABC");
+        supportMeConfiguration.GithubSponsorName.ShouldBe("linkdotnet");
+        supportMeConfiguration.PatreonName.ShouldBe("linkdotnet");
+        supportMeConfiguration.IsPatreonEnabled.ShouldBeTrue();
+        supportMeConfiguration.IsKofiEnabled.ShouldBeTrue();
+        supportMeConfiguration.IsGithubSponsorAvailable.ShouldBeTrue();
+        supportMeConfiguration.ShowUnderBlogPost.ShouldBeTrue();
+        supportMeConfiguration.ShowUnderIntroduction.ShouldBeTrue();
+        supportMeConfiguration.ShowInFooter.ShouldBeTrue();
+        supportMeConfiguration.ShowSupportMePage.ShouldBeTrue();
+        supportMeConfiguration.SupportMePageDescription.ShouldBe("Support me");
+
         var profileInformation = new ProfileInformationBuilder().Build();
         configuration.GetSection(ProfileInformation.ProfileInformationSection).Bind(profileInformation);
         profileInformation.Name.ShouldBe("Steven");
         profileInformation.Heading.ShouldBe("Dev");
         profileInformation.ProfilePictureUrl.ShouldBe("Url");
-        
+
         var social = new Social();
         configuration.GetSection(Social.SocialSection).Bind(social);
         social.GithubAccountUrl.ShouldBe("github");
@@ -96,7 +110,7 @@ public class ApplicationConfigurationTests
         introduction.BackgroundUrl.ShouldBe("someurl");
         introduction.ProfilePictureUrl.ShouldBe("anotherurl");
         introduction.Description.ShouldBe("desc");
-        
+
         var authInformation = new AuthInformationBuilder().Build();
         configuration.GetSection(AuthInformation.AuthInformationSection).Bind(authInformation);
         authInformation.Provider.ShouldBe("Auth0");
