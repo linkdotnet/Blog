@@ -12,7 +12,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 	"Social": {
 		"GithubAccountUrl": "",
 		"LinkedInAccountUrl": "",
-		"TwitterAccountUrl": ""
+		"TwitterAccountUrl": "",
+		"YoutubeAccountUrl": "",
 	},
 	"Introduction": {
 		"Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
@@ -68,11 +69,12 @@ The appsettings.json file has a lot of options to customize the content of the b
 | GithubAccountUrl                              | string         | Url to your github account. If not set it is not shown in the introduction card                                                                                                  |
 | LinkedInAccountUrl                            | string         | Url to your LinkedIn account. If not set it is not shown in the introduction card                                                                                                |
 | TwitterAccountUrl                             | string         | Url to your Twitter account. If not set it is not shown in the introduction card                                                                                                 |
+| YoutubeAccountUrl                             | string         | Url to your Youtube account. If not set it is not shown in the introduction card                                                                                                 |
 | Introduction                                  |                | Is used for the introduction part of the blog                                                                                                                                    |
 | Description                                   | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text                                 |
 | BackgroundUrl                                 | string         | Url or path to the background image. (Optional)                                                                                                                                  |
 | ProfilePictureUrl                             | string         | Url or path to your profile picture                                                                                                                                              |
-| [PersistenceProvider](./../Storage/Readme.md)                           | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `Sqlite`, `RavenDb`, `MongoDB`, `MySql`). More in-depth explanation [here](./../Storage/Readme.md) |
+| [PersistenceProvider](./../Storage/Readme.md) | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `Sqlite`, `RavenDb`, `MongoDB`, `MySql`). More in-depth explanation [here](./../Storage/Readme.md) |
 | ConnectionString                              | string         | Is used for connection to a database.                                                                                                                                            |
 | DatabaseName                                  | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                                                    |
 | [AuthProvider](./../Authorization/Readme.md)  | string         |                                                                                                                                                                                  |
@@ -87,8 +89,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Name                                          | string         | Name, which is displayed on top of the profile card                                                                                                                              |
 | Heading                                       | string         | Displayed under the name. For example job title                                                                                                                                  |
 | ProfilePictureUrl                             | string         | Displayed profile picture                                                                                                                                                        |
-| [Giscus](./../Comments/Giscus.md)             | node           | Enables the comment section via giscus. If left empty the comment section will not be shown.                                                                                      |
-| [Disqus](./../Comments/Disqus.md)             | node           | Enables the comment section via disqus. If left empty the comment section will not be shown.                                                                                      |
+| [Giscus](./../Comments/Giscus.md)             | node           | Enables the comment section via giscus. If left empty the comment section will not be shown.                                                                                     |
+| [Disqus](./../Comments/Disqus.md)             | node           | Enables the comment section via disqus. If left empty the comment section will not be shown.                                                                                     |
 | ShowReadingIndicator                          | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                                     |
 | SimilarBlogPosts                              | boolean        | If set to `true` (default) similar blog posts are shown at the end of a blog post.                                                                                               |
-| [SupportMe](./../Donations/Readme.md)         | node           | Donation sections configuration. If left empty no donation sections will not be shown.                                                                                     |
+| [SupportMe](./../Donations/Readme.md)         | node           | Donation sections configuration. If left empty no donation sections will not be shown.                                                                                           |
