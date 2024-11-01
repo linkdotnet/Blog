@@ -5,7 +5,7 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @namespace LinkDotNet.Blog.Web.Features.SupportMe.Components
 
-@if (SupportConfiguration.Value.ShowSupportMePage)
+@if (SupportConfiguration.Value.ShowSupportMePage && SupportConfiguration.Value.SupportMePageDescription is not null)
 {
     <OgData Title="@("Support Me - " + ProfileInformation.Value.Name)"
             Description="@("Support Me," + ProfileInformation.Value.Name)"
