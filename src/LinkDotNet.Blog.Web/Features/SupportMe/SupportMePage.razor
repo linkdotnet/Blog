@@ -8,8 +8,8 @@
 @if (SupportConfiguration.Value.ShowSupportMePage)
 {
     <OgData Title="@("Support Me - " + ProfileInformation.Value.Name)"
-            Description="@("Support Me," + ProfileInformation.Value.Name)"
-            Keywords="@ProfileInformation.Value.Name"
+            Description="@("Support Me - " + ProfileInformation.Value.Name)"
+            Keywords="@($"Donation,Support,{ProfileInformation.Value.Name})")"
             AbsolutePreviewImageUrl="@ImageUrl"></OgData>
 
     <div class="container">
