@@ -32,31 +32,31 @@ public class SupportMeConfigurationBuilder
         return this;
     }
 
-    public SupportMeConfigurationBuilder WithShowUnderBlogPost(bool showUnderBlogPost)
+    public SupportMeConfigurationBuilder WithShowUnderBlogPost(bool showUnderBlogPost = true)
     {
         this.showUnderBlogPost = showUnderBlogPost;
         return this;
     }
 
-    public SupportMeConfigurationBuilder WithshowUnderIntroduction(bool showUnderIntroduction)
+    public SupportMeConfigurationBuilder WithShowUnderIntroduction(bool showUnderIntroduction = true)
     {
         this.showUnderIntroduction = showUnderIntroduction;
         return this;
     }
 
-    public SupportMeConfigurationBuilder WithShowInFooter(bool showInFooter)
+    public SupportMeConfigurationBuilder WithShowInFooter(bool showInFooter = true)
     {
         this.showInFooter = showInFooter;
         return this;
     }
 
-    public SupportMeConfigurationBuilder WithShowSupportMePage(bool showSupportMePage)
+    public SupportMeConfigurationBuilder WithShowSupportMePage(bool showSupportMePage = true)
     {
         this.showSupportMePage = showSupportMePage;
         return this;
     }
 
-    public SupportMeConfigurationBuilder WithSupportMePageDescription(string? supportMePageDescription)
+    public SupportMeConfigurationBuilder WithSupportMePageDescription(string supportMePageDescription)
     {
         this.supportMePageDescription = supportMePageDescription;
         return this;

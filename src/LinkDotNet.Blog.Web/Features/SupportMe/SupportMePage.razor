@@ -1,9 +1,9 @@
 @page "/SupportMe"
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.SupportMe.Components
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject NavigationManager NavigationManager
 @inject IOptions<ProfileInformation> ProfileInformation
-@namespace LinkDotNet.Blog.Web.Features.SupportMe.Components
 
 @if (SupportConfiguration.Value.ShowSupportMePage)
 {
