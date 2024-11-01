@@ -1,32 +1,21 @@
 @font-face {
   font-family: 'icons';
   src:
-    url('fonts/icons.woff2') format('woff2'),
     url('fonts/icons.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-  font-display: swap;
+  font-display: block;
 }
 
-i, .icomoon-liga {
+i {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icons';
+  font-family: 'icons' !important;
   speak: never;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-
-  /* Enable Ligatures ================ */
-  letter-spacing: 0;
-  -webkit-font-feature-settings: "liga";
-  -moz-font-feature-settings: "liga=1";
-  -moz-font-feature-settings: "liga";
-  -ms-font-feature-settings: "liga" 1;
-  font-feature-settings: "liga";
-  -webkit-font-variant-ligatures: discretionary-ligatures;
-  font-variant-ligatures: discretionary-ligatures;
 
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
@@ -75,11 +64,17 @@ i, .icomoon-liga {
 .bin2:before {
   content: "\e9ad";
 }
+.contrast:before {
+  content: "\e9d5";
+}
 .plus:before {
   content: "\ea0a";
 }
 .circle-right:before {
   content: "\ea42";
+}
+.share2:before {
+  content: "\ea82";
 }
 .twitter:before {
   content: "\ea96";
@@ -93,13 +88,24 @@ i, .icomoon-liga {
 .linkedin:before {
   content: "\eac9";
 }
-.contrast:before {
-  content: "\e9d5";
- }
-.share2:before {
-	content: "\ea82";
-}
-
 .list:before {
-	content: "\e901";
+  content: "\e901";
+}
+.todo:before {
+  content: "\e901";
+}
+.bullet:before {
+  content: "\e901";
+}
+.menu:before {
+  content: "\e901";
+}
+.options:before {
+  content: "\e901";
+}
+.coin-dollar:before {
+  content: "\e93b";
+}
+.youtube:before {
+  content: "\ea9d";
 }
