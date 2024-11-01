@@ -13,7 +13,7 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.0-rc.2.24474.3" />
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
     <PackageVersion Include="MySql.EntityFrameworkCore" Version="9.0.0-preview" />
-    <PackageVersion Include="RavenDB.Client" Version="6.2.0" />
+    <PackageVersion Include="RavenDB.Client" Version="6.2.1" />
   </ItemGroup>
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
@@ -31,7 +31,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0-rc.2.24473.5" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="RavenDB.TestDriver" Version="6.2.0" />
+    <PackageVersion Include="RavenDB.TestDriver" Version="6.2.1" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="bunit" Version="2.0.24-preview" />
     <PackageVersion Include="bunit.generators" Version="2.0.24-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
