@@ -45,11 +45,18 @@ The appsettings.json file has a lot of options to customize the content of the b
 	"Disqus": {
 		"Shortname": "blog"
 	},
-	"KofiToken": "ABC123",
-	"GithubSponsorName": "your-tag-here",
 	"ShowReadingIndicator": true,
-	"PatreonName": "your-tag-here",
-	"SimlarBlogPosts": "true"
+	"SimlarBlogPosts": "true",
+	"SupportMe": {
+		"KofiToken": "ABC123",
+		"GithubSponsorName": "your-tag-here",
+		"PatreonName": "your-tag-here",
+		"ShowUnderBlogPost": true,
+		"ShowUnderIntroduction": true,
+		"ShowInFooter": true,
+		"ShowSupportMePage": true,
+		"SupportMePageDescription": "Buy my book here: [My Blazor Book](https://google.com) or please contribute to my open-source project here: [My Awesome Repo](https://github.com) . This can be **markdown**."
+	}
 }
 ```
 
@@ -80,10 +87,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 | Name                                          | string         | Name, which is displayed on top of the profile card                                                                                                                              |
 | Heading                                       | string         | Displayed under the name. For example job title                                                                                                                                  |
 | ProfilePictureUrl                             | string         | Displayed profile picture                                                                                                                                                        |
-| [Giscus](./../Comments/Giscus.md)             | node           | Enables the comment section via giscus. If left empty the comment secion will not be shown.                                                                                      |
-| [Disqus](./../Comments/Disqus.md)             | node           | Enables the comment section via disqus. If left empty the comment secion will not be shown.                                                                                      |
-| KofiToken                                     | string         | Enables the "Buy me a Coffee" button of Kofi. To aquire the token head down to the "Kofi" section                                                                                |
-| GithubSponsorName                             | string         | Enables the "Github Sponsor" button which redirects to GitHub. Only pass in the user name instead of the url.                                                                    |
+| [Giscus](./../Comments/Giscus.md)             | node           | Enables the comment section via giscus. If left empty the comment section will not be shown.                                                                                      |
+| [Disqus](./../Comments/Disqus.md)             | node           | Enables the comment section via disqus. If left empty the comment section will not be shown.                                                                                      |
 | ShowReadingIndicator                          | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                                     |
-| PatreonName                                   | string         | Enables the "Become a patreon" button that redirects to patreon.com. Only pass the user name (public profile) as user name.                                                      |
 | SimilarBlogPosts                              | boolean        | If set to `true` (default) similar blog posts are shown at the end of a blog post.                                                                                               |
+| [SupportMe](./../Donations/Readme.md)         | node           | Donation sections configuration. If left empty no donation sections will not be shown.                                                                                     |
