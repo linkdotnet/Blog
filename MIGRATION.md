@@ -9,8 +9,8 @@ Shortcodes, a form a templating that can be adjusted dynamically, are introduced
 ```sql
 CREATE TABLE Shortcodes
 (
-	Id [NVARCHAR](450)] NOT NULL,
-	Name [NVARCHAR(512)] NOT NULL,
+	Id [NVARCHAR](450) NOT NULL,
+	Name [NVARCHAR](512) NOT NULL,
 	MarkdownContent NVARCHAR(MAX) NOT NULL,
 )
 
