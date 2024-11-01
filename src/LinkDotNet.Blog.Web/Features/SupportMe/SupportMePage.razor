@@ -5,7 +5,7 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @namespace LinkDotNet.Blog.Web.Features.SupportMe.Components
 
-@if (SupportConfiguration.Value.ShowSupportMePage && SupportConfiguration.Value.SupportMePageDescription is not null)
+@if (SupportConfiguration.Value.ShowSupportMePage)
 {
     <OgData Title="@("Support Me - " + ProfileInformation.Value.Name)"
             Description="@("Support Me," + ProfileInformation.Value.Name)"
@@ -13,7 +13,10 @@
             AbsolutePreviewImageUrl="@ImageUrl"></OgData>
 
     <div class="container">
-        <div>@MarkdownConverter.ToMarkupString(SupportConfiguration.Value.SupportMePageDescription)</div>
+        @if (!string.IsNullOrEmpty(SupportConfiguration.Value.SupportMePageDescription))
+        {
+            <div>@MarkdownConverter.ToMarkupString(SupportConfiguration.Value.SupportMePageDescription)</div>
+        }
         <DonationSection />
     </div>
 }
