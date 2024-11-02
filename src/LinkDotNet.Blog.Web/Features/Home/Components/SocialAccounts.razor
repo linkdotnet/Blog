@@ -1,34 +1,25 @@
 @using LinkDotNet.Blog.Domain
-<div class="d-flex flex-row justify-content-center" style="font-size: 1.25em;">
-    @if (Social.HasLinkedinAccount)
+<div class="d-flex flex-row justify-content-center h3 gap-4 py-2">
+    @foreach (var account in AllSocialAccounts.Where(a => a.HasAccount))
     {
-        <a id="linkedin" class="nav-link px-3 py-2" target="_blank" href="@Social.LinkedInAccountUrl" aria-label="LinkedIn" rel="noreferrer">
-            <i class="linkedin"></i>
-        </a>
-    }
-    @if (Social.HasGithubAccount)
-    {
-        <a id="github" class="nav-link px-3 py-2" target="_blank" href="@Social.GithubAccountUrl" aria-label="Github" rel="noreferrer">
-            <i class="github"></i>
-        </a>
-    }
-    @if (Social.HasTwitterAccount)
-    {
-        <a id="twitter" class="nav-link px-3 py-2" target="_blank" href="@Social.TwitterAccountUrl" aria-label="Twitter" rel="noreferrer">
-            <i class="twitter"></i>
-        </a>
-    }
-
-    @if (Social.HasYoutubeAccount)
-    {
-	    <a id="youtube" class="nav-link px-3 py-2" target="_blank" href="@Social.YoutubeAccountUrl" aria-label="Youtube" rel="noreferrer">
-		    <i class="youtube"></i>
+	    <a id="@account.Id" class="nav-link" target="_blank" href="@account.Url" aria-label="@account.Name" rel="noreferrer">
+		    <i class="@account.Icon"></i>
 	    </a>
     }
 </div>
 
 @code {
+    private List<SocialAccount> AllSocialAccounts =>
+    [
+	    // Icons have to be defined in the icons.css
+	    new("linkedin", Social.HasLinkedinAccount, Social.LinkedInAccountUrl, "LinkedIn", "linkedin"),
+	    new("github", Social.HasGithubAccount, Social.GithubAccountUrl, "Github", "github"),
+	    new("twitter", Social.HasTwitterAccount, Social.TwitterAccountUrl, "Twitter", "twitter"),
+	    new("youtube", Social.HasYoutubeAccount, Social.YoutubeAccountUrl, "Youtube", "youtube")
+    ];
 
     [Parameter, EditorRequired]
     public required Social Social { get; set; }
+
+    private record SocialAccount(string Id, bool HasAccount, string? Url, string Name, string Icon);
 }
