@@ -63,8 +63,9 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"AuthenticationMode": "Default",
 		"ConnectionString": "",
 		"ServiceUrl": "",
-		"ContainerName": ""
-	},
+		"ContainerName": "",
+		"CdnEndpoint": ""
+	}
 }
 ```
 
@@ -107,3 +108,4 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ConnectionString                              | string         | The connection string for the image storage provider. Only used if `AuthenticationMode` is set to `ConnectionString`                                                             |
 | ServiceUrl                                    | string         | The host url of the Azure blob storage. Only used if `AuthenticationMode` is set to `Default`                                                                                    |
 | ContainerName                                 | string         | The container name for the image storage provider                                                                                                                                |
+| CdnEndpoint                                   | string         | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets.                                  |

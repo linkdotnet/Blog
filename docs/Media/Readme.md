@@ -25,6 +25,7 @@ The following settings in `appsettings.json` control media upload functionality:
 | ConnectionString   | string | Azure Storage connection string (only used when AuthenticationMode is `ConnectionString`)                          |
 | ServiceUrl         | string | Azure Blob Storage service URL (only used when AuthenticationMode is `Default`)                                    |
 | ContainerName      | string | Name of the Azure Storage container to store uploaded files.                                                          |
+| CdnEndpoint | string | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets. |
 
 ## Authentication Methods
 
@@ -53,8 +54,4 @@ Uses a storage account connection string for authentication:
 
 ## Performance Note
 
-Currently, the blog software serves images directly from Azure Blob Storage. For better performance and scalability, consider:
-
-- Using Azure CDN in front of the storage account
-- Replacing the blob storage URLs with CDN URLs
-- Benefits include HTTP/2 support and improved caching
+Use a CDN endpoint for uploaded images to improve performance. This can be set in the `CdnEndpoint` setting. Azure CDN has integrated support for HTTP/2 and bring other performance benefits.
