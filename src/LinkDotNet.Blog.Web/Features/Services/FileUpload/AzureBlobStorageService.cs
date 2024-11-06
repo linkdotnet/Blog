@@ -36,7 +36,7 @@ public class AzureBlobStorageService : IBlobUploadService
         }
 
         await blobClient.UploadAsync(fileStream, blobOptions);
-        return blobClient.Uri.AbsoluteUri;
+        return GetAssetUrl(blobClient.Uri.ToString(), azureBlobStorageConfiguration.Value);
     }
 
     private static BlobServiceClient CreateClient(UploadConfiguration configuration)
@@ -52,5 +52,19 @@ public class AzureBlobStorageService : IBlobUploadService
                          ?? throw new InvalidOperationException("ServiceUrl must be set when using Default authentication mode");
 
         return new BlobServiceClient(new Uri(serviceUrl), new DefaultAzureCredential());
+    }
+
+    private static string GetAssetUrl(string blobUrl, UploadConfiguration config)
+    {
+        if (!config.IsCdnEnabled)
+        {
+            return blobUrl;
+        }
+
+        var cdnEndpoint = config.CdnEndpoint!.TrimEnd('/');
+        var blobUri = new Uri(blobUrl);
+        var path = blobUri.AbsolutePath;
+
+        return $"{cdnEndpoint}{path}";
     }
 }

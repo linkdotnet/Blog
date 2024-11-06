@@ -8,4 +8,6 @@ public class UploadConfiguration
     public string? ServiceUrl { get; init; }
     public string? ConnectionString { get; init; }
     public required string ContainerName { get; init; }
+    public string? CdnEndpoint { get; init; }
+    public bool IsCdnEnabled => !string.IsNullOrWhiteSpace(CdnEndpoint);
 }
