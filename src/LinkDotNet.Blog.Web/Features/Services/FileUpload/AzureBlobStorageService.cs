@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using System.Web;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
@@ -20,6 +19,8 @@ public class AzureBlobStorageService : IBlobUploadService
 
     public async Task<string> UploadFileAsync(string fileName, Stream fileStream, UploadOptions options)
     {
+        ArgumentNullException.ThrowIfNull(options);
+
         var containerName = azureBlobStorageConfiguration.Value.ContainerName;
         var client = CreateClient(azureBlobStorageConfiguration.Value);
         var blobContainerClient = client.GetBlobContainerClient(containerName);
