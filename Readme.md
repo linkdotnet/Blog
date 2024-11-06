@@ -20,6 +20,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Authorization](./docs/Authorization/Readme.md)
 -   [Comments](./docs/Comments/Readme.md)
 -   [Storage Provider](./docs/Storage/Readme.md)
+-   [Media Upload](./docs/Media/Readme.md)
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
 -   [Advanced Features](./docs/Features/AdvancedFeatures.md)
 
