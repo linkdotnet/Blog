@@ -57,7 +57,14 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"ShowInFooter": true,
 		"ShowSupportMePage": true,
 		"SupportMePageDescription": "Buy my book here: [My Blazor Book](https://google.com) or please contribute to my open-source project here: [My Awesome Repo](https://github.com) . This can be **markdown**."
-	}
+	},
+	"ImageStorageProvider": "Azure",
+	"ImageStorage" : {
+		"AuthenticationMode": "Default",
+		"ConnectionString": "",
+		"ServiceUrl": "",
+		"ContainerName": ""
+	},
 }
 ```
 
@@ -94,3 +101,9 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ShowReadingIndicator                          | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                                     |
 | SimilarBlogPosts                              | boolean        | If set to `true` (default) similar blog posts are shown at the end of a blog post.                                                                                               |
 | [SupportMe](./../Donations/Readme.md)         | node           | Donation sections configuration. If left empty no donation sections will not be shown.                                                                                           |
+| [ImageStorageProvider](./../Media/Readme.md)  | string         | Declares the type of the image storage provider (currently only `Azure`).                                                                                                        |
+| [ImageStorage](./../Media/Readme.md)          | node           | Configuration for the image storage provider.                                                                                                                                    |
+| AuthenticationMode                            | string         | The authentication mode for the image storage provider. Either `Default` or `ConnectionString`                                                                                   |
+| ConnectionString                              | string         | The connection string for the image storage provider. Only used if `AuthenticationMode` is set to `ConnectionString`                                                             |
+| ServiceUrl                                    | string         | The host url of the Azure blob storage. Only used if `AuthenticationMode` is set to `Default`                                                                                    |
+| ContainerName                                 | string         | The container name for the image storage provider                                                                                                                                |
