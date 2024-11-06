@@ -3,27 +3,30 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Configuration</h5>
-                <button type="button" class="btn-close" @onclick="OnAbort"></button>
+                <button type="button" class="btn-close" @onclick="Abort"></button>
             </div>
             <div class="modal-body">
-                <EditForm Model="@model" OnValidSubmit="OnOk">
+                <EditForm Model="@model" OnValidSubmit="Ok">
                     <DataAnnotationsValidator />
                     <div class="form-floating mb-3">
-                        <InputText type="text" class="form-control" id="name" placeholder="Filename"
-                            @bind-Value="model.Name" />
-                        <label for="name">Filename</label>
-                        <ValidationMessage For="() => model.Name"></ValidationMessage>
+	                    <InputText type="text" class="form-control" id="name" placeholder="Filename"
+	                               @bind-Value="model.Name"/>
+	                    <label for="name">The filename of the media file. On services like Azure, this can include the directory path.</label>
+	                    <ValidationMessage For="() => model.Name"></ValidationMessage>
                     </div>
                     <div class="form-check form-switch mb-3">
                         <InputCheckbox class="form-check-input" id="cache" @bind-Value="model.CacheMedia" />
                         <label class="form-check-label" for="cache">Enable Media Caching</label><br />
-                        <small class="form-text text-body-secondary">If enabled, the browser will cache the media file</small>
+                        <small class="form-text text-body-secondary">
+	                        If enabled, the "Cache-Control" header will be set automatically.<br/>
+	                        The value is set to one week. If disabled, no header will be set.
+                        </small>
                     </div>
                 </EditForm>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="OnAbort">Abort</button>
-                <button type="button" class="btn btn-primary" @onclick="OnOk">OK</button>
+                <button id="abort" type="button" class="btn btn-secondary" @onclick="Abort">Abort</button>
+                <button type="button" class="btn btn-primary" @onclick="Ok">OK</button>
             </div>
         </div>
     </div>
@@ -52,19 +55,19 @@
         return await result.Task;
     }
 
-    private void OnAbort()
+    private void Abort()
     {
         modalDisplay = "none";
-        modalClass = "";
+        modalClass = string.Empty;
         showBackdrop = false;
         result.SetResult(null);
         StateHasChanged();
     }
 
-    private void OnOk()
+    private void Ok()
     {
         modalDisplay = "none";
-        modalClass = "";
+        modalClass = string.Empty;
         showBackdrop = false;
         result.SetResult(model);
         StateHasChanged();

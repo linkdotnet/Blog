@@ -70,10 +70,14 @@
 			    var options = await UploadDialog.ShowAsync(file.Name);
 			    if (options is null)
 			    {
+				    await file.Cancel();
 				    continue;
 			    }
 
-			    var url = await BlobUploadService.UploadFileAsync(options.Name, memoryStream, new());
+			    var url = await BlobUploadService.UploadFileAsync(options.Name, memoryStream, new UploadOptions
+			    {
+				    SetCacheControlHeader = options.CacheMedia,
+			    });
 			    file.UploadUrl = url;
 			    ToastService.ShowSuccess($"Successfully uploaded {file.Name}");
 		    }
