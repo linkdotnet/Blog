@@ -1,10 +1,12 @@
 using System;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
+using LinkDotNet.Blog.Web.Features.Services.FileUpload;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using LinkDotNet.Blog.Web.Features.SupportMe.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web;
 
@@ -20,7 +22,8 @@ public static class ConfigurationExtension
             .AddProfileInformationConfigurations()
             .AddGiscusConfiguration()
             .AddDisqusConfiguration()
-            .AddSupportMeConfiguration();
+            .AddSupportMeConfiguration()
+            .AddImageUploadConfiguration();
 
         return services;
     }
@@ -126,6 +129,19 @@ public static class ConfigurationExtension
             .Configure<IConfiguration>((settings, config) =>
             {
                 config.GetSection(SupportMeConfiguration.SupportMeConfigurationSection).Bind(settings);
+            });
+        return services;
+    }
+
+    private static IServiceCollection AddImageUploadConfiguration(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddOptions<UploadConfiguration>()
+            .Configure<IConfiguration>((settings, config) =>
+            {
+                config.GetSection(UploadConfiguration.ConfigurationSection)
+                    .Bind(settings);
             });
         return services;
     }

@@ -1,5 +1,11 @@
+@using System.IO
+@using Blazorise
 @using Blazorise.Markdown
+@using LinkDotNet.Blog.Web.Features.Services.FileUpload
+@using IToastService = Blazored.Toast.Services.IToastService
 @inject IJSRuntime JsRuntime
+@inject IBlobUploadService BlobUploadService
+@inject IToastService ToastService
 
 <Markdown ElementId="@Id"
           Placeholder="@Placeholder"
@@ -8,12 +14,18 @@
           ValueChanged="s => Value = s"
           MaxHeight="@Height"
           PreviewRender="PreviewFunction"
+          ImageAccept="image/*"
+          ImageUploadChanged="UploadFiles"
           PreviewImagesInEditor="true"/>
+
+<UploadFileModalDialog @ref="UploadDialog"></UploadFileModalDialog>
 
 @code {
     private string textContent = string.Empty;
 
     private string Height => $"{Rows * 25}px";
+
+    private UploadFileModalDialog UploadDialog { get; set; } = default!;
 
 #pragma warning disable BL0007
     [Parameter]
@@ -45,4 +57,31 @@
 
     [Parameter] public Func<string, Task<string>> PreviewFunction { get; set; } =
 	    s => Task.FromResult(MarkdownConverter.ToMarkupString(s).Value);
+
+    private async Task UploadFiles(FileChangedEventArgs arg)
+    {
+	    try
+	    {
+		    foreach (var file in arg.Files)
+		    {
+			    using var memoryStream = new MemoryStream();
+			    await file.WriteToStreamAsync(memoryStream);
+			    memoryStream.Position = 0;
+			    var options = await UploadDialog.ShowAsync(file.Name);
+			    if (options is null)
+			    {
+				    continue;
+			    }
+
+			    var url = await BlobUploadService.UploadFileAsync(options.Name, memoryStream, new());
+			    file.UploadUrl = url;
+			    ToastService.ShowSuccess($"Successfully uploaded {file.Name}");
+		    }
+	    }
+	    catch (Exception e)
+	    {
+		    ToastService.ShowError($"Error while uploading file: {e.Message}");
+	    }
+    }
+
 }

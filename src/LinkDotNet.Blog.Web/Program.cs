@@ -31,6 +31,7 @@ public class Program
             .AddRateLimiting()
             .AddApplicationServices()
             .AddStorageProvider(builder.Configuration)
+            .AddImageUploadProvider(builder.Configuration)
             .AddBlazoredToast()
             .AddBlazoriseWithBootstrap()
             .AddResponseCompression()
