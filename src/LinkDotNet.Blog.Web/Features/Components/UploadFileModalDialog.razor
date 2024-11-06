@@ -1,0 +1,72 @@
+<div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Configuration</h5>
+                <button type="button" class="btn-close" @onclick="OnAbort"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@model" OnValidSubmit="OnOk">
+                    <DataAnnotationsValidator />
+                    <div class="form-floating mb-3">
+                        <InputText type="text" class="form-control" id="name" placeholder="Filename"
+                            @bind-Value="model.Name" />
+                        <label for="name">Filename</label>
+                        <ValidationMessage For="() => model.Name"></ValidationMessage>
+                    </div>
+                    <div class="form-check form-switch mb-3">
+                        <InputCheckbox class="form-check-input" id="cache" @bind-Value="model.CacheMedia" />
+                        <label class="form-check-label" for="cache">Enable Media Caching</label><br />
+                        <small class="form-text text-body-secondary">If enabled, the browser will cache the media file</small>
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="OnAbort">Abort</button>
+                <button type="button" class="btn btn-primary" @onclick="OnOk">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (showBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    private TaskCompletionSource<UploadFileModalDialogObject?> result = null!;
+    private string modalDisplay = "none;";
+    private string modalClass = "";
+    private bool showBackdrop;
+    private readonly UploadFileModalDialogObject model = new();
+
+    public async Task<UploadFileModalDialogObject?> ShowAsync(string fileName)
+    {
+        modalDisplay = "block;";
+        modalClass = "show";
+        showBackdrop = true;
+        model.Name = fileName;
+        result = new TaskCompletionSource<UploadFileModalDialogObject?>();
+        StateHasChanged();
+        return await result.Task;
+    }
+
+    private void OnAbort()
+    {
+        modalDisplay = "none";
+        modalClass = "";
+        showBackdrop = false;
+        result.SetResult(null);
+        StateHasChanged();
+    }
+
+    private void OnOk()
+    {
+        modalDisplay = "none";
+        modalClass = "";
+        showBackdrop = false;
+        result.SetResult(model);
+        StateHasChanged();
+    }
+}
