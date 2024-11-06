@@ -30,7 +30,7 @@ public class AzureBlobStorageService : IBlobUploadService
         {
             blobOptions.HttpHeaders = new BlobHttpHeaders
             {
-                CacheControl = "public, max-age=31536000"
+                CacheControl = "public, max-age=604800"
             };
         }
 
