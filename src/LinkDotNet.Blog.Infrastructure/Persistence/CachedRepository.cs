@@ -51,7 +51,7 @@ public sealed class CachedRepository<T> : IRepository<T>
 
         await repository.StoreAsync(entity);
 
-        if (!string.IsNullOrEmpty(entity.Id) && memoryCache.TryGetValue(entity.Id, out _))
+        if (!string.IsNullOrEmpty(entity.Id))
         {
             memoryCache.Remove(entity.Id);
         }
@@ -60,11 +60,7 @@ public sealed class CachedRepository<T> : IRepository<T>
     public async ValueTask DeleteAsync(string id)
     {
         await repository.DeleteAsync(id);
-
-        if (memoryCache.TryGetValue(id, out _))
-        {
-            memoryCache.Remove(id);
-        }
+        memoryCache.Remove(id);
     }
 
     public async ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids) => await repository.DeleteBulkAsync(ids);

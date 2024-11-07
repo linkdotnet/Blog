@@ -22,8 +22,8 @@ The following settings in `appsettings.json` control media upload functionality:
 | ------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------- |
 | ImageStorageProvider            | string | Currently only supports `Azure` for Azure Blob Storage.                                                             |
 | AuthenticationMode | string | Authentication method - either `Default` for Microsoft Entra ID or `ConnectionString` for connection string auth |
-| ConnectionString   | string | Azure Storage connection string (only used when AuthenticationMode is `ConnectionString`)                          |
-| ServiceUrl         | string | Azure Blob Storage service URL (only used when AuthenticationMode is `Default`)                                    |
+| ConnectionString   | string | Azure Storage connection string (only used and mandatory when AuthenticationMode is `ConnectionString`)                          |
+| ServiceUrl         | string | Azure Blob Storage service URL (only used and mandatory when AuthenticationMode is `Default`)                                    |
 | ContainerName      | string | Name of the Azure Storage container to store uploaded files.                                                          |
 | CdnEndpoint | string | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets. |
 
