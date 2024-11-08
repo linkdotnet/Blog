@@ -115,6 +115,21 @@ code {
 	background: #696969;
 }
 
+.copy-btn {
+	border-color: whitesmoke !important;
+}
+
+.copy-btn:active {
+	animation: copy-flash 0.5s ease-out;
+}
+
+@keyframes copy-flash {
+	50% {
+		border-color: whitesmoke !important;
+		background: whitesmoke;
+	}
+}
+
 /* Template defined css */
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
@@ -127,6 +142,7 @@ code {
 .validation-message {
     color: red;
 }
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
