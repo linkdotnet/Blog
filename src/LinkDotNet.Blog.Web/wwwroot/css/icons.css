@@ -109,3 +109,6 @@ i {
 .youtube:before {
   content: "\ea9d";
 }
+.bluesky:before {
+	content: "\e902";
+}

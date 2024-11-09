@@ -11,11 +11,12 @@
 @code {
     private List<SocialAccount> AllSocialAccounts =>
     [
-	    // Icons have to be defined in the icons.css
+	    // Icons have to be defined in the icons.css or basic.css as a class
 	    new("linkedin", Social.HasLinkedinAccount, Social.LinkedInAccountUrl, "LinkedIn", "linkedin"),
 	    new("github", Social.HasGithubAccount, Social.GithubAccountUrl, "Github", "github"),
 	    new("twitter", Social.HasTwitterAccount, Social.TwitterAccountUrl, "Twitter", "twitter"),
-	    new("youtube", Social.HasYoutubeAccount, Social.YoutubeAccountUrl, "Youtube", "youtube")
+	    new("youtube", Social.HasYoutubeAccount, Social.YoutubeAccountUrl, "Youtube", "youtube"),
+	    new("bluesky", Social.HasBlueSkyHandle, Social.BlueSkyHandle, "Bluesky", "bluesky"),
     ];
 
     [Parameter, EditorRequired]

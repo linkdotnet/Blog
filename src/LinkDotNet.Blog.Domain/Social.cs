@@ -19,4 +19,8 @@ public sealed record Social
     public string? YoutubeAccountUrl { get; init; }
 
     public bool HasYoutubeAccount => !string.IsNullOrEmpty(YoutubeAccountUrl);
+
+    public string? BlueSkyHandle { get; init; }
+
+    public bool HasBlueSkyHandle => !string.IsNullOrEmpty(BlueSkyHandle);
 }
