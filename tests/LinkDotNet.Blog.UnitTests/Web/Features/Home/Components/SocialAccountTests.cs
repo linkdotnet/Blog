@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Features.Home.Components;
@@ -30,6 +31,7 @@ public class SocialAccountTests : BunitContext
 
     private class SocialAccountTheoryData : TheoryData<Social, Dictionary<string, bool>>
     {
+        [SuppressMessage("Design", "S1144: Unused private types or members should be removed", Justification = "Used by xUnit")]
         public SocialAccountTheoryData()
         {
             var testCases = new[]
