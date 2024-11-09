@@ -16,7 +16,7 @@
 	    new("github", Social.HasGithubAccount, Social.GithubAccountUrl, "Github", "github"),
 	    new("twitter", Social.HasTwitterAccount, Social.TwitterAccountUrl, "Twitter", "twitter"),
 	    new("youtube", Social.HasYoutubeAccount, Social.YoutubeAccountUrl, "Youtube", "youtube"),
-	    new("bluesky", Social.HasBlueSkyHandle, Social.BlueSkyHandle, "Bluesky", "bluesky"),
+	    new("bluesky", Social.HasBlueSkyHandle, $"https://bsky.app/profile/{Social.BlueSkyHandle}", "Bluesky", "bluesky"),
     ];
 
     [Parameter, EditorRequired]
