@@ -33,11 +33,11 @@ public sealed class BlogDbContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new BlogPostConfiguration(Database));
+        modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostRecordConfiguration());
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
         modelBuilder.ApplyConfiguration(new ShortCodeConfiguration());
-        modelBuilder.ApplyConfiguration(new SimilarBlogPostConfiguration(Database));
+        modelBuilder.ApplyConfiguration(new SimilarBlogPostConfiguration());
         modelBuilder.ApplyConfiguration(new SkillConfiguration());
         modelBuilder.ApplyConfiguration(new TalkConfiguration());
         modelBuilder.ApplyConfiguration(new UserRecordConfiguration());
