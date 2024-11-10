@@ -1,5 +1,6 @@
 ﻿using System;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.Sql;
@@ -32,6 +33,13 @@ public sealed class BlogDbContext : DbContext
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BlogDbContext).Assembly);
+        modelBuilder.ApplyConfiguration(new BlogPostConfiguration(Database));
+        modelBuilder.ApplyConfiguration(new BlogPostRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
+        modelBuilder.ApplyConfiguration(new ShortCodeConfiguration());
+        modelBuilder.ApplyConfiguration(new SimilarBlogPostConfiguration(Database));
+        modelBuilder.ApplyConfiguration(new SkillConfiguration());
+        modelBuilder.ApplyConfiguration(new TalkConfiguration());
+        modelBuilder.ApplyConfiguration(new UserRecordConfiguration());
     }
 }
