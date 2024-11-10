@@ -41,4 +41,9 @@
     <PackageVersion Include="xunit.v3" Version="0.6.0-pre.7" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0-pre.49" />
   </ItemGroup>
+	
+	<ItemGroup Label="Tools">
+		<PackageVersion Include="CommandLineParser" Version="2.9.1" />
+		<PackageVersion Include="Microsoft.Playwright" Version="1.48.0" />
+	</ItemGroup>
 </Project>
