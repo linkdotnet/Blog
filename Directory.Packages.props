@@ -8,12 +8,12 @@
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
 		<PackageVersion Include="Azure.Storage.Blobs" Version="12.22.2" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.2.24474.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0-rc.2.24474.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0-rc.2.24474.1" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.10" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.0-rc.2.24474.3" />
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
-    <PackageVersion Include="MySql.EntityFrameworkCore" Version="9.0.0-preview" />
+    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageVersion Include="RavenDB.Client" Version="6.2.1" />
   </ItemGroup>
   <ItemGroup Label="Web">
@@ -38,7 +38,7 @@
     <PackageVersion Include="bunit.generators" Version="2.0.24-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <PackageVersion Include="coverlet.collector" Version="6.0.2" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
-    <PackageVersion Include="xunit.v3" Version="0.5.0-pre.27" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0-pre.42" />
+    <PackageVersion Include="xunit.v3" Version="0.6.0-pre.7" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.0.0-pre.49" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@
 	    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
       <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
       <PackageReference Include="MongoDB.Driver" />
-      <PackageReference Include="MySql.EntityFrameworkCore" />
+			<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
       <PackageReference Include="RavenDB.Client" />
     </ItemGroup>
 

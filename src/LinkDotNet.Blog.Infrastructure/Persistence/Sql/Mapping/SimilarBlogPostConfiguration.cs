@@ -12,6 +12,10 @@ internal sealed class SimilarBlogPostConfiguration : IEntityTypeConfiguration<Si
         builder.Property(b => b.Id)
             .IsUnicode(false)
             .ValueGeneratedOnAdd();
-        builder.Property(b => b.SimilarBlogPostIds).HasMaxLength(450 * 3).IsRequired();
+
+        builder
+            .Property(b => b.SimilarBlogPostIds)
+            .HasMaxLength(450 * 3)
+            .IsRequired();
     }
 }
