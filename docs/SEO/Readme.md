@@ -35,3 +35,6 @@ This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.
 ### Sitemap
 
 This blog offers to generate a [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) that lists all blog posts, the archive and pages of the blog. A sitemap can be generated in the Admin tab of the navigation bar under "Sitemap". This allows, especially new sites that don't have many inbound links, to be indexed easier by search engines.
+
+## Critical CSS
+The blog offers an integrated tool, that generates critical CSS for the blog. Read more about it in the ["*Advanced Features*"](../Features/AdvancedFeatures.md) section.
