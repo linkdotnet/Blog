@@ -43,4 +43,15 @@ public class ShareBlogPostTests : BunitContext
         var linkedInShare = (IHtmlAnchorElement)cut.Find("#share-x");
         linkedInShare.Href.ShouldBe("https://twitter.com/intent/tweet?url=http://localhost/blogPost/1");
     }
+
+    [Fact]
+    public void ShouldShareToBluesky()
+    {
+        Services.GetRequiredService<BunitNavigationManager>().NavigateTo("blogPost/1");
+        
+        var cut = Render<ShareBlogPost>();
+        
+        var blueskyShare = (IHtmlAnchorElement)cut.Find("#share-bluesky");
+        blueskyShare.Href.ShouldBe("https://bsky.app/intent/compose?text=http://localhost/blogPost/1");
+    }
 }
