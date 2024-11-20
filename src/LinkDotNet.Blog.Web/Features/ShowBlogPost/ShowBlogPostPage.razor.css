@@ -23,6 +23,12 @@
     object-fit: cover;
 }
 
+.read-time:before {
+	font-family: 'icons';
+	font-weight: 900;
+	content: "\e94f";
+}
+
 @media only screen and (max-width: 700px) {
     .blog-outer-box .blog-container {
         width: 90%;
