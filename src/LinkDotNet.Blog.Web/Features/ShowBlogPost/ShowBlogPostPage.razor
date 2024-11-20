@@ -53,6 +53,8 @@ else if (BlogPost is not null)
 						<span class="date"></span>
 						<span class="ms-1">@BlogPost.UpdatedDate.ToShortDateString()</span>
 					</div>
+          				<span class="read-time"></span>
+          				<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
 						<div class="d-flex align-items-center">
