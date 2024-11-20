@@ -143,6 +143,10 @@ code {
     color: red;
 }
 
+.editor-toolbar button.active, .editor-toolbar button:hover {
+    background: rgb(206, 206, 206, 0.5) !important;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
