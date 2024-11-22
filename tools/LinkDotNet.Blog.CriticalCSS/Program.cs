@@ -110,11 +110,10 @@ static void OutputToLayout(string css, string? layoutPath)
     const string styleTagPattern = "<style[^>]*>.*?</style>";
     const string headEndTag = "</head>";
 
-    var newStyleTag = $"<style>{css}</style>";
 
     layoutContent = Regex.IsMatch(layoutContent, styleTagPattern, RegexOptions.Singleline)
-        ? Regex.Replace(layoutContent, styleTagPattern, newStyleTag, RegexOptions.Singleline)
-        : layoutContent.Replace(headEndTag, $"{newStyleTag}\n    {headEndTag}", StringComparison.OrdinalIgnoreCase);
+        ? Regex.Replace(layoutContent, styleTagPattern, css, RegexOptions.Singleline)
+        : layoutContent.Replace(headEndTag, $"{css}\n    {headEndTag}", StringComparison.OrdinalIgnoreCase);
 
     File.WriteAllText(layoutPath, layoutContent);
 }
