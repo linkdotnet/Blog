@@ -41,5 +41,5 @@ Thanks to all [contributors](https://github.com/linkdotnet/Blog/graphs/contribut
   <img src="https://contrib.rocks/image?repo=linkdotnet/blog" alt="Supporters" />
 </a>
 
-## Resources
+## Resources
 You want a visual walkthrough through the features and details? The awesome [@ncosentino / DevLeader](https://github.com/ncosentino/)has a YouTube video/series: [*"WordPress Is A DUMPSTER FIRE - Build A Blog In Blazor!"*](https://www.youtube.com/watch?v=RGq2s25xTPE).
