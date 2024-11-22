@@ -30,3 +30,6 @@ For MySql use the following:
 "PersistenceProvider": "MySql"
 "ConnectionString": "Server=YOURSERVER;User ID=YOURUSERID;Password=YOURPASSWORD;Database=YOURDATABASE"
 ```
+
+## Considerations
+For most people a Sqlite database might be the best choice between convienence and ease of setup. As it runs "in-process" there are no additional dependencies or setup required (and therefore no additional cost). As the blog tries to cache many things, the load onto the database is not that big (performance considerations). The advantages of a "real" database like SqlServer or MySql are more in the realm of backups, replication, and other enterprise features (which are not needed often times for a simple blog).
