@@ -4,7 +4,7 @@
     <p>I really looked hard but I couldn't find the page you are looking for.</p>
     <p>Go back to <a href="/">safety</a></p>
     <hr />
-    <h3>Play a Number Guessing Game!</h3>
+    <h3>Play a Number Guessing Game</h3>
     <p>Since you are here, why not play a number guessing game?</p>
 
     @if (!isGameStarted)
@@ -19,6 +19,7 @@
     else
     {
         <p>I'm thinking of a number between 1 and @maxNumber. Can you guess it?</p>
+        <p>You have <strong>@remainingGuesses</strong> guesses left.</p>
         <div class="input-group mb-3 w-25 mx-auto">
             <input type="number" class="form-control" @bind="userGuess" min="1" max="@maxNumber" @onkeyup="HandleKeyPress" />
             <button class="btn btn-primary" @onclick="CheckGuess">Guess</button>
@@ -26,10 +27,12 @@
         <p>Total guesses: <strong>@guessCount</strong></p>
         @if (!string.IsNullOrEmpty(message))
         {
-            <p>@message</p>
+            <div class="alert @alertClass mt-3" role="alert">
+                @message
+            </div>
             @if (gameDone)
             {
-                <button class="btn btn-success" @onclick="ResetGame">Play Again</button>
+                <button class="btn btn-success mt-3" @onclick="ResetGame">Play Again</button>
             }
         }
     }
@@ -40,7 +43,10 @@
     private int userGuess;
     private int guessCount;
     private int maxNumber;
+    private int maxGuesses;
+    private int remainingGuesses;
     private string message = string.Empty;
+    private string alertClass = "";
     private bool gameDone = false;
     private bool isGameStarted = false;
 
@@ -63,17 +69,22 @@
         {
             case DifficultyLevel.Easy:
                 maxNumber = 10;
+                maxGuesses = 3;
                 break;
             case DifficultyLevel.Medium:
                 maxNumber = 100;
+                maxGuesses = 7;
                 break;
             case DifficultyLevel.Hard:
                 maxNumber = 1000;
+                maxGuesses = 10;
                 break;
+            default:
+	            throw new ArgumentOutOfRangeException(nameof(difficulty), difficulty, null);
         }
 
-        var random = new Random();
-        targetNumber = random.Next(1, maxNumber + 1);
+        remainingGuesses = maxGuesses;
+        targetNumber = Random.Shared.Next(1, maxNumber + 1);
     }
 
     private void CheckGuess()
@@ -81,21 +92,56 @@
         if (gameDone || !isGameStarted)
             return;
 
-        if (userGuess < targetNumber)
+        if (userGuess < 1 || userGuess > maxNumber)
         {
-            guessCount++;
-            message = "Too low, try again!";
+            message = $"Please enter a number between 1 and {maxNumber}.";
+            alertClass = "alert-warning";
+            return;
         }
-        else if (userGuess > targetNumber)
+
+        guessCount++;
+        remainingGuesses--;
+
+        int difference = Math.Abs(userGuess - targetNumber);
+        double proximity = (double)difference / maxNumber;
+
+        if (userGuess == targetNumber)
         {
-            guessCount++;
-            message = "Too high, try again!";
+            gameDone = true;
+            message = "🎉 Congratulations! You guessed the number!";
+            alertClass = "alert-success";
+        }
+        else if (remainingGuesses == 0)
+        {
+            gameDone = true;
+            message = $"😞 Game over! You've run out of guesses. The number was {targetNumber}.";
+            alertClass = "alert-danger";
         }
         else
         {
-            guessCount++;
-            gameDone = true;
-            message = "🎉 Congratulations! You guessed the number!";
+	        switch (proximity)
+	        {
+		        case < 0.05:
+			        message = "🔥 Scalding Hot!";
+			        alertClass = "alert-danger";
+			        break;
+		        case < 0.1:
+			        message = "🌡️ Very Hot!";
+			        alertClass = "alert-warning";
+			        break;
+		        case < 0.2:
+			        message = "🌞 Warm.";
+			        alertClass = "alert-info";
+			        break;
+		        case < 0.3:
+			        message = "🌤️ Cool.";
+			        alertClass = "alert-secondary";
+			        break;
+		        default:
+			        message = "❄️ Cold!";
+			        alertClass = "alert-secondary";
+			        break;
+	        }
         }
     }
 
@@ -104,8 +150,10 @@
         isGameStarted = false;
         gameDone = false;
         message = string.Empty;
+        alertClass = "";
         userGuess = 0;
         guessCount = 0;
+        remainingGuesses = 0;
     }
 
     private void HandleKeyPress(KeyboardEventArgs e)
