@@ -115,8 +115,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<ShowBlogPostPage>();
 
-        cut.FindAll(".blogpost-content").ShouldBeEmpty();
-        cut.FindAll("#no-blog-post-error").ShouldHaveSingleItem();
+        cut.HasComponent<ObjectNotFound>().ShouldBeTrue();
     }
 
     [Fact]
