@@ -466,6 +466,8 @@ dotnet_diagnostic.BL0005.severity = none
 dotnet_diagnostic.BL0006.severity = none
 dotnet_diagnostic.BL0007.severity = none
 
+dotnet_diagnostic.CA5394.severity = none # CA5394 : Random is an insecure random number generator.
+
 ##########################################
 # Custom Test Code Analyzers Rules
 ##########################################
