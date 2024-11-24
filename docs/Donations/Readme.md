@@ -18,14 +18,14 @@ Enables the usage of [Patreon](https://www.patreon.com). Only pass the user name
 ### Configuration
 ```json
 "SupportMe": {
-		"KofiToken": "ABC123",
-		"GithubSponsorName": "your-tag-here",
-		"PatreonName": "your-tag-here",
-		"ShowUnderBlogPost": true,
-		"ShowUnderIntroduction": true,
-		"ShowInFooter": true,
-		"ShowSupportMePage": true,
-		"SupportMePageDescription": "Buy my book here: [My Blazor Book](https://google.com) or please contribute to my open-source project here: [My Awesome Repo](https://github.com) . This can be **markdown**."
+	"KofiToken": "ABC123",
+	"GithubSponsorName": "your-tag-here",
+	"PatreonName": "your-tag-here",
+	"ShowUnderBlogPost": true,
+	"ShowUnderIntroduction": true,
+	"ShowInFooter": true,
+	"ShowSupportMePage": true,
+	"SupportMePageDescription": "Buy my book here: [My Blazor Book](https://google.com) or please contribute to my open-source project here: [My Awesome Repo](https://github.com) . This can be **markdown**."
 }
 ```
 

@@ -41,7 +41,7 @@ In `appsettings.json` change following
 | Property     | Type   | Description                                                                                 |
 | ------------ | ------ | ------------------------------------------------------------------------------------------- |
 | Giscus       | node   | Enables the comment section via giscus. If left empty the comment secion will not be shown. |
-| Repository   | string | path of you github repository, example `linkdotnet/Blog`                                    |
-| RepositoryId | string |                                                                                             |
-| Category     | string |                                                                                             |
-| CategoryId   | string |                                                                                             |
+| Repository   | string | Path of you github repository, example `linkdotnet/Blog`                                    |
+| RepositoryId | string | The id provided by giscus (`data-repository-id`)                                            |
+| Category     | string | The "Category" under which the comments are histed (like "Q&A", "General", "Ideas", ...)    |
+| CategoryId   | string | The id provided by giscus (`data-category-id`)                                              |
