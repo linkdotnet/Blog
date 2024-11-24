@@ -1,0 +1,118 @@
+<div class="m-auto text-center">
+    <h1 class="fs-1">404 - o((⊙﹏⊙))o</h1>
+    <br />
+    <p>I really looked hard but I couldn't find the page you are looking for.</p>
+    <p>Go back to <a href="/">safety</a></p>
+    <hr />
+    <h3>Play a Number Guessing Game!</h3>
+    <p>Since you are here, why not play a number guessing game?</p>
+
+    @if (!isGameStarted)
+    {
+        <p>Select a difficulty level to start:</p>
+        <div class="btn-group mb-3" role="group">
+            <button class="btn btn-success" @onclick="() => StartGame(DifficultyLevel.Easy)">Easy</button>
+            <button class="btn btn-warning" @onclick="() => StartGame(DifficultyLevel.Medium)">Medium</button>
+            <button class="btn btn-danger" @onclick="() => StartGame(DifficultyLevel.Hard)">Hard</button>
+        </div>
+    }
+    else
+    {
+        <p>I'm thinking of a number between 1 and @maxNumber. Can you guess it?</p>
+        <div class="input-group mb-3 w-25 mx-auto">
+            <input type="number" class="form-control" @bind="userGuess" min="1" max="@maxNumber" @onkeyup="HandleKeyPress" />
+            <button class="btn btn-primary" @onclick="CheckGuess">Guess</button>
+        </div>
+        <p>Total guesses: <strong>@guessCount</strong></p>
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <p>@message</p>
+            @if (gameDone)
+            {
+                <button class="btn btn-success" @onclick="ResetGame">Play Again</button>
+            }
+        }
+    }
+</div>
+
+@code {
+    private int targetNumber;
+    private int userGuess;
+    private int guessCount;
+    private int maxNumber;
+    private string message = string.Empty;
+    private bool gameDone = false;
+    private bool isGameStarted = false;
+
+    private enum DifficultyLevel
+    {
+        Easy,
+        Medium,
+        Hard
+    }
+
+    private void StartGame(DifficultyLevel difficulty)
+    {
+        isGameStarted = true;
+        gameDone = false;
+        guessCount = 0;
+        message = string.Empty;
+        userGuess = 0;
+
+        switch (difficulty)
+        {
+            case DifficultyLevel.Easy:
+                maxNumber = 10;
+                break;
+            case DifficultyLevel.Medium:
+                maxNumber = 100;
+                break;
+            case DifficultyLevel.Hard:
+                maxNumber = 1000;
+                break;
+        }
+
+        var random = new Random();
+        targetNumber = random.Next(1, maxNumber + 1);
+    }
+
+    private void CheckGuess()
+    {
+        if (gameDone || !isGameStarted)
+            return;
+
+        if (userGuess < targetNumber)
+        {
+            guessCount++;
+            message = "Too low, try again!";
+        }
+        else if (userGuess > targetNumber)
+        {
+            guessCount++;
+            message = "Too high, try again!";
+        }
+        else
+        {
+            guessCount++;
+            gameDone = true;
+            message = "🎉 Congratulations! You guessed the number!";
+        }
+    }
+
+    private void ResetGame()
+    {
+        isGameStarted = false;
+        gameDone = false;
+        message = string.Empty;
+        userGuess = 0;
+        guessCount = 0;
+    }
+
+    private void HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !gameDone && isGameStarted)
+        {
+            CheckGuess();
+        }
+    }
+}

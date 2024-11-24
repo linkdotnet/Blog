@@ -21,12 +21,7 @@
 }
 else if (!isLoading && BlogPost is null)
 {
-	<div class="m-auto text-center" id="no-blog-post-error">
-		<h1 class="fs-1">404 - o((⊙﹏⊙))o</h1>
-		<br/>
-		<p>I really looked hard but I couldn't find the page you are looking for.</p>
-		<p>Go back to <a href="/">safety</a></p>
-	</div>
+	<ObjectNotFound></ObjectNotFound>
 }
 else if (BlogPost is not null)
 {
@@ -87,7 +82,7 @@ else if (BlogPost is not null)
 			</div>
             @if (SupportConfiguration.Value.ShowUnderBlogPost)
             {
-                <DonationSection />   
+                <DonationSection />
             }
             @if (AppConfiguration.Value.ShowSimilarPosts)
 			{
