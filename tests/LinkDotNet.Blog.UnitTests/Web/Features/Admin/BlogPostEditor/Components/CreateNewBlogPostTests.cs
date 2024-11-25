@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
@@ -282,5 +282,36 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("form").Submit();
 
         token.IsCancellationRequested.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void ShouldTransformHtmlToMarkdown()
+    {
+        var cut = Render<CreateNewBlogPost>();
+        var content = cut.Find("#content");
+        content.Input("<h3>My Content</h3>");
+        var btnConvert = cut.Find("#btnConvert");
+        btnConvert.Click();
+        content.TextContent.ShouldBeEquivalentTo("### My Content");
+        btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Restore");
+    }
+
+    [Fact]
+    public void ShouldRestoreMarkdownToHtml()
+    {
+        var cut = Render<CreateNewBlogPost>();
+        string htmlContent = "<h3>My Content</h3>";
+        string markdownContent = "### My Content";
+        var content = cut.Find("#content");
+
+        content.Input(htmlContent);
+        var btnConvert = cut.Find("#btnConvert");
+        btnConvert.Click();
+        content.TextContent.ShouldBeEquivalentTo(markdownContent);
+        btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Restore");
+
+        btnConvert.Click();
+        content.TextContent.ShouldBeEquivalentTo(htmlContent);
+        btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Convert to markdown");
     }
 }

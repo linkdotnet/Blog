@@ -1,7 +1,8 @@
-﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components
 @using NCronJob
 @inject IJSRuntime JSRuntime
 @inject ICacheInvalidator CacheInvalidator
@@ -9,100 +10,111 @@
 @inject IRepository<ShortCode> ShortCodeRepository
 
 <div class="container">
-	<h3 class="fw-bold">@Title</h3>
-	<EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
-		<DataAnnotationsValidator />
-		<div class="form-floating mb-3">
-			<input type="text" class="form-control" id="title" placeholder="Title"
-			       @oninput="args => model.Title = args.Value!.ToString()!" value="@model.Title"/>
-			<label for="title">Title</label>
-			<ValidationMessage For="() => model.Title"></ValidationMessage>
-		</div>
-		<div class="form-floating mb-3">
-			<MarkdownTextArea Id="short" Class="form-control" Rows="4" Placeholder="Short Description"
-			                  @bind-Value="@model.ShortDescription"
-			                  PreviewFunction="ReplaceShortCodes"
-			                  ></MarkdownTextArea>
-			<ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
-		</div>
-		<div class="form-floating mb-3 relative">
-			<MarkdownTextArea Id="content" Class="form-control" Rows="20" Placeholder="Content"
-			                  PreviewFunction="ReplaceShortCodes"
-			                  @bind-Value="@model.Content"></MarkdownTextArea>
-			<ValidationMessage For="() => model.Content"></ValidationMessage>
+    <h3 class="fw-bold">@Title</h3>
+    <EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
+        <DataAnnotationsValidator />
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="title" placeholder="Title"
+                   @oninput="args => model.Title = args.Value!.ToString()!" value="@model.Title" />
+            <label for="title">Title</label>
+            <ValidationMessage For="() => model.Title"></ValidationMessage>
+        </div>
+        <div class="form-floating mb-3">
+            <MarkdownTextArea Id="short" Class="form-control" Rows="4" Placeholder="Short Description"
+                              @bind-Value="@model.ShortDescription"
+                              PreviewFunction="ReplaceShortCodes"></MarkdownTextArea>
+            <ValidationMessage For="() => model.ShortDescription"></ValidationMessage>
+        </div>
+        <div class="form-floating mb-3 relative">
+            <MarkdownTextArea Id="content" Class="form-control" Rows="20" Placeholder="Content"
+                              PreviewFunction="ReplaceShortCodes"
+                              @bind-Value="@model.Content"></MarkdownTextArea>
+            <ValidationMessage For="() => model.Content"></ValidationMessage>
 
-			<div class="btn-group position-absolute bottom-0 end-0 m-5 extra-buttons">
-				<button class="btn btn-primary btn-outlined btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-					More
-				</button>
-				<ul class="dropdown-menu">
-					@if (shortCodes.Count > 0)
-					{
-						<li>
-							<button type="button" @onclick="OpenShortCodeDialog" class="dropdown-item">
-								<span>Get shortcode</span>
-							</button>
-						</li>
-					}
-					<li><button type="button" class="dropdown-item" @onclick="FeatureDialog.Open">Experimental Features</button></li>
-				</ul>
-			</div>
-		</div>
-		<div class="form-floating mb-3">
-			<InputText type="url" class="form-control" id="preview" placeholder="Preview-Url" @bind-Value="model.PreviewImageUrl"/>
-			<label for="preview">Preview-Url</label>
-			<small for="preview" class="form-text text-body-secondary">The primary image which will be used.</small>
-			<ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
-		</div>
-		<div class="form-floating mb-3">
-			<InputText type="url" class="form-control" id="fallback-preview" placeholder="Fallback Preview-Url" @bind-Value="model.PreviewImageUrlFallback"/>
-			<label for="fallback-preview">Fallback Preview-Url</label>
-			<small for="fallback-preview" class="form-text text-body-secondary">Optional: Used as a fallback if the preview image can't be used by the browser.
-				<br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.</small>
-			<ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
-		</div>
-		<div class="form-floating mb-3">
-			<InputDate Type="InputDateType.DateTimeLocal" class="form-control" id="scheduled"
-			           placeholder="Scheduled Publish Date" @bind-Value="model.ScheduledPublishDate"
-			           @bind-Value:after="@(() => model.IsPublished &= !IsScheduled)"/>
-			<label for="scheduled">Scheduled Publish Date</label>
-			<small for="scheduled" class="form-text text-body-secondary">If set the blog post will be published at the given date.
-				A blog post with a schedule date can't be set to published.</small>
-			<ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
-		</div>
-		<div class="form-check form-switch mb-3">
-			<InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished"/>
-			<label class="form-check-label" for="published">Publish</label><br/>
-			<small for="published" class="form-text text-body-secondary">If this blog post is only draft or it will be scheduled, uncheck the box.</small>
-			<ValidationMessage For="() => model.IsPublished"></ValidationMessage>
-		</div>
-		<div class="form-floating mb-3">
-			<InputText type="text" class="form-control" id="tags" placeholder="Tags" @bind-Value="model.Tags"/>
-			<label for="tags">Tags (Comma separated)</label>
-		</div>
-		@if (BlogPost is not null && !IsScheduled)
-		{
-		<div class="form-check form-switch mb-3">
-			<InputCheckbox class="form-check-input" id="updatedate"  @bind-Value="model.ShouldUpdateDate" />
-			<label class="form-check-label" for="updatedate">Update Publish Date</label><br/>
-			<small for="updatedate" class="form-text text-body-secondary">If set the publish date is set to now,
-				otherwise its original date.</small>
-		</div>
-		}
-		<div class="mb-3">
-			<button class="btn btn-primary position-relative" type="submit" disabled="@(!canSubmit)">Submit</button>
-			<div class="alert alert-info text-muted form-text mt-3 mb-3">
-				The first page of the blog is cached. Therefore, the blog post is not immediately visible.
-				Head over to <a href="/settings">settings</a> to invalidate the cache or enable the checkmark.
-				<br>
-				The option should be enabled if you want to publish the blog post immediately and it should be visible on the first page.
-			</div>
-			<div class="form-check form-switch mb-3">
-				<InputCheckbox class="form-check-input" id="invalidate-cache" @bind-Value="model.ShouldInvalidateCache"/>
-				<label class="form-check-label" for="invalidate-cache">Make it visible immediately</label><br/>
-			</div>
-		</div>
-	</EditForm>
+            <div class="btn-group position-absolute bottom-0 end-0 m-5 extra-buttons">
+                <button class="btn btn-primary btn-outlined btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    More
+                </button>
+                <ul class="dropdown-menu">
+                    @if (shortCodes.Count > 0)
+                    {
+                        <li>
+                            <button type="button" @onclick="OpenShortCodeDialog" class="dropdown-item">
+                                <span>Get shortcode</span>
+                            </button>
+                        </li>
+                    }
+                    <li><button type="button" class="dropdown-item" @onclick="FeatureDialog.Open">Experimental Features</button></li>
+                </ul>
+            </div>
+            <div class="btn-group position-absolute bottom-0 m-5 extra-buttons">
+                <button id="btnConvert" class="btn btn-primary btn-outlined btn-sm" type="button" @onclick="convertContent">
+                    <i class="lab"></i>
+                    @BtnConvertLabel
+                </button>
+            </div>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText type="url" class="form-control" id="preview" placeholder="Preview-Url" @bind-Value="model.PreviewImageUrl" />
+            <label for="preview">Preview-Url</label>
+            <small for="preview" class="form-text text-body-secondary">The primary image which will be used.</small>
+            <ValidationMessage For="() => model.PreviewImageUrl"></ValidationMessage>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText type="url" class="form-control" id="fallback-preview" placeholder="Fallback Preview-Url" @bind-Value="model.PreviewImageUrlFallback" />
+            <label for="fallback-preview">Fallback Preview-Url</label>
+            <small for="fallback-preview" class="form-text text-body-secondary">
+                Optional: Used as a fallback if the preview image can't be used by the browser.
+                <br>For example using a jpg or png as fallback for avif which is not supported in Safari or Edge.
+            </small>
+            <ValidationMessage For="() => model.PreviewImageUrlFallback"></ValidationMessage>
+        </div>
+        <div class="form-floating mb-3">
+            <InputDate Type="InputDateType.DateTimeLocal" class="form-control" id="scheduled"
+                       placeholder="Scheduled Publish Date" @bind-Value="model.ScheduledPublishDate"
+                       @bind-Value:after="@(() => model.IsPublished &= !IsScheduled)" />
+            <label for="scheduled">Scheduled Publish Date</label>
+            <small for="scheduled" class="form-text text-body-secondary">
+                If set the blog post will be published at the given date.
+                A blog post with a schedule date can't be set to published.
+            </small>
+            <ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />
+            <label class="form-check-label" for="published">Publish</label><br />
+            <small for="published" class="form-text text-body-secondary">If this blog post is only draft or it will be scheduled, uncheck the box.</small>
+            <ValidationMessage For="() => model.IsPublished"></ValidationMessage>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText type="text" class="form-control" id="tags" placeholder="Tags" @bind-Value="model.Tags" />
+            <label for="tags">Tags (Comma separated)</label>
+        </div>
+        @if (BlogPost is not null && !IsScheduled)
+        {
+            <div class="form-check form-switch mb-3">
+                <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
+                <label class="form-check-label" for="updatedate">Update Publish Date</label><br />
+                <small for="updatedate" class="form-text text-body-secondary">
+                    If set the publish date is set to now,
+                    otherwise its original date.
+                </small>
+            </div>
+        }
+        <div class="mb-3">
+            <button class="btn btn-primary position-relative" type="submit" disabled="@(!canSubmit)">Submit</button>
+            <div class="alert alert-info text-muted form-text mt-3 mb-3">
+                The first page of the blog is cached. Therefore, the blog post is not immediately visible.
+                Head over to <a href="/settings">settings</a> to invalidate the cache or enable the checkmark.
+                <br>
+                The option should be enabled if you want to publish the blog post immediately and it should be visible on the first page.
+            </div>
+            <div class="form-check form-switch mb-3">
+                <InputCheckbox class="form-check-input" id="invalidate-cache" @bind-Value="model.ShouldInvalidateCache" />
+                <label class="form-check-label" for="invalidate-cache">Make it visible immediately</label><br />
+            </div>
+        </div>
+    </EditForm>
 </div>
 
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
@@ -127,17 +139,21 @@
 
     private CreateNewModel model = new();
 
-	private bool canSubmit = true;
-	private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
+    private string? originalContent = null;
+    private bool IsContentConverted => !string.IsNullOrWhiteSpace(originalContent);
+    private string BtnConvertLabel => !IsContentConverted ? "Convert to markdown" : "Restore"; 
 
-	private bool IsScheduled => model.ScheduledPublishDate.HasValue;
+    private bool canSubmit = true;
+    private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
 
-	protected override async Task OnInitializedAsync()
-	{
-		shortCodes = await ShortCodeRepository.GetAllAsync();
-	}
+    private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
-	protected override void OnParametersSet()
+    protected override async Task OnInitializedAsync()
+    {
+        shortCodes = await ShortCodeRepository.GetAllAsync();
+    }
+
+    protected override void OnParametersSet()
     {
         if (BlogPost is null)
         {
@@ -149,16 +165,16 @@
 
     private async Task OnValidBlogPostCreatedAsync()
     {
-	    canSubmit = false;
+        canSubmit = false;
         await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
         if (model.ShouldInvalidateCache)
-		{
-			CacheInvalidator.Cancel();
-		}
+        {
+            CacheInvalidator.Cancel();
+        }
 
         InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
         ClearModel();
-	    canSubmit = true;
+        canSubmit = true;
     }
 
     private void ClearModel()
@@ -186,17 +202,35 @@
 
     private Task<string> ReplaceShortCodes(string markdown)
     {
-	    foreach (var code in shortCodes)
-	    {
-		    markdown = markdown.Replace($"[[{code.Name}]]", code.MarkdownContent);
-	    }
+        foreach (var code in shortCodes)
+        {
+            markdown = markdown.Replace($"[[{code.Name}]]", code.MarkdownContent);
+        }
 
-		return Task.FromResult(MarkdownConverter.ToMarkupString(markdown).Value);
+        return Task.FromResult(MarkdownConverter.ToMarkupString(markdown).Value);
     }
 
     private void OpenShortCodeDialog()
     {
-	    ShortCodeDialog.Open();
-	    StateHasChanged();
+        ShortCodeDialog.Open();
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Convert content from HTML to Markdown and viceversa
+    /// </summary>
+    private void convertContent()
+    {
+        if (IsContentConverted)
+        {
+            model.Content = originalContent!;
+            originalContent = null;
+        }
+        else
+        {
+            originalContent = model.Content; //keep the original inserted content
+            var converter = new ReverseMarkdown.Converter();
+            model.Content = converter.Convert(model.Content);
+        }
     }
 }
