@@ -1,3 +1,4 @@
+@using System.Security.Cryptography
 <div class="m-auto text-center">
     <h1 class="fs-1">404 - o((⊙﹏⊙))o</h1>
     <br />
@@ -84,7 +85,7 @@
         }
 
         remainingGuesses = maxGuesses;
-        targetNumber = Random.Shared.Next(1, maxNumber + 1);
+        targetNumber = RandomNumberGenerator.GetInt32(1, maxNumber + 1);
     }
 
     private void CheckGuess()

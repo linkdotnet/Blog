@@ -1,5 +1,20 @@
 ## Advanced Features
 
+- [Advanced Features](#advanced-features)
+- [Shortcodes](#shortcodes)
+  - [Creating a shortcode](#creating-a-shortcode)
+  - [Using a shortcode](#using-a-shortcode)
+  - [Limitations](#limitations)
+- [Critical CSS Generator](#critical-css-generator)
+  - [How it works](#how-it-works)
+  - [Options](#options)
+- [Output Modes](#output-modes)
+  - [Console Mode](#console-mode)
+    - [File Mode](#file-mode)
+    - [Layout Mode](#layout-mode)
+  - [Examples](#examples)
+  - [Notes](#notes)
+
 This page lists some of the more advanced or less-used features of the blog software.
 
 ## Shortcodes
@@ -62,7 +77,7 @@ The output of the "critical.css" should be copied into the head of the [`_Layout
 
 ## Output Modes
 
-### #Console Mode
+### Console Mode
 Outputs the critical CSS directly to the console:
 
 ```sh
