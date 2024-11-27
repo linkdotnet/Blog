@@ -45,13 +45,8 @@
                         </li>
                     }
                     <li><button type="button" class="dropdown-item" @onclick="FeatureDialog.Open">Experimental Features</button></li>
+                    <li><button id="convert" type="button" class="dropdown-item" @onclick="ConvertContent">@ConvertLabel <i class="lab"></i></button></li>
                 </ul>
-            </div>
-            <div class="btn-group position-absolute bottom-0 m-5 extra-buttons">
-                <button id="btnConvert" class="btn btn-primary btn-outlined btn-sm" type="button" @onclick="convertContent">
-                    <i class="lab"></i>
-                    @BtnConvertLabel
-                </button>
             </div>
         </div>
         <div class="form-floating mb-3">
@@ -141,7 +136,7 @@
 
     private string? originalContent = null;
     private bool IsContentConverted => !string.IsNullOrWhiteSpace(originalContent);
-    private string BtnConvertLabel => !IsContentConverted ? "Convert to markdown" : "Restore"; 
+    private string ConvertLabel => !IsContentConverted ? "Convert to markdown" : "Restore"; 
 
     private bool canSubmit = true;
     private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
@@ -219,7 +214,7 @@
     /// <summary>
     /// Convert content from HTML to Markdown and viceversa
     /// </summary>
-    private void convertContent()
+    private void ConvertContent()
     {
         if (IsContentConverted)
         {
@@ -228,7 +223,7 @@
         }
         else
         {
-            originalContent = model.Content; //keep the original inserted content
+            originalContent = model.Content;
             var converter = new ReverseMarkdown.Converter();
             model.Content = converter.Convert(model.Content);
         }

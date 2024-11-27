@@ -290,7 +290,7 @@ public class CreateNewBlogPostTests : BunitContext
         var cut = Render<CreateNewBlogPost>();
         var content = cut.Find("#content");
         content.Input("<h3>My Content</h3>");
-        var btnConvert = cut.Find("#btnConvert");
+        var btnConvert = cut.Find("#convert");
         btnConvert.Click();
         content.TextContent.ShouldBeEquivalentTo("### My Content");
         btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Restore");
@@ -305,7 +305,7 @@ public class CreateNewBlogPostTests : BunitContext
         var content = cut.Find("#content");
 
         content.Input(htmlContent);
-        var btnConvert = cut.Find("#btnConvert");
+        var btnConvert = cut.Find("#convert");
         btnConvert.Click();
         content.TextContent.ShouldBeEquivalentTo(markdownContent);
         btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Restore");
