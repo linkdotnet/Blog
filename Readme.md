@@ -41,5 +41,13 @@ Thanks to all [contributors](https://github.com/linkdotnet/Blog/graphs/contribut
   <img src="https://contrib.rocks/image?repo=linkdotnet/blog" alt="Supporters" />
 </a>
 
+## Try it out with **Codespaces**
+
+This repository offers a [GitHub Codespace](https://github.com/features/codespaces) where you can easily run and modify the Blog completely in your browser, no IDE or local .net installation needed.
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/linkdotnet/Blog)
+
 ## Resources
-You want a visual walkthrough through the features and details? The awesome [@ncosentino / DevLeader](https://github.com/ncosentino/) has a YouTube video/series: [*"WordPress Is A DUMPSTER FIRE - Build A Blog In Blazor!"*](https://www.youtube.com/watch?v=RGq2s25xTPE).
+You want a visual walkthrough through the features and details? The awesome [@ncosentino / DevLeader](https://github.com/ncosentino/) has a YouTube video/series: 
+ * [*"WordPress Is A DUMPSTER FIRE - Build A Blog In Blazor!"*](https://www.youtube.com/watch?v=RGq2s25xTPE).
+ * [*"WordPress is HISTORY! Get Your Own Blazor Blog Running TODAY!"*](https://www.youtube.com/watch?v=A2vAO7jxFz4)
