@@ -25,8 +25,12 @@
 		}
 	},
 
-	"postCreateCommand": "dotnet dev-certs https --check --trust"
-
+	"postCreateCommand": "dotnet dev-certs https --trust",
+	"portsAttributes": {
+		"5001": {
+			"protocol": "https"
+		}
+	}
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }
