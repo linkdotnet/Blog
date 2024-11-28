@@ -3,6 +3,27 @@ This document describes the changes that need to be made to migrate from one ver
 
 ## 8.0 to 9.0
 
+### SQL - Entity Framework Migrations
+
+Starting with `v9.0` the blog uses Entity Framework Migrations for all SQL providers. If you are already having a database you need to run the following script that creates the history table and the initial entry:
+```bash
+IF OBJECT_ID(N'[__EFMigrationsHistory]') IS NULL
+BEGIN
+    CREATE TABLE [__EFMigrationsHistory] (
+        [MigrationId] nvarchar(150) NOT NULL,
+        [ProductVersion] nvarchar(32) NOT NULL,
+        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])
+    );
+END;
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20241128180004_Initial', N'8.0.11');
+GO
+```
+
+Read more in the [documentation](docs/Storage/Readme.md).
+
 ### Support / Donation section
 If you used the sponsor/donation mechanism in the `appsettings.json` like this:
 ```json
