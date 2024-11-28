@@ -28,6 +28,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 
 -   [Installation Instructions](./docs/Setup/Readme.md)
 -   Releases on [github.com](https://github.com/linkdotnet/Blog/releases)
+-   [Upgrading from an older version? What now?](./docs/Migrations/Readme.md)
 
 ## License
 
