@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup Label="Code Analyzers">
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.3.0.106239" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.23.0" />
