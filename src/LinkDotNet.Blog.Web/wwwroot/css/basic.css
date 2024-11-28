@@ -111,10 +111,6 @@ code {
 	content: "\e9d5";
 }
 
-.editor-toolbar {
-	background: #696969;
-}
-
 .copy-btn {
 	border-color: whitesmoke !important;
 }
@@ -147,6 +143,7 @@ code {
 .editor-toolbar {
 	background: rgb(36, 90, 170) !important;
 }
+
 .editor-toolbar button.active, .editor-toolbar button:hover {
     background: rgb(36, 90, 170) !important;
 }
