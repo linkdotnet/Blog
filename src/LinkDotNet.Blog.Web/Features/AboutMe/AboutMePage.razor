@@ -6,6 +6,8 @@
 @inject NavigationManager NavigationManager
 @inject IOptions<ProfileInformation> ProfileInformation
 
+<PageTitle>About Me - @ProfileInformation.Value.Name</PageTitle>
+
 @if (AppConfiguration.Value.IsAboutMeEnabled)
 {
     <OgData Title="@("About Me - " + ProfileInformation.Value.Name)"

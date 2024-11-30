@@ -4,7 +4,9 @@
 @using System.Collections.Immutable
 @using System.Globalization
 @inject IRepository<BlogPost> Repository
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 
+<PageTitle>Archive @AppConfiguration.Value.BlogName</PageTitle>
 <OgData Title="Archive" Description="Explore all blog posts."></OgData>
 
 <div class="container">
