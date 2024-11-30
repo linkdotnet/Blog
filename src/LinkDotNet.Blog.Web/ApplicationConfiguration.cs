@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace LinkDotNet.Blog.Web;
 
 public sealed record ApplicationConfiguration

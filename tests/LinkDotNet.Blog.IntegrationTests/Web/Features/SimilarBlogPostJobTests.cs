@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

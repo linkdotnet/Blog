@@ -2,7 +2,6 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
-@using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components
 @using NCronJob
 @inject IJSRuntime JSRuntime
 @inject ICacheInvalidator CacheInvalidator
@@ -136,7 +135,7 @@
 
     private string? originalContent = null;
     private bool IsContentConverted => !string.IsNullOrWhiteSpace(originalContent);
-    private string ConvertLabel => !IsContentConverted ? "Convert to markdown" : "Restore"; 
+    private string ConvertLabel => !IsContentConverted ? "Convert to markdown" : "Restore";
 
     private bool canSubmit = true;
     private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;

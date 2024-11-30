@@ -3,7 +3,6 @@ using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

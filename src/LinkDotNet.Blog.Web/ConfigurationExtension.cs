@@ -6,7 +6,6 @@ using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using LinkDotNet.Blog.Web.Features.SupportMe.Components;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web;
 

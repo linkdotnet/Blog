@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using AngleSharp.Html.Dom;
-using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;

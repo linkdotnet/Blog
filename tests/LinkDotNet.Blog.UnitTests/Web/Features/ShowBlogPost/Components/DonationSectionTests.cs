@@ -1,6 +1,4 @@
 using LinkDotNet.Blog.TestUtilities;
-using LinkDotNet.Blog.Web;
-using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using LinkDotNet.Blog.Web.Features.SupportMe.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
