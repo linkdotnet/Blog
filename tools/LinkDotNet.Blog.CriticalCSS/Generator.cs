@@ -4,7 +4,7 @@ namespace LinkDotNet.Blog.CriticalCSS;
 
 internal static class CriticalCssGenerator
 {
-    public static async Task<string> GenerateAsync(IReadOnlyCollection<string>urls)
+    public static async Task<string> GenerateAsync(IReadOnlyCollection<string> urls)
     {
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync();
@@ -41,7 +41,7 @@ internal static class CriticalCssGenerator
                     async function fetchExternalStylesheet(url) {
                         if (processedUrls.has(url)) return;
                         processedUrls.add(url);
-                        
+
                         try {
                             const response = await fetch(url);
                             const text = await response.text();
@@ -63,7 +63,7 @@ internal static class CriticalCssGenerator
                                     Array.from(externalSheet.cssRules).forEach(processRule);
                                 }
                             }
-                            
+
                             Array.from(sheet.cssRules).forEach(processRule);
                         } catch (e) {
                             if (sheet.href) {
