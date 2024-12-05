@@ -6,6 +6,8 @@
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IToastService ToastService
 
+<PageTitle>Updating: @blogPostFromDb?.Title</PageTitle>
+
 @if (blogPostFromDb is not null)
 {
     <CreateNewBlogPost

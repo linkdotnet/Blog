@@ -8,6 +8,8 @@
 @inject IInstantJobRegistry InstantJobRegistry
 @inject IRepository<ShortCode> ShortCodeRepository
 
+<PageTitle>Creating new Blog Post</PageTitle>
+
 <div class="container">
     <h3 class="fw-bold">@Title</h3>
     <EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
