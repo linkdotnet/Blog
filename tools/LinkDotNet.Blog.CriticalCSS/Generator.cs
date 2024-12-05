@@ -1,3 +1,4 @@
+using AngleSharp.Diffing.Extensions;
 using Microsoft.Playwright;
 
 namespace LinkDotNet.Blog.CriticalCSS;
@@ -106,10 +107,7 @@ internal static class CriticalCssGenerator
                 }
                 """);
 
-                foreach (var css in usedCss)
-                {
-                    criticalCss.Add(css);
-                }
+                criticalCss.AddRange(usedCss);
             }
         }
 
