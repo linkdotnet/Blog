@@ -18,6 +18,7 @@ public sealed class CreateNewModel
     private string tags = string.Empty;
     private string previewImageUrlFallback = string.Empty;
     private DateTime? scheduledPublishDate;
+    private bool isMembersOnly;
 
     [Required]
     [MaxLength(256)]
@@ -62,6 +63,12 @@ public sealed class CreateNewModel
     {
         get => shouldUpdateDate;
         set => SetProperty(out shouldUpdateDate, value);
+    }
+
+    public bool IsMembersOnly
+    {
+        get => isMembersOnly;
+        set => SetProperty(out isMembersOnly, value);
     }
 
     [FutureDateValidation]
@@ -128,6 +135,7 @@ public sealed class CreateNewModel
             Content,
             PreviewImageUrl,
             IsPublished,
+            IsMembersOnly,
             updatedDate,
             scheduledPublishDate,
             tagList,
