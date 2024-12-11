@@ -15,13 +15,13 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.0" />
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-    <PackageVersion Include="RavenDB.Client" Version="6.2.1" />
+    <PackageVersion Include="RavenDB.Client" Version="6.2.2" />
   </ItemGroup>
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
     <PackageVersion Include="Blazored.Toast" Version="4.2.1" />
-    <PackageVersion Include="Blazorise.Bootstrap5" Version="1.7.0" />
-    <PackageVersion Include="Blazorise.Markdown" Version="1.7.0" />
+    <PackageVersion Include="Blazorise.Bootstrap5" Version="1.7.1" />
+    <PackageVersion Include="Blazorise.Markdown" Version="1.7.1" />
     <PackageVersion Include="Markdig" Version="0.38.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.0" />
@@ -34,7 +34,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="RavenDB.TestDriver" Version="6.2.1" />
+    <PackageVersion Include="RavenDB.TestDriver" Version="6.2.2" />
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="bunit" Version="2.0.24-preview" />
     <PackageVersion Include="bunit.generators" Version="2.0.24-preview" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />

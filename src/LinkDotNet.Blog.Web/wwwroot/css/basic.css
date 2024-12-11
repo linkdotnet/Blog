@@ -148,12 +148,6 @@ code {
     background: rgb(36, 90, 170) !important;
 }
 
-/* Remove when https://github.com/Megabit/Blazorise/issues/5876 fixed */
-.editor-toolbar .table {
-	display: inline-block !important;
-	width: fit-content !important;
-}
-
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
