@@ -53,6 +53,12 @@ public static class AuthExtensions
             };
         });
 
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+            options.AddPolicy("Member", policy => policy.RequireRole("Member"));
+        });
+
         services.AddHttpContextAccessor();
         services.AddScoped<ILoginManager, AuthLoginManager>();
     }

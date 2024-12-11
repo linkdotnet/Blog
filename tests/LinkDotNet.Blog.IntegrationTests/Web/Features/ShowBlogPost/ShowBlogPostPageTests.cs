@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AngleSharp.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
@@ -135,6 +137,38 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
             p => p.Add(b => b.BlogPostId, blogPost.Id));
         
         cut.Find(".blogpost-content > p").TextContent.ShouldBe("This is a Content shortcode");
+    }
+
+    [Fact]
+    public async Task MembersOnlyShouldOnlyBeVisibleForMembers()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization().SetAuthorized("s").SetRoles("Member");
+        RegisterComponents(ctx);
+        var blogPost = new BlogPostBuilder().WithContent("Member Content").IsPublished().WithIsMembersOnly().Build();
+        await Repository.StoreAsync(blogPost);
+        
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+        
+        cut.Find(".blogpost-content").TextContent.ShouldContain("Member Content");
+    }
+    
+    [Fact]
+    public async Task MembersOnlyShouldNotOnlyBeVisibleForNonMembers()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization();
+        RegisterComponents(ctx);
+        var blogPost = new BlogPostBuilder().WithContent("Member Content").IsPublished().WithIsMembersOnly().Build();
+        await Repository.StoreAsync(blogPost);
+        
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+        
+        cut.FindAll(".blogpost-content").Count.ShouldBe(0);
     }
 
     private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null)

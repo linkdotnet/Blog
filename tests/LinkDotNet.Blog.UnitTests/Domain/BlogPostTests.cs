@@ -12,7 +12,7 @@ public class BlogPostTests
     {
         var blogPostToUpdate = new BlogPostBuilder().Build();
         blogPostToUpdate.Id = "random-id";
-        var blogPost = BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2");
+        var blogPost = BlogPost.Create("Title", "Desc", "Other Content", "Url", true, true, previewImageUrlFallback: "Url2");
         blogPost.Id = "something else";
 
         blogPostToUpdate.Update(blogPost);
@@ -23,6 +23,7 @@ public class BlogPostTests
         blogPostToUpdate.PreviewImageUrl.ShouldBe("Url");
         blogPostToUpdate.PreviewImageUrlFallback.ShouldBe("Url2");
         blogPostToUpdate.IsPublished.ShouldBeTrue();
+        blogPostToUpdate.IsMembersOnly.ShouldBeTrue();
         blogPostToUpdate.Tags.ShouldBeEmpty();
         blogPostToUpdate.Slug.ShouldNotBeNull();
         blogPostToUpdate.ReadingTimeInMinutes.ShouldBe(1);
@@ -65,7 +66,7 @@ public class BlogPostTests
     [Fact]
     public void ShouldTrimWhitespacesFromTags()
     {
-        var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, tags: new[] { " Tag 1", " Tag 2 ", });
+        var blogPost = BlogPost.Create("Title", "Sub", "Content", "Preview", false, false, tags: new[] { " Tag 1", " Tag 2 ", });
 
         blogPost.Tags.ShouldContain("Tag 1");
         blogPost.Tags.ShouldContain("Tag 2");
@@ -76,7 +77,7 @@ public class BlogPostTests
     {
         var somewhen = new DateTime(1991, 5, 17);
 
-        var blog = BlogPost.Create("1", "2", "3", "4", false, somewhen);
+        var blog = BlogPost.Create("1", "2", "3", "4", false, false, somewhen);
 
         blog.UpdatedDate.ShouldBe(somewhen);
     }
@@ -108,7 +109,7 @@ public class BlogPostTests
     [Fact]
     public void ShouldThrowErrorWhenCreatingBlogPostThatIsPublishedAndHasScheduledPublishDate()
     {
-        Action action = () => BlogPost.Create("1", "2", "3", "4", true, scheduledPublishDate: new DateTime(2023, 3, 24));
+        Action action = () => BlogPost.Create("1", "2", "3", "4", true, true, scheduledPublishDate: new DateTime(2023, 3, 24));
 
         action.ShouldThrow<InvalidOperationException>();
     }
@@ -129,7 +130,7 @@ public class BlogPostTests
     {
         var date = new DateTime(2023, 3, 24);
 
-        var bp = BlogPost.Create("1", "2", "3", "4", false, scheduledPublishDate: date);
+        var bp = BlogPost.Create("1", "2", "3", "4", false, false, scheduledPublishDate: date);
 
         bp.UpdatedDate.ShouldBe(date);
     }
@@ -139,7 +140,7 @@ public class BlogPostTests
     {
         var date = new DateTime(2023, 3, 24);
 
-        var bp = BlogPost.Create("1", "2", "3", "4", false, scheduledPublishDate: date);
+        var bp = BlogPost.Create("1", "2", "3", "4", false, false, scheduledPublishDate: date);
 
         bp.IsScheduled.ShouldBeTrue();
     }

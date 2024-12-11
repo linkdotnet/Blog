@@ -27,7 +27,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
     [Fact]
     public async Task ShouldLoadBlogPost()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, true, tags: new[] { "Tag 1", "Tag 2" });
         await SaveBlogPostAsync(blogPost);
 
         var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
@@ -38,6 +38,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromRepo.Content.ShouldBe("Content");
         blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
         blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.IsMembersOnly.ShouldBeTrue();
         blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");
@@ -87,7 +88,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
     [Fact]
     public async Task ShouldSaveBlogPost()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, true, tags: new[] { "Tag 1", "Tag 2" });
 
         await sut.StoreAsync(blogPost);
 
@@ -97,6 +98,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromContext.ShortDescription.ShouldBe("Subtitle");
         blogPostFromContext.Content.ShouldBe("Content");
         blogPostFromContext.IsPublished.ShouldBeTrue();
+        blogPostFromContext.IsMembersOnly.ShouldBeTrue();
         blogPostFromContext.PreviewImageUrl.ShouldBe("url");
         blogPostFromContext.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromContext.Tags;
@@ -107,7 +109,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
     [Fact]
     public async Task ShouldGetAllBlogPosts()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, true, tags: new[] { "Tag 1", "Tag 2" });
         await SaveBlogPostAsync(blogPost);
 
         var blogPostsFromRepo = await sut.GetAllAsync();
@@ -120,6 +122,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromRepo.Content.ShouldBe("Content");
         blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
         blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.IsMembersOnly.ShouldBeTrue();
         blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");
