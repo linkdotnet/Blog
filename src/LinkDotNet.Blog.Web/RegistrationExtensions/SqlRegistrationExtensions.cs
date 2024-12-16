@@ -57,6 +57,7 @@ public static class SqlRegistrationExtensions
             builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), mySqlOptions =>
             {
                 mySqlOptions.EnablePrimitiveCollectionsSupport();
+                mySqlOptions.TranslateParameterizedCollectionsToConstants();
             })
 #if DEBUG
                 .EnableDetailedErrors()
