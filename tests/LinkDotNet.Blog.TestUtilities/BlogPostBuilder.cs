@@ -15,6 +15,7 @@ public class BlogPostBuilder
     private int likes;
     private DateTime? updateDate;
     private DateTime? scheduledPublishDate;
+    private bool isMembersOnly;
 
     public BlogPostBuilder WithTitle(string title)
     {
@@ -75,6 +76,12 @@ public class BlogPostBuilder
         this.scheduledPublishDate = scheduledPublishDate;
         return this;
     }
+    
+    public BlogPostBuilder WithIsMembersOnly(bool isMembersOnly = true)
+    {
+        this.isMembersOnly = isMembersOnly;
+        return this;
+    }
 
     public BlogPost Build()
     {
@@ -84,6 +91,7 @@ public class BlogPostBuilder
             content,
             previewImageUrl,
             isPublished,
+            isMembersOnly,
             updateDate,
             scheduledPublishDate,
             tags,

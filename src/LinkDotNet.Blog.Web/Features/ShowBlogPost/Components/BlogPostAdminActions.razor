@@ -6,7 +6,7 @@
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IInstantJobRegistry InstantJobRegistry
 
-<AuthorizeView>
+<AuthorizeView Roles="Admin">
 	<div class="d-flex justify-content-start gap-2">
 		<a id="edit-blogpost" type="button" class="btn btn-primary d-flex align-items-center gap-2" href="update/@BlogPostId" aria-label="edit">
 			<i class="pencil"></i>

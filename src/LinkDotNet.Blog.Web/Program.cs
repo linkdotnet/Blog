@@ -37,7 +37,7 @@ public class Program
             .AddResponseCompression()
             .AddHealthCheckSetup();
 
-        if (builder.Environment.IsDevelopment())
+        if (!builder.Environment.IsDevelopment())
         {
             builder.Services.UseDummyAuthentication();
         }
