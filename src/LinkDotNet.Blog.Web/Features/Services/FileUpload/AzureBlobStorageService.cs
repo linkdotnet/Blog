@@ -1,10 +1,11 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Options;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LinkDotNet.Blog.Web.Features.Services.FileUpload;
 
@@ -23,8 +24,10 @@ public class AzureBlobStorageService : IBlobUploadService
 
         var containerName = azureBlobStorageConfiguration.Value.ContainerName;
         var client = CreateClient(azureBlobStorageConfiguration.Value);
-        var blobContainerClient = client.GetBlobContainerClient(containerName);
-        var blobClient = blobContainerClient.GetBlobClient(fileName);
+
+        var (rootContainer, subContainer) = SplitContainerName(containerName);
+        var blobContainerClient = client.GetBlobContainerClient(rootContainer);
+        var blobClient = blobContainerClient.GetBlobClient($"{subContainer}/{fileName}");
 
         var blobOptions = new BlobUploadOptions();
         if (options.SetCacheControlHeader)
@@ -37,6 +40,18 @@ public class AzureBlobStorageService : IBlobUploadService
 
         await blobClient.UploadAsync(fileStream, blobOptions);
         return GetAssetUrl(blobClient.Uri.ToString(), azureBlobStorageConfiguration.Value);
+    }
+
+    private static (string rootContainer, string subContainer) SplitContainerName(string containerName)
+    {
+        var containerNames = containerName.Split('/', StringSplitOptions.RemoveEmptyEntries);
+
+        if (containerNames.Length == 0)
+            return (string.Empty, string.Empty);
+
+        var rootContainer = containerNames[0];
+        var subContainer = string.Join("/", containerNames.Skip(1));
+        return (rootContainer, subContainer);
     }
 
     private static BlobServiceClient CreateClient(UploadConfiguration configuration)
