@@ -20,7 +20,7 @@ public static class ServiceExtensions
         services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
         services.AddScoped<ISitemapService, SitemapService>();
-        services.AddScoped<IXmlFileWriter, XmlFileWriter>();
+        services.AddScoped<IXmlWriter, XmlWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
 
         services.AddSingleton<CacheService>();
