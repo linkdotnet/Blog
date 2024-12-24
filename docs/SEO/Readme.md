@@ -34,7 +34,7 @@ This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.
 
 ### Sitemap
 
-This blog offers to generate a [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) that lists all blog posts, the archive and pages of the blog. A sitemap can be generated in the Admin tab of the navigation bar under "Sitemap". This allows, especially new sites that don't have many inbound links, to be indexed easier by search engines.
+This blog automatically generates a [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) that lists all blog posts, the archive and pages of the blog.
 
 ## JSON LD
 This blog supports a JSON-LD for structured data. The current support is limited / rudimentary. Information like `Headline` (the title of the blog post), `Author`, `PublishDated` and `PreviewImage` are present.

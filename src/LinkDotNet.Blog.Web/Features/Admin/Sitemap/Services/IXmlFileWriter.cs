@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
-public interface IXmlFileWriter
+public interface IXmlWriter
 {
-    Task WriteObjectToXmlFileAsync<T>(T objectToSave, string fileName);
+    Task<byte[]> WriteToBuffer<T>(T objectToSave);
 }
