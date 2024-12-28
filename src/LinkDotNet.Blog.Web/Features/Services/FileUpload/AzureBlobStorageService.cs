@@ -47,7 +47,9 @@ public class AzureBlobStorageService : IBlobUploadService
         var containerNames = containerName.Split('/', StringSplitOptions.RemoveEmptyEntries);
 
         if (containerNames.Length == 0)
+        {
             return (string.Empty, string.Empty);
+        }
 
         var rootContainer = containerNames[0];
         var subContainer = string.Join("/", containerNames.Skip(1));
