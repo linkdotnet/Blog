@@ -1,8 +1,5 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
