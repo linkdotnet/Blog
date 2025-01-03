@@ -43,6 +43,11 @@ public static class StorageProviderExtensions
             services.UseMongoDBAsStorageProvider();
             services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
         }
+        else if (persistenceProvider == PersistenceProvider.PostgreSql)
+        {
+            services.UsePostgreSqlAsStorageProvider();
+            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+        }
 
         return services;
     }
