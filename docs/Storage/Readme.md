@@ -7,6 +7,7 @@ Currently, there are 5 Storage-Provider:
 -   Sqlite - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
 -   SqlServer - Based on EF Core, it can be easily adapted for other Sql Dialects. The tables are automatically created.
 -   MySql - Based on EF Core - also supports MariaDB.
+-   PostgreSql - Based on EF Core.
 
 The default (when you clone the repository) is the `Sqlite` option with an in-memory database.
 That means every time you restart the service, all posts and related objects are gone. This is useful for testing. 
@@ -31,9 +32,16 @@ For MySql use the following:
 "ConnectionString": "Server=YOURSERVER;User ID=YOURUSERID;Password=YOURPASSWORD;Database=YOURDATABASE"
 ```
 
+For PostgreSql use the following:
+
+```
+"PersistenceProvider": "PostgreSql"
+"ConnectionString": "Server=YOURSERVER;User ID=YOURUSERID;Password=YOURPASSWORD;Database=YOURDATABASE"
+```
+
 ## Entity Framework Migrations
 
-For the SQL providers (`SqlServer`, `Sqlite`, `MySql`), you can use Entity Framework Core Migrations to create and manage the database schema. The whole documentation can be found under [*"Entity Framework Core tools reference"*](https://learn.microsoft.com/en-us/ef/core/cli/dotnet). The short version is that you can use the following steps:
+For the SQL providers (`SqlServer`, `Sqlite`, `MySql`, `PostgreSql`), you can use Entity Framework Core Migrations to create and manage the database schema. The whole documentation can be found under [*"Entity Framework Core tools reference"*](https://learn.microsoft.com/en-us/ef/core/cli/dotnet). The short version is that you can use the following steps:
 
 ```bash
 dotnet ef database update --project src/LinkDotNet.Blog.Infrastructure --startup-project src/LinkDotNet.Blog.Web --connection "<ConnectionString>"
