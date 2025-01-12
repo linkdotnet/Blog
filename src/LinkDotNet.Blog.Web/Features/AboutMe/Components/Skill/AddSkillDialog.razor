@@ -21,9 +21,9 @@
         <div class="mb-3">
             <label for="proficiency">Proficiency</label>
             <select class="form-select" id="proficiency" @bind="model.Proficiency">
-                @foreach (var level in ProficiencyLevel.All)
+                @foreach (var level in ProficiencyLevel.All.Select(l => l.Key))
                 {
-                    <option value="@level.Key">@level.Key</option>
+                    <option value="@level">@level</option>
                 }
             </select>
         </div>

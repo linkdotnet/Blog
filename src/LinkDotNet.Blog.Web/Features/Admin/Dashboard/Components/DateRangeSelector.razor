@@ -1,4 +1,5 @@
-﻿<div class="row mb-3">
+﻿@using System.Globalization
+<div class="row mb-3">
     <div class="col-sm-6 col-md-4 col-sm-6">
         <label for="startDate">Since</label>
         <input type="date" class="form-control" id="startDate" @onchange="StartDateChanged"/>
@@ -12,19 +13,19 @@
     [Parameter]
     public EventCallback<Filter> FilterChanged { get; set; }
 
-    private Filter filter = new();
+    private readonly Filter filter = new();
 
     private async Task ApplyFilters() => await FilterChanged.InvokeAsync(filter);
 
     private async Task StartDateChanged(ChangeEventArgs args)
     {
-        filter.StartDate = args.Value is string { Length: >0 } dateTime ? DateOnly.Parse(dateTime) : null;
+        filter.StartDate = args.Value is string { Length: >0 } dateTime ? DateOnly.Parse(dateTime, CultureInfo.CurrentCulture) : null;
         await ApplyFilters();
     }
 
     private async Task EndDateChanged(ChangeEventArgs args)
     {
-        filter.EndDate = args.Value is string { Length: >0 } dateTime ? DateOnly.Parse(dateTime) : null;
+        filter.EndDate = args.Value is string { Length: >0 } dateTime ? DateOnly.Parse(dateTime, CultureInfo.CurrentCulture) : null;
         await ApplyFilters();
     }
 }
