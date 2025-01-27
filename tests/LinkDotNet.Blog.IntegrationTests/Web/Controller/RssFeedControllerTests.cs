@@ -70,7 +70,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
                   <link>http://localhost//blogPost/{blogPost2.Id}</link>
                   <title>2</title>
                   <pubDate>Wed, 01 Jun 2022 00:00:00.*</pubDate>
-                  <description><!\[CDATA\[<p><strong>Short 2</strong></p>
+                  <description><![CDATA[<p><strong>Short 2</strong></p>
             ]]></description>
                   <image>preview2</image>
                 </item>
@@ -81,7 +81,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
                   <category>.NET</category>
                   <title>1</title>
                   <pubDate>Sun, 01 May 2022 00:00:00.*</pubDate>
-                  <description><!\[CDATA\[<p>Short 1</p>
+                  <description><![CDATA[<p>Short 1</p>
             ]]></description>
                   <image>preview1</image>
                 </item>
@@ -148,7 +148,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
                    <link>http://localhost//blogPost/{blogPost2.Id}</link>
                    <title>2</title>
                    <pubDate>Wed, 01 Jun 2022 00:00:00.*</pubDate>
-                   <description><!\[CDATA\[<p><strong>Content 2</strong></p>
+                   <description><![CDATA[<p><strong>Content 2</strong></p>
              ]]></description>
                    <image>preview2</image>
                  </item>
@@ -159,7 +159,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
                    <category>.NET</category>
                    <title>1</title>
                    <pubDate>Sun, 01 May 2022 00:00:00.*</pubDate>
-                   <description><!\[CDATA\[<p>Content1</p>
+                   <description><![CDATA[<p>Content1</p>
              ]]></description>
                    <image>preview1</image>
                  </item>
@@ -226,7 +226,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
                   <link>http://localhost//blogPost/{blogPost2.Id}</link>
                   <title>2</title>
                   <pubDate>Wed, 01 Jun 2022 00:00:00.*</pubDate>
-                  <description><!\[CDATA\[<p><strong>Content 2</strong></p>
+                  <description><![CDATA[<p><strong>Content 2</strong></p>
             ]]></description>
                   <image>preview2</image>
                 </item>
@@ -294,7 +294,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
                    <link>http://localhost//blogPost/{blogPost2.Id}</link>
                    <title>2</title>
                    <pubDate>Wed, 01 Jun 2022 00:00:00.*</pubDate>
-                   <description><!\[CDATA\[<p><strong>Content 2</strong></p>
+                   <description><![CDATA[<p><strong>Content 2</strong></p>
              ]]></description>
                    <image>preview2</image>
                  </item>
