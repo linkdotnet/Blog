@@ -73,6 +73,7 @@
             <small for="scheduled" class="form-text text-body-secondary">
                 If set the blog post will be published at the given date.
                 A blog post with a schedule date can't be set to published.
+                All dates are stored in UTC internally.
             </small>
             <ValidationMessage For="() => model.ScheduledPublishDate"></ValidationMessage>
         </div>

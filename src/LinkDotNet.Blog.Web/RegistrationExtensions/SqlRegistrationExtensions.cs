@@ -66,4 +66,22 @@ public static class SqlRegistrationExtensions
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
     }
+
+    public static void UsePostgreSqlAsStorageProvider(this IServiceCollection services)
+    {
+        services.AssertNotAlreadyRegistered(typeof(IRepository<>));
+
+        services.AddPooledDbContextFactory<BlogDbContext>(
+            (s, builder) =>
+            {
+                var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
+                var connectionString = configuration.Value.ConnectionString;
+                builder.UseNpgsql(connectionString)
+#if DEBUG
+                    .EnableDetailedErrors()
+#endif
+                    ;
+            });
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+    }
 }
