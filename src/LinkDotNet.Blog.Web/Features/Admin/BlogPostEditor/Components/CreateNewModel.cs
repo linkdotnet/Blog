@@ -67,8 +67,8 @@ public sealed class CreateNewModel
     [FutureDateValidation]
     public DateTime? ScheduledPublishDate
     {
-        get => scheduledPublishDate;
-        set => SetProperty(out scheduledPublishDate, value);
+        get => scheduledPublishDate?.ToLocalTime();
+        set => SetProperty(out scheduledPublishDate, value?.ToUniversalTime());
     }
 
     public string Tags
@@ -108,7 +108,7 @@ public sealed class CreateNewModel
             PreviewImageUrl = blogPost.PreviewImageUrl,
             originalUpdatedDate = blogPost.UpdatedDate,
             PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback ?? string.Empty,
-            ScheduledPublishDate = blogPost.ScheduledPublishDate,
+            scheduledPublishDate = blogPost.ScheduledPublishDate?.ToUniversalTime(),
             IsDirty = false,
         };
     }
