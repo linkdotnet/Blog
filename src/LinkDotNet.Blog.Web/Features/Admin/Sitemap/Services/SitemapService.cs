@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 

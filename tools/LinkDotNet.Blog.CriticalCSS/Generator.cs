@@ -26,11 +26,12 @@ internal static class CriticalCssGenerator
                 await page.SetViewportSizeAsync(viewport.Width, viewport.Height);
 
                 var usedCss = await page.EvaluateAsync<string[]>(
-                    """
+                """
                 async () => {
                     const styleSheets = Array.from(document.styleSheets);
                     const usedRules = new Set();
                     const processedUrls = new Set();
+                    const mediaQueryRules = new Set();
 
                     const viewportHeight = window.innerHeight;
                     const elements = document.querySelectorAll('*');
@@ -38,6 +39,47 @@ internal static class CriticalCssGenerator
                         const rect = el.getBoundingClientRect();
                         return rect.top < viewportHeight;
                     });
+
+                    function processRule(rule) {
+                        switch (rule.type) {
+                            case CSSRule.STYLE_RULE:
+                                aboveFold.forEach(el => {
+                                    try {
+                                        if (el.matches(rule.selectorText)) {
+                                            usedRules.add(rule.cssText);
+                                        }
+                                    } catch (e) {}
+                                });
+                                break;
+                            case CSSRule.MEDIA_RULE:
+                                // Always include the complete media query block
+                                mediaQueryRules.add(rule.cssText);
+                                break;
+                            case CSSRule.IMPORT_RULE:
+                                processStyleSheet(rule.styleSheet);
+                                break;
+                            case CSSRule.FONT_FACE_RULE:
+                            case CSSRule.KEYFRAMES_RULE:
+                                usedRules.add(rule.cssText);
+                                break;
+                        }
+                    }
+
+                    async function processStyleSheet(sheet) {
+                        try {
+                            if (sheet.href) {
+                                const externalSheet = await fetchExternalStylesheet(sheet.href);
+                                if (externalSheet) {
+                                    Array.from(externalSheet.cssRules).forEach(processRule);
+                                }
+                            }
+                            Array.from(sheet.cssRules).forEach(processRule);
+                        } catch (e) {
+                            if (sheet.href) {
+                                console.error('CORS issue with:', sheet.href);
+                            }
+                        }
+                    }
 
                     async function fetchExternalStylesheet(url) {
                         if (processedUrls.has(url)) return;
@@ -56,54 +98,12 @@ internal static class CriticalCssGenerator
                         }
                     }
 
-                    async function processStyleSheet(sheet) {
-                        try {
-                            if (sheet.href) {
-                                const externalSheet = await fetchExternalStylesheet(sheet.href);
-                                if (externalSheet) {
-                                    Array.from(externalSheet.cssRules).forEach(processRule);
-                                }
-                            }
-
-                            Array.from(sheet.cssRules).forEach(processRule);
-                        } catch (e) {
-                            if (sheet.href) {
-                                console.error('CORS issue with:', sheet.href);
-                            }
-                        }
-                    }
-
-                    function processRule(rule) {
-                        switch (rule.type) {
-                            case CSSRule.STYLE_RULE:
-                                aboveFold.forEach(el => {
-                                    try {
-                                        if (el.matches(rule.selectorText)) {
-                                            usedRules.add(rule.cssText);
-                                        }
-                                    } catch (e) {}
-                                });
-                                break;
-                            case CSSRule.MEDIA_RULE:
-                                if (window.matchMedia(rule.conditionText).matches) {
-                                    Array.from(rule.cssRules).forEach(processRule);
-                                }
-                                break;
-                            case CSSRule.IMPORT_RULE:
-                                processStyleSheet(rule.styleSheet);
-                                break;
-                            case CSSRule.FONT_FACE_RULE:
-                            case CSSRule.KEYFRAMES_RULE:
-                                usedRules.add(rule.cssText);
-                                break;
-                        }
-                    }
-
                     for (const sheet of styleSheets) {
                         await processStyleSheet(sheet);
                     }
 
-                    return Array.from(usedRules);
+                    // Combine regular rules and media queries
+                    return [...Array.from(usedRules), ...Array.from(mediaQueryRules)];
                 }
                 """);
 

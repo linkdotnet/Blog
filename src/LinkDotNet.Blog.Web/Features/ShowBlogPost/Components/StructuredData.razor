@@ -46,7 +46,7 @@
 		await base.OnParametersSetAsync();
 	}
 
-	private class NewsArticle
+	private sealed class NewsArticle
 	{
 		[JsonPropertyName("@context")]
 		public required string Context { get; set; }

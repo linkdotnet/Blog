@@ -22,5 +22,5 @@
     [Parameter, EditorRequired]
     public required Social Social { get; set; }
 
-    private record SocialAccount(string Id, bool HasAccount, string? Url, string Name, string Icon);
+    private sealed record SocialAccount(string Id, bool HasAccount, string? Url, string Name, string Icon);
 }
