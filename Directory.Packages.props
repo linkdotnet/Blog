@@ -15,7 +15,7 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.1" />
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
     <PackageVersion Include="RavenDB.Client" Version="6.2.3" />
   </ItemGroup>
   <ItemGroup Label="Web">
@@ -26,7 +26,7 @@
     <PackageVersion Include="Markdig" Version="0.40.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.1" />
-    <PackageVersion Include="NCronJob" Version="4.3.2" />
+    <PackageVersion Include="NCronJob" Version="4.3.3" />
     <PackageVersion Include="ReverseMarkdown" Version="4.6.0" />
     <PackageVersion Include="System.ServiceModel.Syndication" Version="9.0.1" />
   </ItemGroup>
