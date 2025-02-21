@@ -12,7 +12,7 @@ public class NavMenuTests : BunitContext
 {
     public NavMenuTests()
     {
-        ComponentFactories.AddStub<ThemeToggler>();
+        ComponentFactories.Add<ThemeToggler, ThemeTogglerStub>();
     }
 
     [Fact]
@@ -101,6 +101,12 @@ public class NavMenuTests : BunitContext
         var brandImage = cut.Find(".nav-brand");
         var image = brandImage as IHtmlAnchorElement;
         image.ShouldNotBeNull();
-        image!.TextContent.ShouldBe("Steven");
+        image.TextContent.ShouldBe("Steven");
+    }
+    
+    private class ThemeTogglerStub : ComponentBase
+    {
+        [Parameter]
+        public string Class { get; set; } = default!;
     }
 }

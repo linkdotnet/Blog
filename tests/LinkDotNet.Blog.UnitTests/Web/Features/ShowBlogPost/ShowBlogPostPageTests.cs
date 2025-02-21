@@ -9,6 +9,7 @@ using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -21,7 +22,7 @@ public class ShowBlogPostPageTests : BunitContext
 {
     public ShowBlogPostPageTests()
     {
-        ComponentFactories.AddStub<SimilarBlogPostSection>();
+        ComponentFactories.Add<SimilarBlogPostSection, SimilarBlogPostSectionStub>();
         JSInterop.Mode = JSRuntimeMode.Loose;
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
@@ -31,8 +32,8 @@ public class ShowBlogPostPageTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
         AddAuthorization();
-        ComponentFactories.AddStub<PageTitle>();
-        ComponentFactories.AddStub<Like>();
+        ComponentFactories.Add<PageTitle, PageTitleStub>();
+        ComponentFactories.Add<Like, LikeStub>();
         ComponentFactories.AddStub<CommentSection>();
     }
     
@@ -160,5 +161,26 @@ public class ShowBlogPostPageTests : BunitContext
             p => p.Add(s => s.BlogPostId, "1"));
         
         cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.ShouldBe("blogPost/1");
+    }
+    
+    private class PageTitleStub : ComponentBase
+    {
+        [Parameter]
+        public RenderFragment? ChildContent { get; set; } = default!;
+    }
+    
+    private class LikeStub : ComponentBase
+    {
+        [Parameter]
+        public BlogPost BlogPost { get; set; } = default!;
+
+        [Parameter]
+        public EventCallback<bool> OnBlogPostLiked { get; set; } = default!;
+    }
+    
+    private class SimilarBlogPostSectionStub : ComponentBase
+    {
+        [Parameter]
+        public BlogPost BlogPost { get; set; } = default!;
     }
 }

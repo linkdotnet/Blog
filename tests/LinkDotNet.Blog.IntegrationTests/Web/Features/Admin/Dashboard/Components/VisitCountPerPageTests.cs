@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TestContext = Xunit.TestContext;
@@ -54,7 +55,7 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.BlogPostRecords.AddRangeAsync(clicked1, clicked2, clicked3, clicked4);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         await using var ctx = new BunitContext();
-        ctx.ComponentFactories.AddStub<DateRangeSelector>();
+        ctx.ComponentFactories.Add<DateRangeSelector, DateRangeSelectorStub>();
         RegisterRepositories(ctx);
         var cut = ctx.Render<VisitCountPerPage>();
         var filter = new Filter { StartDate = new DateOnly(2019, 1, 1), EndDate = new DateOnly(2020, 12, 31) };
@@ -135,5 +136,11 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
         }
 
         await DbContext.SaveChangesAsync();
+    }
+    
+    private class DateRangeSelectorStub : ComponentBase
+    {
+        [Parameter]
+        public EventCallback<Filter> FilterChanged { get; set; }
     }
 }

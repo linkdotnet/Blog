@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.SearchByTag;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,7 +47,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
-        ctx.ComponentFactories.AddStub<PageTitle>();
+        ctx.ComponentFactories.Add<PageTitle, PageTitleStub>();
 
         var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
 
@@ -65,5 +66,11 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterServices(BunitContext ctx)
     {
         ctx.Services.AddScoped(_ => Repository);
+    }
+    
+    private class PageTitleStub : ComponentBase
+    {
+        [Parameter]
+        public RenderFragment? ChildContent { get; set; } = default!;
     }
 }
