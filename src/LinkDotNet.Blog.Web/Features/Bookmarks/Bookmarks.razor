@@ -1,0 +1,24 @@
+@page "/bookmarks"
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Services
+@inject IBookmarkService BookmarkService
+
+@if (bookmarkedPosts.Count <= 0)
+{
+	<p>You have no bookmarks</p>
+}
+else
+{
+	@foreach (var post in bookmarkedPosts)
+	{
+		<ShortBlogPost BlogPost="post" />
+	}
+}
+
+@code {
+	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
+	protected override async Task OnInitializedAsync()
+	{
+		bookmarkedPosts = await BookmarkService.GetBookmarkedPosts();
+	}
+}

@@ -4,6 +4,7 @@ using Blazorise;
 using Blazorise.Bootstrap5;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
+using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +20,7 @@ public static class ServiceExtensions
         services.AddScoped<ILocalStorageService, LocalStorageService>();
         services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
+        services.AddScoped<IBookmarkService, BookmarkService>();
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlWriter, XmlWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
