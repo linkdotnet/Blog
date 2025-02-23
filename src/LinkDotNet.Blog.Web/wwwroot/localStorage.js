@@ -1,0 +1,1 @@
+window.localStorageClear = () => localStorage.clear();
