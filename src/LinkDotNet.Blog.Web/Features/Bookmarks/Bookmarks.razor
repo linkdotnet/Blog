@@ -1,6 +1,5 @@
 @page "/bookmarks"
 @using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Web.Features.Services
 @inject IBookmarkService BookmarkService
 
 @if (bookmarkedPosts.Count <= 0)
@@ -17,8 +16,11 @@ else
 
 @code {
 	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
-	protected override async Task OnInitializedAsync()
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		bookmarkedPosts = await BookmarkService.GetBookmarkedPosts();
+		StateHasChanged();
 	}
+
 }

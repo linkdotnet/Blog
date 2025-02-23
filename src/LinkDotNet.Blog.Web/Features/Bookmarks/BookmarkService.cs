@@ -21,6 +21,7 @@ public class BookmarkService : IBookmarkService
 
     public async Task<bool> IsBookMarked(string blogId)
     {
+        await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
         return bookmarks.Contains(blogId);
@@ -28,6 +29,7 @@ public class BookmarkService : IBookmarkService
 
     public async Task<IReadOnlyList<BlogPost>> GetBookmarkedPosts()
     {
+        await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
         var context = await dbContextFactory.CreateDbContextAsync();
 
@@ -36,10 +38,26 @@ public class BookmarkService : IBookmarkService
 
     public async Task BookMarkPost(BlogPost post)
     {
+        await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
         bookmarks.Add(post.Id);
 
         await localStorageService.SetItemAsync("bookmarks", bookmarks);
+    }
+
+    public async Task RemovePost(string postId)
+    {
+        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
+
+        bookmarks.Remove(postId);
+
+        await localStorageService.SetItemAsync("bookmarks", bookmarks);
+    }
+
+    private async Task InitializeIfNotExists()
+    {
+        if (!(await localStorageService.ContainKeyAsync("bookmarks")))
+            await localStorageService.SetItemAsync("bookmarks", new List<string>());
     }
 }

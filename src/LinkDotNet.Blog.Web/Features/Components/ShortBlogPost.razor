@@ -35,17 +35,17 @@
 			</ul>
 		</div>
 		<div class="description">
-			@if (!BookmarkService.IsBookMarked(BlogPost.Id).Result)
-			{
+			<div class="header">
 				<h1>@BlogPost.Title</h1>
-			}
-			else
-			{
-				<div class="header">
-					<h1>@BlogPost.Title</h1>
-					<button @onclick="async () => await BookmarkService.BookMarkPost(BlogPost)">Bookmark</button>
-				</div>
-			}
+				@if (isBookmarked)
+				{
+					<button @onclick="async () => { await BookmarkService.RemovePost(BlogPost.Id); StateHasChanged(); }">bookmarked</button>
+				}
+				else
+				{
+					<button @onclick="async () => { await BookmarkService.BookMarkPost(BlogPost); StateHasChanged(); }">bookmark</button>
+				}
+			</div>
 			<p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
 				<a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" aria-label="@BlogPost.Title">Read the whole article</a>
@@ -57,6 +57,8 @@
 @code {
 	[Parameter, EditorRequired]
 	public required BlogPost BlogPost { get; set; }
+
+	private bool isBookmarked = false;
 
 	[Parameter]
 	public bool UseAlternativeStyle { get; set; }
@@ -85,5 +87,11 @@
 		}
 
 		return base.SetParametersAsync(ParameterView.Empty);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		isBookmarked = await BookmarkService.IsBookMarked(BlogPost.Id);
+		StateHasChanged();
 	}
 }
