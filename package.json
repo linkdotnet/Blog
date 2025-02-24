@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.8",
+    "tailwindcss": "^4.0.8"
+  },
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i src/LinkDotNet.Blog.Web/wwwroot/css/basic.css -o src/LinkDotNet.Blog.Web/wwwroot/css/dist.css",
+    "watch:css": "npx @tailwindcss/cli -i src/LinkDotNet.Blog.Web/wwwroot/css/basic.css -o src/LinkDotNet.Blog.Web/wwwroot/css/dist.css --watch"
+	}
+}

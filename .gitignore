@@ -32,3 +32,7 @@ bundle.min.css
 
 # MacOS
 .DS_Store
+
+# Node related and tailwindcss
+node_modules/
+dist.css
