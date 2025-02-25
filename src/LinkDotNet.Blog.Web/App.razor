@@ -16,15 +16,3 @@
 		</NotFound>
 	</Router>
 </CascadingAuthenticationState>
-
-@code{
-
-	protected override async Task OnAfterRenderAsync(bool firstRender)
-	{
-		if (firstRender && Environment.IsDevelopment())
-		{
-			await JSRuntime.InvokeVoidAsync("localStorageClear");
-		}
-	}
-
-}
