@@ -3,6 +3,7 @@
 @using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Bookmarks
 @using LinkDotNet.Blog.Web.Features.Services
 @using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components
 @using LinkDotNet.Blog.Web.Features.SupportMe.Components
@@ -14,6 +15,7 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
+@inject IBookmarkService BookmarkService
 
 @if (isLoading)
 {
@@ -25,7 +27,7 @@ else if (!isLoading && BlogPost is null)
 }
 else if (BlogPost is not null)
 {
-    <PageTitle>@BlogPost.Title</PageTitle>
+	<PageTitle>@BlogPost.Title</PageTitle>
 	<OgData Title="@BlogPost.Title"
 	        AbsolutePreviewImageUrl="@OgDataImage"
 	        Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
@@ -49,7 +51,15 @@ else if (BlogPost is not null)
 						<span class="ms-1">@BlogPost.UpdatedDate.ToShortDateString()</span>
 					</div>
           				<span class="read-time"></span>
-          				<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
+					<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
+					@if (isBookmarked)
+					{
+					<button @onclick="async () => { await BookmarkService.RemovePost(BlogPost.Id); StateHasChanged(); }">bookmarked</button>
+					}
+					else
+					{
+					<button @onclick="async () => { await BookmarkService.BookMarkPost(BlogPost); StateHasChanged(); }">bookmark</button>
+					}
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
 						<div class="d-flex align-items-center">
@@ -110,6 +120,7 @@ else if (BlogPost is not null)
 	private string OgDataImage => BlogPost!.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
 	private string BlogPostCanoncialUrl => $"blogPost/{BlogPost?.Id}";
 	private IReadOnlyCollection<ShortCode> shortCodes = [];
+	private bool isBookmarked;
 
 	private BlogPost? BlogPost { get; set; }
 
@@ -129,6 +140,9 @@ else if (BlogPost is not null)
     {
         await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
         _ = UserRecordService.StoreUserRecordAsync();
+
+        isBookmarked = await BookmarkService.IsBookMarked(BlogPost.Id);
+        StateHasChanged();
     }
 
     private MarkupString EnrichWithShortCodes(string content)
