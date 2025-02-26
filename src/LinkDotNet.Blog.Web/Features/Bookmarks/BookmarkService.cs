@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,12 +20,13 @@ public class BookmarkService : IBookmarkService
         this.dbContextFactory = dbContextFactory;
     }
 
-    public async Task<bool> IsBookMarked(string blogId)
+    public async Task<bool> IsBookMarked(string postId)
     {
+        ArgumentNullException.ThrowIfNull(postId);
         await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
-        return bookmarks.Contains(blogId);
+        return bookmarks.Contains(postId);
     }
 
     public async Task<IReadOnlyList<BlogPost>> GetBookmarkedPosts()
@@ -33,11 +35,16 @@ public class BookmarkService : IBookmarkService
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
         var context = await dbContextFactory.CreateDbContextAsync();
 
-        return await context.BlogPosts.Where(p => bookmarks.Contains(p.Id)).ToListAsync();
+        var results = await context.BlogPosts.Where(p => bookmarks.Contains(p.Id)).ToListAsync();
+
+        await context.DisposeAsync();
+
+        return results;
     }
 
     public async Task BookMarkPost(BlogPost post)
     {
+        ArgumentNullException.ThrowIfNull(post);
         await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
@@ -48,6 +55,7 @@ public class BookmarkService : IBookmarkService
 
     public async Task RemovePost(string postId)
     {
+        ArgumentNullException.ThrowIfNull(postId);
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
         bookmarks.Remove(postId);

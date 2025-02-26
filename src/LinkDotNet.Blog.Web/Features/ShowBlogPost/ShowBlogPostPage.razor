@@ -141,6 +141,7 @@ else if (BlogPost is not null)
         await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
         _ = UserRecordService.StoreUserRecordAsync();
 
+        ArgumentNullException.ThrowIfNull(BlogPost);
         isBookmarked = await BookmarkService.IsBookMarked(BlogPost.Id);
         StateHasChanged();
     }
