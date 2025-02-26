@@ -42,13 +42,13 @@ public class BookmarkService : IBookmarkService
         return results;
     }
 
-    public async Task BookMarkPost(BlogPost post)
+    public async Task BookMarkPost(string postId)
     {
-        ArgumentNullException.ThrowIfNull(post);
+        ArgumentNullException.ThrowIfNull(postId);
         await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
-        bookmarks.Add(post.Id);
+        bookmarks.Add(postId);
 
         await localStorageService.SetItemAsync("bookmarks", bookmarks);
     }
@@ -61,6 +61,23 @@ public class BookmarkService : IBookmarkService
         bookmarks.Remove(postId);
 
         await localStorageService.SetItemAsync("bookmarks", bookmarks);
+    }
+
+    public async Task ToggleBookmark(string postId)
+    {
+        await InitializeIfNotExists();
+        ArgumentNullException.ThrowIfNull(postId);
+
+        if (await IsBookMarked(postId))
+        {
+            await RemovePost(postId);
+        }
+        else
+        {
+            var context = await dbContextFactory.CreateDbContextAsync();
+            await BookMarkPost(postId);
+            await context.DisposeAsync();
+        }
     }
 
     private async Task InitializeIfNotExists()

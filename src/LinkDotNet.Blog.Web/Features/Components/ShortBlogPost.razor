@@ -1,5 +1,6 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Web.Features.Bookmarks
+@using LinkDotNet.Blog.Web.Features.Bookmarks.Components
 @inject IBookmarkService BookmarkService
 
 <article>
@@ -37,14 +38,7 @@
 		<div class="description">
 			<div class="header">
 				<h1>@BlogPost.Title</h1>
-				@if (isBookmarked)
-				{
-					<button @onclick="async () => { await BookmarkService.RemovePost(BlogPost.Id); StateHasChanged(); }">bookmarked</button>
-				}
-				else
-				{
-					<button @onclick="async () => { await BookmarkService.BookMarkPost(BlogPost); StateHasChanged(); }">bookmark</button>
-				}
+				<BookmarkButton IsBookmarked="isBookmarked" OnClick="async () => { await BookmarkService.ToggleBookmark(BlogPost.Id); StateHasChanged(); }"></BookmarkButton>
 			</div>
 			<p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
