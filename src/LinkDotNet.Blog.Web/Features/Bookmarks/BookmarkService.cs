@@ -42,27 +42,6 @@ public class BookmarkService : IBookmarkService
         return results;
     }
 
-    public async Task BookMarkPost(string postId)
-    {
-        ArgumentNullException.ThrowIfNull(postId);
-        await InitializeIfNotExists();
-        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-
-        bookmarks.Add(postId);
-
-        await localStorageService.SetItemAsync("bookmarks", bookmarks);
-    }
-
-    public async Task RemovePost(string postId)
-    {
-        ArgumentNullException.ThrowIfNull(postId);
-        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-
-        bookmarks.Remove(postId);
-
-        await localStorageService.SetItemAsync("bookmarks", bookmarks);
-    }
-
     public async Task ToggleBookmark(string postId)
     {
         await InitializeIfNotExists();
@@ -70,13 +49,19 @@ public class BookmarkService : IBookmarkService
 
         if (await IsBookMarked(postId))
         {
-            await RemovePost(postId);
+            var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
+
+            bookmarks.Remove(postId);
+
+            await localStorageService.SetItemAsync("bookmarks", bookmarks);
         }
         else
         {
-            var context = await dbContextFactory.CreateDbContextAsync();
-            await BookMarkPost(postId);
-            await context.DisposeAsync();
+            var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
+
+            bookmarks.Add(postId);
+
+            await localStorageService.SetItemAsync("bookmarks", bookmarks);
         }
     }
 
