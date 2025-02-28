@@ -12,12 +12,10 @@ namespace LinkDotNet.Blog.Web.Features.Bookmarks;
 public class BookmarkService : IBookmarkService
 {
     private readonly ILocalStorageService localStorageService;
-    private readonly IDbContextFactory<BlogDbContext> dbContextFactory;
 
-    public BookmarkService(ILocalStorageService localStorageService, IDbContextFactory<BlogDbContext> dbContextFactory)
+    public BookmarkService(ILocalStorageService localStorageService)
     {
         this.localStorageService = localStorageService;
-        this.dbContextFactory = dbContextFactory;
     }
 
     public async Task<bool> IsBookMarked(string postId)
@@ -29,17 +27,10 @@ public class BookmarkService : IBookmarkService
         return bookmarks.Contains(postId);
     }
 
-    public async Task<IReadOnlyList<BlogPost>> GetBookmarkedPosts()
+    public async Task<IReadOnlyList<string>> GetBookmarkedPostIds()
     {
         await InitializeIfNotExists();
-        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-        var context = await dbContextFactory.CreateDbContextAsync();
-
-        var results = await context.BlogPosts.Where(p => bookmarks.Contains(p.Id)).ToListAsync();
-
-        await context.DisposeAsync();
-
-        return results;
+        return await localStorageService.GetItemAsync<IReadOnlyList<string>>("bookmarks");
     }
 
     public async Task ToggleBookmark(string postId)

@@ -1,6 +1,8 @@
 @page "/bookmarks"
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IBookmarkService BookmarkService
+@inject IRepository<BlogPost> BlogPostRepository;
 
 @if (bookmarkedPosts.Count <= 0)
 {
@@ -19,7 +21,8 @@ else
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		bookmarkedPosts = await BookmarkService.GetBookmarkedPosts();
+		var ids = await BookmarkService.GetBookmarkedPostIds();
+		bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
 		StateHasChanged();
 	}
 
