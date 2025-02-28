@@ -20,7 +20,7 @@ public class BookmarkService : IBookmarkService
 
     public async Task<bool> IsBookMarked(string postId)
     {
-        ArgumentNullException.ThrowIfNull(postId);
+        if(string.IsNullOrEmpty(postId)) throw new ArgumentNullException(nameof(postId));
         await InitializeIfNotExists();
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
@@ -36,7 +36,7 @@ public class BookmarkService : IBookmarkService
     public async Task ToggleBookmark(string postId)
     {
         await InitializeIfNotExists();
-        ArgumentNullException.ThrowIfNull(postId);
+        if(string.IsNullOrEmpty(postId)) throw new ArgumentNullException(nameof(postId));
 
         if (await IsBookMarked(postId))
         {
