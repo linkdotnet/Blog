@@ -4,17 +4,24 @@
 @inject IBookmarkService BookmarkService
 @inject IRepository<BlogPost> BlogPostRepository;
 
-@if (bookmarkedPosts.Count <= 0)
-{
-	<p>You have no bookmarks</p>
-}
-else
-{
-	@foreach (var post in bookmarkedPosts)
+<section>
+	@if (bookmarkedPosts.Count <= 0)
 	{
-		<ShortBlogPost BlogPost="post" />
+		<p>You have no bookmarks</p>
 	}
-}
+	else
+	{
+		@foreach (var post in bookmarkedPosts)
+		{
+			<ShortBlogPost BlogPost="post" />
+		}
+	}
+</section>
+<style>
+	section {
+		padding: 4rem;
+	}
+</style>
 
 @code {
 	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
