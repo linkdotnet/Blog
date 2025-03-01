@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup Label="Code Analyzers">
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.6.0.109712" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.7.0.110445" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.23.0" />
@@ -15,18 +15,18 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.2" />
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="RavenDB.Client" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Blazored.Toast" Version="4.2.1" />
-    <PackageVersion Include="Blazorise.Bootstrap5" Version="1.7.4" />
-    <PackageVersion Include="Blazorise.Markdown" Version="1.7.4" />
+    <PackageVersion Include="Blazorise.Bootstrap5" Version="1.7.5" />
+    <PackageVersion Include="Blazorise.Markdown" Version="1.7.5" />
     <PackageVersion Include="Markdig" Version="0.40.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.2" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.2" />
-    <PackageVersion Include="NCronJob" Version="4.3.3" />
+    <PackageVersion Include="NCronJob" Version="4.3.4" />
     <PackageVersion Include="ReverseMarkdown" Version="4.6.0" />
     <PackageVersion Include="System.ServiceModel.Syndication" Version="9.0.2" />
   </ItemGroup>
