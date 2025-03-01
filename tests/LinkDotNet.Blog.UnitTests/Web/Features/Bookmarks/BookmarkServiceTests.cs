@@ -9,7 +9,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Bookmarks;
 
 public class BookmarkServiceTests
 {
-    private ILocalStorageService localStorageService;
+    private readonly ILocalStorageService localStorageService;
     private readonly IBookmarkService bookmarkService;
 
     public BookmarkServiceTests()
@@ -50,7 +50,7 @@ public class BookmarkServiceTests
             .GetItemAsync<HashSet<string>>("bookmarks")
             .Returns(x => ["1", "2", "3"]);
 
-        var isBookmarked = await bookmarkService.IsBookMarked("1");
+        var isBookmarked = await bookmarkService.IsBookmarked("1");
         
         isBookmarked.ShouldBeTrue();
     }
@@ -62,7 +62,7 @@ public class BookmarkServiceTests
             .GetItemAsync<HashSet<string>>("bookmarks")
             .Returns(x => ["1", "2", "3"]);
 
-        var isBookmarked = await bookmarkService.IsBookMarked("4");
+        var isBookmarked = await bookmarkService.IsBookmarked("4");
         
         isBookmarked.ShouldBeFalse();
     }
@@ -75,7 +75,7 @@ public class BookmarkServiceTests
         await bookmarkService.ToggleBookmark(id)
             .ShouldThrowAsync<ArgumentException>();
 
-        await bookmarkService.IsBookMarked(id)
+        await bookmarkService.IsBookmarked(id)
             .ShouldThrowAsync<ArgumentException>();
     }
 }

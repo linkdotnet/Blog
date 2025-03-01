@@ -136,7 +136,7 @@ else if (BlogPost is not null)
         _ = UserRecordService.StoreUserRecordAsync();
 
         ArgumentNullException.ThrowIfNull(BlogPost);
-        isBookmarked = await BookmarkService.IsBookMarked(BlogPost.Id);
+        isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
         StateHasChanged();
     }
 

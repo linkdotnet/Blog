@@ -4,7 +4,6 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@using LinkDotNet.Blog.Web.Features.Bookmarks
 @using LinkDotNet.Blog.Web.Features.Home.Components
 @using LinkDotNet.Blog.Web.Features.Services
 @using Microsoft.Extensions.Caching.Memory
@@ -15,7 +14,6 @@
 @inject IOptions<Introduction> Introduction
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager NavigationManager
-@inject IBookmarkService BookmarkService
 
 <PageTitle>@AppConfiguration.Value.BlogName</PageTitle>
 
