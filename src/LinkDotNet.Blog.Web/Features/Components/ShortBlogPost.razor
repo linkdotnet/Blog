@@ -38,7 +38,7 @@
 		<div class="description">
 			<div class="header">
 				<h1>@BlogPost.Title</h1>
-				<BookmarkButton IsBookmarked="isBookmarked" OnClick="async () => { await BookmarkService.ToggleBookmark(BlogPost.Id); StateHasChanged(); }"></BookmarkButton>
+				<BookmarkButton IsBookmarked="isBookmarked" OnClick="ToggleBookmark"></BookmarkButton>
 			</div>
 			<p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
@@ -61,6 +61,12 @@
 	public bool LazyLoadPreviewImage { get; set; }
 
 	private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
+
+	private async Task ToggleBookmark()
+	{
+		await BookmarkService.ToggleBookmark(BlogPost.Id);
+		StateHasChanged();
+	}
 
 	public override Task SetParametersAsync(ParameterView parameters)
 	{

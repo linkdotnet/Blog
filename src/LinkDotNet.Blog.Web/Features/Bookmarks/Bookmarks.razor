@@ -4,7 +4,8 @@
 @inject IBookmarkService BookmarkService
 @inject IRepository<BlogPost> BlogPostRepository;
 
-<section>
+<div class="container">
+	<h3 class="pb-3 fw-bold">Bookmarks</h3>
 	@if (bookmarkedPosts.Count <= 0)
 	{
 		<p>You have no bookmarks</p>
@@ -16,12 +17,7 @@
 			<ShortBlogPost BlogPost="post" />
 		}
 	}
-</section>
-<style>
-	section {
-		padding: 4rem;
-	}
-</style>
+</div>
 
 @code {
 	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
@@ -29,6 +25,9 @@
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		var ids = await BookmarkService.GetBookmarkedPostIds();
+
+		if (!ids.Any()) return;
+
 		bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
 		StateHasChanged();
 	}

@@ -38,22 +38,19 @@ public class BookmarkService : IBookmarkService
         ArgumentException.ThrowIfNullOrEmpty(postId);
         await InitializeIfNotExists();
 
+        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
+
         if (await IsBookmarked(postId))
         {
-            var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-
             bookmarks.Remove(postId);
-
-            await localStorageService.SetItemAsync("bookmarks", bookmarks);
         }
         else
         {
-            var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-
             bookmarks.Add(postId);
-
-            await localStorageService.SetItemAsync("bookmarks", bookmarks);
         }
+
+        await localStorageService.SetItemAsync("bookmarks", bookmarks);
+
     }
 
     private async Task InitializeIfNotExists()
