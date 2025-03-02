@@ -13,17 +13,6 @@
 	}
 </button>
 
-<style>
-	svg :hover {
-		fill: grey;
-	}
-	button {
-		border: none;
-		color: var(--tag-background);
-		background-color: var(--tag-background);
-	}
-</style>
-
 @code {
 	[Parameter] public bool IsBookmarked { get; set; }
 	[Parameter] public EventCallback OnClick { get; set; }
