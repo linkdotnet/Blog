@@ -1,0 +1,35 @@
+@page "/bookmarks"
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@inject IBookmarkService BookmarkService
+@inject IRepository<BlogPost> BlogPostRepository;
+
+<div class="container">
+	<h3 class="pb-3 fw-bold">Bookmarks</h3>
+	@if (bookmarkedPosts.Count <= 0)
+	{
+		<p>You have no bookmarks</p>
+	}
+	else
+	{
+		@foreach (var post in bookmarkedPosts)
+		{
+			<ShortBlogPost BlogPost="post" />
+		}
+	}
+</div>
+
+@code {
+	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		var ids = await BookmarkService.GetBookmarkedPostIds();
+
+		if (!ids.Any()) return;
+
+		bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
+		StateHasChanged();
+	}
+
+}
