@@ -1,24 +1,17 @@
-<button @onclick="OnClickHandler">
-	@if (!IsBookmarked)
-	{
-		<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-			<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m17 21-5-4-5 4V3.889a.92.92 0 0 1 .244-.629.808.808 0 0 1 .59-.26h8.333a.81.81 0 0 1 .589.26.92.92 0 0 1 .244.63V21Z"/>
-		</svg>
-	}
-	else
-	{
-		<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-			<path d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
-		</svg>
-	}
+<button type="button" class="btn btn-sm bg-transparent border-0" @onclick="OnBookmarkClicked" title="@(IsBookmarked ? "Remove bookmark" : "Add bookmark")">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi @(IsBookmarked ? "text-warning" : "text-secondary")" viewBox="0 0 16 16">
+        <path d="@(IsBookmarked ?
+            "M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" :
+            "M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z")"/>
+    </svg>
 </button>
 
 @code {
 	[Parameter] public bool IsBookmarked { get; set; }
-	[Parameter] public EventCallback OnClick { get; set; }
+	[Parameter] public EventCallback Bookmarked { get; set; }
 
-	private async Task OnClickHandler()
+	private async Task OnBookmarkClicked()
 	{
-		await OnClick.InvokeAsync();
+		await Bookmarked.InvokeAsync();
 	}
 }

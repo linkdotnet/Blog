@@ -7,5 +7,5 @@ public interface IBookmarkService
 {
     public Task<bool> IsBookmarked(string postId);
     public Task<IReadOnlyList<string>> GetBookmarkedPostIds();
-    public Task ToggleBookmark(string postId);
+    public Task SetBookmark(string postId, bool isBookmarked);
 }

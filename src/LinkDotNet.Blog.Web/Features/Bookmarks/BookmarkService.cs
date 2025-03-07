@@ -33,14 +33,14 @@ public class BookmarkService : IBookmarkService
         return await localStorageService.GetItemAsync<IReadOnlyList<string>>("bookmarks");
     }
 
-    public async Task ToggleBookmark(string postId)
+    public async Task SetBookmark(string postId, bool isBookmarked)
     {
         ArgumentException.ThrowIfNullOrEmpty(postId);
         await InitializeIfNotExists();
 
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
-        if (await IsBookmarked(postId))
+        if (isBookmarked)
         {
             bookmarks.Remove(postId);
         }

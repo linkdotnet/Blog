@@ -53,7 +53,7 @@ else if (BlogPost is not null)
 					</div>
           				<span class="read-time"></span>
 					<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
-					<BookmarkButton IsBookmarked="isBookmarked" OnClick="async () => { await BookmarkService.ToggleBookmark(BlogPost.Id); StateHasChanged(); }"></BookmarkButton>
+					<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="BlogPostBookmarked"></BookmarkButton>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
 						<div class="d-flex align-items-center">
@@ -165,4 +165,17 @@ else if (BlogPost is not null)
         BlogPost.Likes = hasLiked ? BlogPost.Likes + 1 : BlogPost.Likes - 1;
         await BlogPostRepository.StoreAsync(BlogPost);
     }
+
+    private async Task BlogPostBookmarked()
+    {
+	    if (BlogPost is null)
+	    {
+		    return;
+	    }
+
+	    isBookmarked = !isBookmarked;
+	    await BookmarkService.SetBookmark(BlogPost.Id, isBookmarked);
+	    StateHasChanged();
+    }
+
 }

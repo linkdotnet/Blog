@@ -72,7 +72,7 @@ public class BookmarkServiceTests
     {
         var id = string.Empty;
 
-        await bookmarkService.ToggleBookmark(id)
+        await bookmarkService.SetBookmark(id, false)
             .ShouldThrowAsync<ArgumentException>();
 
         await bookmarkService.IsBookmarked(id)

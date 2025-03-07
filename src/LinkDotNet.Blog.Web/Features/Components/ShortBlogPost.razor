@@ -38,7 +38,7 @@
 		<div class="description">
 			<div class="header">
 				<h1>@BlogPost.Title</h1>
-				<BookmarkButton IsBookmarked="isBookmarked" OnClick="ToggleBookmark"></BookmarkButton>
+				<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="ToggleBookmark"></BookmarkButton>
 			</div>
 			<p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
@@ -64,7 +64,8 @@
 
 	private async Task ToggleBookmark()
 	{
-		await BookmarkService.ToggleBookmark(BlogPost.Id);
+		isBookmarked = !isBookmarked;
+		await BookmarkService.SetBookmark(BlogPost.Id, isBookmarked);
 		StateHasChanged();
 	}
 

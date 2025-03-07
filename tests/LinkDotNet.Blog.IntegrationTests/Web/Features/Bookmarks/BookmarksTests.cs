@@ -58,7 +58,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         bookmarkButton.Click();
         
         // Assert
-        await bookmarkService.Received(1).ToggleBookmark(bookmarkedBlogPost.Id);
+        await bookmarkService.Received(1).SetBookmark(bookmarkedBlogPost.Id, false);
     }
     
     [Fact]
