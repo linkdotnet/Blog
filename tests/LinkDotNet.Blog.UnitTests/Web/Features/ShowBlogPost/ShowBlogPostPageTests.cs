@@ -5,6 +5,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
@@ -31,6 +32,7 @@ public class ShowBlogPostPageTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
+        Services.AddScoped(_ => Substitute.For<IBookmarkService>());
         AddAuthorization();
         ComponentFactories.Add<PageTitle, PageTitleStub>();
         ComponentFactories.Add<Like, LikeStub>();
