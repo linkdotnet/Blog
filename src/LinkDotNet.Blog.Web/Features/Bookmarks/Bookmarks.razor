@@ -24,12 +24,15 @@
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		var ids = await BookmarkService.GetBookmarkedPostIds();
+		if (firstRender)
+		{
+			var ids = await BookmarkService.GetBookmarkedPostIds();
 
-		if (!ids.Any()) return;
+			if (!ids.Any()) return;
 
-		bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
-		StateHasChanged();
+			bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
+			StateHasChanged();
+		}
 	}
 
 }

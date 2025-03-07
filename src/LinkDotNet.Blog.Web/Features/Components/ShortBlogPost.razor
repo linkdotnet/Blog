@@ -91,7 +91,10 @@
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
-		StateHasChanged();
+		if (firstRender)
+		{
+			isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
+			StateHasChanged();
+		}
 	}
 }
