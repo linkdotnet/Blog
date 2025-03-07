@@ -28,10 +28,11 @@
 		{
 			var ids = await BookmarkService.GetBookmarkedPostIds();
 
-			if (!ids.Any()) return;
-
-			bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
-			StateHasChanged();
+			if (ids.Any())
+			{
+				bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
+				StateHasChanged();
+			}
 		}
 	}
 
