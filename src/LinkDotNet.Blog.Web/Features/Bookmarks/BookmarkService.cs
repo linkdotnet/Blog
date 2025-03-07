@@ -40,7 +40,7 @@ public class BookmarkService : IBookmarkService
 
         var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
 
-        if (isBookmarked)
+        if (!isBookmarked)
         {
             bookmarks.Remove(postId);
         }

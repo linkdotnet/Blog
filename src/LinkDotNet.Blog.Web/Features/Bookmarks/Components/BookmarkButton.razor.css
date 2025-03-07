@@ -1,8 +1,0 @@
-svg :hover {
-	fill: grey;
-}
-button {
-	border: none;
-	color: var(--tag-background);
-	background-color: var(--tag-background);
-}
