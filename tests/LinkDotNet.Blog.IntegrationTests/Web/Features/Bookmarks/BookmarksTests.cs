@@ -75,8 +75,8 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         var cut = ctx.Render<Blog.Web.Features.Bookmarks.Bookmarks>();
         
         // Assert
-        cut.WaitForElement("p");
-        cut.Find("p").TextContent.ShouldBe("You have no bookmarks");
+        cut.WaitForElement("h4");
+        cut.Find("h4").TextContent.ShouldBe("No bookmarks yet!");
         cut.FindComponents<ShortBlogPost>().Count.ShouldBe(0);
     }
 }
