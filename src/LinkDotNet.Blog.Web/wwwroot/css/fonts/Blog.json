@@ -1929,7 +1929,10 @@
           "ligatures": "bookmark, ribbon",
           "name": "bookmark",
           "id": 210,
-          "order": 0
+          "order": 87,
+          "prevSize": 32,
+          "code": 59858,
+          "tempChar": ""
         },
         {
           "ligatures": "bookmarks, ribbons",
@@ -3150,7 +3153,7 @@
           "order": 85,
           "prevSize": 32,
           "code": 60061,
-          "tempChar": ""
+          "tempChar": ""
         },
         {
           "ligatures": "youtube2, brand22",
@@ -13357,6 +13360,5 @@
     "showCodes": true,
     "gridSize": 16
   },
-  "uid": -1,
-  "time": 1731146188893
+  "uid": -1
 }

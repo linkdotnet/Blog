@@ -112,3 +112,6 @@ i {
 .bluesky:before {
 	content: "\e902";
 }
+.bookmark:before {
+	content: "\e9d2";
+}

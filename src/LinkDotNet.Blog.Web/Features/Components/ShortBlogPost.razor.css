@@ -80,6 +80,11 @@
     z-index: 1;
 }
 
+.blog-card .description .header {
+	display: flex;
+	justify-content: space-between;
+}
+
 .blog-card .description h1 {
     line-height: 1;
     margin: 0 0 5px 0;

@@ -1,0 +1,46 @@
+@page "/bookmarks"
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@inject IBookmarkService BookmarkService
+@inject IRepository<BlogPost> BlogPostRepository;
+
+<div class="container">
+	<h3 class="pb-3 fw-bold">Bookmarks</h3>
+	@if (bookmarkedPosts.Count <= 0)
+	{
+		<div class="alert alert-info" role="alert">
+			<h4 class="alert-heading">No bookmarks yet!</h4>
+			<p>You can bookmark posts while browsing by clicking the bookmark icon <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi text-secondary" viewBox="0 0 16 16">
+				<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+			</svg> that appears on each post.</p>
+			<hr>
+			<p class="mb-0">Bookmarks are stored in your browser's local storage and are not synchronized across devices or browsers.</p>
+		</div>
+	}
+	else
+	{
+		@foreach (var post in bookmarkedPosts)
+		{
+			<ShortBlogPost BlogPost="post" />
+		}
+	}
+</div>
+
+@code {
+	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			var ids = await BookmarkService.GetBookmarkedPostIds();
+
+			if (ids.Any())
+			{
+				bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
+				StateHasChanged();
+			}
+		}
+	}
+
+}

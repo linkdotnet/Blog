@@ -1,4 +1,7 @@
 @using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Bookmarks
+@using LinkDotNet.Blog.Web.Features.Bookmarks.Components
+@inject IBookmarkService BookmarkService
 
 <article>
 	<div class="blog-card @AltCssClass">
@@ -33,11 +36,13 @@
 			</ul>
 		</div>
 		<div class="description">
-			<h1>@BlogPost.Title</h1>
-			<h2></h2>
+			<div class="header">
+				<h1>@BlogPost.Title</h1>
+				<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="ToggleBookmark"></BookmarkButton>
+			</div>
 			<p>@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
-                <a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" aria-label="@BlogPost.Title">Read the whole article</a>
+				<a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" aria-label="@BlogPost.Title">Read the whole article</a>
 			</p>
 		</div>
 	</div>
@@ -47,6 +52,8 @@
 	[Parameter, EditorRequired]
 	public required BlogPost BlogPost { get; set; }
 
+	private bool isBookmarked = false;
+
 	[Parameter]
 	public bool UseAlternativeStyle { get; set; }
 
@@ -54,6 +61,13 @@
 	public bool LazyLoadPreviewImage { get; set; }
 
 	private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
+
+	private async Task ToggleBookmark()
+	{
+		isBookmarked = !isBookmarked;
+		await BookmarkService.SetBookmark(BlogPost.Id, isBookmarked);
+		StateHasChanged();
+	}
 
 	public override Task SetParametersAsync(ParameterView parameters)
 	{
@@ -74,5 +88,14 @@
 		}
 
 		return base.SetParametersAsync(ParameterView.Empty);
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
+			StateHasChanged();
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.SearchByTag;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -66,6 +67,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterServices(BunitContext ctx)
     {
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
     }
     
     private class PageTitleStub : ComponentBase
