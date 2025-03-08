@@ -11,6 +11,23 @@ The basic idea is that the content creator writes their posts in markdown langua
 The markdown will then be translated into HTML and displayed to the client. This gives an easy entry to writing posts with all the flexibility markdown has.
 This also includes source code snippets. Highlighting is done via [highlight.js](https://highlightjs.org/) with the GitHub theme.
 
+## Features
+
+- **Modern Markdown Editor** - Write blog posts with a feature-rich markdown editor
+- **Bookmarks** - Allow readers to save their favorite articles
+- **Drafts** - Save work in progress and continue later
+- **Scheduled Publishing** - Plan ahead and publish automatically
+- **Similar Blog Posts** - Recommend related content to readers
+- **Comments** - Enable discussions
+- **Media Upload** - Easily include images in your posts (Azure Blob Storage and CDN Support)
+- **SEO Optimization** - Improve search engine visibility
+- **Tag and Category System** - Organize content effectively
+- **Search Functionality** - Help readers find specific content
+- **Responsive Design** - Optimal viewing on all devices
+- **About Me Page** - Customizable profile page that showcases skills and experience
+- **RSS Feed** - Allow readers to subscribe to content updates
+- **Visit Counter** - Get visitor counters for each blog post in the internal dashboard
+
 ## In Action
 
 ![overview](assets/overview.gif)
