@@ -111,6 +111,12 @@ code {
 	content: "\e9d5";
 }
 
+.read-time:before {
+	font-family: 'icons';
+	font-weight: 900;
+	content: "\e94f";
+}
+
 .copy-btn {
 	border-color: whitesmoke !important;
 }

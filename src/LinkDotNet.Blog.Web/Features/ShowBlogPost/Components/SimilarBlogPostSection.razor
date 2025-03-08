@@ -1,50 +1,89 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IRepository<SimilarBlogPost> SimilarBlogPostJobRepository
 
 @if (similarBlogPosts.Count > 0)
 {
-	<div class="accordion my-5" id="similarBlogPosts">
-		<div class="accordion-item">
-			<h2 class="accordion-header" id="similar-post-header">
-				<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#similiar-post-body" aria-expanded="false" aria-controls="similiar-post-body">
-					Want to read more? Check out these related blog posts!
-				</button>
-			</h2>
-			<div id="similiar-post-body" class="accordion-collapse collapse" aria-labelledby="similar-post-header">
-				<div class="row p-4">
-					@foreach (var relatedBlogPost in similarBlogPosts)
-					{
-						<div class="col-12 col-md-4 pt-2">
-							<div class="card h-100">
-								<div class="card-body">
-									<h5 class="card-title fw-bold">@relatedBlogPost.Title</h5>
-									<p class="card-text">@MarkdownConverter.ToMarkupString(relatedBlogPost.ShortDescription)</p>
-								</div>
-								<a href="blogPost/@relatedBlogPost.Id/@relatedBlogPost.Slug" class="stretched-link"></a>
-							</div>
-						</div>
-					}
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="accordion my-4" id="similarBlogPosts">
+        <div class="accordion-item border-start-0 border-end-0">
+            <h2 class="accordion-header" id="similar-post-header">
+                <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#similiar-post-body" aria-expanded="false" aria-controls="similiar-post-body">
+                    <i class="bi bi-book me-2"></i> Related articles you might enjoy
+                </button>
+            </h2>
+            <div id="similiar-post-body" class="accordion-collapse collapse" aria-labelledby="similar-post-header">
+                <div class="accordion-body p-3">
+                    <div class="list-group list-group-flush">
+                        @foreach (var post in similarBlogPosts)
+                        {
+                            <a href="blogPost/@post.Id/@post.Slug" class="list-group-item list-group-item-action px-0 py-3 border-top">
+                                <div class="row gx-3">
+                                    <div class="col-2 col-sm-1">
+                                        @if (!string.IsNullOrEmpty(post.PreviewImageUrl))
+                                        {
+                                            <img src="@post.PreviewImageUrl" 
+                                                 alt="@post.Title" 
+                                                 class="img-fluid rounded w-100 aspect-ratio-1x1"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null; this.src='@(post.PreviewImageUrlFallback ?? "assets/image-placeholder.webp")';">
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center aspect-ratio-1x1">
+                                                <i class="bi bi-image text-secondary"></i>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="col-10 col-sm-11">
+                                        <div class="d-flex flex-column h-100">
+                                            <h6 class="mb-1 fw-bold">@post.Title</h6>
+                                            <p class="mb-1 small text-body-secondary">
+                                                @MarkdownConverter.ToPlainString(post.ShortDescription)
+                                            </p>
+                                            <div class="text-dark-emphasis d-flex flex-wrap gap-2 mt-1">
+                                                <div class="me-2">
+                                                    <span class="date"></span>
+                                                    <span class="ms-1">@post.UpdatedDate.ToShortDateString()</span>
+                                                </div>
+                                                <span class="read-time"></span>
+                                                <span class="me-2">@post.ReadingTimeInMinutes minute read</span>
+                                            </div>
+                                            @if (post.Tags.Any())
+                                            {
+                                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                                    @foreach (var tag in post.Tags)
+                                                    {
+                                                        <a class="goto-tag badge bg-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 }
 
 @code {
-	[Parameter, EditorRequired]
+    [Parameter, EditorRequired]
     public required BlogPost BlogPost { get; set; }
 
-	private IReadOnlyCollection<BlogPost> similarBlogPosts = [];
+    private IReadOnlyCollection<BlogPost> similarBlogPosts = [];
 
-	protected override async Task OnParametersSetAsync()
-	{
-		var similarBlogPostIds = await SimilarBlogPostJobRepository.GetByIdAsync(BlogPost.Id);
-		if (similarBlogPostIds is not null)
-		{
-			similarBlogPosts = await BlogPostRepository.GetAllAsync(
-				b => similarBlogPostIds.SimilarBlogPostIds.Contains(b.Id));
-		}
-	}
+    protected override async Task OnParametersSetAsync()
+    {
+        var similarBlogPostIds = await SimilarBlogPostJobRepository.GetByIdAsync(BlogPost.Id);
+        if (similarBlogPostIds is not null)
+        {
+            similarBlogPosts = await BlogPostRepository.GetAllAsync(
+                b => similarBlogPostIds.SimilarBlogPostIds.Contains(b.Id));
+        }
+    }
 }
