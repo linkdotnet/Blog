@@ -177,10 +177,10 @@ public class ProfileTests : BunitContext
         return (repoMock, calcMock);
     }
 
-    private RenderedComponent<Profile> RenderProfileWithEmptyInformation()
+    private IRenderedComponent<Profile> RenderProfileWithEmptyInformation()
         => Render<Profile>(p => p.Add(s => s.ProfileInformation, new ProfileInformationBuilder().Build()));
 
-    private RenderedComponent<Profile> RenderProfileInAdmin()
+    private IRenderedComponent<Profile> RenderProfileInAdmin()
         => Render<Profile>(p => p
             .Add(s => s.ProfileInformation, new ProfileInformationBuilder().Build())
             .Add(s => s.ShowAdminActions, true));
