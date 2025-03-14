@@ -12,6 +12,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NCronJob;
@@ -68,7 +69,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         act.ShouldThrow<ArgumentNullException>();
     }
 
-    private static void TriggerUpdate(RenderedFragment cut)
+    private static void TriggerUpdate(IRenderedComponent<IComponent> cut)
     {
         cut.Find("#short").Input("My new Description");
 
