@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="bunit.generators" />
     <PackageReference Include="bunit" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="NSubstitute" />
