@@ -14,7 +14,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.3" />
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
-    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.2.efcore.9.0.0" />
+    <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="RavenDB.Client" Version="7.0.0" />
   </ItemGroup>
