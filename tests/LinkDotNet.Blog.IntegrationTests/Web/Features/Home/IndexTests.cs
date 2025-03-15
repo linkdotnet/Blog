@@ -30,8 +30,8 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
         blogPosts.Count.ShouldBe(2);
-        blogPosts[0].Find(".description h1").InnerHtml.ShouldBe("New");
-        blogPosts[1].Find(".description h1").InnerHtml.ShouldBe("Old");
+        blogPosts[0].Find(".description h4").InnerHtml.ShouldBe("New");
+        blogPosts[1].Find(".description h4").InnerHtml.ShouldBe("Old");
     }
 
     [Fact]
@@ -50,7 +50,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
         blogPosts.ShouldHaveSingleItem();
-        blogPosts[0].Find(".description h1").InnerHtml.ShouldBe("Published");
+        blogPosts[0].Find(".description h4").InnerHtml.ShouldBe("Published");
     }
 
     [Fact]
