@@ -27,6 +27,6 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPosts = cut.FindComponents<ShortBlogPost>();
 
         blogPosts.ShouldHaveSingleItem();
-        blogPosts[0].Find(".description h1").InnerHtml.ShouldBe("Not published");
+        blogPosts[0].Find(".description h4").InnerHtml.ShouldBe("Not published");
     }
 }

@@ -33,7 +33,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         var blogPosts = cut.FindComponents<ShortBlogPost>();
         
         blogPosts.ShouldHaveSingleItem();
-        blogPosts[0].Find(".description h1").TextContent.ShouldBe("Bookmarked Post");
+        blogPosts[0].Find(".description h4").TextContent.ShouldBe("Bookmarked Post");
     }
     
     [Fact]
