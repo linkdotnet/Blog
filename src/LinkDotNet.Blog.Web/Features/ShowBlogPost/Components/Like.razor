@@ -3,7 +3,7 @@
 @inject ILocalStorageService LocalStorage
 
 <button class="btn @ButtonClass d-inline-flex align-items-center gap-2" @onclick="LikeBlogPost">
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" 
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
          class="bi bi-hand-thumbs-up@(HasLiked ? "-fill" : "")" viewBox="0 0 16 16">
         @if (HasLiked)
         {
@@ -29,8 +29,8 @@
 
     private bool HasLiked { get; set; }
 
-    private string ButtonClass => HasLiked 
-        ? "btn-primary" 
+    private string ButtonClass => HasLiked
+        ? "btn-primary"
         : "btn-outline-secondary";
 
     protected override void OnParametersSet()
@@ -68,7 +68,7 @@
 
     private async Task<bool> GetHasLiked()
     {
-        if (await LocalStorage.ContainKeyAsync($"hasLiked/{BlogPost.Id}"))
+        if (await LocalStorage.ContainsKeyAsync($"hasLiked/{BlogPost.Id}"))
         {
             return await LocalStorage.GetItemAsync<bool>($"hasLiked/{BlogPost.Id}");
         }

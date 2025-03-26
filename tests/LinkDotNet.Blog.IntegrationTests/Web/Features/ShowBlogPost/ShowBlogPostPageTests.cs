@@ -48,7 +48,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new BunitContext();
         var localStorage = Substitute.For<ILocalStorageService>();
         var hasLikedStorage = $"hasLiked/{publishedPost.Id}";
-        localStorage.ContainKeyAsync(hasLikedStorage).Returns(true);
+        localStorage.ContainsKeyAsync(hasLikedStorage).Returns(true);
         localStorage.GetItemAsync<bool>(hasLikedStorage).Returns(true);
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         RegisterComponents(ctx, localStorage);

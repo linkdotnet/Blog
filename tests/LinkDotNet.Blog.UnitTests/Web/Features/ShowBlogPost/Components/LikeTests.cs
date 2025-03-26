@@ -61,7 +61,7 @@ public class LikeTests : BunitContext
     public void ShouldCheckLocalStorageOnInit()
     {
         var localStorage = Substitute.For<ILocalStorageService>();
-        localStorage.ContainKeyAsync("hasLiked/id").Returns(true);
+        localStorage.ContainsKeyAsync("hasLiked/id").Returns(true);
         localStorage.GetItemAsync<bool>("hasLiked/id").Returns(true);
         Services.AddScoped(_ => localStorage);
         var blogPost = new BlogPostBuilder().Build();
@@ -87,7 +87,7 @@ public class LikeTests : BunitContext
         var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost)
                 .Add(l => l.OnBlogPostLiked, _ => wasClicked = true));
-        localStorage.ContainKeyAsync("hasLiked/id").Returns(true);
+        localStorage.ContainsKeyAsync("hasLiked/id").Returns(true);
         localStorage.GetItemAsync<bool>("hasLiked/id").Returns(true);
 
         cut.Find("span").Click();

@@ -51,7 +51,7 @@
 		{
 			await using var _ = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/Home/Components/ThemeToggler.razor.js");
 
-			currentTheme = await LocalStorageService.ContainKeyAsync(StorageKey)
+			currentTheme = await LocalStorageService.ContainsKeyAsync(StorageKey)
 				? await LocalStorageService.GetItemAsync<string>(StorageKey)
 				: await JSRuntime.InvokeAsync<string>("getCurrentSystemPreference");
 

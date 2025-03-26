@@ -24,7 +24,7 @@ public class ThemeTogglerTests : BunitContext
     public void ShouldSetFromLocalStorage()
     {
         var localStorage = Substitute.For<ILocalStorageService>();
-        localStorage.ContainKeyAsync("preferred-theme").Returns(true);
+        localStorage.ContainsKeyAsync("preferred-theme").Returns(true);
         localStorage.GetItemAsync<string>("preferred-theme").Returns("dark");
         Services.AddScoped(_ => localStorage);
         JSInterop.SetupModule("./Features/Home/Components/ThemeToggler.razor.js");
