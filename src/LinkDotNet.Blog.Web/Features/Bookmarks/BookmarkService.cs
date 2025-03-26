@@ -55,7 +55,7 @@ public class BookmarkService : IBookmarkService
 
     private async Task InitializeIfNotExists()
     {
-        if (!(await localStorageService.ContainKeyAsync("bookmarks")))
+        if (!(await localStorageService.ContainsKeyAsync("bookmarks")))
         {
             await localStorageService.SetItemAsync("bookmarks", new List<string>());
         }
