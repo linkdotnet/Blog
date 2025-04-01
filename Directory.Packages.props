@@ -16,7 +16,7 @@
     <PackageVersion Include="MongoDB.Driver" Version="2.30.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageVersion Include="RavenDB.Client" Version="7.0.0" />
+    <PackageVersion Include="RavenDB.Client" Version="7.0.1" />
   </ItemGroup>
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
