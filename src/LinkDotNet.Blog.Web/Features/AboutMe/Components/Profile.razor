@@ -4,16 +4,16 @@
 
 @inject IRepository<ProfileInformationEntry> Repository
 @inject ISortOrderCalculator SortOrderCalculator
-<div class="profile-card">
-    <div class="profile-name">
+<div class="aboutme-profile-card">
+    <div class="aboutme-profile-name">
         <span>@ProfileInformation.Name</span>
         <br/>
         <span>@ProfileInformation.Heading</span>
     </div>
-    <div class="profile-image">
+    <div class="aboutme-profile-image">
         <img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
     </div>
-    <ul class="profile-keypoints"
+    <ul class="aboutme-profile-keypoints"
         ondragover="event.preventDefault();">
         @foreach (var entry in profileInformationEntries)
         {

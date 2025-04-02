@@ -23,7 +23,7 @@ public class ProfileTests : BunitContext
         SetupGetAll(repoMock, entry1, entry2);
         var cut = RenderProfileWithEmptyInformation();
 
-        var items = cut.FindAll(".profile-keypoints li");
+        var items = cut.FindAll(".aboutme-profile-keypoints li");
 
         items.Count.ShouldBe(2);
         items[0].TextContent.ShouldContain("key 1");
@@ -70,7 +70,7 @@ public class ProfileTests : BunitContext
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entryToDelete);
         var cut = RenderProfileInAdmin();
-        cut.Find(".profile-keypoints li button").Click();
+        cut.Find(".aboutme-profile-keypoints li button").Click();
 
         cut.FindComponent<ConfirmDialog>().Find("#ok").Click();
 
@@ -86,7 +86,7 @@ public class ProfileTests : BunitContext
         var (repoMock, _) = RegisterServices();
         SetupGetAll(repoMock, entryToDelete);
         var cut = RenderProfileInAdmin();
-        cut.Find(".profile-keypoints li button").Click();
+        cut.Find(".aboutme-profile-keypoints li button").Click();
 
         cut.FindComponent<ConfirmDialog>().Find("#cancel").Click();
 

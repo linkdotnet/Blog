@@ -9,8 +9,8 @@
             <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
         }
     </div>
-<div class="table-container">
-    <table class="skill-table" id="skill-table">
+<div class="aboutme-table-container">
+    <table class="aboutme-skill-table" id="aboutme-skill-table">
         <tbody>
         <tr>
             <th>Capability</th>
@@ -51,7 +51,7 @@
     </table>
     @if (ShowAdminActions)
     {
-        <small for="skill-table">You can drag and drop your skills from one proficiency to another</small>
+        <small for="aboutme-skill-table">You can drag and drop your skills from one proficiency to another</small>
     }
 </div>
 @code {

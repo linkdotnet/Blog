@@ -1,0 +1,98 @@
+.nav>.nav-item>button {
+    border: 0;
+    background: transparent !important;
+    color: var(--bs-body-color) !important;
+}
+
+.aboutme-table-container {
+    overflow-x: auto;
+}
+
+.aboutme-skill-table {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.aboutme-skill-table td:first-of-type {
+    width:10%
+}
+
+.aboutme-skill-table td {
+    width: 30%;
+    border-top: 1px var(--bs-light) solid;
+    vertical-align: top;
+    min-width: 100px;
+}
+
+.aboutme-skill-table td div {
+    display: inline-block;
+    margin-right: 8px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.aboutme-skill-tag {
+    padding: 8px;
+    border-radius: 5px;
+    background-color: var(--tag-background);
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.aboutme-skill-tag img {
+    padding-right: 12px;
+    width: 36px;
+}
+
+.aboutme-profile-card {
+    display: inline-block;
+    box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    border-radius: 8px;
+}
+
+.aboutme-profile-name {
+    padding: 20px;
+    font-size: 1.25em;
+    line-height: 1.5em;
+}
+
+.aboutme-profile-name:first-child {
+    background: var(--tag-background);
+}
+
+.aboutme-profile-image {
+    padding: 30px;
+    background: var(--tag-background);
+}
+
+.aboutme-profile-image img {
+    width: 100%;
+    margin: auto;
+    border-radius: 50vw;
+    display: block;
+}
+
+.aboutme-profile-keypoints {
+    background-color: var(--tag-background);
+    padding-top: 10px;
+    padding-left: 2.5em;
+    padding-right: 1.5em;
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.aboutme-profile-keypoints li {
+    padding-bottom: 0.6em;
+    letter-spacing: 0.05em;
+}
+
+.aboutme-profile-keypoints li p {
+    display: inline;
+}
+
+.item-draggable {
+    cursor: grab;
+}
