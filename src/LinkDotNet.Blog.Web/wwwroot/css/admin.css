@@ -1,0 +1,7 @@
+.admin-extra-buttons {
+	opacity: 0.25;
+}
+
+.admin-extra-buttons:hover {
+	opacity: 1;
+}

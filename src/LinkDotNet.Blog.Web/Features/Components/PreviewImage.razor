@@ -1,13 +1,13 @@
 @using Microsoft.AspNetCore.StaticFiles
 @if (string.IsNullOrEmpty(PreviewImageUrlFallback))
 {
-    <img src="@PreviewImageUrl" alt="Preview image blogpost" loading="@LazyLoadTag" decoding="@DecodingTag" />
+    <img class="preview-img" src="@PreviewImageUrl" alt="Preview image blogpost" loading="@LazyLoadTag" decoding="@DecodingTag" />
 }
 else
 {
     <picture>
         <source srcset="@PreviewImageUrl" type="@GetMimeType()"/>
-        <img src="@PreviewImageUrlFallback" alt="Preview image blogpost" loading="@LazyLoadTag" decoding="@DecodingTag" />
+        <img class="preview-img" src="@PreviewImageUrlFallback" alt="Preview image blogpost" loading="@LazyLoadTag" decoding="@DecodingTag" />
     </picture>
 }
 
