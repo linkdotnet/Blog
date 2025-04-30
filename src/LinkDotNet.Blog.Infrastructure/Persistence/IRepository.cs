@@ -22,7 +22,7 @@ public interface IRepository<TEntity>
         int pageSize = int.MaxValue);
 
     ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<TEntity, TProjection>>? selector,
+        Expression<Func<TEntity, TProjection>> selector,
         Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,

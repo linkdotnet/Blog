@@ -50,7 +50,7 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
         GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<TEntity, TProjection>>? selector,
+        Expression<Func<TEntity, TProjection>> selector,
         Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
