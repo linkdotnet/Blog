@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -51,7 +52,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         await GetAllByProjectionAsync(s => s, filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<TEntity, TProjection>>? selector,
+        Expression<Func<TEntity, TProjection>> selector,
         Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? orderBy = null,
         bool descending = true,
@@ -70,8 +71,9 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
             query = descending ? query.OrderByDescending(orderBy) : query.OrderBy(orderBy);
         }
 
-        var projectionQuery = query.Select(selector);
-        return await projectionQuery.ToPagedListAsync(page, pageSize);
+        return await query
+            .Select(selector)
+            .ToPagedListAsync(page, pageSize);
     }
 
     public async ValueTask StoreAsync(TEntity entity)

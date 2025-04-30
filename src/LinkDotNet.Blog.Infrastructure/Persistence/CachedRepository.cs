@@ -37,7 +37,7 @@ public sealed class CachedRepository<T> : IRepository<T>
         await repository.GetAllAsync(filter, orderBy, descending, page, pageSize);
 
     public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-        Expression<Func<T, TProjection>>? selector,
+        Expression<Func<T, TProjection>> selector,
         Expression<Func<T, bool>>? filter = null,
         Expression<Func<T, object>>? orderBy = null,
         bool descending = true,
