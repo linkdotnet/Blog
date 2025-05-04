@@ -70,7 +70,7 @@ public class OgDataTests : BunitContext
     }
 
     private static void AssertMetaTagExistsWithValue(
-        RenderedFragment cut,
+        IRenderedComponent<IComponent> cut,
         string metaTag,
         string metaTagValue,
         string? ogPropertyName = null)
@@ -87,7 +87,7 @@ public class OgDataTests : BunitContext
     }
 
     private static bool GetMetaTagExists(
-        RenderedFragment cut,
+        IRenderedComponent<IComponent> cut,
         string metaTag)
     {
         var metaTags = cut.FindAll("meta");
