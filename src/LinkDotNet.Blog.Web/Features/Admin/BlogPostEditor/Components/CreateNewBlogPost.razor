@@ -32,7 +32,9 @@
                               @bind-Value="@model.Content"></MarkdownTextArea>
             <ValidationMessage For="() => model.Content"></ValidationMessage>
 
-            <div class="btn-group position-absolute bottom-0 end-0 m-5 extra-buttons">
+            <div class="btn-group position-absolute bottom-0 end-0 m-5"
+                 style="opacity: 0.25; transition: opacity 0.2s;"
+                 onmouseover="this.style.opacity='1';" onmouseout="this.style.opacity='0.25';">>
                 <button class="btn btn-primary btn-outlined btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     More
                 </button>

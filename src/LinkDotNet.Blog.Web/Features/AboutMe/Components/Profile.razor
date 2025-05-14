@@ -4,16 +4,18 @@
 
 @inject IRepository<ProfileInformationEntry> Repository
 @inject ISortOrderCalculator SortOrderCalculator
-<div class="profile-card">
-    <div class="profile-name">
+
+<div class="card shadow-sm w-100 rounded">
+	<div class="px-4 py-3 fs-5 lh-base" style="background: var(--tag-background);">
         <span>@ProfileInformation.Name</span>
         <br/>
         <span>@ProfileInformation.Heading</span>
     </div>
-    <div class="profile-image">
-        <img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
+	<div class="p-4" style="background: var(--tag-background);">
+		<img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture"
+		     class="w-100 mx-auto d-block rounded-circle"/>
     </div>
-    <ul class="profile-keypoints"
+	<ul class="list-unstyled px-4 pt-2 mb-0" style="background: var(--tag-background);"
         ondragover="event.preventDefault();">
         @foreach (var entry in profileInformationEntries)
         {
