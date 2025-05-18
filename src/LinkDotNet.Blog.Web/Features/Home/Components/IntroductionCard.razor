@@ -4,20 +4,36 @@
 @inject IOptions<Social> Social
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
-<div style="@IntroductionStyle" class="@IntroductionClass">
-    <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@Introduction.Value.ProfilePictureUrl)">
-        </div>
-        <div class="profile-text d-flex flex-column">
-            <div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
-            <SocialAccounts Social="@Social.Value"></SocialAccounts>
-            @if (SupportConfiguration.Value.ShowUnderIntroduction)
-            {
-                <DonationSection />
-            }
+<div class="@IntroductionClass py-4 bg-dark bg-opacity-50 text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <!-- Profile Picture -->
+            <div class="col-12 d-flex justify-content-center">
+                <div class="rounded-circle border border-white shadow"
+                     style="width: 175px; height: 175px; background-image: url(@Introduction.Value.ProfilePictureUrl); background-repeat: no-repeat; background-position: center; background-size: cover;">
+                </div>
+            </div>
+            <!-- Profile Text -->
+            <div class="col-md-8 mt-4">
+                <div class="fs-5 lh-base text-center">
+                    @MarkdownConverter.ToMarkupString(Introduction.Value.Description)
+                </div>
+                <!-- Social Links -->
+                <div class="mt-3">
+                    <SocialAccounts Social="@Social.Value"></SocialAccounts>
+                </div>
+                <!-- Donation Section -->
+                @if (SupportConfiguration.Value.ShowUnderIntroduction)
+                {
+                    <div class="mt-3">
+                        <DonationSection />
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
+
 @code {
     private string IntroductionClass => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
         ? "introduction-background"

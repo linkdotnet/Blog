@@ -41,60 +41,62 @@ else if (BlogPost is not null)
 		                Author="@ProfileInformation.Value.Name"/>
 	</OgData>
 
-	<div class="d-flex justify-content-center pt-2 blog-outer-box">
-		<div class="blog-container">
-			<div class="blog-inner-content">
+	<div class="d-flex justify-content-center pt-2">
+		<div class="bg-body w-100 px-3 px-md-4 px-lg-5 py-4 shadow rounded" style="max-width: 90%;">
+			<div>
 				<header class="text-center">
-					<h1 class="fw-bold">@BlogPost.Title</h1></header>
-				<div class="text-dark-emphasis d-flex flex-wrap gap-2">
-					<div class="me-2">
-						<span class="date"></span>
-						<span class="ms-1">@BlogPost.UpdatedDate.ToShortDateString()</span>
+					<h1 class="fw-bold">@BlogPost.Title</h1>
+				</header>
+				<div class="text-body-secondary d-flex flex-wrap gap-2">
+					<div class="me-2 d-flex align-items-center">
+						<span class="me-1">
+							<i class="date"></i> @BlogPost.UpdatedDate.ToShortDateString()
+						</span>
 					</div>
-          				<span class="read-time"></span>
-					<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
+					<div class="me-2 d-flex align-items-center">
+						<i class="read-time me-1"></i>
+						<span>@BlogPost.ReadingTimeInMinutes minute read</span>
+					</div>
 					<div class="d-flex align-items-center">
 						<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="BlogPostBookmarked"></BookmarkButton>
 					</div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
 						<div class="d-flex align-items-center">
-							<span class="blogpost-tag me-2"></span>
+							<i class="bi bi-tag me-2"></i> <!-- bi = bootstrap icons / fas = font awesome -->
 							<div class="d-flex flex-wrap gap-2">
 								@foreach (var tag in BlogPost.Tags)
 								{
-									<a class="goto-tag badge bg-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+									<a class="badge bg-primary rounded-pill text-decoration-none" 
+									href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
 								}
 							</div>
 						</div>
 					}
 				</div>
-
 				<div class="pt-2">
-					<BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
+					<BlogPostAdminActions BlogPostId="@BlogPostId" />
 				</div>
-
 				<div class="pt-2">
-					<TableOfContents Content="@BlogPost.Content" CurrentUri="@NavigationManager.Uri"></TableOfContents>
+					<TableOfContents Content="@BlogPost.Content" CurrentUri="@NavigationManager.Uri" />
 				</div>
-
-				<div class="blogpost-content">
+				<div class="pt-3 overflow-hidden">
 					@(EnrichWithShortCodes(BlogPost.Content))
 				</div>
 			</div>
 			<div class="d-flex justify-content-between py-2 border-top border-bottom align-items-center">
-				<Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
-				<ShareBlogPost></ShareBlogPost>
+				<Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes" />
+				<ShareBlogPost />
 			</div>
-            @if (SupportConfiguration.Value.ShowUnderBlogPost)
-            {
-                <DonationSection />
-            }
-            @if (AppConfiguration.Value.ShowSimilarPosts)
+			@if (SupportConfiguration.Value.ShowUnderBlogPost)
+			{
+				<DonationSection />
+			}
+			@if (AppConfiguration.Value.ShowSimilarPosts)
 			{
 				<SimilarBlogPostSection BlogPost="@BlogPost" />
 			}
-			<CommentSection></CommentSection>
+			<CommentSection />
 		</div>
 	</div>
 
