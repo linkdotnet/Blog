@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup Label="Code Analyzers">
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.9.0.115408" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.10.0.116381" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.24.0" />
@@ -36,7 +36,7 @@
   <ItemGroup Label="Tests">
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.5" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="RavenDB.TestDriver" Version="7.0.2" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
