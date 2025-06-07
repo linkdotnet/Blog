@@ -116,6 +116,7 @@
 
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
 <ShortCodeDialog @ref="ShortCodeDialog" ShortCodes="shortCodes"></ShortCodeDialog>
+<AutoSave @ref="AutoSaveComponent" Model="@model" BlogPostId="@BlogPost?.Id"></AutoSave>
 
 <NavigationLock ConfirmExternalNavigation="@model.IsDirty" OnBeforeInternalNavigation="PreventNavigationWhenDirty"></NavigationLock>
 @code {
@@ -133,6 +134,7 @@
 
     private FeatureInfoDialog FeatureDialog { get; set; } = default!;
     private ShortCodeDialog ShortCodeDialog { get; set; } = default!;
+    private AutoSave AutoSaveComponent { get; set; } = default!;
 
     private CreateNewModel model = new();
 
@@ -163,6 +165,10 @@
     private async Task OnValidBlogPostCreatedAsync()
     {
         canSubmit = false;
+
+        // Clear the draft since we're successfully submitting
+        await AutoSaveComponent.ClearDraftAsync();
+
         await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
         if (model.ShouldInvalidateCache)
         {

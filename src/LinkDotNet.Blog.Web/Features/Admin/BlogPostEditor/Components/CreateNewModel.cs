@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Web.Features.Services;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 
@@ -140,5 +141,17 @@ public sealed class CreateNewModel
     {
         backingField = value;
         IsDirty = true;
+        PropertyChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public event EventHandler? PropertyChanged;
+
+    public bool HasSubstantialContent => !string.IsNullOrWhiteSpace(Title) ||
+                                        !string.IsNullOrWhiteSpace(ShortDescription) ||
+                                        !string.IsNullOrWhiteSpace(Content);
+
+    public void MarkAsClean()
+    {
+        IsDirty = false;
     }
 }

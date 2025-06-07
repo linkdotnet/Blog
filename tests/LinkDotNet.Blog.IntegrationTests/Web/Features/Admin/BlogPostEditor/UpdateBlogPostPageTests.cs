@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
@@ -39,6 +40,8 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped(_ => Substitute.For<IDraftService>());
+        
         using var cut = ctx.Render<UpdateBlogPostPage>(
             p => p.Add(s => s.BlogPostId, blogPost.Id));
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
