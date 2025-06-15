@@ -18,10 +18,7 @@ public static partial class ReadingTimeCalculator
         return (int)Math.Ceiling(readTimeWords + readTimeImages);
     }
 
-    [GeneratedRegex(@"!\[.*?\]\((.*?)\)")]
-    private static partial Regex ImageRegex();
-
-    private static int GetWordCount(ReadOnlySpan<char> content)
+    public static int GetWordCount(ReadOnlySpan<char> content)
     {
         var wordCount = 0;
         for (var i = 0; i < content.Length; i++)
@@ -34,4 +31,7 @@ public static partial class ReadingTimeCalculator
 
         return wordCount;
     }
+
+    [GeneratedRegex(@"!\[.*?\]\((.*?)\)")]
+    private static partial Regex ImageRegex();
 }
