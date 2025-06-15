@@ -67,8 +67,8 @@ public sealed class CreateNewModel
     [FutureDateValidation]
     public DateTime? ScheduledPublishDate
     {
-        get => scheduledPublishDate?.ToLocalTime();
-        set => SetProperty(out scheduledPublishDate, value?.ToUniversalTime());
+        get => scheduledPublishDate;
+        set => SetProperty(out scheduledPublishDate, value);
     }
 
     public string Tags
