@@ -1,0 +1,368 @@
+@using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
+@using System.Threading
+@inject IDraftService DraftService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+@if (showSaveStatus)
+{
+    <div class="position-fixed top-0 end-0 m-3 bg-white rounded shadow-sm border p-2 @StatusClass" style="z-index: 1050; font-size: 0.875rem;" title="@StatusTitle">
+        <i class="@StatusIcon"></i>
+        <span class="ms-1">@StatusText</span>
+    </div>
+}
+
+@if (showDraftRecovery && availableDrafts.Any())
+{
+    <div class="alert alert-info d-flex align-items-center justify-content-between" role="alert">
+        <div>
+            <i class="info-circle me-2"></i>
+            <strong>Draft Recovery:</strong> Found @availableDrafts.Count saved draft(s). Would you like to recover your work?
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-sm btn-primary" @onclick="ShowDraftRecoveryDialog">
+                <i class="arrow-clockwise me-1"></i>View Drafts
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="DismissDraftRecovery">
+                <i class="x me-1"></i>Dismiss
+            </button>
+        </div>
+    </div>
+}
+
+@if (showDraftDialog)
+{
+    <div class="modal show d-block" style="background-color: rgba(0,0,0,0.5);" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-file-earmark-text me-2"></i>Recover Draft
+                    </h5>
+                    <button type="button" class="btn-close" @onclick="CloseDraftDialog"></button>
+                </div>
+                <div class="modal-body">
+                    @if (availableDrafts.Any())
+                    {
+                        <p class="text-muted mb-3">Select a draft to recover:</p>
+                        <div class="list-group">
+                            @foreach (var draft in availableDrafts.OrderByDescending(d => d.LastSavedAt))
+                            {
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1">@(string.IsNullOrWhiteSpace(draft.Title) ? "[Untitled Draft]" : draft.Title)</h6>
+                                            <p class="mb-1 text-muted small">
+                                                @if (!string.IsNullOrWhiteSpace(draft.ShortDescription))
+                                                {
+                                                    <span>@(draft.ShortDescription.Length > 100 ? draft.ShortDescription[..100] + "..." : draft.ShortDescription)</span>
+                                                }
+                                                else
+                                                {
+                                                    <em>No description</em>
+                                                }
+                                            </p>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock me-1"></i>
+                                                Saved @draft.LastSavedAt.ToString("MMM dd, yyyy HH:mm")
+                                                @if (draft.DraftType == DraftType.Edit)
+                                                {
+                                                    <span class="badge bg-secondary ms-2">Editing</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-primary ms-2">New Post</span>
+                                                }
+                                            </small>
+                                        </div>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-primary" @onclick="() => RestoreDraft(draft)">
+                                                <i class="bi bi-arrow-clockwise me-1"></i>Restore
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => DeleteDraft(draft)">
+                                                <i class="bi bi-trash me-1"></i>Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-file-earmark-x display-1 text-muted"></i>
+                            <p class="text-muted mt-3">No drafts available</p>
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="CloseDraftDialog">Close</button>
+                    @if (availableDrafts.Any())
+                    {
+                        <button type="button" class="btn btn-outline-danger" @onclick="DeleteAllDrafts">
+                            <i class="bi bi-trash me-1"></i>Delete All Drafts
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private Timer? autoSaveTimer;
+    private string? currentDraftId;
+    private SaveStatus currentStatus = SaveStatus.None;
+    private bool showSaveStatus;
+    private bool showDraftRecovery;
+    private bool showDraftDialog;
+    private List<BlogPostDraft> availableDrafts = new();
+
+    private const int AutoSaveDelaySeconds = 3;
+    private const int StatusDisplayDurationMs = 3000;
+
+    [Parameter, EditorRequired]
+    public CreateNewModel Model { get; set; } = default!;
+
+    [Parameter]
+    public string? BlogPostId { get; set; }
+
+    private string StatusClass => currentStatus switch
+    {
+        SaveStatus.Saving => "text-warning",
+        SaveStatus.Saved => "text-success",
+        SaveStatus.Error => "text-danger",
+        _ => "text-muted"
+    };
+
+    private string StatusIcon => currentStatus switch
+    {
+        SaveStatus.Saving => "bi bi-arrow-repeat",
+        SaveStatus.Saved => "bi bi-check-circle-fill",
+        SaveStatus.Error => "bi bi-exclamation-triangle-fill",
+        _ => ""
+    };
+
+    private string StatusText => currentStatus switch
+    {
+        SaveStatus.Saving => "Saving draft...",
+        SaveStatus.Saved => "Draft saved",
+        SaveStatus.Error => "Save failed",
+        _ => ""
+    };
+
+    private string StatusTitle => currentStatus switch
+    {
+        SaveStatus.Saving => "Automatically saving your changes",
+        SaveStatus.Saved => $"Draft saved at {DateTime.Now:HH:mm:ss}",
+        SaveStatus.Error => "Failed to save draft to local storage",
+        _ => ""
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model.PropertyChanged += OnModelPropertyChanged;
+
+        await LoadAvailableDraftsAsync();
+
+        showDraftRecovery = availableDrafts.Any();
+
+        autoSaveTimer = new Timer(AutoSaveCallback, null, Timeout.Infinite, Timeout.Infinite);
+    }
+
+    private async Task LoadAvailableDraftsAsync()
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(BlogPostId))
+            {
+                var drafts = await DraftService.GetDraftsForBlogPostAsync(BlogPostId);
+                availableDrafts = drafts.ToList();
+            }
+            else
+            {
+                var drafts = await DraftService.GetNewPostDraftsAsync();
+                availableDrafts = drafts.ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Failed to load drafts", ex.Message);
+        }
+    }
+
+    private void OnModelPropertyChanged(object? sender, EventArgs e)
+    {
+        autoSaveTimer?.Change(TimeSpan.FromSeconds(AutoSaveDelaySeconds), Timeout.InfiniteTimeSpan);
+    }
+
+    private async void AutoSaveCallback(object? state)
+    {
+        try
+        {
+            if (!Model.HasSubstantialContent || !Model.IsDirty)
+                return;
+
+            await InvokeAsync(async () =>
+            {
+                await UpdateSaveStatus(SaveStatus.Saving);
+
+                try
+                {
+                    var draft = BlogPostDraft.FromCreateNewModel(Model, BlogPostId);
+
+                    if (!string.IsNullOrEmpty(currentDraftId))
+                    {
+                        draft.Id = currentDraftId;
+                    }
+                    else
+                    {
+                        currentDraftId = draft.Id;
+                    }
+
+                    await DraftService.SaveDraftAsync(draft);
+                    await UpdateSaveStatus(SaveStatus.Saved);
+                }
+                catch (Exception ex)
+                {
+                    await JSRuntime.InvokeVoidAsync("console.error", "Auto-save failed", ex.Message);
+                    await UpdateSaveStatus(SaveStatus.Error);
+                }
+            });
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("console.error", "Auto-save callback failed", ex.Message);
+        }
+    }
+
+    private async Task UpdateSaveStatus(SaveStatus status)
+    {
+        currentStatus = status;
+        showSaveStatus = status != SaveStatus.None;
+        StateHasChanged();
+
+        if (status != SaveStatus.Saving)
+        {
+            await Task.Delay(StatusDisplayDurationMs);
+            if (currentStatus == status)
+            {
+                showSaveStatus = false;
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void ShowDraftRecoveryDialog()
+    {
+        showDraftDialog = true;
+        StateHasChanged();
+    }
+
+    private void CloseDraftDialog()
+    {
+        showDraftDialog = false;
+        StateHasChanged();
+    }
+
+    private void DismissDraftRecovery()
+    {
+        showDraftRecovery = false;
+        StateHasChanged();
+    }
+
+    private void RestoreDraft(BlogPostDraft draft)
+{
+        draft.UpdateCreateNewModel(Model);
+        Model.MarkAsClean();
+        currentDraftId = draft.Id;
+
+        showDraftDialog = false;
+        showDraftRecovery = false;
+        StateHasChanged();
+    }
+
+    private async Task DeleteDraft(BlogPostDraft draft)
+    {
+        await DraftService.DeleteDraftAsync(draft.Id);
+        availableDrafts.Remove(draft);
+
+        if (!availableDrafts.Any())
+        {
+            showDraftDialog = false;
+            showDraftRecovery = false;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task DeleteAllDrafts()
+    {
+        var draftsToDelete = availableDrafts.ToList();
+        foreach (var draft in draftsToDelete)
+        {
+            await DraftService.DeleteDraftAsync(draft.Id);
+        }
+
+        availableDrafts.Clear();
+        showDraftDialog = false;
+        showDraftRecovery = false;
+        StateHasChanged();
+    }
+
+    public async Task SaveDraftAsync()
+    {
+        if (!Model.HasSubstantialContent)
+        {
+            return;
+        }
+
+        await UpdateSaveStatus(SaveStatus.Saving);
+
+        try
+        {
+            var draft = BlogPostDraft.FromCreateNewModel(Model, BlogPostId);
+
+            if (!string.IsNullOrEmpty(currentDraftId))
+            {
+                draft.Id = currentDraftId;
+            }
+            else
+            {
+                currentDraftId = draft.Id;
+            }
+
+            await DraftService.SaveDraftAsync(draft);
+            await UpdateSaveStatus(SaveStatus.Saved);
+        }
+        catch (Exception)
+        {
+            await UpdateSaveStatus(SaveStatus.Error);
+        }
+    }
+
+    public async Task ClearDraftAsync()
+    {
+        if (!string.IsNullOrEmpty(currentDraftId))
+        {
+            await DraftService.DeleteDraftAsync(currentDraftId);
+            currentDraftId = null;
+        }
+    }
+
+    public void Dispose()
+    {
+        Model.PropertyChanged -= OnModelPropertyChanged;
+        autoSaveTimer?.Dispose();
+    }
+
+    private enum SaveStatus
+    {
+        None,
+        Saving,
+        Saved,
+        Error
+    }
+}

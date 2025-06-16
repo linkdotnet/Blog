@@ -30,6 +30,7 @@ public class CreateNewBlogPostTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped<ICacheInvalidator>(_ => cacheService);
         Services.AddScoped(_ => Substitute.For<IToastService>());
+        Services.AddScoped(_ => Substitute.For<IDraftService>());
     }
 
     [Fact]

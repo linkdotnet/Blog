@@ -18,6 +18,7 @@ public static class ServiceExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddScoped<ILocalStorageService, LocalStorageService>();
+        services.AddScoped<IDraftService, DraftService>();
         services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
         services.AddScoped<IBookmarkService, BookmarkService>();
