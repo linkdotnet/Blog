@@ -172,3 +172,28 @@ code {
     right: 0.75rem;
     top: 0.5rem;
 }
+
+/* Custom CSS */
+.profile-keypoints {
+	background-color: var(--tag-background);
+	padding-top: 10px;
+	padding-left: 2.5em;
+	padding-right: 1.5em;
+	list-style: none;
+	margin-bottom: 0;
+}
+
+/* As the MarkupComponent is a base class we have to use deep */
+::deep .profile-keypoints li p {
+	display: inline;
+}
+
+.item-draggable {
+	cursor: grab;
+}
+
+.nav>.nav-item>button {
+	border: 0;
+	background: transparent !important;
+	color: var(--bs-body-color) !important;
+}

@@ -1,4 +1,4 @@
-﻿@page "/AboutMe"
+@page "/AboutMe"
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components
 @using LinkDotNet.Blog.Domain
 @inject IOptions<ApplicationConfiguration> AppConfiguration
@@ -16,12 +16,14 @@
             AbsolutePreviewImageUrl="@ImageUrl"></OgData>
 
     <div class="container">
-        <div class="row">
-            <div class="col-lg-3 col-md-4">
-                <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="ProfileInformation.Value"/>
-            </div>
-            <TabbedNavigation IsAuthenticated="isAuthenticated"></TabbedNavigation>
-        </div>
+	    <div class="row gy-4">
+		    <div class="col-lg-3 col-md-4">
+			    <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="ProfileInformation.Value" />
+		    </div>
+		    <div class="col-lg-9 col-md-8">
+			    <TabbedNavigation IsAuthenticated="isAuthenticated" />
+		    </div>
+	    </div>
     </div>
 }
 
