@@ -173,7 +173,7 @@ code {
     top: 0.5rem;
 }
 
-/* Custom CSS */
+/*region Profile.razor */
 .profile-keypoints {
 	background-color: var(--tag-background);
 	padding-top: 10px;
@@ -191,16 +191,39 @@ code {
 .item-draggable {
 	cursor: grab;
 }
+/*#endregion */
 
+/*region TabbedNavigation.razor */
 .nav>.nav-item>button {
 	border: 0;
 	background: transparent !important;
 	color: var(--bs-body-color) !important;
 }
+/*#endregion */
+
+/*#region IntroductionCard.razor */
+.introduction-background {
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), var(--profile-background);
+}
+
+.profile-picture {
+	grid-area: profile-picture;
+	width: 175px;
+	height: 175px;
+	border-radius: 50%;
+	border: white;
+	margin: auto;
+	box-shadow: 0 0 0 4px white;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+}
 
 /*#endregion */
 
-/*#region Components */
+/*#region ShortBlogPost */
 .blog-card {
 	display: flex;
 	flex-direction: column;
@@ -385,3 +408,34 @@ code {
 	}
 }
 /*#endregion */
+
+/*region SearchBar */
+.search-bar {
+	width: 40px;
+	height: 40px;
+	transition: width 300ms ease-in-out;
+}
+
+.search-bar-input {
+	opacity: 0;
+	z-index: 2;
+	cursor: pointer;
+}
+
+.search-bar-input:focus {
+	outline: 0;
+}
+
+.search-bar:focus-within {
+	width: 170px;
+}
+
+.search-bar:focus-within .search-bar-input {
+	cursor: initial;
+	opacity: 1;
+	z-index: initial;
+	max-width: 130px;
+}
+
+/*#endregion */
+

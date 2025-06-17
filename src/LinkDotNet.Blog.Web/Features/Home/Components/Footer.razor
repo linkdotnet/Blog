@@ -4,15 +4,16 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
-<footer id="footer" class="text-center">
-    <span class="py-2 mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
-    @if (SupportConfiguration.Value.ShowInFooter)
-    {
-        <div class="pb-2" style="display:flex;justify-content:center">
-            <DonationSection />
-        </div>
-    }
+<footer class="text-center mt-auto w-100 py-2">
+	<span class="mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
+	@if (SupportConfiguration.Value.ShowInFooter)
+	{
+		<div class="d-flex justify-content-center pt-2">
+			<DonationSection />
+		</div>
+	}
 </footer>
+
 @code {
     private string CopyrightName => AppConfiguration.Value.IsAboutMeEnabled
         ? ProfileInformation.Value.Name
