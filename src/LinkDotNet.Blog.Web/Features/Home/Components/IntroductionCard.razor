@@ -4,19 +4,29 @@
 @inject IOptions<Social> Social
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
-<div style="@IntroductionStyle" class="@IntroductionClass">
-    <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@Introduction.Value.ProfilePictureUrl)">
-        </div>
-        <div class="profile-text d-flex flex-column">
-            <div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
-            <SocialAccounts Social="@Social.Value"></SocialAccounts>
-            @if (SupportConfiguration.Value.ShowUnderIntroduction)
-            {
-                <DonationSection />
-            }
-        </div>
-    </div>
+<div class="@IntroductionClass bg-dark bg-opacity-50 text-white py-5" style="@IntroductionStyle">
+	<div class="container d-flex flex-column align-items-center text-center">
+		<div class="profile-picture"
+		     style="background-image: url('@Introduction.Value.ProfilePictureUrl');">
+		</div>
+
+		<div class="mt-4"
+			style="font-size: clamp(1.0rem, 0.6479rem + 1vw, 1.4rem);
+			 line-height: clamp(1.5em, 0.6479rem + 1.1268vw, 2.25em);">
+			@MarkdownConverter.ToMarkupString(Introduction.Value.Description)
+		</div>
+
+		<div class="mt-3">
+			<SocialAccounts Social="@Social.Value" />
+		</div>
+
+		@if (SupportConfiguration.Value.ShowUnderIntroduction)
+		{
+			<div class="mt-3">
+				<DonationSection />
+			</div>
+		}
+	</div>
 </div>
 @code {
     private string IntroductionClass => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
@@ -24,6 +34,6 @@
         : string.Empty;
 
     private string IntroductionStyle => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
-        ? $"--profile-background: url({Introduction.Value.BackgroundUrl})"
-        : string.Empty;
+	    ? $"background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url({Introduction.Value.BackgroundUrl})"
+	    : string.Empty;
 }
