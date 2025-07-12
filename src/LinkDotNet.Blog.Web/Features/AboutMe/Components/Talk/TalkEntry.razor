@@ -2,18 +2,18 @@
 
 <li class="pb-1">
 	<div class="row">
-		<div class="col-10">
+		<div class="col-10" id="talk-display-content">
 			<p class="text-body-secondary mb-0 small">@Talk.PublishedDate.ToShortDateString()</p>
 			<strong class="fs-5">@Talk.PresentationTitle</strong>
-			<p class="text-body-secondary">@Talk.Place</p>
-			<div>
+			<p id="talk-place" class="text-body-secondary">@Talk.Place</p>
+			<div id="talk-description">
 				@MarkdownConverter.ToMarkupString(Talk.Description)
 			</div>
 		</div>
 		<div class="col-2">
 			@if (ShowAdminActions)
 			{
-				<button type="button" class="btn btn-outline-secondary" aria-label="Delete Talk" @onclick="() => TalkDeleted.InvokeAsync()">
+				<button id="talk-delete" type="button" class="btn btn-outline-secondary" aria-label="Delete Talk" @onclick="() => TalkDeleted.InvokeAsync()">
 					<i class="bin2" aria-hidden="true"></i>
 				</button>
 			}

@@ -8,72 +8,56 @@
     <div class="container-fluid">
         @if (!string.IsNullOrEmpty(Configuration.Value.BlogBrandUrl))
         {
-            <a class="navbar-brand ms-5 d-flex align-items-center" href="/">
-                <img class="img-fluid rounded-circle" style="max-height: 70px;"
+            <a class="nav-brand ms-5" href="/">
+                <img style="max-height: 70px; width: 70px; height: 70px;"
                      src="@Configuration.Value.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
-                     alt="brand" height="70" width="70" />
+                     alt="brand" />
             </a>
         }
         else
         {
-            <a class="navbar-brand ms-5 fs-2 fw-normal text-decoration-none" href="/">
-                @Configuration.Value.BlogName
-            </a>
+            <a class="nav-brand barcode ms-5" href="/">@Configuration.Value.BlogName</a>
         }
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 gap-3">
-                <li class="nav-item">
-                    <a class="nav-link" href="/"><i class="home"></i> Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/archive"><i class="books"></i> Archive</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/bookmarks"><i class="bookmark"></i> Bookmarks</a>
-                </li>
-
-                @if (Configuration.Value.IsAboutMeEnabled)
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
+	            <li><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
+	            <li><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
+	            <li><a class="nav-link" href="/bookmarks"><i class="bookmark"></i> Bookmarks</a>
+		        </li>
+	            @if (Configuration.Value.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="/AboutMe"><i class="profile"></i> About me</a>
+                        <a class="nav-link" href="AboutMe">
+                            <i class="profile"></i> About me
+                        </a>
                     </li>
                 }
 
                 @if (SupportConfiguration.Value.ShowSupportMePage)
                 {
                     <li class="nav-item">
-                        <a class="nav-link" href="/SupportMe"><i class="coin-dollar"></i> Support me</a>
+                        <a class="nav-link" href="SupportMe">
+                            <i class="coin-dollar"></i> Support me
+                        </a>
                     </li>
                 }
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="rssDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false" aria-label="RSS Selector">
+                    <a class="nav-link dropdown-toggle" href="#" id="rssDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="RSS Selector">
                         <i class="rss2"></i> RSS
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="rssDropdown">
-                        <li>
-                            <a class="dropdown-item" href="/feed.rss" aria-label="RSS with All Posts">All Posts (Summary)</a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" href="/feed.rss?withContent=true" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a>
-                        </li>
+	                    <li><a class="dropdown-item" href="/feed.rss" aria-label="RSS with All Posts">All Posts (Summary)</a></li>
+	                    <li><a class="dropdown-item" href="/feed.rss?withContent=true" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a></li>
                     </ul>
                 </li>
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
-
-                <li class="nav-item d-flex align-items-center">
-                    <ThemeToggler Class="nav-link"></ThemeToggler>
-                </li>
-
-                <li class="nav-item d-flex align-items-center">
+                <li class="nav-item d-flex align-items-center"><ThemeToggler Class="nav-link"></ThemeToggler></li>
+                <li class="d-flex">
                     <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
             </ul>

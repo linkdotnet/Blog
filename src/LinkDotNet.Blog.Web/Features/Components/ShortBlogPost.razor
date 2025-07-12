@@ -14,11 +14,11 @@
 			<ul class="details">
 				@if (BlogPost.IsScheduled)
 				{
-					<li class="bg-success text-white px-2 py-1 rounded">Scheduled</li>
+					<li class="schedule">Scheduled</li>
 				}
 				else if (!BlogPost.IsPublished)
 				{
-					<li class="text-white px-2 py-1 rounded" style="background-color: #ff8700;">Draft</li>
+					<li class="draft">Draft</li>
 				}
 				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToShortDateString()</span></li>
 				@if (BlogPost.Tags.Any())

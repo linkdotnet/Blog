@@ -173,6 +173,36 @@ code {
     top: 0.5rem;
 }
 
+/*region Skilltag.razor */
+.skill-tag {
+	padding: 8px;
+	border-radius: 5px;
+	background-color: var(--tag-background);
+	display: inline-block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.skill-tag img {
+	padding-right: 12px;
+	width: 36px;
+}
+/*endregion */
+
+/*region NavMenu.razor */
+.barcode {
+	text-decoration: none;
+	font-weight: 400;
+	font-size: 2.5rem;
+}
+
+::deep .navbar-nav li {
+	padding-left: 1rem;
+	white-space: nowrap;
+}
+/*endregion */
+
 /*region Profile.razor */
 .profile-keypoints {
 	background-color: var(--tag-background);
@@ -407,6 +437,15 @@ code {
 		padding-left: 25px;
 	}
 }
+
+.schedule {
+	background-color: #28a745;
+}
+
+.draft {
+	background-color: #ff8700;
+}
+
 /*#endregion */
 
 /*region SearchBar */
