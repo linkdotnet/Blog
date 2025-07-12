@@ -49,7 +49,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }
 
-    private static void TriggerNewBlogPost(RenderedComponent<CreateNewBlogPost> cut)
+    private static void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
     {
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");
