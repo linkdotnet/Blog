@@ -1,21 +1,7 @@
-﻿<div class="search-bar d-flex border border-2 rounded-pill overflow-hidden p-1 position-relative transition-width">
-	<input
-		type="text"
-		class="search-bar-input flex-grow-1 px-2 border-0 bg-transparent position-absolute top-0 bottom-0 start-0 text-body fw-normal"
-		placeholder="search"
-		aria-label="search"
-		@bind-value="searchTerm"
-		@onkeyup="@CheckForEnter"
-		title="Search for blog post via title or tags"
-		/>
-
-	<button
-		class="search-bar-button border-0 rounded-pill ms-auto d-flex align-items-center justify-content-center bg-transparent text-body"
-		aria-label="search submit"
-		@onclick="CallSearchEntered">
-
-		<i class="search"></i>
-	</button>
+﻿<div class="search-bar">
+	<input type="text" class="search-bar-input" placeholder="search" aria-label="search" @bind-value="searchTerm"
+	       @onkeyup="@CheckForEnter" title="Search for blog post via title or tags"/>
+	<button class="search-bar-button" aria-label="search submit" @onclick="CallSearchEntered"><i class="search"></i></button>
 </div>
 
 

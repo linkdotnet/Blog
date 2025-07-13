@@ -4,11 +4,11 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
-<footer class="text-center mt-auto w-100 py-2">
-	<span class="mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
+<footer class="position-absolute bottom-0 w-100 text-center" style="height: 2.5rem;">
+	<span class="py-2 mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
 	@if (SupportConfiguration.Value.ShowInFooter)
 	{
-		<div class="d-flex justify-content-center pt-2">
+		<div class="pb-2 d-flex justify-content-center">
 			<DonationSection />
 		</div>
 	}

@@ -173,6 +173,35 @@ code {
     top: 0.5rem;
 }
 
+/*region Skilltable.razor */
+.table-container {
+	overflow-x: auto;
+}
+
+.skill-table {
+	margin-top: 20px;
+	width: 100%;
+}
+
+.skill-table td:first-of-type {
+	width:10%
+}
+
+.skill-table td {
+	width: 30%;
+	border-top: 1px var(--bs-light) solid;
+	vertical-align: top;
+	min-width: 100px;
+}
+
+.skill-table td div {
+	display: inline-block;
+	margin-right: 8px;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+/*endregion */
+
 /*region Skilltag.razor */
 .skill-tag {
 	padding: 8px;
@@ -190,6 +219,47 @@ code {
 }
 /*endregion */
 
+/*#region IntroductionCard.razor */
+.introduction-background {
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.introduction-container {
+	height: 438px;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 0.5fr 1fr 1fr 1fr;
+	gap: 10px;
+	grid-template-areas:
+    ". . . . ."
+    ". . profile-picture . ."
+    ". profile-text profile-text profile-text ."
+    ". profile-text profile-text profile-text .";
+}
+
+.profile-picture {
+	grid-area: profile-picture;
+	width: 175px;
+	height: 175px;
+	border-radius: 50%;
+	border: white;
+	margin: auto;
+	box-shadow: 0 0 0 4px white;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
+}
+
+.profile-text {
+	margin: auto;
+	grid-area: profile-text;
+	font-size: clamp(1.0rem, 0.6479rem + 1vw, 1.4rem);
+	line-height: clamp(1.5em, 0.6479rem + 1.1268vw, 2.25em);
+	text-align: center;
+}
+/*#endregion */
+
 /*region NavMenu.razor */
 .barcode {
 	text-decoration: none;
@@ -204,6 +274,35 @@ code {
 /*endregion */
 
 /*region Profile.razor */
+.profile-card {
+	display: inline-block;
+	box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	border-radius: 8px;
+}
+
+.profile-name {
+	padding: 20px;
+	font-size: 1.25em;
+	line-height: 1.5em;
+}
+
+.profile-name:first-child {
+	background: var(--tag-background);
+}
+
+.profile-image {
+	padding: 30px;
+	background: var(--tag-background);
+}
+
+.profile-image img {
+	width: 100%;
+	margin: auto;
+	border-radius: 50vw;
+	display: block;
+}
+
 .profile-keypoints {
 	background-color: var(--tag-background);
 	padding-top: 10px;
@@ -211,6 +310,11 @@ code {
 	padding-right: 1.5em;
 	list-style: none;
 	margin-bottom: 0;
+}
+
+.profile-keypoints li {
+	padding-bottom: 0.6em;
+	letter-spacing: 0.05em;
 }
 
 /* As the MarkupComponent is a base class we have to use deep */
@@ -250,7 +354,6 @@ code {
 	background-position: center center;
 	background-size: cover;
 }
-
 /*#endregion */
 
 /*#region ShortBlogPost.razor */
@@ -445,24 +548,53 @@ code {
 .draft {
 	background-color: #ff8700;
 }
-
 /*#endregion */
 
-/*region SearchBar */
+/*region SearchInput.razor */
 .search-bar {
-	width: 40px;
+	border: 2px solid;
+	display: flex;
+	border-radius: 100vh;
+	overflow: hidden;
 	height: 40px;
+	padding: 3px;
+	width: 40px;
+	position: relative;
 	transition: width 300ms ease-in-out;
 }
 
 .search-bar-input {
+	flex-grow: 1;
+	padding: 0 .5em;
+	border: 0;
 	opacity: 0;
+	background: transparent;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
 	z-index: 2;
 	cursor: pointer;
+	font-weight: 400;
+	color: var(--bs-navbar-color);
 }
 
 .search-bar-input:focus {
 	outline: 0;
+}
+.search-bar-button {
+	border: 0;
+	border-radius: 100vh;
+	margin-left: auto;
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	background: transparent;
+	/*
+		TODO: That is really ugly
+		The problem is that every other button is behind nav-
+	 */
+	color: var(--bs-navbar-color);
 }
 
 .search-bar:focus-within {
@@ -522,6 +654,7 @@ code {
 [data-bs-theme='light'] .progress-bg {
 	stroke: #444444;
 }
+/*#endregion */
 
 /*region ShowBlogPostPage.razor */
 .blog-container {

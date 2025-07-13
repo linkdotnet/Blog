@@ -9,32 +9,28 @@
             <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
         }
     </div>
-<div class="table-responsive">
-	<table class="table w-100 mt-3 align-top" id="skill-table">
-		<thead>
-		<tr>
-			<th class="w-10">Capability</th>
-			<th class="w-30">Familiar with</th>
-			<th class="w-30">Proficient</th>
-			<th class="w-30">Expert</th>
-		</tr>
-		</thead>
+<div class="table-container">
+    <table class="skill-table" id="skill-table">
         <tbody>
+        <tr>
+            <th>Capability</th>
+            <th>Familiar with</th>
+            <th>Proficient</th>
+            <th>Expert</th>
+        </tr>
         @foreach (var skillCapabilityGroup in skills.GroupBy(s => s.Capability))
         {
             <tr ondragover="event.preventDefault();">
                 <td>@skillCapabilityGroup.Key</td>
                 @foreach (var skillLevel in ProficiencyLevel.All)
                 {
-	                <td @ondrop="@(() => HandleDrop(skillLevel))" class="border-top align-top" style="min-width: 100px;">
+                    <td @ondrop="@(() => HandleDrop(skillLevel))" class="proficiency-level">
                         @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
                         {
-                            if (ShowAdminActions)
+                            @if (ShowAdminActions)
                             {
-	                            <div draggable="true"
-	                                 @ondrag="@(() => currentDragItem = skill)"
-	                                 class="d-inline-block me-2 my-2 px-2 py-1 rounded bg-light"
-	                                 style="background-color: var(--tag-background); cursor: grab; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab"
+                                 class="skill-tag">
                                     <SkillTag Skill="@skill"
                                               ShowAdminActions="@true"
                                               DeleteSkill="@(() => DeleteSkill(skill))"/>
@@ -42,7 +38,7 @@
                             }
                             else
                             {
-	                            <div class="d-inline-block me-2 my-2">
+                                <div>
                                     <SkillTag Skill="@skill"/>
                                 </div>
                             }
@@ -55,7 +51,7 @@
     </table>
     @if (ShowAdminActions)
     {
-	    <small class="form-text text-muted">You can drag and drop your skills from one proficiency to another</small>
+        <small for="skill-table">You can drag and drop your skills from one proficiency to another</small>
     }
 </div>
 @code {
