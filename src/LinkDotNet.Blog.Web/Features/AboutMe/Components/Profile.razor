@@ -5,46 +5,46 @@
 @inject IRepository<ProfileInformationEntry> Repository
 @inject ISortOrderCalculator SortOrderCalculator
 <div class="profile-card">
-    <div class="profile-name">
-        <span>@ProfileInformation.Name</span>
-        <br/>
-        <span>@ProfileInformation.Heading</span>
-    </div>
-    <div class="profile-image">
-        <img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
-    </div>
-    <ul class="profile-keypoints"
-        ondragover="event.preventDefault();">
-        @foreach (var entry in profileInformationEntries)
-        {
-            @if (ShowAdminActions)
-            {
-                <li
-                    class="item-draggable"
-                    draggable="true"
-                    @ondrag="@(() => currentDragItem = entry)"
-                    @ondrop="@(() => HandleDrop(entry))">
+	<div class="profile-name">
+		<span>@ProfileInformation.Name</span>
+		<br/>
+		<span>@ProfileInformation.Heading</span>
+	</div>
+	<div class="profile-image">
+		<img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
+	</div>
+	<ul class="profile-keypoints"
+	    ondragover="event.preventDefault();">
+		@foreach (var entry in profileInformationEntries)
+		{
+			@if (ShowAdminActions)
+			{
+				<li
+					class="item-draggable"
+					draggable="true"
+					@ondrag="@(() => currentDragItem = entry)"
+					@ondrop="@(() => HandleDrop(entry))">
 
-                    <button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
-                        <i class="bin2" aria-hidden="true"></i>
-                    </button>
-                    @MarkdownConverter.ToMarkupString(entry.Content)
-                </li>
-            }
-            else
-            {
-                <li>@MarkdownConverter.ToMarkupString(entry.Content)</li>
-            }
-        }
-        @if (ShowAdminActions)
-        {
-            <AddProfileShortItem ValueAdded="@AddValue"></AddProfileShortItem>
-        }
-    </ul>
+					<button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
+						<i class="bin2" aria-hidden="true"></i>
+					</button>
+					@MarkdownConverter.ToMarkupString(entry.Content)
+				</li>
+			}
+			else
+			{
+				<li>@MarkdownConverter.ToMarkupString(entry.Content)</li>
+			}
+		}
+		@if (ShowAdminActions)
+		{
+			<AddProfileShortItem ValueAdded="@AddValue"></AddProfileShortItem>
+		}
+	</ul>
 </div>
 
 <ConfirmDialog @ref="Dialog" Content="Do you really want to delete this entry?" Title="Delete"
-OnYesPressed="DeleteItem"></ConfirmDialog>
+               OnYesPressed="DeleteItem"></ConfirmDialog>
 
 @code {
     [Parameter]
