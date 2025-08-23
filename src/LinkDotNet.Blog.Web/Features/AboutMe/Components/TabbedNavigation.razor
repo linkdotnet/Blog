@@ -1,23 +1,34 @@
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk
 
-<div class="col-lg-9 col-md-8 tab-container">
-    <ul class="nav nav-pills nav-underline border-bottom justify-content-around" id="aboutMe" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active btn-primary btn-light" id="pills-skills-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Skills</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link btn-primary btn-light" id="pills-talks-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Talks</button>
-        </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-skills-tab" tabindex="0">
-            <SkillTable ShowAdminActions="@IsAuthenticated"></SkillTable>
-        </div>
-        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-talks-tab" tabindex="0">
-            <Talks ShowAdminActions="@IsAuthenticated"></Talks>
-        </div>
-    </div>
+<div class="col-lg-9 col-md-8">
+	<ul class="nav nav-pills nav-underline border-bottom justify-content-around" id="aboutMe" role="tablist">
+		<li class="nav-item" role="presentation">
+			<button class="nav-link active" id="pills-skills-tab"
+			        data-bs-toggle="pill" data-bs-target="#pills-home"
+			        type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+				Skills
+			</button>
+		</li>
+		<li class="nav-item" role="presentation">
+			<button class="nav-link" id="pills-talks-tab"
+			        data-bs-toggle="pill" data-bs-target="#pills-profile"
+			        type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+				Talks
+			</button>
+		</li>
+	</ul>
+
+	<div class="tab-content pt-3" id="myTabContent">
+		<div class="tab-pane fade show active" id="pills-home"
+		     role="tabpanel" aria-labelledby="pills-skills-tab" tabindex="0">
+			<SkillTable ShowAdminActions="@IsAuthenticated"></SkillTable>
+		</div>
+		<div class="tab-pane fade" id="pills-profile"
+		     role="tabpanel" aria-labelledby="pills-talks-tab" tabindex="0">
+			<Talks ShowAdminActions="@IsAuthenticated"></Talks>
+		</div>
+	</div>
 </div>
 
 @code {
