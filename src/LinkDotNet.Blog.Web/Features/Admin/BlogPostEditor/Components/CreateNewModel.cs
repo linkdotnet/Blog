@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 using LinkDotNet.Blog.Domain;
 
@@ -18,6 +18,7 @@ public sealed class CreateNewModel
     private string tags = string.Empty;
     private string previewImageUrlFallback = string.Empty;
     private DateTime? scheduledPublishDate;
+    private string? authorName;
 
     [Required]
     [MaxLength(256)]
@@ -91,6 +92,12 @@ public sealed class CreateNewModel
         set => SetProperty(out shouldInvalidateCache, value);
     }
 
+    public string? AuthorName
+    {
+        get => authorName;
+        set => SetProperty(out authorName, value);
+    }
+
     public bool IsDirty { get; private set; }
 
     public static CreateNewModel FromBlogPost(BlogPost blogPost)
@@ -109,6 +116,7 @@ public sealed class CreateNewModel
             originalUpdatedDate = blogPost.UpdatedDate,
             PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback ?? string.Empty,
             scheduledPublishDate = blogPost.ScheduledPublishDate?.ToUniversalTime(),
+            authorName = blogPost.AuthorName,
             IsDirty = false,
         };
     }
@@ -131,7 +139,8 @@ public sealed class CreateNewModel
             updatedDate,
             scheduledPublishDate,
             tagList,
-            PreviewImageUrlFallback);
+            PreviewImageUrlFallback,
+            AuthorName);
         blogPost.Id = id;
         return blogPost;
     }
