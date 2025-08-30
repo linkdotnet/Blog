@@ -24,7 +24,7 @@
 	            <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a><label>@authorName</label></li>
+        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a>@if(authorName is not null){<label>@authorName</label>}</li>
     </Authorized>
     <NotAuthorized>
         <li class="nav-item"><a class="nav-link" href="login?redirectUri=@CurrentUri" rel="nofollow"><i class="unlocked"></i> Log in</a></li>
