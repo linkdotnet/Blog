@@ -39,7 +39,7 @@
 
     protected override void OnInitialized()
     {
-        if (AppConfiguration.Value.IsMultiModeEnabled)
+        if (AppConfiguration.Value.UseMultiAuthorMode)
         {
             authorName = HttpContextAccessor.HttpContext?.User.Identity?.Name;
         }

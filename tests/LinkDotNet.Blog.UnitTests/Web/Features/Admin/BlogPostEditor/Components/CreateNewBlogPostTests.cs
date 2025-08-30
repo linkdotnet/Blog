@@ -38,7 +38,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = true,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
@@ -88,7 +88,7 @@ public class CreateNewBlogPostTests : BunitContext
     {
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = false,
+            UseMultiAuthorMode = false,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
