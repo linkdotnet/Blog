@@ -23,4 +23,6 @@ public sealed record ApplicationConfiguration
     public bool ShowReadingIndicator { get; init; }
 
     public bool ShowSimilarPosts { get; init; }
+
+    public bool IsMultiModeEnabled { get; init; }
 }
