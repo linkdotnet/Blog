@@ -17,7 +17,7 @@ public class AccessControlTests : BunitContext
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = true,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
@@ -76,14 +76,12 @@ public class AccessControlTests : BunitContext
         ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.ShouldContain(currentUri);
     }
 
-    [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public void ShouldShowOrHideAuthorNameWhenLoggedIn(bool isMultiModeEnabled)
+    [Fact]
+    public void ShouldShowAuthorNameWhenUseMultiAuthorModeIsEnabled()
     {
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = isMultiModeEnabled,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
@@ -93,13 +91,24 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        if (isMultiModeEnabled)
+        cut.FindAll("label:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public void ShouldHideAuthorNameWhenUseMultiAuthorModeIsDisabled()
+    {
+        options.Value.Returns(new ApplicationConfiguration()
         {
-            cut.FindAll("label:contains('Test Author')").ShouldHaveSingleItem();
-        }
-        else
-        {
-            cut.FindAll("label:contains('Test Author')").ShouldBeEmpty();
-        }
+            UseMultiAuthorMode = false,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<AccessControl>();
+
+        cut.FindAll("label:contains('Test Author')").ShouldBeEmpty();
     }
 }
