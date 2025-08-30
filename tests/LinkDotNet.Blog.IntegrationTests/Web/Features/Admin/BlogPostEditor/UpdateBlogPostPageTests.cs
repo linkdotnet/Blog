@@ -25,10 +25,8 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.BlogPostEditor;
 
 public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {
-    [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public async Task ShouldSaveBlogPostOnSave(bool isMultiModeEnabled)
+    [Fact]
+    public async Task ShouldSaveBlogPostOnSave()
     {
         await using var ctx = new BunitContext();
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
@@ -54,7 +52,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = isMultiModeEnabled,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
@@ -71,18 +69,56 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id, TestContext.Current.CancellationToken);
         blogPostFromDb.ShouldNotBeNull();
         blogPostFromDb.ShortDescription.ShouldBe("My new Description");
-
-        if (isMultiModeEnabled)
-        {
-            blogPostFromDb.AuthorName.ShouldBe("Test Author");
-        }
-        else
-        {
-            blogPostFromDb.AuthorName.ShouldBeNull();
-        }
+        blogPostFromDb.AuthorName.ShouldBe("Test Author");
 
         toastService.Received(1).ShowInfo("Updated BlogPost Title", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task ShouldSaveAuthorNameAsNullWhenMultiAuthorModeIsDisabled()
+    {
+        await using var ctx = new BunitContext();
+        ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
+        ctx.JSInterop.SetupVoid("hljs.highlightAll");
+        var toastService = Substitute.For<IToastService>();
+        ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        var instantRegistry = Substitute.For<IInstantJobRegistry>();
+        var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
+        await Repository.StoreAsync(blogPost);
+        ctx.AddAuthorization().SetAuthorized("some username");
+        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped(_ => toastService);
+        ctx.Services.AddScoped(_ => instantRegistry);
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
+        ctx.Services.AddScoped(_ => shortCodeRepository);
+
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
+        ctx.Services.AddScoped(_ => contextAccessor);
+
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = false,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        ctx.Services.AddScoped(_ => options);
+
+        using var cut = ctx.Render<UpdateBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, blogPost.Id));
+        var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
+
+        TriggerUpdate(newBlogPost);
+
+        var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Id == blogPost.Id, TestContext.Current.CancellationToken);
+        blogPostFromDb.ShouldNotBeNull();
+        blogPostFromDb.AuthorName.ShouldBeNull();
     }
 
     [Fact]
@@ -103,7 +139,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = true,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
