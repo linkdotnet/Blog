@@ -1,4 +1,8 @@
-﻿<AuthorizeView>
+@using Microsoft.AspNetCore.Http
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject IHttpContextAccessor HttpContextAccessor
+
+<AuthorizeView>
     <Authorized>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -20,7 +24,7 @@
 	            <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
+        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a><label>@authorName</label></li>
     </Authorized>
     <NotAuthorized>
         <li class="nav-item"><a class="nav-link" href="login?redirectUri=@CurrentUri" rel="nofollow"><i class="unlocked"></i> Log in</a></li>
@@ -30,4 +34,14 @@
 @code {
 	[Parameter]
     public string CurrentUri { get; set; } = string.Empty;
+
+    private string? authorName;
+
+    protected override void OnInitialized()
+    {
+        if (AppConfiguration.Value.IsMultiModeEnabled)
+        {
+            authorName = HttpContextAccessor.HttpContext?.User.Identity?.Name;
+        }
+    }
 }
