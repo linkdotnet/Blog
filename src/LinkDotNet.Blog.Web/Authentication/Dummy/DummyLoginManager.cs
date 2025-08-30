@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -22,11 +22,11 @@ public sealed class DummyLoginManager : ILoginManager
         context.Response.Redirect(redirectUri);
     }
 
-    public async Task SignInAsync(string redirectUri)
+    public async Task SignInAsync(string redirectUri, string? authorName = null)
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, "Dummy user"),
+            new Claim(ClaimTypes.Name, authorName ?? "Dummy user"),
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
         };
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
