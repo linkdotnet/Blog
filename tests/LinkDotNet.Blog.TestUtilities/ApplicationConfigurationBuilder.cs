@@ -15,6 +15,7 @@ public class ApplicationConfigurationBuilder
     private bool showReadingIndicator;
     private bool showSimilarPosts;
     private string? blogBrandUrl;
+    private bool isMultiModeEnabled;
 
     public ApplicationConfigurationBuilder WithBlogName(string blogName)
     {
@@ -81,7 +82,13 @@ public class ApplicationConfigurationBuilder
         this.blogBrandUrl = blogBrandUrl;
         return this;
     }
-    
+
+    public ApplicationConfigurationBuilder WithIsMultiModeEnabled(bool isMultiModeEnabled)
+    {
+        this.isMultiModeEnabled = isMultiModeEnabled;
+        return this;
+    }
+
     public ApplicationConfiguration Build()
     {
         return new ApplicationConfiguration
@@ -97,6 +104,7 @@ public class ApplicationConfigurationBuilder
             ShowReadingIndicator = showReadingIndicator,
             ShowSimilarPosts = showSimilarPosts,
             BlogBrandUrl = blogBrandUrl,
+            IsMultiModeEnabled = isMultiModeEnabled,
         };
     }
 }

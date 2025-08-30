@@ -1,8 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -19,6 +20,7 @@ public class NavMenuTests : BunitContext
     public void ShouldNavigateToSearchPage()
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
+        Services.AddScoped(_ => Substitute.For<IHttpContextAccessor>());
         AddAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
         var cut = Render<NavMenu>();
@@ -36,6 +38,7 @@ public class NavMenuTests : BunitContext
             .WithIsAboutMeEnabled(true)
             .Build());
         Services.AddScoped(_ => config);
+        Services.AddScoped(_ => Substitute.For<IHttpContextAccessor>());
         AddAuthorization();
 
         var cut = Render<NavMenu>();
@@ -51,6 +54,7 @@ public class NavMenuTests : BunitContext
     {
         var config = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => config);
+        Services.AddScoped(_ => Substitute.For<IHttpContextAccessor>());
         AddAuthorization();
         var cut = Render<NavMenu>();
 
@@ -66,7 +70,8 @@ public class NavMenuTests : BunitContext
             .WithBlogBrandUrl("http://localhost/img.png")
             .Build());
         Services.AddScoped(_ => config);
-        
+        Services.AddScoped(_ => Substitute.For<IHttpContextAccessor>());
+
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => profileInfoConfig);
 
@@ -90,7 +95,8 @@ public class NavMenuTests : BunitContext
             .WithBlogName("Steven")
             .Build());
         Services.AddScoped(_ => config);
-        
+        Services.AddScoped(_ => Substitute.For<IHttpContextAccessor>());
+
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => profileInfoConfig);
         

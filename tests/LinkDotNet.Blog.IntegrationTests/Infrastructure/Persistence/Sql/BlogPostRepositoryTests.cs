@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -11,10 +11,15 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql;
 
 public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
 {
-    [Fact]
-    public async Task ShouldLoadBlogPost()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ShouldLoadBlogPost(bool isAuthorEnable)
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = isAuthorEnable
+            ? BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" }, authorName: "Test Author")
+            : BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+
         await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -30,12 +35,25 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");
         tagContent.ShouldContain("Tag 2");
+
+        if (isAuthorEnable)
+        {
+            blogPostFromRepo.AuthorName.ShouldBe("Test Author");
+        }
+        else
+        {
+            blogPostFromRepo.AuthorName.ShouldBeNull();
+        }
     }
 
-    [Fact]
-    public async Task ShouldSaveBlogPost()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ShouldSaveBlogPost(bool isAuthorEnable)
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = isAuthorEnable
+            ? BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" }, authorName: "Test Author")
+            : BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
 
         await Repository.StoreAsync(blogPost);
 
@@ -53,12 +71,26 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         var tagContent = blogPostFromContext.Tags;
         tagContent.ShouldContain("Tag 1");
         tagContent.ShouldContain("Tag 2");
+
+        if (isAuthorEnable)
+        {
+            blogPostFromContext.AuthorName.ShouldBe("Test Author");
+        }
+        else
+        {
+            blogPostFromContext.AuthorName.ShouldBeNull();
+        }
     }
 
-    [Fact]
-    public async Task ShouldGetAllBlogPosts()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ShouldGetAllBlogPosts(bool isAuthorEnable)
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = isAuthorEnable
+            ? BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" }, authorName: "Test Author")
+            : BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+
         await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -76,6 +108,15 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");
         tagContent.ShouldContain("Tag 2");
+
+        if (isAuthorEnable)
+        {
+            blogPostFromRepo.AuthorName.ShouldBe("Test Author");
+        }
+        else
+        {
+            blogPostFromRepo.AuthorName.ShouldBeNull();
+        }
     }
 
     [Fact]
