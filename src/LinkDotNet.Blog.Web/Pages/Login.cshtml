@@ -1,4 +1,28 @@
-﻿@page
+@page
 @model LinkDotNet.Blog.Web.Pages.LoginModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
 }
+
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+          crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="post">
+            <div class="form-group">
+                <label for="authorName">Enter author name</label>
+                <input type="text" id="authorName" name="authorName" class="form-control" />
+            </div>
+            <input type="submit" class="btn btn-primary" value="Login" />
+            <a href="/">Back to home</a>
+        </form>
+    </div>
+</body>
+</html>
