@@ -1,18 +1,21 @@
-﻿using System.Threading;
+using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities.Fakes;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NCronJob;
 using TestContext = Xunit.TestContext;
 
@@ -20,8 +23,10 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.BlogPostEditor;
 
 public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 {
-    [Fact]
-    public async Task ShouldSaveBlogPostOnSave()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task ShouldSaveBlogPostOnSave(bool isMultiModeEnabled)
     {
         await using var ctx = new BunitContext();
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
@@ -37,6 +42,23 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+
+        var contextAccessor = Substitute.For<IHttpContextAccessor>();
+        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
+        ctx.Services.AddScoped(_ => contextAccessor);
+
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            IsMultiModeEnabled = isMultiModeEnabled,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        ctx.Services.AddScoped(_ => options);
+
         using var cut = ctx.Render<CreateBlogPost>();
         var newBlogPost = cut.FindComponent<CreateNewBlogPost>();
 
@@ -45,6 +67,16 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Title == "My Title", TestContext.Current.CancellationToken);
         blogPostFromDb.ShouldNotBeNull();
         blogPostFromDb.ShortDescription.ShouldBe("My short Description");
+
+        if (isMultiModeEnabled)
+        {
+            blogPostFromDb.AuthorName.ShouldBe("Test Author");
+        }
+        else
+        {
+            blogPostFromDb.AuthorName.ShouldBeNull();
+        }
+
         toastService.Received(1).ShowInfo("Created BlogPost My Title", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }

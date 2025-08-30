@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.TestUtilities;
@@ -15,6 +15,7 @@ public class BlogPostBuilder
     private int likes;
     private DateTime? updateDate;
     private DateTime? scheduledPublishDate;
+    private string? authorName;
 
     public BlogPostBuilder WithTitle(string title)
     {
@@ -76,6 +77,12 @@ public class BlogPostBuilder
         return this;
     }
 
+    public BlogPostBuilder WithAuthorName(string authorName)
+    {
+        this.authorName = authorName;
+        return this;
+    }
+
     public BlogPost Build()
     {
         var blogPost = BlogPost.Create(
@@ -87,7 +94,8 @@ public class BlogPostBuilder
             updateDate,
             scheduledPublishDate,
             tags,
-            previewImageUrlFallback);
+            previewImageUrlFallback,
+            authorName);
         blogPost.Likes = likes;
         return blogPost;
     }

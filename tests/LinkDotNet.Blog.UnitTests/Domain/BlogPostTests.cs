@@ -7,12 +7,18 @@ namespace LinkDotNet.Blog.UnitTests.Domain;
 
 public class BlogPostTests
 {
-    [Fact]
-    public void ShouldUpdateBlogPost()
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void ShouldUpdateBlogPost(bool hasAuthorName)
     {
         var blogPostToUpdate = new BlogPostBuilder().Build();
         blogPostToUpdate.Id = "random-id";
-        var blogPost = BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2");
+
+        var blogPost = hasAuthorName
+            ? BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2", authorName: "Test Author")
+            : BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2");
+
         blogPost.Id = "something else";
 
         blogPostToUpdate.Update(blogPost);
@@ -26,6 +32,15 @@ public class BlogPostTests
         blogPostToUpdate.Tags.ShouldBeEmpty();
         blogPostToUpdate.Slug.ShouldNotBeNull();
         blogPostToUpdate.ReadingTimeInMinutes.ShouldBe(1);
+
+        if (hasAuthorName)
+        {
+            blogPostToUpdate.AuthorName.ShouldBe("Test Author");
+        }
+        else
+        {
+            blogPostToUpdate.AuthorName.ShouldBeNull();
+        }
     }
 
     [Theory]
