@@ -16,7 +16,7 @@ public class LoginModelTests
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = false,
+            UseMultiAuthorMode = false,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
@@ -38,7 +38,7 @@ public class LoginModelTests
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = true,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"
@@ -60,7 +60,7 @@ public class LoginModelTests
 
         options.Value.Returns(new ApplicationConfiguration()
         {
-            IsMultiModeEnabled = true,
+            UseMultiAuthorMode = true,
             BlogName = "Test",
             ConnectionString = "Test",
             DatabaseName = "Test"

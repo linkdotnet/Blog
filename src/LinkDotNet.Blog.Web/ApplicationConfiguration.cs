@@ -24,5 +24,5 @@ public sealed record ApplicationConfiguration
 
     public bool ShowSimilarPosts { get; init; }
 
-    public bool IsMultiModeEnabled { get; init; }
+    public bool UseMultiAuthorMode { get; init; }
 }

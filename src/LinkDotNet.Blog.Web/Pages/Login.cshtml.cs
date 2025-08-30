@@ -21,7 +21,7 @@ public sealed partial class LoginModel : PageModel
 
     public async Task OnGet(string redirectUri)
     {
-        if (!applicationConfiguration.IsMultiModeEnabled)
+        if (!applicationConfiguration.UseMultiAuthorMode)
         {
             await loginManager.SignInAsync(redirectUri);
         }
