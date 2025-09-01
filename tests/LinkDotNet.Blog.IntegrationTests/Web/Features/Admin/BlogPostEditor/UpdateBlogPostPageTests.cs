@@ -44,9 +44,9 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
 
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
-        ctx.Services.AddScoped(_ => contextAccessor);
+        var userRecordService = Substitute.For<IUserRecordService>();
+        userRecordService.GetDisplayNameAsync().Returns("Test Author");
+        ctx.Services.AddScoped(_ => userRecordService);
 
         var options = Substitute.For<IOptions<ApplicationConfiguration>>();
 
@@ -94,9 +94,9 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
 
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
-        ctx.Services.AddScoped(_ => contextAccessor);
+        var userRecordService = Substitute.For<IUserRecordService>();
+        userRecordService.GetDisplayNameAsync().Returns("Test Author");
+        ctx.Services.AddScoped(_ => userRecordService);
 
         var options = Substitute.For<IOptions<ApplicationConfiguration>>();
 
@@ -131,9 +131,9 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
 
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
-        ctx.Services.AddScoped(_ => contextAccessor);
+        var userRecordService = Substitute.For<IUserRecordService>();
+        userRecordService.GetDisplayNameAsync().Returns("Test Author");
+        ctx.Services.AddScoped(_ => userRecordService);
 
         var options = Substitute.For<IOptions<ApplicationConfiguration>>();
 

@@ -25,8 +25,7 @@ namespace LinkDotNet.Blog.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AuthorName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasMaxLength(256);
 
                     b.Property<string>("Content")
                         .IsRequired()

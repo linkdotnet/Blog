@@ -34,7 +34,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     }
 
     [Fact]
-    public async Task ShouldAuthorNameNullWhenNotGiven()
+    public async Task ShouldLoadAuthorNameAsNullWhenNotGiven()
     {
         var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
         await DbContext.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);

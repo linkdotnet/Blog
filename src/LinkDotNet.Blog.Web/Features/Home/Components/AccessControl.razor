@@ -1,6 +1,6 @@
-@using Microsoft.AspNetCore.Http
+@using LinkDotNet.Blog.Web.Features.Services
 @inject IOptions<ApplicationConfiguration> AppConfiguration
-@inject IHttpContextAccessor HttpContextAccessor
+@inject IUserRecordService UserRecordService
 
 <AuthorizeView>
     <Authorized>
@@ -37,11 +37,11 @@
 
     private string? authorName;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (AppConfiguration.Value.UseMultiAuthorMode)
         {
-            authorName = HttpContextAccessor.HttpContext?.User.Identity?.Name;
+            authorName = await UserRecordService.GetDisplayNameAsync();
         }
     }
 }
