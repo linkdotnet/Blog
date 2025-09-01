@@ -1,9 +1,12 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.Logging;
+using NSubstitute;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Services;
 
@@ -68,5 +71,25 @@ public class UserRecordServiceTests : BunitContext
 
         recordToDb.ShouldNotBeNull();
         recordToDb.UrlClicked.ShouldBe(expectedRecord);
+    }
+
+    [Fact]
+    public async Task ShouldGetDisplayNameWhenAuthenticated()
+    {
+        var claims = new List<Claim>()
+        {
+            new Claim("name", "Test Author")
+        };
+
+        fakeAuthenticationStateProvider.TriggerAuthenticationStateChanged("Steven", claims: claims);
+        var authorName = await sut.GetDisplayNameAsync();
+        authorName.ShouldBe("Test Author");
+    }
+
+    [Fact]
+    public async Task ShouldGetNullAsDisplayNameWhenUnauthenticated()
+    {
+        var authorName = await sut.GetDisplayNameAsync();
+        authorName.ShouldBeNull();
     }
 }

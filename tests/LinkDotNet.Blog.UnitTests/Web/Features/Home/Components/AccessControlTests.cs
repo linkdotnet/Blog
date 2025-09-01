@@ -1,6 +1,7 @@
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -25,9 +26,9 @@ public class AccessControlTests : BunitContext
 
         Services.AddScoped(_ => options);
 
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
-        Services.AddScoped(_ => contextAccessor);
+        var userRecordService = Substitute.For<IUserRecordService>();
+        userRecordService.GetDisplayNameAsync().Returns("Test Author");
+        Services.AddScoped(_ => userRecordService);
     }
 
     [Fact]

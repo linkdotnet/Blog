@@ -46,13 +46,13 @@ public class CreateNewBlogPostTests : BunitContext
 
         Services.AddScoped(_ => options);
 
-        var contextAccessor = Substitute.For<IHttpContextAccessor>();
-        contextAccessor.HttpContext?.User.Identity?.Name.Returns("Test Author");
-        Services.AddScoped(_ => contextAccessor);
+        var userRecordService = Substitute.For<IUserRecordService>();
+        userRecordService.GetDisplayNameAsync().Returns("Test Author");
+        Services.AddScoped(_ => userRecordService);
     }
 
     [Fact]
-    public void ShouldCreateNewBlogPostWhenMultiModeIsEnabled()
+    public void ShouldCreateNewBlogPostWhenMultiAuthorModeIsEnabled()
     {
         BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
@@ -84,7 +84,7 @@ public class CreateNewBlogPostTests : BunitContext
     }
 
     [Fact]
-    public void ShouldAuthorNameIsNullWhenMultiModeIsDisable()
+    public void ShouldAuthorNameIsNullWhenMultiAuthorModeIsDisable()
     {
         options.Value.Returns(new ApplicationConfiguration()
         {

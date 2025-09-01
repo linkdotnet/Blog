@@ -1,5 +1,4 @@
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -22,27 +21,12 @@ public sealed class AuthLoginManager : ILoginManager
         authProvider = authInformation.Value.Provider;
     }
 
-    public async Task SignInAsync(string redirectUri, string? authorName = null)
+    public async Task SignInAsync(string redirectUri)
     {
-        if (authorName is not null)
+        await httpContext.ChallengeAsync(authProvider, new AuthenticationProperties
         {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, authorName)
-            };
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            await httpContext.SignInAsync(authProvider, principal);
-            httpContext.Response.Redirect(redirectUri);
-        }
-        else
-        {
-            await httpContext.ChallengeAsync(authProvider, new AuthenticationProperties
-            {
-                RedirectUri = redirectUri,
-            });
-        }
+            RedirectUri = redirectUri,
+        });
     }
 
     public async Task SignOutAsync(string redirectUri = "/")

@@ -2,7 +2,6 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
-@using Microsoft.AspNetCore.Http
 @using NCronJob
 @using System.Threading
 @inject IJSRuntime JSRuntime
@@ -10,7 +9,7 @@
 @inject IInstantJobRegistry InstantJobRegistry
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IOptions<ApplicationConfiguration> AppConfiguration
-@inject IHttpContextAccessor HttpContextAccessor
+@inject IUserRecordService UserRecordService
 
 <PageTitle>Creating new Blog Post</PageTitle>
 
@@ -287,7 +286,7 @@
 
         if (AppConfiguration.Value.UseMultiAuthorMode)
         {
-            authorName = HttpContextAccessor.HttpContext?.User.Identity?.Name;
+            authorName = await UserRecordService.GetDisplayNameAsync();
         }
     }
 

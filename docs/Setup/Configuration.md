@@ -65,7 +65,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"ServiceUrl": "",
 		"ContainerName": "",
 		"CdnEndpoint": ""
-	}
+	},
+	"UseMultiAuthorMode": false
 }
 ```
 
@@ -109,3 +110,4 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ServiceUrl                                    | string         | The host url of the Azure blob storage. Only used if `AuthenticationMode` is set to `Default`                                                                                    |
 | ContainerName                                 | string         | The container name for the image storage provider                                                                                                                                |
 | CdnEndpoint                                   | string         | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets.                                  |
+| UseMultiAuthorMode                            | boolean        | The default value is `false`. If set to `true` then author name will be associated with blog posts at the time of creation.

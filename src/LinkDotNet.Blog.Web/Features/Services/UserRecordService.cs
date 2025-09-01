@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -37,6 +37,21 @@ public sealed partial class UserRecordService : IUserRecordService
         {
             LogUserRecordError(e);
         }
+    }
+
+    public async ValueTask<string?> GetDisplayNameAsync()
+    {
+        var user = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+        if (user?.Identity is not { IsAuthenticated: true })
+        {
+            return null;
+        }
+
+        var name = user.FindFirst("Name")?.Value
+                   ?? user.FindFirst("preferred_username")?.Value
+                   ?? user.FindFirst("nickname")?.Value;
+
+        return string.IsNullOrWhiteSpace(name) ? null : name;
     }
 
     private async ValueTask GetAndStoreUserRecordAsync()
