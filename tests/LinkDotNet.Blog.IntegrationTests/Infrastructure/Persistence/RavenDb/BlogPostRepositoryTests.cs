@@ -46,7 +46,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
     }
 
     [Fact]
-    public async Task ShouldAuthorNameNullWhenNotGiven()
+    public async Task ShouldSetAuthorNameAsNullWhenNotGiven()
     {
         var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
         await SaveBlogPostAsync(blogPost);
