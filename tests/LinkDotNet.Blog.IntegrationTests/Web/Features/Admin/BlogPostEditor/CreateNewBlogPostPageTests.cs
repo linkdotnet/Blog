@@ -12,7 +12,6 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -41,9 +40,9 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
 
-        var userRecordService = Substitute.For<IUserRecordService>();
-        userRecordService.GetDisplayNameAsync().Returns("Test Author");
-        ctx.Services.AddScoped(_ => userRecordService);
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.GetDisplayNameAsync().Returns("Test Author");
+        ctx.Services.AddScoped(_ => currentUserService);
 
         var options = Substitute.For<IOptions<ApplicationConfiguration>>();
 
@@ -89,9 +88,9 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
 
-        var userRecordService = Substitute.For<IUserRecordService>();
-        userRecordService.GetDisplayNameAsync().Returns("Test Author");
-        ctx.Services.AddScoped(_ => userRecordService);
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.GetDisplayNameAsync().Returns("Test Author");
+        ctx.Services.AddScoped(_ => currentUserService);
 
         var options = Substitute.For<IOptions<ApplicationConfiguration>>();
 

@@ -2,7 +2,6 @@ using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using LinkDotNet.Blog.Web.Features.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -26,9 +25,9 @@ public class AccessControlTests : BunitContext
 
         Services.AddScoped(_ => options);
 
-        var userRecordService = Substitute.For<IUserRecordService>();
-        userRecordService.GetDisplayNameAsync().Returns("Test Author");
-        Services.AddScoped(_ => userRecordService);
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.GetDisplayNameAsync().Returns("Test Author");
+        Services.AddScoped(_ => currentUserService);
     }
 
     [Fact]
@@ -92,7 +91,7 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("label:contains('Test Author')").ShouldHaveSingleItem();
+        cut.FindAll("a:contains('Log out Test Author')").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -110,6 +109,6 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("label:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("a:contains('Log out Test Author')").ShouldBeEmpty();
     }
 }

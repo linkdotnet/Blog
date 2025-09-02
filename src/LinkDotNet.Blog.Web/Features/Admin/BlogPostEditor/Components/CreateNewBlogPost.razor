@@ -9,7 +9,7 @@
 @inject IInstantJobRegistry InstantJobRegistry
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IOptions<ApplicationConfiguration> AppConfiguration
-@inject IUserRecordService UserRecordService
+@inject ICurrentUserService CurrentUserService
 
 <PageTitle>Creating new Blog Post</PageTitle>
 
@@ -286,7 +286,7 @@
 
         if (AppConfiguration.Value.UseMultiAuthorMode)
         {
-            authorName = await UserRecordService.GetDisplayNameAsync();
+            authorName = await CurrentUserService.GetDisplayNameAsync();
         }
     }
 

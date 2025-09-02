@@ -12,7 +12,6 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
@@ -46,9 +45,9 @@ public class CreateNewBlogPostTests : BunitContext
 
         Services.AddScoped(_ => options);
 
-        var userRecordService = Substitute.For<IUserRecordService>();
-        userRecordService.GetDisplayNameAsync().Returns("Test Author");
-        Services.AddScoped(_ => userRecordService);
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.GetDisplayNameAsync().Returns("Test Author");
+        Services.AddScoped(_ => currentUserService);
     }
 
     [Fact]
@@ -84,7 +83,7 @@ public class CreateNewBlogPostTests : BunitContext
     }
 
     [Fact]
-    public void ShouldAuthorNameIsNullWhenMultiAuthorModeIsDisable()
+    public void ShouldSetAuthorNameAsNullWhenMultiAuthorModeIsDisable()
     {
         options.Value.Returns(new ApplicationConfiguration()
         {

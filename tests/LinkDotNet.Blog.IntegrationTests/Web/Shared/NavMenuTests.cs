@@ -21,7 +21,7 @@ public class NavMenuTests : BunitContext
     public void ShouldNavigateToSearchPage()
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
         AddAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
         var cut = Render<NavMenu>();
@@ -39,7 +39,7 @@ public class NavMenuTests : BunitContext
             .WithIsAboutMeEnabled(true)
             .Build());
         Services.AddScoped(_ => config);
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
         AddAuthorization();
 
         var cut = Render<NavMenu>();
@@ -55,7 +55,7 @@ public class NavMenuTests : BunitContext
     {
         var config = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => config);
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
         AddAuthorization();
         var cut = Render<NavMenu>();
 
@@ -71,7 +71,7 @@ public class NavMenuTests : BunitContext
             .WithBlogBrandUrl("http://localhost/img.png")
             .Build());
         Services.AddScoped(_ => config);
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
 
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => profileInfoConfig);
@@ -96,7 +96,7 @@ public class NavMenuTests : BunitContext
             .WithBlogName("Steven")
             .Build());
         Services.AddScoped(_ => config);
-        Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
 
         var profileInfoConfig = Options.Create(new ProfileInformationBuilder().Build());
         Services.AddScoped(_ => profileInfoConfig);
