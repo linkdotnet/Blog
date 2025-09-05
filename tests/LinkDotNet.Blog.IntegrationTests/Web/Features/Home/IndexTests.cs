@@ -1,5 +1,6 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
+using Bunit.Extensions.WaitForHelpers;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
@@ -139,12 +140,48 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".blog-card").Count.ShouldBe(10);
     }
 
+    [Fact]
+    public async Task ShouldShowAuthorNameWhenUseMultiAuthorModeIsTrue()
+    {
+        var publishedPost = new BlogPostBuilder()
+            .WithAuthorName("Test Author")
+            .Build();
+
+        await Repository.StoreAsync(publishedPost);
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        RegisterComponents(ctx, useMultiAuthorMode: true);
+        var cut = ctx.Render<Index>();
+
+        cut.WaitForElement("li:contains('Test Author')");
+        cut.FindAll("li:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public async Task ShouldNotShowAuthorNameWhenUseMultiAuthorModeIsFalse()
+    {
+        var publishedPost = new BlogPostBuilder()
+            .WithAuthorName("Test Author")
+            .Build();
+
+        await Repository.StoreAsync(publishedPost);
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        RegisterComponents(ctx, useMultiAuthorMode: false);
+        var cut = ctx.Render<Index>();
+
+        var func = () => cut.WaitForElement("li:contains('Test Author')");
+        func.ShouldThrow<WaitForFailedException>();
+        cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
+    }
+
     private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction)
-        CreateSampleAppConfiguration(string? profilePictureUri = null)
+        CreateSampleAppConfiguration(string? profilePictureUri = null, bool useMultiAuthorMode = false)
     {
         return (new ApplicationConfigurationBuilder()
                 .WithBlogName(string.Empty)
                 .WithBlogPostsPerPage(10)
+                .WithUseMultiAuthorMode(useMultiAuthorMode)
                 .Build(),
             new Introduction
             {
@@ -163,11 +200,11 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         }
     }
 
-    private void RegisterComponents(BunitContext ctx, string? profilePictureUri = null)
+    private void RegisterComponents(BunitContext ctx, string? profilePictureUri = null, bool useMultiAuthorMode = false)
     {
         ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).ApplicationConfiguration));
-        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri).Introduction));
+        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri, useMultiAuthorMode).ApplicationConfiguration));
+        ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri, useMultiAuthorMode).Introduction));
         ctx.Services.AddScoped(_ => Substitute.For<ICacheTokenProvider>());
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
     }
