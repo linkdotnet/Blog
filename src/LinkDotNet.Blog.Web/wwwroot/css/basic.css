@@ -315,6 +315,7 @@ code {
 .profile-keypoints li {
 	padding-bottom: 0.6em;
 	letter-spacing: 0.05em;
+	display: flex;
 }
 
 /* As the MarkupComponent is a base class we have to use deep */
