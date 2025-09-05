@@ -91,7 +91,7 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("a:contains('Log out Test Author')").ShouldHaveSingleItem();
+        cut.FindAll("a:contains('Test Author')").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -109,6 +109,6 @@ public class AccessControlTests : BunitContext
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("a:contains('Log out Test Author')").ShouldBeEmpty();
+        cut.FindAll("a:contains('Test Author')").ShouldBeEmpty();
     }
 }

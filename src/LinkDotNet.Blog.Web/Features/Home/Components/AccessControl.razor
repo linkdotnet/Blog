@@ -24,7 +24,21 @@
 	            <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out @if(authorName is not null){@authorName}</a></li>
+        @if (authorName is not null)
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="user-tie"></i> @authorName
+                </a>
+                <ul class="dropdown-menu ps-0" aria-labelledby="navbarDropdown">
+                    <li><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
+        }
     </Authorized>
     <NotAuthorized>
         <li class="nav-item"><a class="nav-link" href="login?redirectUri=@CurrentUri" rel="nofollow"><i class="unlocked"></i> Log in</a></li>
