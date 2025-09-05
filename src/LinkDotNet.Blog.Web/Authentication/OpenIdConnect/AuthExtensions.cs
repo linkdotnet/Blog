@@ -39,6 +39,7 @@ public static class AuthExtensions
 
             options.Scope.Clear();
             options.Scope.Add("openid");
+            options.Scope.Add("profile");
 
             // Set the callback path, so Auth provider will call back to http://localhost:1234/callback
             // Also ensure that you have added the URL as an Allowed Callback URL in your Auth provider dashboard

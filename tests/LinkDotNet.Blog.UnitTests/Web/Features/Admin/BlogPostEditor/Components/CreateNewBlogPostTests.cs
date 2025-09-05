@@ -7,11 +7,13 @@ using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using NCronJob;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components;
@@ -19,7 +21,8 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components
 public class CreateNewBlogPostTests : BunitContext
 {
     private readonly CacheService cacheService = new CacheService();
-    
+    private readonly IOptions<ApplicationConfiguration> options;
+
     public CreateNewBlogPostTests()
     {
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
@@ -30,10 +33,25 @@ public class CreateNewBlogPostTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped<ICacheInvalidator>(_ => cacheService);
         Services.AddScoped(_ => Substitute.For<IToastService>());
+        options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
+
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.GetDisplayNameAsync().Returns("Test Author");
+        Services.AddScoped(_ => currentUserService);
     }
 
     [Fact]
-    public void ShouldCreateNewBlogPostWhenValidDataGiven()
+    public void ShouldCreateNewBlogPostWhenMultiAuthorModeIsEnabled()
     {
         BlogPost? blogPost = null;
         var cut = Render<CreateNewBlogPost>(
@@ -57,10 +75,40 @@ public class CreateNewBlogPostTests : BunitContext
         blogPost.PreviewImageUrlFallback.ShouldBe("My fallback preview url");
         blogPost.IsPublished.ShouldBeFalse();
         blogPost.UpdatedDate.ShouldNotBe(default);
+        blogPost.AuthorName.ShouldBe("Test Author");
         blogPost.Tags.Count.ShouldBe(3);
         blogPost.Tags.ShouldContain("Tag1");
         blogPost.Tags.ShouldContain("Tag2");
         blogPost.Tags.ShouldContain("Tag3");
+    }
+
+    [Fact]
+    public void ShouldSetAuthorNameAsNullWhenMultiAuthorModeIsDisable()
+    {
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = false,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        BlogPost? blogPost = null;
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.OnBlogPostCreated, bp => blogPost = bp));
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
+        cut.Find("#preview").Change("My preview url");
+        cut.Find("#fallback-preview").Change("My fallback preview url");
+        cut.Find("#published").Change(false);
+        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+
+        cut.Find("form").Submit();
+
+        cut.WaitForState(() => cut.Find("#title").TextContent == string.Empty);
+        blogPost.ShouldNotBeNull();
+        blogPost.AuthorName.ShouldBeNull();
     }
 
     [Fact]

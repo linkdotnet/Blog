@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -27,6 +27,7 @@ public sealed class DummyLoginManager : ILoginManager
         var claims = new[]
         {
             new Claim(ClaimTypes.Name, "Dummy user"),
+            new Claim("name", "Dummy user"),
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
         };
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

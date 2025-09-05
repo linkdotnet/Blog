@@ -1,9 +1,12 @@
 using System;
 using System.Linq;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using static Microsoft.IO.RecyclableMemoryStreamManager;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
@@ -13,6 +16,17 @@ public class ShortBlogPostTests : BunitContext
     public void ShouldOpenBlogPost()
     {
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().Build();
         blogPost.Id = "SomeId";
         var cut = Render<ShortBlogPost>(
@@ -27,6 +41,17 @@ public class ShortBlogPostTests : BunitContext
     public void ShouldNavigateToEscapedTagSiteWhenClickingOnTag()
     {
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().WithTags("Tag 1").Build();
         var cut = Render<ShortBlogPost>(
             p => p.Add(c => c.BlogPost, blogPost));
@@ -40,6 +65,17 @@ public class ShortBlogPostTests : BunitContext
     public void WhenNoTagsAreGivenThenTagsAreNotShown()
     {
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().Build();
 
         var cut = Render<ShortBlogPost>(
@@ -52,6 +88,17 @@ public class ShortBlogPostTests : BunitContext
     public void GivenBlogPostThatIsScheduled_ThenIndicating()
     {
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(new DateTime(2099, 1, 1))
             .Build();
 
@@ -65,6 +112,17 @@ public class ShortBlogPostTests : BunitContext
     public void GivenBlogPostThatIsNotPublishedAndNotScheduled_ThenIndicating()
     {
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().IsPublished(false).Build();
 
         var cut = Render<ShortBlogPost>(
@@ -77,6 +135,17 @@ public class ShortBlogPostTests : BunitContext
     public void GivenBlogPostThatIsPublished_ThenNoDraft()
     {
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().IsPublished(true).Build();
 
         var cut = Render<ShortBlogPost>(
@@ -84,5 +153,57 @@ public class ShortBlogPostTests : BunitContext
 
         cut.FindAll(".draft").ShouldBeEmpty();
         cut.FindAll(".scheduled").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void ShouldShowAuthorNameWhenUseMultiAuthorModeIsTrue()
+    {
+        Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
+
+        var blogPost = new BlogPostBuilder()
+            .WithAuthorName("Test Author")
+            .IsPublished(true)
+            .Build();
+
+        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.FindAll("li:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public void ShouldNotShowAuthorNameWhenUseMultiAuthorModeIsFalse()
+    {
+        Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = false,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
+
+        var blogPost = new BlogPostBuilder()
+            .WithAuthorName("Test Author")
+            .IsPublished(true)
+            .Build();
+
+        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
     }
 }
