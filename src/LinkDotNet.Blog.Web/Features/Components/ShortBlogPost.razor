@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Web.Features.Bookmarks
 @using LinkDotNet.Blog.Web.Features.Bookmarks.Components
 @inject IBookmarkService BookmarkService
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <article>
 	<div class="blog-card @AltCssClass">
@@ -33,7 +34,11 @@
 					</li>
 				}
 				<li class="read-time me-4">@BlogPost.ReadingTimeInMinutes minute read</li>
-			</ul>
+                @if (AppConfiguration.Value.UseMultiAuthorMode)
+                {
+                    <li class="me-4">@BlogPost.AuthorName</li>
+                }
+            </ul>
 		</div>
 		<div class="description">
 			<div class="header">
