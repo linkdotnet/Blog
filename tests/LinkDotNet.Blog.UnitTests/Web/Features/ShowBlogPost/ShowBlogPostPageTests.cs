@@ -164,7 +164,43 @@ public class ShowBlogPostPageTests : BunitContext
         
         cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.ShouldBe("blogPost/1");
     }
-    
+
+    [Fact]
+    public void ShouldShowAuthorNameWhenUseMultiAuthorModeIsTrue()
+    {
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .WithAuthorName("Test Author")
+            .Build();
+        blogPost.Id = "1";
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(true).Build()));
+
+        var cut = Render<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindAll("span:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public void ShouldNotShowAuthorNameWhenUseMultiAuthorModeIsFalse()
+    {
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .WithAuthorName("Test Author")
+            .Build();
+        blogPost.Id = "1";
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(false).Build()));
+
+        var cut = Render<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
+    }
+
     private class PageTitleStub : ComponentBase
     {
         [Parameter]
