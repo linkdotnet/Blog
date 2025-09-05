@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
@@ -138,13 +138,45 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find(".blogpost-content > p").TextContent.ShouldBe("This is a Content shortcode");
     }
 
-    private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null)
+    [Fact]
+    public async Task ShouldShowAuthorNameWhenUseMultiAuthorModeIsTrue()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization();
+        RegisterComponents(ctx, useMultiAuthorMode: true);
+        var blogPost = new BlogPostBuilder().WithAuthorName("Test Author").IsPublished().Build();
+        await Repository.StoreAsync(blogPost);
+
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+
+        cut.FindAll("span:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public async Task ShouldNotShowAuthorNameWhenUseMultiAuthorModeIsFalse()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization();
+        RegisterComponents(ctx, useMultiAuthorMode: false);
+        var blogPost = new BlogPostBuilder().WithAuthorName("Test Author").IsPublished().Build();
+        await Repository.StoreAsync(blogPost);
+
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+
+        cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
+    }
+
+    private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null, bool useMultiAuthorMode = false)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
-        ctx.Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
+        ctx.Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(useMultiAuthorMode).Build()));
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);

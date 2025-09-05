@@ -53,7 +53,11 @@ else if (BlogPost is not null)
 					</div>
           				<span class="read-time"></span>
 					<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
-					<div class="d-flex align-items-center">
+                    @if (AppConfiguration.Value.UseMultiAuthorMode)
+                    {
+                        <span class="me-2">@BlogPost.AuthorName</span>
+                    }
+                    <div class="d-flex align-items-center">
 						<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="BlogPostBookmarked"></BookmarkButton>
 					</div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
