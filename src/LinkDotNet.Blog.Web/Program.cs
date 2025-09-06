@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace LinkDotNet.Blog.Web;
@@ -25,6 +26,10 @@ public class Program
 
     private static void RegisterServices(WebApplicationBuilder builder)
     {
+        builder.Services.AddSecurityHeaderPolicies()
+            .SetDefaultPolicy(p => p.AddDefaultSecurityHeaders())
+            .AddPolicy("API", p => p.AddDefaultApiSecurityHeaders());
+
         builder.Services
             .AddHostingServices()
             .AddConfiguration()
@@ -49,6 +54,8 @@ public class Program
 
     private static void ConfigureApp(WebApplication app)
     {
+        app.UseSecurityHeaders();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
