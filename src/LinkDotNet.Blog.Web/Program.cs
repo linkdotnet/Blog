@@ -27,7 +27,15 @@ public class Program
     private static void RegisterServices(WebApplicationBuilder builder)
     {
         builder.Services.AddSecurityHeaderPolicies()
-            .SetDefaultPolicy(p => p.AddDefaultSecurityHeaders())
+            .SetDefaultPolicy(p =>
+                p.AddDefaultSecurityHeaders()
+                    .AddCrossOriginEmbedderPolicy(policy => policy.UnsafeNone())
+                    .AddPermissionsPolicy(policy =>
+                    {
+                        policy.AddCamera().None();
+                        policy.AddMicrophone().None();
+                        policy.AddGeolocation().None();
+                    }))
             .AddPolicy("API", p => p.AddDefaultApiSecurityHeaders());
 
         builder.Services
