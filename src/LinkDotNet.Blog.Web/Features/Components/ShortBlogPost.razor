@@ -34,9 +34,9 @@
 					</li>
 				}
 				<li class="read-time me-4">@BlogPost.ReadingTimeInMinutes minute read</li>
-                @if (AppConfiguration.Value.UseMultiAuthorMode)
+                @if (AppConfiguration.Value.UseMultiAuthorMode && BlogPost.AuthorName is not null)
                 {
-                    <li class="me-4">@BlogPost.AuthorName</li>
+                    <li class="me-4"><i class="user-tie"></i> @BlogPost.AuthorName</li>
                 }
             </ul>
 		</div>

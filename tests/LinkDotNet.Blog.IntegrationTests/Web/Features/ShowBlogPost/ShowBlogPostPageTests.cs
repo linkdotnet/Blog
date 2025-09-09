@@ -152,6 +152,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
             p => p.Add(b => b.BlogPostId, blogPost.Id));
 
         cut.FindAll("span:contains('Test Author')").ShouldHaveSingleItem();
+        cut.FindAll("i.user-tie").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -168,6 +169,24 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
             p => p.Add(b => b.BlogPostId, blogPost.Id));
 
         cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task ShouldNotShowAuthorNameWhenAuthorNameIsNull()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization();
+        RegisterComponents(ctx, useMultiAuthorMode: true);
+        var blogPost = new BlogPostBuilder().IsPublished().Build(); // Author name is null here.
+        await Repository.StoreAsync(blogPost);
+
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+
+        cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
     }
 
     private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null, bool useMultiAuthorMode = false)

@@ -179,6 +179,7 @@ public class ShortBlogPostTests : BunitContext
         var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
 
         cut.FindAll("li:contains('Test Author')").ShouldHaveSingleItem();
+        cut.FindAll("i.user-tie").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -205,5 +206,32 @@ public class ShortBlogPostTests : BunitContext
         var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
 
         cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void ShouldNotShowAuthorNameWhenAuthorNameIsNull()
+    {
+        Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
+
+        var blogPost = new BlogPostBuilder()
+            .IsPublished(true)
+            .Build(); // Author name is null here.
+
+        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
     }
 }

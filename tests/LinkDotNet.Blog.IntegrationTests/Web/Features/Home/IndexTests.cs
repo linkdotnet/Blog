@@ -155,6 +155,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
 
         cut.WaitForElement("li:contains('Test Author')");
         cut.FindAll("li:contains('Test Author')").ShouldHaveSingleItem();
+        cut.FindAll("i.user-tie").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -173,6 +174,23 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         var func = () => cut.WaitForElement("li:contains('Test Author')");
         func.ShouldThrow<WaitForFailedException>();
         cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task ShouldNotShowAuthorNameWhenAuthorNameIsNull()
+    {
+        var publishedPost = new BlogPostBuilder().Build(); // Author name is null here.
+        await Repository.StoreAsync(publishedPost);
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        RegisterComponents(ctx, useMultiAuthorMode: true);
+        var cut = ctx.Render<Index>();
+
+        var func = () => cut.WaitForElement("li:contains('Test Author')");
+        func.ShouldThrow<WaitForFailedException>();
+        cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
     }
 
     private static (ApplicationConfiguration ApplicationConfiguration, Introduction Introduction)

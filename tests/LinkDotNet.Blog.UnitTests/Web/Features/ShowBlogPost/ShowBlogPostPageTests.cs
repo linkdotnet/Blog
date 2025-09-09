@@ -181,6 +181,7 @@ public class ShowBlogPostPageTests : BunitContext
             p => p.Add(s => s.BlogPostId, "1"));
 
         cut.FindAll("span:contains('Test Author')").ShouldHaveSingleItem();
+        cut.FindAll("i.user-tie").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -199,6 +200,24 @@ public class ShowBlogPostPageTests : BunitContext
             p => p.Add(s => s.BlogPostId, "1"));
 
         cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void ShouldNotShowAuthorNameWhenAuthorNameIsNull()
+    {
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder().Build(); // Author name is null here.
+        blogPost.Id = "1";
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(true).Build()));
+
+        var cut = Render<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
+        cut.FindAll("i.user-tie").ShouldBeEmpty();
     }
 
     private class PageTitleStub : ComponentBase
