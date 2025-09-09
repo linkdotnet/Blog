@@ -271,6 +271,11 @@ code {
 	padding-left: 1rem;
 	white-space: nowrap;
 }
+
+#navbarSupportedContent .nav-link {
+	padding-left: 1rem;
+	padding-right: 1rem;
+}
 /*endregion */
 
 /*region Profile.razor */
