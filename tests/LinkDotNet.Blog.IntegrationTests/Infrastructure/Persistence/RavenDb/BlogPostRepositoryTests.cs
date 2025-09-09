@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -27,7 +27,7 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
     [Fact]
     public async Task ShouldLoadBlogPost()
     {
-        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" }, authorName: "Test Author");
         await SaveBlogPostAsync(blogPost);
 
         var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
@@ -38,10 +38,23 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         blogPostFromRepo.Content.ShouldBe("Content");
         blogPostFromRepo.PreviewImageUrl.ShouldBe("url");
         blogPostFromRepo.IsPublished.ShouldBeTrue();
+        blogPostFromRepo.AuthorName.ShouldBe("Test Author");
         blogPostFromRepo.Tags.Count.ShouldBe(2);
         var tagContent = blogPostFromRepo.Tags;
         tagContent.ShouldContain("Tag 1");
         tagContent.ShouldContain("Tag 2");
+    }
+
+    [Fact]
+    public async Task ShouldSetAuthorNameAsNullWhenNotGiven()
+    {
+        var blogPost = BlogPost.Create("Title", "Subtitle", "Content", "url", true, tags: new[] { "Tag 1", "Tag 2" });
+        await SaveBlogPostAsync(blogPost);
+
+        var blogPostFromRepo = await sut.GetByIdAsync(blogPost.Id);
+
+        blogPostFromRepo.ShouldNotBeNull();
+        blogPostFromRepo.AuthorName.ShouldBeNull();
     }
 
     [Fact]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.RateLimiting;
 using Blazorise;
 using Blazorise.Bootstrap5;
@@ -24,6 +24,7 @@ public static class ServiceExtensions
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlWriter, XmlWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheTokenProvider>(s => s.GetRequiredService<CacheService>());

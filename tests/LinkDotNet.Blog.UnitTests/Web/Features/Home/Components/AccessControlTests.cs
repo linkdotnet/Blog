@@ -1,10 +1,35 @@
-﻿using AngleSharp.Html.Dom;
+using AngleSharp.Html.Dom;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
+using LinkDotNet.Blog.Web.Features.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
 public class AccessControlTests : BunitContext
 {
+    private readonly IOptions<ApplicationConfiguration> options;
+
+    public AccessControlTests()
+    {
+        options = Substitute.For<IOptions<ApplicationConfiguration>>();
+
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        Services.AddScoped(_ => options);
+
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        currentUserService.GetDisplayNameAsync().Returns("Test Author");
+        Services.AddScoped(_ => currentUserService);
+    }
+
     [Fact]
     public void ShouldShowLoginAndHideAdminWhenNotLoggedIn()
     {
@@ -49,5 +74,41 @@ public class AccessControlTests : BunitContext
             p => p.Add(s => s.CurrentUri, currentUri));
 
         ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.ShouldContain(currentUri);
+    }
+
+    [Fact]
+    public void ShouldShowAuthorNameWhenUseMultiAuthorModeIsEnabled()
+    {
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = true,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<AccessControl>();
+
+        cut.FindAll("a:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public void ShouldHideAuthorNameWhenUseMultiAuthorModeIsDisabled()
+    {
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = false,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<AccessControl>();
+
+        cut.FindAll("a:contains('Test Author')").ShouldBeEmpty();
     }
 }

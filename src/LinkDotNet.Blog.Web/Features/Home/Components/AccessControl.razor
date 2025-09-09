@@ -1,4 +1,8 @@
-﻿<AuthorizeView>
+@using LinkDotNet.Blog.Web.Features.Services
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject ICurrentUserService CurrentUserService
+
+<AuthorizeView>
     <Authorized>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -20,7 +24,21 @@
 	            <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a></li>
             </ul>
         </li>
-        <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
+        @if (authorName is not null)
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="user-tie"></i> @authorName
+                </a>
+                <ul class="dropdown-menu ps-0" aria-labelledby="navbarDropdown">
+                    <li><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
+                </ul>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item"><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
+        }
     </Authorized>
     <NotAuthorized>
         <li class="nav-item"><a class="nav-link" href="login?redirectUri=@CurrentUri" rel="nofollow"><i class="unlocked"></i> Log in</a></li>
@@ -30,4 +48,14 @@
 @code {
 	[Parameter]
     public string CurrentUri { get; set; } = string.Empty;
+
+    private string? authorName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AppConfiguration.Value.UseMultiAuthorMode)
+        {
+            authorName = await CurrentUserService.GetDisplayNameAsync();
+        }
+    }
 }
