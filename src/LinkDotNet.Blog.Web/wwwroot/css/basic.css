@@ -202,23 +202,6 @@ code {
 }
 /*endregion */
 
-/*region Skilltag.razor */
-.skill-tag {
-	padding: 8px;
-	border-radius: 5px;
-	background-color: var(--tag-background);
-	display: inline-block;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.skill-tag img {
-	padding-right: 12px;
-	width: 36px;
-}
-/*endregion */
-
 /*#region IntroductionCard.razor */
 .introduction-background {
 	background-repeat: no-repeat;
