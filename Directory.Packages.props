@@ -16,7 +16,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.9" />
-    <PackageVersion Include="MongoDB.Driver" Version="3.4.3" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.5.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="RavenDB.Client" Version="7.1.2" />
@@ -26,7 +26,7 @@
     <PackageVersion Include="Blazored.Toast" Version="4.2.1" />
     <PackageVersion Include="Blazorise.Bootstrap5" Version="1.8.1" />
     <PackageVersion Include="Blazorise.Markdown" Version="1.8.1" />
-    <PackageVersion Include="Markdig" Version="0.41.3" />
+    <PackageVersion Include="Markdig" Version="0.42.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.9" />
     <PackageVersion Include="NCronJob" Version="4.6.0" />
