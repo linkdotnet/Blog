@@ -46,19 +46,28 @@ else if (BlogPost is not null)
 			<div class="blog-inner-content">
 				<header class="text-center">
 					<h1 class="fw-bold">@BlogPost.Title</h1></header>
-				<div class="text-dark-emphasis d-flex flex-wrap gap-2">
-					<div class="me-2">
-						<span class="date"></span>
-						<span class="ms-1">@BlogPost.UpdatedDate.ToShortDateString()</span>
+				<div class="text-dark-emphasis d-flex flex-wrap align-items-center gap-3 meta-info">
+					<div class="d-inline-flex align-items-center">
+						<span class="date me-1"></span>
+						<span>@BlogPost.UpdatedDate.ToShortDateString()</span>
 					</div>
-          				<span class="read-time"></span>
-					<span class="me-2">@BlogPost.ReadingTimeInMinutes minute read</span>
-					<div class="d-flex align-items-center">
+					<div class="d-inline-flex align-items-center">
+						<span class="read-time me-1"></span>
+						<span>@BlogPost.ReadingTimeInMinutes minute read</span>
+					</div>
+                    @if (AppConfiguration.Value.UseMultiAuthorMode && BlogPost.AuthorName is not null)
+                    {
+						<div class="d-inline-flex align-items-center">
+							<i class="user-tie me-1"></i>
+							<span>@BlogPost.AuthorName</span>
+						</div>
+                    }
+                    <div class="d-inline-flex align-items-center">
 						<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="BlogPostBookmarked"></BookmarkButton>
 					</div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
-						<div class="d-flex align-items-center">
+						<div class="d-inline-flex align-items-center flex-wrap">
 							<span class="blogpost-tag me-2"></span>
 							<div class="d-flex flex-wrap gap-2">
 								@foreach (var tag in BlogPost.Tags)

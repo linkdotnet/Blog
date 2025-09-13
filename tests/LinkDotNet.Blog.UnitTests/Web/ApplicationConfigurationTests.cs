@@ -45,7 +45,8 @@ public class ApplicationConfigurationTests
             { "Authentication:Provider","Auth0"},
             { "Authentication:ClientId","123"},
             { "Authentication:ClientSecret","qwe"},
-            { "Authentication:Domain","example.com"}
+            { "Authentication:Domain","example.com"},
+            { "UseMultiAuthorMode","true"}
 
         };
         var configuration = new ConfigurationBuilder()
@@ -64,6 +65,7 @@ public class ApplicationConfigurationTests
         appConfiguration.BlogPostsPerPage.ShouldBe(5);
         appConfiguration.IsAboutMeEnabled.ShouldBeTrue();
         appConfiguration.ShowReadingIndicator.ShouldBeTrue();
+        appConfiguration.UseMultiAuthorMode.ShouldBeTrue();
 
         var giscusConfiguration = new GiscusConfigurationBuilder().Build();
         configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);

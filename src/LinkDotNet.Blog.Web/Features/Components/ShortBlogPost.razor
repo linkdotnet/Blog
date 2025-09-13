@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Web.Features.Bookmarks
 @using LinkDotNet.Blog.Web.Features.Bookmarks.Components
 @inject IBookmarkService BookmarkService
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <article>
 	<div class="blog-card @AltCssClass">
@@ -32,25 +33,25 @@
 						</ul>
 					</li>
 				}
-				<li class="me-4">
-					<span class="me-1" style="font-family: 'icons'; font-weight: 900;">&#xe94f;</span>
-					@BlogPost.ReadingTimeInMinutes minute read
-				</li>
-			</ul>
+				<li class="read-time me-4">@BlogPost.ReadingTimeInMinutes minute read</li>
+                @if (AppConfiguration.Value.UseMultiAuthorMode && BlogPost.AuthorName is not null)
+                {
+                    <li class="me-4"><i class="user-tie"></i> @BlogPost.AuthorName</li>
+                }
+            </ul>
 		</div>
 		<div class="description">
 			<div class="header">
-				<h4 class="fw-semibold lh-sm me-4">@BlogPost.Title</h4>
+				<h4 class="card-title">@BlogPost.Title</h4>
 				<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="ToggleBookmark"></BookmarkButton>
 			</div>
-			<p class="fw-light">@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
+			<p class="card-content">@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
 				<a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" aria-label="@BlogPost.Title">Read the whole article</a>
 			</p>
 		</div>
 	</div>
 </article>
-
 
 @code {
 	[Parameter, EditorRequired]

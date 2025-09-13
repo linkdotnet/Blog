@@ -12,7 +12,7 @@ public class BlogPostTests
     {
         var blogPostToUpdate = new BlogPostBuilder().Build();
         blogPostToUpdate.Id = "random-id";
-        var blogPost = BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2");
+        var blogPost = BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2", authorName: "Test Author");
         blogPost.Id = "something else";
 
         blogPostToUpdate.Update(blogPost);
@@ -26,6 +26,20 @@ public class BlogPostTests
         blogPostToUpdate.Tags.ShouldBeEmpty();
         blogPostToUpdate.Slug.ShouldNotBeNull();
         blogPostToUpdate.ReadingTimeInMinutes.ShouldBe(1);
+        blogPostToUpdate.AuthorName.ShouldBe("Test Author");
+    }
+
+    [Fact]
+    public void ShouldUpdateAuthorNameAsNullWhenNotGiven()
+    {
+        var blogPostToUpdate = new BlogPostBuilder().Build();
+        blogPostToUpdate.Id = "random-id";
+        var blogPost = BlogPost.Create("Title", "Desc", "Other Content", "Url", true, previewImageUrlFallback: "Url2");
+        blogPost.Id = "something else";
+
+        blogPostToUpdate.Update(blogPost);
+
+        blogPostToUpdate.AuthorName.ShouldBeNull();
     }
 
     [Theory]
