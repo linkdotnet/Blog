@@ -24,8 +24,8 @@
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Blazored.Toast" Version="4.2.1" />
-    <PackageVersion Include="Blazorise.Bootstrap5" Version="1.8.1" />
-    <PackageVersion Include="Blazorise.Markdown" Version="1.8.1" />
+    <PackageVersion Include="Blazorise.Bootstrap5" Version="1.8.2" />
+    <PackageVersion Include="Blazorise.Markdown" Version="1.8.2" />
     <PackageVersion Include="Markdig" Version="0.42.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.9" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.9" />
@@ -41,7 +41,7 @@
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <PackageVersion Include="RavenDB.TestDriver" Version="7.1.2" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="bunit" Version="2.0.49-preview" />
+    <PackageVersion Include="bunit" Version="2.0.50-preview" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
