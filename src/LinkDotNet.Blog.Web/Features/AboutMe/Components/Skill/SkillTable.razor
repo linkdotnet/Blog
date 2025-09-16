@@ -29,8 +29,8 @@
                         {
                             @if (ShowAdminActions)
                             {
-                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab"
-                                 class="skill-tag">
+                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)"
+                                 class="skill-tag cursor-grab">
                                     <SkillTag Skill="@skill"
                                               ShowAdminActions="@true"
                                               DeleteSkill="@(() => DeleteSkill(skill))"/>
