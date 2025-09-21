@@ -32,7 +32,7 @@
     <PackageVersion Include="NCronJob" Version="4.6.0" />
     <PackageVersion Include="ReverseMarkdown" Version="4.7.0" />
     <PackageVersion Include="System.ServiceModel.Syndication" Version="9.0.9" />
-		<PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders" Version="1.1.0"/>
+		<PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders" Version="1.2.0"/>
   </ItemGroup>
   <ItemGroup Label="Tests">
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.9" />
