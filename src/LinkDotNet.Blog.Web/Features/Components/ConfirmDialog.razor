@@ -1,8 +1,8 @@
 ﻿<ModalDialog @ref="ModalDialog" Title="@Title">
     <h3>@Content</h3>
-    <div class="actions">
-        <button id="ok" @onclick="OnYesButtonPressed" type="button" class="btn btn-primary">Ok</button>
-        <button id="cancel" @onclick="OnNoButtonPressed" type="button" class="btn btn-secondary">Cancel</button>
+    <div class="d-flex justify-content-end gap-2 mt-4">
+	    <button id="ok" @onclick="OnYesButtonPressed" type="button" class="btn btn-primary w-100">Ok</button>
+	    <button id="cancel" @onclick="OnNoButtonPressed" type="button" class="btn btn-secondary w-100" >Cancel</button>
     </div>
 </ModalDialog>
 
