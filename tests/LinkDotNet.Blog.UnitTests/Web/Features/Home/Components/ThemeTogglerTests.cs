@@ -48,7 +48,7 @@ public class ThemeTogglerTests : BunitContext
             .SetVoidResult();
         var cut = Render<ThemeToggler>();
 
-        cut.Find("div").Click();
+        await cut.Find("div").ClickAsync();
 
         setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
         await localStorage.Received(1).SetItemAsync("preferred-theme", "dark");

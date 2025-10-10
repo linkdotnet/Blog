@@ -26,7 +26,7 @@ public class UploadFileModalDialogTests : BunitContext
         var cut = Render<UploadFileModalDialog>();
         var task = cut.InvokeAsync(() => cut.Instance.ShowAsync("Filename.png"));
         
-        cut.Find("#abort").Click();
+        await cut.Find("#abort").ClickAsync();
 
         var result = await task;
         result.ShouldBeNull();

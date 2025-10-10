@@ -52,7 +52,7 @@ public class LikeTests : BunitContext
         var cut = Render<Like>(
             p => p.Add(l => l.BlogPost, blogPost));
 
-        cut.Find("span").Click();
+        await cut.Find("span").ClickAsync();
 
         await localStorage.Received(1).SetItemAsync("hasLiked/id", true);
     }
