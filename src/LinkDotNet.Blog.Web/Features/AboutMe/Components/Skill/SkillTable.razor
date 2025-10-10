@@ -5,7 +5,7 @@
         @if (ShowAdminActions)
         {
             <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()">
-                <i class="plus"></i>Add skill</button>
+                <i class="plus"></i> Add skill</button>
             <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
         }
     </div>
@@ -29,8 +29,8 @@
                         {
                             @if (ShowAdminActions)
                             {
-                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)" style="cursor: grab"
-                                 class="skill-tag">
+                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)"
+                                 class="skill-tag cursor-grab">
                                     <SkillTag Skill="@skill"
                                               ShowAdminActions="@true"
                                               DeleteSkill="@(() => DeleteSkill(skill))"/>
