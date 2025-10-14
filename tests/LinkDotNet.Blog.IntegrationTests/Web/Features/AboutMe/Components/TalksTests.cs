@@ -58,7 +58,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         var cut = ctx.Render<Talks>(
             p => p.Add(s => s.ShowAdminActions, true));
 
-        cut.WaitForComponent<TalkEntry>().Find("#talk-delete").Click();
+        await cut.WaitForComponent<TalkEntry>().Find("#talk-delete").ClickAsync();
 
         cut.WaitForState(() => !cut.HasComponent<TalkEntry>());
         cut.HasComponent<TalkEntry>().ShouldBeFalse();

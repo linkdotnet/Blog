@@ -40,7 +40,7 @@ public sealed class ShortCodesPageTests : SqlDatabaseTestBase<ShortCode>
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         var cut = ctx.Render<ShortCodesPage>();
-        cut.Find("#edit-shortcode").Click();
+        await cut.Find("#edit-shortcode").ClickAsync();
         cut.Find("#short-code-content").Input("# New Text");
         cut.Find("#short-code-name").Change("ShortName");
         

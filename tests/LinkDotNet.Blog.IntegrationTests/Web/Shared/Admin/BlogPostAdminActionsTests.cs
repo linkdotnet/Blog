@@ -27,9 +27,9 @@ public class BlogPostAdminActionsTests : BunitContext
         Services.AddSingleton(repositoryMock);
         
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
-        cut.Find("#delete-blogpost").Click();
+        await cut.Find("#delete-blogpost").ClickAsync();
 
-        cut.Find("#ok").Click();
+        await cut.Find("#ok").ClickAsync();
 
         await repositoryMock.Received(1).DeleteAsync(blogPostId);
     }
@@ -42,9 +42,9 @@ public class BlogPostAdminActionsTests : BunitContext
         
         Services.AddSingleton(repositoryMock);
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
-        cut.Find("#delete-blogpost").Click();
+        await cut.Find("#delete-blogpost").ClickAsync();
 
-        cut.Find("#cancel").Click();
+        await cut.Find("#cancel").ClickAsync();
 
         await repositoryMock.Received(0).DeleteAsync(blogPostId);
     }
