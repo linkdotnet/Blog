@@ -55,7 +55,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         
         // Find and click the bookmark button
         var bookmarkButton = cut.FindComponent<BookmarkButton>().Find("button");
-        bookmarkButton.Click();
+        await bookmarkButton.ClickAsync();
         
         // Assert
         await bookmarkService.Received(1).SetBookmark(bookmarkedBlogPost.Id, false);
