@@ -657,3 +657,10 @@ code {
 	}
 }
 /*#endregion */
+
+/*region ShortCodeDialog.razor */
+.markdown-scrollable {
+	overflow: auto;
+	max-height: 100%;
+}
+/*#endregion */
