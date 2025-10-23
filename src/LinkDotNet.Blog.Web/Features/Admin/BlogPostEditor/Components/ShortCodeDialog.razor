@@ -23,7 +23,7 @@
 					<tr @onclick="() => AddShortCode(shortCode)" style="cursor: pointer;">
 						<td>@shortCode.Name</td>
 						<td>
-							<div style="max-height: 100px; overflow-y: auto;">
+							<div class="markdown-scrollable">
 								@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
 							</div>
 						</td>

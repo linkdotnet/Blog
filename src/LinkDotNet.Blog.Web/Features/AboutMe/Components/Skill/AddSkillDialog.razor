@@ -5,28 +5,30 @@
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="mb-3">
-            <label for="title">Skill name</label>
-            <InputText class="form-control" id="title" @bind-Value="model.Skill" />
+	        <label for="title" class="form-label">Skill name</label>
+	        <InputText class="form-control" id="title" @bind-Value="model.Skill" />
         </div>
         <div class="mb-3">
-            <label for="image">Image Url</label>
-            <InputText class="form-control" id="image" @bind-Value="model.ImageUrl"/>
-            <small for="image" class="form-text text-body-secondary">If set is used before the skill (optional). 24x24 pixel
-            optimal size</small>
+	        <label for="image" class="form-label">Image Url</label>
+	        <InputText class="form-control" id="image" @bind-Value="model.ImageUrl" />
+	        <small class="form-text text-secondary">
+		        If set, it's used before the skill (optional). 24x24 pixel optimal size.
+	        </small>
         </div>
         <div class="mb-3">
-            <label for="capability">Capability</label>
-            <InputText class="form-control" id="capability" @bind-Value="model.Capability" />
+	        <label for="capability" class="form-label">Capability</label>
+	        <InputText class="form-control" id="capability" @bind-Value="model.Capability" />
         </div>
         <div class="mb-3">
-            <label for="proficiency">Proficiency</label>
-            <select class="form-select" id="proficiency" @bind="model.Proficiency">
-                @foreach (var level in ProficiencyLevel.All.Select(l => l.Key))
-                {
-                    <option value="@level">@level</option>
-                }
-            </select>
+	        <label for="proficiency" class="form-label">Proficiency</label>
+	        <select class="form-select" id="proficiency" @bind="model.Proficiency">
+		        @foreach (var level in ProficiencyLevel.All.Select(l => l.Key))
+		        {
+			        <option value="@level">@level</option>
+		        }
+	        </select>
         </div>
+
         <button class="btn btn-primary" type="submit">Submit</button>
     </EditForm>
 </ModalDialog>

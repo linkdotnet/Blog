@@ -1,26 +1,26 @@
 ﻿@using LinkDotNet.Blog.Domain
 <span class="skill-tag">
-    @if (!string.IsNullOrEmpty(Skill.IconUrl))
-    {
-        <img src="@Skill.IconUrl" alt="icon" max-width="48px"/>
-    }
-    @Skill.Name
+	@if (!string.IsNullOrEmpty(Skill.IconUrl))
+	{
+		<img src="@Skill.IconUrl" alt="icon" max-width="48px"/>
+	}
+	@Skill.Name
 
-    @if (ShowAdminActions)
-    {
-        <button type="button" class="btn btn-default" aria-label="Delete Skill" @onclick="() => DeleteSkill.InvokeAsync()">
-            <i class="bin2" aria-hidden="true"></i>
-        </button>
-    }
+	@if (ShowAdminActions)
+	{
+		<button type="button" class="btn btn-default" aria-label="Delete Skill" @onclick="() => DeleteSkill.InvokeAsync()">
+			<i class="bin2" aria-hidden="true"></i>
+		</button>
+	}
 </span>
 
 @code {
-    [Parameter, EditorRequired]
-    public required Skill Skill { get; set; }
+	[Parameter, EditorRequired]
+	public required Skill Skill { get; set; }
 
-    [Parameter]
-    public bool ShowAdminActions { get; set; }
+	[Parameter]
+	public bool ShowAdminActions { get; set; }
 
-    [Parameter]
-    public EventCallback DeleteSkill { get; set; }
+	[Parameter]
+	public EventCallback DeleteSkill { get; set; }
 }

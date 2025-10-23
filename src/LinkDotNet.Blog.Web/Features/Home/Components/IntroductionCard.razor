@@ -5,18 +5,18 @@
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
 <div style="@IntroductionStyle" class="@IntroductionClass">
-    <div class="introduction-container">
-        <div class="profile-picture" style="--profile-image: url(@Introduction.Value.ProfilePictureUrl)">
-        </div>
-        <div class="profile-text d-flex flex-column">
-            <div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
-            <SocialAccounts Social="@Social.Value"></SocialAccounts>
-            @if (SupportConfiguration.Value.ShowUnderIntroduction)
-            {
-                <DonationSection />
-            }
-        </div>
-    </div>
+	<div class="introduction-container">
+		<div class="profile-picture" style="background-image: url('@Introduction.Value.ProfilePictureUrl');">
+		</div>
+		<div class="profile-text d-flex flex-column">
+			<div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
+			<SocialAccounts Social="@Social.Value"></SocialAccounts>
+			@if (SupportConfiguration.Value.ShowUnderIntroduction)
+			{
+				<DonationSection />
+			}
+		</div>
+	</div>
 </div>
 @code {
     private string IntroductionClass => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
@@ -24,6 +24,6 @@
         : string.Empty;
 
     private string IntroductionStyle => !string.IsNullOrEmpty(Introduction.Value.BackgroundUrl)
-        ? $"--profile-background: url({Introduction.Value.BackgroundUrl})"
-        : string.Empty;
+	    ? $"background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url({Introduction.Value.BackgroundUrl})"
+	    : string.Empty;
 }
