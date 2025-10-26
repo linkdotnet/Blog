@@ -26,7 +26,7 @@
     <PackageVersion Include="Blazored.Toast" Version="4.2.1" />
     <PackageVersion Include="Blazorise.Bootstrap5" Version="[1.8.1]" /> <!-- License change >1.8.1 forces registration -->
     <PackageVersion Include="Blazorise.Markdown" Version="[1.8.1]" />
-    <PackageVersion Include="Markdig" Version="0.42.0" />
+    <PackageVersion Include="Markdig" Version="0.43.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.10" />
     <PackageVersion Include="NCronJob" Version="4.6.0" />
