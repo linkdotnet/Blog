@@ -30,7 +30,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.10" />
     <PackageVersion Include="NCronJob" Version="4.6.0" />
-    <PackageVersion Include="ReverseMarkdown" Version="4.7.0" />
+    <PackageVersion Include="ReverseMarkdown" Version="4.7.1" />
     <PackageVersion Include="System.ServiceModel.Syndication" Version="9.0.10" />
     <PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders" Version="1.2.0" />
   </ItemGroup>
