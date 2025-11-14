@@ -505,3 +505,4 @@ dotnet_diagnostic.S3459.severity = none # S3459: Unassigned members should be re
 dotnet_diagnostic.S3871.severity = none # S3871: Exception types should be "public"
 dotnet_diagnostic.S1186.severity = none # S1186: Methods should not be empty
 dotnet_diagnostic.S6608.severity = none # S6608: Indexing at Count-1 should be used instead of "Enumerable" extension method "Last"
+dotnet_diagnostic.S6966.severity = suggestion # S6966: Await "method" instead

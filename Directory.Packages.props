@@ -8,40 +8,41 @@
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.26.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
-    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="10.0.0" />
     <PackageVersion Include="MongoDB.Driver" Version="3.5.0" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
-    <PackageVersion Include="RavenDB.Client" Version="7.1.3" />
+    <PackageVersion Include="RavenDB.Client" Version="7.1.4" />
   </ItemGroup>
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Blazored.Toast" Version="4.2.1" />
-    <PackageVersion Include="Blazorise.Bootstrap5" Version="[1.8.1]" /> <!-- License change >1.8.1 forces registration -->
+    <PackageVersion Include="Blazorise.Bootstrap5" Version="[1.8.1]" />
+    <!-- License change >1.8.1 forces registration -->
     <PackageVersion Include="Blazorise.Markdown" Version="[1.8.1]" />
     <PackageVersion Include="Markdig" Version="0.43.0" />
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="9.0.10" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.0" />
     <PackageVersion Include="NCronJob" Version="4.6.0" />
     <PackageVersion Include="ReverseMarkdown" Version="4.7.1" />
-    <PackageVersion Include="System.ServiceModel.Syndication" Version="9.0.10" />
+    <PackageVersion Include="System.ServiceModel.Syndication" Version="10.0.0" />
     <PackageVersion Include="NetEscapades.AspNetCore.SecurityHeaders" Version="1.2.0" />
   </ItemGroup>
   <ItemGroup Label="Tests">
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="RavenDB.TestDriver" Version="7.1.3" />
+    <PackageVersion Include="RavenDB.TestDriver" Version="7.1.4" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="bunit" Version="2.0.64-preview" />
+    <PackageVersion Include="bunit" Version="2.0.66" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -55,6 +56,6 @@
   </ItemGroup>
   <ItemGroup Label="Tools">
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
-    <PackageVersion Include="Microsoft.Playwright" Version="1.55.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.56.0" />
   </ItemGroup>
 </Project>
