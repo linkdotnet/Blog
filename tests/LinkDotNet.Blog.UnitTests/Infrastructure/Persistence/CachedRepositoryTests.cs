@@ -1,12 +1,12 @@
-using System;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using AsyncKeyedLock;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 
 namespace LinkDotNet.Blog.UnitTests.Infrastructure.Persistence;
 
@@ -18,7 +18,7 @@ public sealed class CachedRepositoryTests
     public CachedRepositoryTests()
     {
         repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        sut = new CachedRepository<BlogPost>(repositoryMock, new MemoryCache(new MemoryCacheOptions()), new AsyncKeyedLocker<string>());
+        sut = new CachedRepository<BlogPost>(repositoryMock, new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
     }
 
     [Fact]

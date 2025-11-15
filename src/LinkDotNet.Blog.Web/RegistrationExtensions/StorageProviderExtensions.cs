@@ -1,10 +1,11 @@
-using System;
-using AsyncKeyedLock;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 
 namespace LinkDotNet.Blog.Web.RegistrationExtensions;
 
@@ -14,7 +15,8 @@ public static class StorageProviderExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        services.AddMemoryCache();
+        services.AddSingleton<IFusionCacheMemoryLocker, AsyncKeyedMemoryLocker>();
+        services.AddFusionCache().WithRegisteredMemoryLocker();
 
         var provider = configuration["PersistenceProvider"] ?? throw new InvalidOperationException("No persistence provider configured");
         var persistenceProvider = PersistenceProvider.Create(provider);
@@ -59,7 +61,6 @@ public static class StorageProviderExtensions
         services.AddScoped<TRepo>();
         services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(
                 provider.GetRequiredService<TRepo>(),
-                provider.GetRequiredService<IMemoryCache>(),
-                provider.GetRequiredService<AsyncKeyedLocker<string>>()));
+                provider.GetRequiredService<IFusionCache>()));
     }
 }

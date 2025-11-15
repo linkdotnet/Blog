@@ -1,10 +1,10 @@
-using System.Linq;
-using System.Threading.Tasks;
-using AsyncKeyedLock;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
-using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using System.Threading.Tasks;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence;
 
@@ -20,7 +20,7 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(bp2);
         await Repository.StoreAsync(bp3);
         var searchTerm = "tag 1";
-        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()), new AsyncKeyedLocker<string>());
+        var sut = new CachedRepository<BlogPost>(Repository, new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
         await sut.GetAllAsync(f => f.Tags.Any(t => t == searchTerm));
         searchTerm = "tag 2";
 
@@ -35,7 +35,7 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
     {
         var bp1 = new BlogPostBuilder().WithTitle("1").Build();
         var bp2 = new BlogPostBuilder().WithTitle("2").Build();
-        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()), new AsyncKeyedLocker<string>());
+        var sut = new CachedRepository<BlogPost>(Repository, new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
         await sut.StoreAsync(bp1);
         await sut.StoreAsync(bp2);
         await sut.GetAllAsync();
@@ -51,7 +51,7 @@ public class CachedRepositoryTests : SqlDatabaseTestBase<BlogPost>
     {
         var bp1 = new BlogPostBuilder().WithTitle("1").Build();
         var bp2 = new BlogPostBuilder().WithTitle("2").Build();
-        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()), new AsyncKeyedLocker<string>());
+        var sut = new CachedRepository<BlogPost>(Repository, new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
         await sut.StoreAsync(bp1);
         await sut.GetAllAsync();
         bp1.Update(bp2);

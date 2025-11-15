@@ -8,7 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AsyncKeyedLock" />
       <PackageReference Include="Microsoft.EntityFrameworkCore" />
 	    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
 	    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
@@ -17,6 +16,7 @@
 			<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
       <PackageReference Include="RavenDB.Client" />
+			<PackageReference Include="ZiggyCreatures.FusionCache.Locking.AsyncKeyed" />
     </ItemGroup>
 
     <ItemGroup>

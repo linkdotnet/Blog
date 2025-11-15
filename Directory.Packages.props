@@ -3,7 +3,6 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="Code Analyzers">
-    <PackageVersion Include="AsyncKeyedLock" Version="7.1.7" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
     <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
   </ItemGroup>
@@ -21,6 +20,7 @@
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageVersion Include="RavenDB.Client" Version="7.1.4" />
+		<PackageVersion Include="ZiggyCreatures.FusionCache.Locking.AsyncKeyed" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup Label="Web">
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
