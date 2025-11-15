@@ -1,24 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <AssemblyName>LinkDotNet.Blog.Infrastructure</AssemblyName>
-        <RootNamespace>LinkDotNet.Blog.Infrastructure</RootNamespace>
-			  <Nullable>enable</Nullable>
-    </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>LinkDotNet.Blog.Infrastructure</AssemblyName>
+		<RootNamespace>LinkDotNet.Blog.Infrastructure</RootNamespace>
+	</PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" />
-	    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
-	    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-      <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
-      <PackageReference Include="MongoDB.Driver" />
-			<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
-      <PackageReference Include="RavenDB.Client" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
+		<PackageReference Include="MongoDB.Driver" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+		<PackageReference Include="RavenDB.Client" />
+	</ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
+	</ItemGroup>
+
 </Project>

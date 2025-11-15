@@ -1,47 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
-  <PropertyGroup>
-    <NuGetAuditLevel>critical</NuGetAuditLevel>
-    <InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Bunit</InterceptorsPreviewNamespaces>
-  </PropertyGroup>
-  
-  <ItemGroup Condition="$(MSBuildProjectName) != 'LinkDotNet.Blog.TestUtilities'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk"  />
-    <PackageReference Include="xunit.v3" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
+	<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..\'))" />
 
-  <ItemGroup>
-    <PackageReference Include="bunit" />
-    <PackageReference Include="Shouldly" />
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="coverlet.msbuild">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  
-  <ItemGroup Condition="$(MSBuildProjectName) != 'LinkDotNet.Blog.TestUtilities'">
-    <Using Include="Xunit" />
-  </ItemGroup>
+	<PropertyGroup>
+		<NuGetAuditLevel>critical</NuGetAuditLevel>
+		<InterceptorsPreviewNamespaces>$(InterceptorsPreviewNamespaces);Bunit</InterceptorsPreviewNamespaces>
+	</PropertyGroup>
 
-  <ItemGroup Label="Implicit usings">
-    <Using Include="Shouldly" />
-    <Using Include="NSubstitute" />
-    <Using Include="Bunit" />
-    <Using Include="Bunit.TestDoubles" />
-  </ItemGroup>
+	<ItemGroup Condition="$(MSBuildProjectName) != 'LinkDotNet.Blog.TestUtilities'">
+		<PackageReference Include="Microsoft.NET.Test.Sdk"  />
+		<PackageReference Include="xunit.v3" />
+		<PackageReference Include="xunit.runner.visualstudio">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
 
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="bunit" />
+		<PackageReference Include="Shouldly" />
+		<PackageReference Include="NSubstitute" />
+		<PackageReference Include="coverlet.collector">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.msbuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="$(MSBuildProjectName) != 'LinkDotNet.Blog.TestUtilities'">
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup Label="Implicit usings">
+		<Using Include="Shouldly" />
+		<Using Include="NSubstitute" />
+		<Using Include="Bunit" />
+		<Using Include="Bunit.TestDoubles" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
 
 </Project>
