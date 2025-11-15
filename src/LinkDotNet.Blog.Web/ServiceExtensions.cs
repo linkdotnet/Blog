@@ -27,7 +27,6 @@ public static class ServiceExtensions
         services.AddScoped<IFileProcessor, FileProcessor>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-        services.AddSingleton<AsyncKeyedLocker<string>>();
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheTokenProvider>(s => s.GetRequiredService<CacheService>());
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
