@@ -1,9 +1,9 @@
-using System;
-using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Caching.Memory;
+using System;
+using System.Threading.Tasks;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace LinkDotNet.Blog.Web.Controller;
 
@@ -13,28 +13,24 @@ public sealed class SitemapController : ControllerBase
 {
     private readonly ISitemapService sitemapService;
     private readonly IXmlWriter xmlWriter;
-    private readonly IMemoryCache memoryCache;
+    private readonly IFusionCache fusionCache;
 
     public SitemapController(
         ISitemapService sitemapService,
         IXmlWriter xmlWriter,
-        IMemoryCache memoryCache)
+        IFusionCache fusionCache)
     {
         this.sitemapService = sitemapService;
         this.xmlWriter = xmlWriter;
-        this.memoryCache = memoryCache;
+        this.fusionCache = fusionCache;
     }
 
     [ResponseCache(Duration = 3600)]
     [HttpGet]
     public async Task<IActionResult> GetSitemap()
     {
-        var buffer = await memoryCache.GetOrCreateAsync("sitemap.xml", async e =>
-                     {
-                         e.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
-                         return await GetSitemapBuffer();
-                     })
-                     ?? throw new InvalidOperationException("Buffer is null");
+        var buffer = await fusionCache.GetOrSetAsync("sitemap.xml", async e => await GetSitemapBuffer(), o => o.SetDuration(TimeSpan.FromHours(1)))
+            ?? throw new InvalidOperationException("Buffer is null");
 
         return File(buffer, "application/xml");
     }

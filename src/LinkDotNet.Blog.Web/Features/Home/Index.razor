@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @page "/{page:int}"
 @using Markdig
 @using LinkDotNet.Blog.Domain
@@ -8,7 +8,8 @@
 @using LinkDotNet.Blog.Web.Features.Services
 @using Microsoft.Extensions.Caching.Memory
 @using Microsoft.Extensions.Primitives
-@inject IMemoryCache MemoryCache
+@using ZiggyCreatures.Caching.Fusion
+@inject IFusionCache FusionCache
 @inject ICacheTokenProvider CacheTokenProvider
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IOptions<Introduction> Introduction
@@ -49,27 +50,24 @@
 
     protected override async Task OnParametersSetAsync()
     {
-	    const string firstPageCacheKey = "BlogPostList";
+        const string firstPageCacheKey = "BlogPostList";
         if (Page is null or < 1)
         {
             Page = 1;
         }
 
-	    // The hot path is that users land on the initial page which is the first page.
-	    // So we want to cache that page for a while to reduce the load on the database
-	    // and to speed up the page load.
-		// That will lead to stale blog posts for x minutes (worst case) for the first page,
-		// but I am fine with that (as publishing isn't super critical and not done multiple times per hour).
-		// This cache can be manually invalidated in the Admin UI (settings)
-	    if (Page == 1)
-	    {
-		    currentPage = (await MemoryCache.GetOrCreateAsync(firstPageCacheKey, async entry =>
-		    {
-			    var cacheDuration = TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes);
-			    entry.AbsoluteExpirationRelativeToNow = cacheDuration;
-			    entry.AddExpirationToken(new CancellationChangeToken(CacheTokenProvider.Token));
-			    return await GetAllForPageAsync(1);
-		    }))!;
+        // The hot path is that users land on the initial page which is the first page.
+        // So we want to cache that page for a while to reduce the load on the database
+        // and to speed up the page load.
+        // That will lead to stale blog posts for x minutes (worst case) for the first page,
+        // but I am fine with that (as publishing isn't super critical and not done multiple times per hour).
+        // This cache can be manually invalidated in the Admin UI (settings)
+        if (Page == 1)
+        {
+            currentPage = await FusionCache.GetOrSetAsync(firstPageCacheKey, async e => await GetAllForPageAsync(1), o =>
+            {
+                o.SetDuration(TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes));
+            });
 		    return;
 	    }
 

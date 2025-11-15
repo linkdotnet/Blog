@@ -14,6 +14,7 @@
 		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
 		<PackageReference Include="RavenDB.Client" />
+    <PackageReference Include="ZiggyCreatures.FusionCache.Locking.AsyncKeyed" />
 	</ItemGroup>
 
 	<ItemGroup>
