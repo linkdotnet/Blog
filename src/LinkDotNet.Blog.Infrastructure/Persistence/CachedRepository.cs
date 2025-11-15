@@ -24,10 +24,10 @@ public sealed class CachedRepository<T> : IRepository<T>
 
     public async ValueTask<T?> GetByIdAsync(string id) => await GetByIdAsync(id, TimeSpan.FromDays(7));
 
-    public async ValueTask<T?> GetByIdAsync(string id, TimeSpan slidingExpiration) => await fusionCache.GetOrSetAsync(id, async c =>
+    public async ValueTask<T?> GetByIdAsync(string id, TimeSpan expiration) => await fusionCache.GetOrSetAsync(id, async c =>
         {
             return await repository.GetByIdAsync(id);
-        }, slidingExpiration);
+        }, expiration);
 
     public async ValueTask<IPagedList<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
         Expression<Func<T, object>>? orderBy = null,
