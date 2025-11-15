@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11205.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.Web", "src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj", "{6D6519BF-9265-488D-AA3B-C879F427930F}"
 EndProject
@@ -17,25 +17,29 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LinkDotNet.Blog.TestUtiliti
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B6AF0B6E-14FB-4737-A69B-13B0D7195E2B}"
 	ProjectSection(SolutionItems) = preProject
-		Readme.md = Readme.md
 		.editorconfig = .editorconfig
-		MIGRATION.md = MIGRATION.md
+		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
+		MIGRATION.md = MIGRATION.md
+		Readme.md = Readme.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{86FD0EB5-13F9-4F1C-ADA1-072EEFEFF1E9}"
 	ProjectSection(SolutionItems) = preProject
-		src\Directory.Build.props = src\Directory.Build.props
 		src\.editorconfig = src\.editorconfig
+		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CAD2F4A3-1282-49B5-B0AB-655CDBED0A35}"
 	ProjectSection(SolutionItems) = preProject
-		tests\Directory.Build.props = tests\Directory.Build.props
 		tests\.editorconfig = tests\.editorconfig
+		tests\Directory.Build.props = tests\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{A931171C-22A6-4DB5-802B-67286B536BD2}"
+	ProjectSection(SolutionItems) = preProject
+		tools\Directory.Build.props = tools\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinkDotNet.Blog.CriticalCSS", "tools\LinkDotNet.Blog.CriticalCSS\LinkDotNet.Blog.CriticalCSS.csproj", "{8CB83177-C078-4953-BC27-8968D2A6E0FE}"
 EndProject
@@ -77,16 +81,16 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {FB9B0642-F1F0-4BD8-9EDD-15C95F082180}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{6D6519BF-9265-488D-AA3B-C879F427930F} = {86FD0EB5-13F9-4F1C-ADA1-072EEFEFF1E9}
 		{18F8E09D-FF0B-4FF9-93A9-971A388D0E2A} = {86FD0EB5-13F9-4F1C-ADA1-072EEFEFF1E9}
 		{E8ED38D2-FCD3-473D-BD78-43EE78E08EE6} = {86FD0EB5-13F9-4F1C-ADA1-072EEFEFF1E9}
-		{6D6519BF-9265-488D-AA3B-C879F427930F} = {86FD0EB5-13F9-4F1C-ADA1-072EEFEFF1E9}
+		{5B868911-7C93-4190-AEE4-3A6694F2FFCE} = {CAD2F4A3-1282-49B5-B0AB-655CDBED0A35}
 		{DEFDA17A-9586-4E50-83FB-8F75AC29D39A} = {CAD2F4A3-1282-49B5-B0AB-655CDBED0A35}
 		{310ABEE1-C131-43E6-A759-F2DB75A483DD} = {CAD2F4A3-1282-49B5-B0AB-655CDBED0A35}
-		{5B868911-7C93-4190-AEE4-3A6694F2FFCE} = {CAD2F4A3-1282-49B5-B0AB-655CDBED0A35}
 		{8CB83177-C078-4953-BC27-8968D2A6E0FE} = {A931171C-22A6-4DB5-802B-67286B536BD2}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB9B0642-F1F0-4BD8-9EDD-15C95F082180}
 	EndGlobalSection
 EndGlobal

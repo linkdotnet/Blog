@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <AssemblyName>LinkDotNet.Blog.Domain</AssemblyName>
-        <RootNamespace>LinkDotNet.Blog.Domain</RootNamespace>
-    </PropertyGroup>
+	<PropertyGroup>
+		<AssemblyName>LinkDotNet.Blog.Domain</AssemblyName>
+		<RootNamespace>LinkDotNet.Blog.Domain</RootNamespace>
+	</PropertyGroup>
+
 </Project>
