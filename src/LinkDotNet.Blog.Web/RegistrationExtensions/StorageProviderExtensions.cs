@@ -1,4 +1,5 @@
 using System;
+using AsyncKeyedLock;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.Caching.Memory;
@@ -58,6 +59,7 @@ public static class StorageProviderExtensions
         services.AddScoped<TRepo>();
         services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(
                 provider.GetRequiredService<TRepo>(),
-                provider.GetRequiredService<IMemoryCache>()));
+                provider.GetRequiredService<IMemoryCache>(),
+                provider.GetRequiredService<AsyncKeyedLocker<string>>()));
     }
 }

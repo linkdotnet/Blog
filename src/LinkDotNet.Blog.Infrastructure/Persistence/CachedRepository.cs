@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AsyncKeyedLock;
 using LinkDotNet.Blog.Domain;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -13,21 +14,45 @@ public sealed class CachedRepository<T> : IRepository<T>
 {
     private readonly IRepository<T> repository;
     private readonly IMemoryCache memoryCache;
+    private readonly AsyncKeyedLocker<string> asyncKeyedLocker;
 
-    public CachedRepository(IRepository<T> repository, IMemoryCache memoryCache)
+    public CachedRepository(IRepository<T> repository, IMemoryCache memoryCache, AsyncKeyedLocker<string> asyncKeyedLocker)
     {
         this.repository = repository;
         this.memoryCache = memoryCache;
+        this.asyncKeyedLocker = asyncKeyedLocker;
     }
 
     public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => repository.PerformHealthCheckAsync();
 
-    public async ValueTask<T?> GetByIdAsync(string id) =>
-        (await memoryCache.GetOrCreateAsync(id, async entry =>
+    public async ValueTask<T?> GetByIdAsync(string id) => await GetByIdAsync(id, TimeSpan.FromDays(7));
+
+    public async ValueTask<T?> GetByIdAsync(string id, TimeSpan slidingExpiration)
+    {
+        if (memoryCache.TryGetValue(id, out T? cachedObj))
         {
-            entry.SlidingExpiration = TimeSpan.FromDays(7);
-            return await repository.GetByIdAsync(id);
-        }))!;
+            return cachedObj;
+        }
+
+        using (await asyncKeyedLocker.LockAsync(id))
+        {
+            if (memoryCache.TryGetValue(id, out cachedObj))
+            {
+                return cachedObj;
+            }
+
+            var value = await repository.GetByIdAsync(id);
+
+            var options = new MemoryCacheEntryOptions
+            {
+                SlidingExpiration = slidingExpiration
+            };
+
+            memoryCache.Set(id, value, options);
+
+            return value;
+        }
+    }
 
     public async ValueTask<IPagedList<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null,
         Expression<Func<T, object>>? orderBy = null,

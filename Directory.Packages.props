@@ -3,6 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="Code Analyzers">
+    <PackageVersion Include="AsyncKeyedLock" Version="7.1.7" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
     <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
   </ItemGroup>
