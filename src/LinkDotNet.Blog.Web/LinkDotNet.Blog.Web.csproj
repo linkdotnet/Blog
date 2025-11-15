@@ -1,10 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client"/>
 		<PackageReference Include="Azure.Storage.Blobs"/>
@@ -27,4 +22,5 @@
 		<ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj"/>
 		<ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj"/>
 	</ItemGroup>
+
 </Project>
