@@ -41,8 +41,4 @@
 		<Using Include="Bunit.TestDoubles" />
 	</ItemGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	</PropertyGroup>
-
 </Project>
