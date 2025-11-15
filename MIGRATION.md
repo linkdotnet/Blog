@@ -1,6 +1,10 @@
 # Migration Guide
 This document describes the changes that need to be made to migrate from one version of the blog to another.
 
+## 9.0 to 11.0
+
+A new config has been added `UseMultiAuthorMode` in `appsettings.json`. The default value of this config is `false`. If set to `true` then author name will be associated with blog posts at the time of creation.
+
 ## 8.0 to 9.0
 
 ### SQL - Entity Framework Migrations
