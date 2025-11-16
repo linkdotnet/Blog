@@ -10,6 +10,8 @@ using LinkDotNet.Blog.Web.Features.Home;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Home;
 
@@ -225,5 +227,6 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri, useMultiAuthorMode).Introduction));
         ctx.Services.AddScoped(_ => Substitute.For<ICacheTokenProvider>());
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        ctx.Services.AddScoped<IFusionCache>(_ => new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
     }
 }

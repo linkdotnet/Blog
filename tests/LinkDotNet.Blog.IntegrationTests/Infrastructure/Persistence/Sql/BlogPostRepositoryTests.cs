@@ -1,10 +1,11 @@
-using System.Linq;
-using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using System.Threading.Tasks;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql;
@@ -175,7 +176,7 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
     public async Task GivenBlogPostWithTags_WhenLoadingAndDeleting_ThenShouldBeUpdated()
     {
         var bp = new BlogPostBuilder().WithTags("tag 1").Build();
-        var sut = new CachedRepository<BlogPost>(Repository, new MemoryCache(new MemoryCacheOptions()));
+        var sut = new CachedRepository<BlogPost>(Repository, new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
         await sut.StoreAsync(bp);
         var updateBp = new BlogPostBuilder().WithTags("tag 2").Build();
         var bpFromCache = await sut.GetByIdAsync(bp.Id);
