@@ -23,8 +23,11 @@ public sealed class BlogPostDraftService : IBlogPostDraftService
             if (await localStorageService.ContainsKeyAsync(DraftStorageKey))
             {
                 var draft = await localStorageService.GetItemAsync<DraftBlogPostModel>(DraftStorageKey);
-                var savedTime = draft.SavedAt.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
-                return (true, savedTime);
+                if (draft != null)
+                {
+                    var savedTime = draft.SavedAt.ToLocalTime().ToString("g", CultureInfo.CurrentCulture);
+                    return (true, savedTime);
+                }
             }
         }
         catch
@@ -55,7 +58,7 @@ public sealed class BlogPostDraftService : IBlogPostDraftService
         try
         {
             var draft = await localStorageService.GetItemAsync<DraftBlogPostModel>(DraftStorageKey);
-            return CreateNewModel.FromDraft(draft);
+            return draft != null ? CreateNewModel.FromDraft(draft) : null;
         }
         catch
         {
