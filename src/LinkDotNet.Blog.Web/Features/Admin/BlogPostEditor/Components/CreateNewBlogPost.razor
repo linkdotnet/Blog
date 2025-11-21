@@ -506,19 +506,13 @@
     private void StartAutoSaveTimer()
     {
         // Auto-save every 30 seconds
-        autoSaveTimer = new Timer(async _ => await AutoSaveDraftSafe(), null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+        autoSaveTimer = new Timer(AutoSaveTimerCallback, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
     }
 
-    private async Task AutoSaveDraftSafe()
+    private void AutoSaveTimerCallback(object? state)
     {
-        try
-        {
-            await InvokeAsync(async () => await AutoSaveDraft());
-        }
-        catch
-        {
-            // If auto-save fails, just ignore it
-        }
+        // Fire and forget - exceptions are caught inside AutoSaveDraft
+        _ = InvokeAsync(AutoSaveDraft);
     }
 
     private async Task AutoSaveDraft()
@@ -529,10 +523,17 @@
             return;
         }
 
-        var draft = DraftBlogPostModel.FromCreateNewModel(model, BlogPost?.Id);
-        await LocalStorageService.SetItemAsync(DraftStorageKey, draft);
-        lastAutoSaveTime = DateTime.UtcNow;
-        StateHasChanged();
+        try
+        {
+            var draft = DraftBlogPostModel.FromCreateNewModel(model);
+            await LocalStorageService.SetItemAsync(DraftStorageKey, draft);
+            lastAutoSaveTime = DateTime.UtcNow;
+            StateHasChanged();
+        }
+        catch
+        {
+            // If auto-save fails, just ignore it silently
+        }
     }
 
     private string GetTimeSinceAutoSave()
