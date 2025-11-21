@@ -10,6 +10,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Routing;
@@ -34,7 +35,7 @@ public class CreateNewBlogPostTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped<ICacheInvalidator>(_ => cacheService);
         Services.AddScoped(_ => Substitute.For<IToastService>());
-        Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
+        Services.AddScoped(_ => Substitute.For<IBlogPostDraftService>());
         options = Substitute.For<IOptions<ApplicationConfiguration>>();
 
         options.Value.Returns(new ApplicationConfiguration()
@@ -368,18 +369,9 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public async Task ShouldShowDraftAvailableBannerWhenDraftExists()
     {
-        var localStorageService = Substitute.For<ILocalStorageService>();
-        var draft = new LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel
-        {
-            Title = "Draft Title",
-            ShortDescription = "Draft Description",
-            Content = "Draft Content",
-            PreviewImageUrl = "Draft URL",
-            SavedAt = DateTime.UtcNow
-        };
-        localStorageService.ContainsKeyAsync(Arg.Any<string>()).Returns(true);
-        localStorageService.GetItemAsync<LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel>(Arg.Any<string>()).Returns(draft);
-        Services.AddScoped(_ => localStorageService);
+        var draftService = Substitute.For<IBlogPostDraftService>();
+        draftService.CheckForSavedDraftAsync().Returns((true, "1/1/2024 12:00 PM"));
+        Services.AddScoped(_ => draftService);
 
         var cut = Render<CreateNewBlogPost>();
         
@@ -393,18 +385,17 @@ public class CreateNewBlogPostTests : BunitContext
     [Fact]
     public async Task ShouldRestoreDraftWhenButtonClicked()
     {
-        var localStorageService = Substitute.For<ILocalStorageService>();
-        var draft = new LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel
+        var draftService = Substitute.For<IBlogPostDraftService>();
+        var restoredModel = new CreateNewModel
         {
             Title = "Draft Title",
             ShortDescription = "Draft Description",
             Content = "Draft Content",
-            PreviewImageUrl = "https://example.com/draft.jpg",
-            SavedAt = DateTime.UtcNow
+            PreviewImageUrl = "https://example.com/draft.jpg"
         };
-        localStorageService.ContainsKeyAsync(Arg.Any<string>()).Returns(true);
-        localStorageService.GetItemAsync<LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel>(Arg.Any<string>()).Returns(draft);
-        Services.AddScoped(_ => localStorageService);
+        draftService.CheckForSavedDraftAsync().Returns((true, "1/1/2024 12:00 PM"));
+        draftService.RestoreDraftAsync().Returns(restoredModel);
+        Services.AddScoped(_ => draftService);
 
         var cut = Render<CreateNewBlogPost>();
         

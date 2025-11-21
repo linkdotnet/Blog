@@ -25,6 +25,7 @@ public static class ServiceExtensions
         services.AddScoped<IXmlWriter, XmlWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IBlogPostDraftService, BlogPostDraftService>();
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheTokenProvider>(s => s.GetRequiredService<CacheService>());

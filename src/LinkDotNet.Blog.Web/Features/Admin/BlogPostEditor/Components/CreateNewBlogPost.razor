@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
 @using NCronJob
 @using System.Threading
 @inject IJSRuntime JSRuntime
@@ -10,7 +11,7 @@
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
-@inject ILocalStorageService LocalStorageService
+@inject IBlogPostDraftService DraftService
 @implements IDisposable
 
 <PageTitle>Creating new Blog Post</PageTitle>
@@ -304,7 +305,6 @@
 
     private string? authorName;
     
-    private const string DraftStorageKey = "blogpost-draft";
     private Timer? autoSaveTimer;
     private bool hasSavedDraft;
     private string savedDraftTime = string.Empty;
@@ -383,15 +383,8 @@
 
     private async Task ClearAutoSavedDraft()
     {
-        try
-        {
-            await LocalStorageService.RemoveItemAsync(DraftStorageKey);
-            lastAutoSaveTime = null;
-        }
-        catch
-        {
-            // Ignore errors
-        }
+        await DraftService.DiscardDraftAsync();
+        lastAutoSaveTime = null;
     }
 
     private void ClearModel()
@@ -457,48 +450,26 @@
             return;
         }
 
-        try
-        {
-            if (await LocalStorageService.ContainsKeyAsync(DraftStorageKey))
-            {
-                var draft = await LocalStorageService.GetItemAsync<DraftBlogPostModel>(DraftStorageKey);
-                hasSavedDraft = true;
-                savedDraftTime = draft.SavedAt.ToLocalTime().ToString("g");
-            }
-        }
-        catch
-        {
-            // If there's any error reading the draft, just ignore it
-            hasSavedDraft = false;
-        }
+        var (exists, savedTime) = await DraftService.CheckForSavedDraftAsync();
+        hasSavedDraft = exists;
+        savedDraftTime = savedTime;
     }
 
     private async Task RestoreDraft()
     {
-        try
+        var restoredModel = await DraftService.RestoreDraftAsync();
+        if (restoredModel != null)
         {
-            var draft = await LocalStorageService.GetItemAsync<DraftBlogPostModel>(DraftStorageKey);
-            model = CreateNewModel.FromDraft(draft);
+            model = restoredModel;
             hasSavedDraft = false;
             draftRestored = true;
             StateHasChanged();
-        }
-        catch
-        {
-            // If there's any error restoring the draft, just ignore it
         }
     }
 
     private async Task DiscardDraft()
     {
-        try
-        {
-            await LocalStorageService.RemoveItemAsync(DraftStorageKey);
-        }
-        catch
-        {
-            // Ignore errors
-        }
+        await DraftService.DiscardDraftAsync();
         hasSavedDraft = false;
         StateHasChanged();
     }
@@ -523,30 +494,14 @@
             return;
         }
 
-        try
-        {
-            var draft = DraftBlogPostModel.FromCreateNewModel(model);
-            await LocalStorageService.SetItemAsync(DraftStorageKey, draft);
-            lastAutoSaveTime = DateTime.UtcNow;
-            StateHasChanged();
-        }
-        catch
-        {
-            // If auto-save fails, just ignore it silently
-        }
+        await DraftService.SaveDraftAsync(model);
+        lastAutoSaveTime = DateTime.UtcNow;
+        StateHasChanged();
     }
 
     private string GetTimeSinceAutoSave()
     {
-        if (!lastAutoSaveTime.HasValue)
-            return string.Empty;
-
-        var elapsed = DateTime.UtcNow - lastAutoSaveTime.Value;
-        if (elapsed.TotalMinutes < 1)
-            return "just now";
-        if (elapsed.TotalMinutes < 60)
-            return $"{(int)elapsed.TotalMinutes}m ago";
-        return $"{(int)elapsed.TotalHours}h ago";
+        return DraftService.GetTimeSinceAutoSave(lastAutoSaveTime);
     }
 
     public void Dispose()
