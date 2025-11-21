@@ -385,7 +385,7 @@
     {
         try
         {
-            await LocalStorageService.SetItemAsync<DraftBlogPostModel?>(DraftStorageKey, null);
+            await LocalStorageService.RemoveItemAsync(DraftStorageKey);
             lastAutoSaveTime = null;
         }
         catch
@@ -493,7 +493,7 @@
     {
         try
         {
-            await LocalStorageService.SetItemAsync<DraftBlogPostModel?>(DraftStorageKey, null);
+            await LocalStorageService.RemoveItemAsync(DraftStorageKey);
         }
         catch
         {
@@ -506,7 +506,19 @@
     private void StartAutoSaveTimer()
     {
         // Auto-save every 30 seconds
-        autoSaveTimer = new Timer(async _ => await AutoSaveDraft(), null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+        autoSaveTimer = new Timer(async _ => await AutoSaveDraftSafe(), null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+    }
+
+    private async Task AutoSaveDraftSafe()
+    {
+        try
+        {
+            await InvokeAsync(async () => await AutoSaveDraft());
+        }
+        catch
+        {
+            // If auto-save fails, just ignore it
+        }
     }
 
     private async Task AutoSaveDraft()
@@ -517,17 +529,10 @@
             return;
         }
 
-        try
-        {
-            var draft = DraftBlogPostModel.FromCreateNewModel(model, BlogPost?.Id);
-            await LocalStorageService.SetItemAsync(DraftStorageKey, draft);
-            lastAutoSaveTime = DateTime.UtcNow;
-            await InvokeAsync(StateHasChanged);
-        }
-        catch
-        {
-            // If auto-save fails, just ignore it
-        }
+        var draft = DraftBlogPostModel.FromCreateNewModel(model, BlogPost?.Id);
+        await LocalStorageService.SetItemAsync(DraftStorageKey, draft);
+        lastAutoSaveTime = DateTime.UtcNow;
+        StateHasChanged();
     }
 
     private string GetTimeSinceAutoSave()

@@ -58,4 +58,9 @@ public sealed class LocalStorageService : ILocalStorageService
             throw new InvalidOperationException($"Could not set value for key {key}. The key has been removed.");
         }
     }
+
+    public async ValueTask RemoveItemAsync(string key)
+    {
+        await localStorage.DeleteAsync(key);
+    }
 }
