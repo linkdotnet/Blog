@@ -86,6 +86,8 @@ public class Program
         })
         .RequireAuthorization();
 
+        app.UseStatusCodePagesWithReExecute("/NotFound");
+        
         app.UseRouting();
 
         app.UseUserCulture();
