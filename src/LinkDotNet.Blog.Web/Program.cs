@@ -97,6 +97,7 @@ public class Program
 
         app.UseRateLimiter();
         app.MapControllers();
+        app.MapRazorPages();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
     }
