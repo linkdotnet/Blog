@@ -49,6 +49,8 @@ public class Program
             .AddBlazoriseWithBootstrap()
             .AddResponseCompression()
             .AddHealthCheckSetup();
+        
+        builder.Services.AddAntiforgery();
 
         if (builder.Environment.IsDevelopment())
         {
@@ -84,18 +86,21 @@ public class Program
         })
         .RequireAuthorization();
 
+        app.UseStatusCodePagesWithReExecute("/NotFound");
+        
         app.UseRouting();
 
         app.UseUserCulture();
 
         app.UseAuthentication();
         app.UseAuthorization();
+        
+        app.UseAntiforgery();
 
         app.UseRateLimiter();
         app.MapControllers();
-        app.MapBlazorHub();
-        app.MapFallbackToPage("/_Host");
-        app.MapFallbackToPage("/searchByTag/{tag}", "/_Host");
-        app.MapFallbackToPage("/search/{searchTerm}", "/_Host");
+        app.MapRazorPages();
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode();
     }
 }
