@@ -1,5 +1,6 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@rendermode InteractiveServer
 @inject IRepository<Talk> Repository
 
 @if (talks.Any() || ShowAdminActions)

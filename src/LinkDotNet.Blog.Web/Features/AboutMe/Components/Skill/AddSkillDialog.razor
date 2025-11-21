@@ -1,4 +1,5 @@
 ﻿@using LinkDotNet.Blog.Domain
+@rendermode InteractiveServer
 @inject IToastService ToastService
 <ModalDialog @ref="Dialog" Title="Add Skill">
     <EditForm Model="@model" OnValidSubmit="CreateSkillItem">

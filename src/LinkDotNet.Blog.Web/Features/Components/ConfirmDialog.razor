@@ -1,4 +1,6 @@
-﻿<ModalDialog @ref="ModalDialog" Title="@Title">
+﻿@rendermode InteractiveServer
+
+<ModalDialog @ref="ModalDialog" Title="@Title">
     <h3>@Content</h3>
     <div class="d-flex justify-content-end gap-2 mt-4">
 	    <button id="ok" @onclick="OnYesButtonPressed" type="button" class="btn btn-primary w-100">Ok</button>

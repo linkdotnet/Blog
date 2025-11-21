@@ -1,4 +1,6 @@
-﻿<li>
+﻿@rendermode InteractiveServer
+
+<li>
 	<input type="text" @bind-value="@content" placeholder="supports markdown" class="w-100"/>
 	<button type="button" class="btn btn-default" aria-label="Add Item" @onclick="@AddItemAsync">
 		<i class="plus" aria-hidden="true"></i>

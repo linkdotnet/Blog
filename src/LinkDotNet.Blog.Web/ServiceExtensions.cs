@@ -65,10 +65,6 @@ public static class ServiceExtensions
         services.AddRazorPages();
         services.AddRazorComponents()
             .AddInteractiveServerComponents();
-        services.AddSignalR(options =>
-        {
-            options.MaximumReceiveMessageSize = 1024 * 1024;
-        });
 
         return services;
     }

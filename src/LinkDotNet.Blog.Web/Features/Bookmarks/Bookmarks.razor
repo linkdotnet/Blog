@@ -1,6 +1,7 @@
 @page "/bookmarks"
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@rendermode InteractiveServer
 @inject IBookmarkService BookmarkService
 @inject IRepository<BlogPost> BlogPostRepository;
 

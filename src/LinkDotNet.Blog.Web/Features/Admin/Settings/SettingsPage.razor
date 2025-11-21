@@ -1,6 +1,7 @@
 @page "/settings"
 @using LinkDotNet.Blog.Web.Features.Services
 @using NCronJob
+@rendermode InteractiveServer
 @inject IOptions<ApplicationConfiguration> ApplicationConfiguration
 @inject ICacheInvalidator CacheInvalidator
 @inject IToastService ToastService
