@@ -1,0 +1,21 @@
+@using LinkDotNet.Blog.Web.Features.Home.Components
+@using Microsoft.AspNetCore.Components.Web
+@rendermode RenderMode.InteractiveServer
+
+<CascadingAuthenticationState>
+	<Router AppAssembly="@typeof(Program).Assembly">
+		<Found Context="routeData">
+			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+		</Found>
+		<NotFound>
+			<PageTitle>Not Found</PageTitle>
+			<LayoutView Layout="@typeof(MainLayout)">
+				<ObjectNotFound></ObjectNotFound>
+			</LayoutView>
+		</NotFound>
+	</Router>
+</CascadingAuthenticationState>
+
+@code {
+
+}

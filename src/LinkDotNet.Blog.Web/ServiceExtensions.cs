@@ -63,12 +63,8 @@ public static class ServiceExtensions
     public static IServiceCollection AddHostingServices(this IServiceCollection services)
     {
         services.AddRazorPages();
-        services.AddServerSideBlazor(s =>
-        {
-#if DEBUG
-            s.DetailedErrors = true;
-#endif
-        });
+        services.AddRazorComponents()
+            .AddInteractiveServerComponents();
         services.AddSignalR(options =>
         {
             options.MaximumReceiveMessageSize = 1024 * 1024;
