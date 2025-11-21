@@ -121,6 +121,25 @@ public sealed class CreateNewModel
         };
     }
 
+    public static CreateNewModel FromDraft(DraftBlogPostModel draft)
+    {
+        ArgumentNullException.ThrowIfNull(draft);
+
+        return new CreateNewModel
+        {
+            id = draft.Id ?? string.Empty,
+            Title = draft.Title,
+            ShortDescription = draft.ShortDescription,
+            Content = draft.Content,
+            PreviewImageUrl = draft.PreviewImageUrl,
+            IsPublished = draft.IsPublished,
+            Tags = draft.Tags,
+            PreviewImageUrlFallback = draft.PreviewImageUrlFallback,
+            scheduledPublishDate = draft.ScheduledPublishDate,
+            IsDirty = false,
+        };
+    }
+
     public BlogPost ToBlogPost()
     {
         var tagList = string.IsNullOrWhiteSpace(Tags)

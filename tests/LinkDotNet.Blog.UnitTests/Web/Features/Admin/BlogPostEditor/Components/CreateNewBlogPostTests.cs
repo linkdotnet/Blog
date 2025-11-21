@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
@@ -33,6 +34,7 @@ public class CreateNewBlogPostTests : BunitContext
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped<ICacheInvalidator>(_ => cacheService);
         Services.AddScoped(_ => Substitute.For<IToastService>());
+        Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
         options = Substitute.For<IOptions<ApplicationConfiguration>>();
 
         options.Value.Returns(new ApplicationConfiguration()
@@ -361,5 +363,56 @@ public class CreateNewBlogPostTests : BunitContext
         btnConvert.Click();
         content.TextContent.ShouldBeEquivalentTo(htmlContent);
         btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Convert to markdown");
+    }
+
+    [Fact]
+    public async Task ShouldShowDraftAvailableBannerWhenDraftExists()
+    {
+        var localStorageService = Substitute.For<ILocalStorageService>();
+        var draft = new LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel
+        {
+            Title = "Draft Title",
+            ShortDescription = "Draft Description",
+            Content = "Draft Content",
+            PreviewImageUrl = "Draft URL",
+            SavedAt = DateTime.UtcNow
+        };
+        localStorageService.ContainsKeyAsync(Arg.Any<string>()).Returns(true);
+        localStorageService.GetItemAsync<LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel>(Arg.Any<string>()).Returns(draft);
+        Services.AddScoped(_ => localStorageService);
+
+        var cut = Render<CreateNewBlogPost>();
+        
+        await Task.Delay(100); // Give component time to initialize
+        
+        var alerts = cut.FindAll(".alert-info");
+        alerts.ShouldNotBeEmpty();
+        alerts[0].TextContent.ShouldContain("Draft Available!");
+    }
+
+    [Fact]
+    public async Task ShouldRestoreDraftWhenButtonClicked()
+    {
+        var localStorageService = Substitute.For<ILocalStorageService>();
+        var draft = new LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel
+        {
+            Title = "Draft Title",
+            ShortDescription = "Draft Description",
+            Content = "Draft Content",
+            PreviewImageUrl = "https://example.com/draft.jpg",
+            SavedAt = DateTime.UtcNow
+        };
+        localStorageService.ContainsKeyAsync(Arg.Any<string>()).Returns(true);
+        localStorageService.GetItemAsync<LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components.DraftBlogPostModel>(Arg.Any<string>()).Returns(draft);
+        Services.AddScoped(_ => localStorageService);
+
+        var cut = Render<CreateNewBlogPost>();
+        
+        await Task.Delay(100); // Give component time to initialize
+        
+        var restoreButton = cut.Find("button.btn-primary");
+        restoreButton.Click();
+        
+        cut.Find("#title").GetAttribute("value").ShouldBe("Draft Title");
     }
 }

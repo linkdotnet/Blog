@@ -10,10 +10,29 @@
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
+@inject ILocalStorageService LocalStorageService
+@implements IDisposable
 
 <PageTitle>Creating new Blog Post</PageTitle>
 
 <div class="container-fluid px-4">
+    @if (hasSavedDraft && !draftRestored)
+    {
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>Draft Available!</strong> A previously saved draft from @savedDraftTime was found.
+                    <button type="button" class="btn btn-sm btn-primary ms-2" @onclick="RestoreDraft">
+                        Restore Draft
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-1" @onclick="DiscardDraft">
+                        Discard
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="@(() => hasSavedDraft = false)"></button>
+                </div>
+            </div>
+        </div>
+    }
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -26,6 +45,12 @@
                     {
                         <span class="badge bg-warning text-dark px-3 py-2 fw-medium">
                             Unsaved Changes
+                        </span>
+                    }
+                    @if (lastAutoSaveTime.HasValue)
+                    {
+                        <span class="badge bg-success text-white px-3 py-2 fw-medium">
+                            Auto-saved @GetTimeSinceAutoSave()
                         </span>
                     }
                 </div>
@@ -278,6 +303,13 @@
     private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
     private string? authorName;
+    
+    private const string DraftStorageKey = "blogpost-draft";
+    private Timer? autoSaveTimer;
+    private bool hasSavedDraft;
+    private string savedDraftTime = string.Empty;
+    private bool draftRestored;
+    private DateTime? lastAutoSaveTime;
 
     protected override async Task OnInitializedAsync()
     {
@@ -287,6 +319,9 @@
         {
             authorName = await CurrentUserService.GetDisplayNameAsync();
         }
+
+        await CheckForSavedDraft();
+        StartAutoSaveTimer();
     }
 
     protected override void OnParametersSet()
@@ -338,8 +373,25 @@
         }
 
         InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
+        
+        // Clear the auto-saved draft after successful save
+        await ClearAutoSavedDraft();
+        
         ClearModel();
         canSubmit = true;
+    }
+
+    private async Task ClearAutoSavedDraft()
+    {
+        try
+        {
+            await LocalStorageService.SetItemAsync<DraftBlogPostModel?>(DraftStorageKey, null);
+            lastAutoSaveTime = null;
+        }
+        catch
+        {
+            // Ignore errors
+        }
     }
 
     private void ClearModel()
@@ -395,5 +447,104 @@
             var converter = new ReverseMarkdown.Converter();
             model.Content = converter.Convert(model.Content);
         }
+    }
+
+    private async Task CheckForSavedDraft()
+    {
+        if (BlogPost != null)
+        {
+            // Don't check for drafts when editing existing posts
+            return;
+        }
+
+        try
+        {
+            if (await LocalStorageService.ContainsKeyAsync(DraftStorageKey))
+            {
+                var draft = await LocalStorageService.GetItemAsync<DraftBlogPostModel>(DraftStorageKey);
+                hasSavedDraft = true;
+                savedDraftTime = draft.SavedAt.ToLocalTime().ToString("g");
+            }
+        }
+        catch
+        {
+            // If there's any error reading the draft, just ignore it
+            hasSavedDraft = false;
+        }
+    }
+
+    private async Task RestoreDraft()
+    {
+        try
+        {
+            var draft = await LocalStorageService.GetItemAsync<DraftBlogPostModel>(DraftStorageKey);
+            model = CreateNewModel.FromDraft(draft);
+            hasSavedDraft = false;
+            draftRestored = true;
+            StateHasChanged();
+        }
+        catch
+        {
+            // If there's any error restoring the draft, just ignore it
+        }
+    }
+
+    private async Task DiscardDraft()
+    {
+        try
+        {
+            await LocalStorageService.SetItemAsync<DraftBlogPostModel?>(DraftStorageKey, null);
+        }
+        catch
+        {
+            // Ignore errors
+        }
+        hasSavedDraft = false;
+        StateHasChanged();
+    }
+
+    private void StartAutoSaveTimer()
+    {
+        // Auto-save every 30 seconds
+        autoSaveTimer = new Timer(async _ => await AutoSaveDraft(), null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+    }
+
+    private async Task AutoSaveDraft()
+    {
+        if (!model.IsDirty || BlogPost != null)
+        {
+            // Don't auto-save if there are no changes or if editing an existing post
+            return;
+        }
+
+        try
+        {
+            var draft = DraftBlogPostModel.FromCreateNewModel(model, BlogPost?.Id);
+            await LocalStorageService.SetItemAsync(DraftStorageKey, draft);
+            lastAutoSaveTime = DateTime.UtcNow;
+            await InvokeAsync(StateHasChanged);
+        }
+        catch
+        {
+            // If auto-save fails, just ignore it
+        }
+    }
+
+    private string GetTimeSinceAutoSave()
+    {
+        if (!lastAutoSaveTime.HasValue)
+            return string.Empty;
+
+        var elapsed = DateTime.UtcNow - lastAutoSaveTime.Value;
+        if (elapsed.TotalMinutes < 1)
+            return "just now";
+        if (elapsed.TotalMinutes < 60)
+            return $"{(int)elapsed.TotalMinutes}m ago";
+        return $"{(int)elapsed.TotalHours}h ago";
+    }
+
+    public void Dispose()
+    {
+        autoSaveTimer?.Dispose();
     }
 }
