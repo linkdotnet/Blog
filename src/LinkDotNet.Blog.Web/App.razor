@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.Extensions.Hosting
 @using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Components.Web
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -27,9 +28,8 @@
     <link rel="preload" href="LinkDotNet.Blog.Web.styles.css" as="style">
     <link href="LinkDotNet.Blog.Web.styles.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css" integrity="sha512-fw7f+TcMjTb7bpbLJZlP8g2Y4XcCyFZW8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark-dimmed.min.css" integrity="sha512-zcatBMvxa7rT7dDklfjauWsfiSFParF+hRfCdf4Zr40/MmA1gkFcBRbop0zMpvYF3FmznYFgcL8wlcuO/GwHoA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="_content/Blazorise/blazorise.css" rel="stylesheet" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="RenderMode.InteractiveServer"/>
 </head>
 <body>
     <Routes />
