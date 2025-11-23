@@ -4,9 +4,8 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<BlogPost> BlogPostRepository
 
-<h3>Results for @SearchTerm</h3>
-
-<div class="content px-4">
+<div class="container">
+    <h3 class="pb-3 fw-bold">Results for @SearchTerm</h3>
     @for (var i = 0; i < blogPosts.Count; i++)
     {
         <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
