@@ -37,14 +37,14 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .WithTitle("1")
             .WithShortDescription("Short 1")
             .WithPreviewImageUrl("preview1")
-            .WithUpdatedDate(new DateTime(2022, 5, 1))
+            .WithUpdatedDate(new DateTime(2022, 5, 1, 0, 0, 0, DateTimeKind.Utc))
             .WithTags("C#", ".NET")
             .Build();
         var blogPost2 = new BlogPostBuilder()
             .WithTitle("2")
             .WithShortDescription("**Short 2**")
             .WithPreviewImageUrl("preview2")
-            .WithUpdatedDate(new DateTime(2022, 6, 1))
+            .WithUpdatedDate(new DateTime(2022, 6, 1, 0, 0, 0, DateTimeKind.Utc))
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
@@ -115,14 +115,14 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .WithTitle("1")
             .WithContent("Content1")
             .WithPreviewImageUrl("preview1")
-            .WithUpdatedDate(new DateTime(2022, 5, 1))
+            .WithUpdatedDate(new DateTime(2022, 5, 1, 0, 0, 0, DateTimeKind.Utc))
             .WithTags("C#", ".NET")
             .Build();
         var blogPost2 = new BlogPostBuilder()
             .WithTitle("2")
             .WithContent("**Content 2**")
             .WithPreviewImageUrl("preview2")
-            .WithUpdatedDate(new DateTime(2022, 6, 1))
+            .WithUpdatedDate(new DateTime(2022, 6, 1, 0, 0, 0, DateTimeKind.Utc))
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
@@ -193,14 +193,14 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .WithTitle("1")
             .WithShortDescription("Short 1")
             .WithPreviewImageUrl("preview1")
-            .WithUpdatedDate(new DateTime(2022, 5, 1))
+            .WithUpdatedDate(new DateTime(2022, 5, 1, 0, 0, 0, DateTimeKind.Utc))
             .WithTags("C#", ".NET")
             .Build();
         var blogPost2 = new BlogPostBuilder()
             .WithTitle("2")
             .WithContent("**Content 2**")
             .WithPreviewImageUrl("preview2")
-            .WithUpdatedDate(new DateTime(2022, 6, 1))
+            .WithUpdatedDate(new DateTime(2022, 6, 1, 0, 0, 0, DateTimeKind.Utc))
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
@@ -261,14 +261,14 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .WithTitle("1")
             .WithShortDescription("Short 1")
             .WithPreviewImageUrl("preview1")
-            .WithUpdatedDate(new DateTime(2022, 5, 1))
+            .WithUpdatedDate(new DateTime(2022, 5, 1, 0, 0, 0, DateTimeKind.Utc))
             .WithTags("C#", ".NET")
             .Build();
         var blogPost2 = new BlogPostBuilder()
             .WithTitle("2")
             .WithContent("**Content 2**")
             .WithPreviewImageUrl("preview2")
-            .WithUpdatedDate(new DateTime(2022, 6, 1))
+            .WithUpdatedDate(new DateTime(2022, 6, 1, 0, 0, 0, DateTimeKind.Utc))
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
