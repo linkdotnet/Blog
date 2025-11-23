@@ -6,12 +6,14 @@
 
 <PageTitle>Search for tag: @Tag</PageTitle>
 
-<h3>All posts with Tag <em>@Tag</em></h3>
+<div class="container">
+    <h3 class="pb-3 fw-bold">All posts with Tag <em>@Tag</em></h3>
 
-@for (var i = 0; i < blogPosts.Count; i++)
-{
-    <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-}
+    @for (var i = 0; i < blogPosts.Count; i++)
+    {
+        <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+    }
+</div>
 @code {
     [Parameter, EditorRequired]
     public required string Tag { get; set; }
