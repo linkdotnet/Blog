@@ -22,6 +22,8 @@ public sealed record ApplicationConfiguration
 
     public bool ShowReadingIndicator { get; init; }
 
+    public bool ShowReadPostIndicator { get; init; }
+
     public bool ShowSimilarPosts { get; init; }
 
     public bool UseMultiAuthorMode { get; init; }

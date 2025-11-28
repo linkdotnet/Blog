@@ -17,6 +17,7 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject IBookmarkService BookmarkService
+@inject IReadStateService ReadStateService
 
 @if (isLoading)
 {
@@ -149,6 +150,10 @@ else if (BlogPost is not null)
         if (BlogPost is not null && firstRender)
         {
 	        isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
+	        if (AppConfiguration.Value.ShowReadPostIndicator)
+	        {
+		        await ReadStateService.MarkAsRead(BlogPost.Id);
+	        }
 	        StateHasChanged();
         }
     }

@@ -34,6 +34,7 @@ public class ApplicationConfigurationTests
             { "Giscus:CategoryId", "generalid" },
             { "Disqus:Shortname", "blog" },
             { "ShowReadingIndicator", "true" },
+            { "ShowReadPostIndicator", "true" },
             { "SupportMe:KofiToken", "ABC" },
             { "SupportMe:PatreonName", "linkdotnet" },
             { "SupportMe:GithubSponsorName", "linkdotnet" },
@@ -65,6 +66,7 @@ public class ApplicationConfigurationTests
         appConfiguration.BlogPostsPerPage.ShouldBe(5);
         appConfiguration.IsAboutMeEnabled.ShouldBeTrue();
         appConfiguration.ShowReadingIndicator.ShouldBeTrue();
+        appConfiguration.ShowReadPostIndicator.ShouldBeTrue();
         appConfiguration.UseMultiAuthorMode.ShouldBeTrue();
 
         var giscusConfiguration = new GiscusConfigurationBuilder().Build();

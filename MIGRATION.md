@@ -1,6 +1,16 @@
 # Migration Guide
 This document describes the changes that need to be made to migrate from one version of the blog to another.
 
+## 11.0 to 12.0
+
+A new config has been added `ShowReadPostIndicator` in `appsettings.json`. The default value is `false`. If set to `true`, a subtle indicator will show which blog posts the user has already read. The read state is stored in the browser's localStorage.
+
+```json
+{
+  "ShowReadPostIndicator": true
+}
+```
+
 ## 9.0 to 11.0
 
 A new config has been added `UseMultiAuthorMode` in `appsettings.json`. The default value of this config is `false`. If set to `true` then author name will be associated with blog posts at the time of creation.

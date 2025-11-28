@@ -13,6 +13,7 @@ public class ApplicationConfigurationBuilder
     private bool isGiscusEnabled;
     private bool isDisqusEnabled;
     private bool showReadingIndicator;
+    private bool showReadPostIndicator;
     private bool showSimilarPosts;
     private string? blogBrandUrl;
     private bool useMultiAuthorMode;
@@ -70,6 +71,12 @@ public class ApplicationConfigurationBuilder
         this.showReadingIndicator = showReadingIndicator;
         return this;
     }
+
+    public ApplicationConfigurationBuilder WithShowReadPostIndicator(bool showReadPostIndicator)
+    {
+        this.showReadPostIndicator = showReadPostIndicator;
+        return this;
+    }
     
     public ApplicationConfigurationBuilder WithShowSimilarPosts(bool showSimilarPosts)
     {
@@ -102,6 +109,7 @@ public class ApplicationConfigurationBuilder
             IsGiscusEnabled = isGiscusEnabled,
             IsDisqusEnabled = isDisqusEnabled,
             ShowReadingIndicator = showReadingIndicator,
+            ShowReadPostIndicator = showReadPostIndicator,
             ShowSimilarPosts = showSimilarPosts,
             BlogBrandUrl = blogBrandUrl,
             UseMultiAuthorMode = useMultiAuthorMode,

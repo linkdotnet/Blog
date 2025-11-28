@@ -2,6 +2,7 @@
 @using LinkDotNet.Blog.Web.Features.Bookmarks
 @using LinkDotNet.Blog.Web.Features.Bookmarks.Components
 @inject IBookmarkService BookmarkService
+@inject IReadStateService ReadStateService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <article>
@@ -38,6 +39,12 @@
                 {
                     <li class="me-4"><i class="user-tie"></i> @BlogPost.AuthorName</li>
                 }
+                @if (AppConfiguration.Value.ShowReadPostIndicator && isRead)
+                {
+                    <li class="me-4">
+                        <ReadPostIndicator />
+                    </li>
+                }
             </ul>
 		</div>
 		<div class="description">
@@ -58,6 +65,7 @@
 	public required BlogPost BlogPost { get; set; }
 
 	private bool isBookmarked = false;
+	private bool isRead = false;
 
 	[Parameter]
 	public bool UseAlternativeStyle { get; set; }
@@ -100,6 +108,10 @@
 		if (firstRender)
 		{
 			isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
+			if (AppConfiguration.Value.ShowReadPostIndicator)
+			{
+				isRead = await ReadStateService.IsRead(BlogPost.Id);
+			}
 			StateHasChanged();
 		}
 	}

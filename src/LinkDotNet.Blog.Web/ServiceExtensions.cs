@@ -21,6 +21,7 @@ public static class ServiceExtensions
         services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
         services.AddScoped<IBookmarkService, BookmarkService>();
+        services.AddScoped<IReadStateService, ReadStateService>();
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlWriter, XmlWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
