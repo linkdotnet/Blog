@@ -20,7 +20,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components
 
 public class CreateNewBlogPostTests : BunitContext
 {
-    private readonly CacheService cacheService = new CacheService();
+    private readonly ICacheInvalidator cacheInvalidator = Substitute.For<ICacheInvalidator>();
     private readonly IOptions<ApplicationConfiguration> options;
 
     public CreateNewBlogPostTests()
@@ -31,7 +31,7 @@ public class CreateNewBlogPostTests : BunitContext
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
-        Services.AddScoped<ICacheInvalidator>(_ => cacheService);
+        Services.AddScoped<ICacheInvalidator>(_ => cacheInvalidator);
         Services.AddScoped(_ => Substitute.For<IToastService>());
         options = Substitute.For<IOptions<ApplicationConfiguration>>();
 
@@ -319,7 +319,6 @@ public class CreateNewBlogPostTests : BunitContext
     public void GivenBlogPost_WhenCacheInvalidatedOptionIsSet_CacheIsInvalidated()
     {
         var cut = Render<CreateNewBlogPost>();
-        var token = cacheService.Token;
         cut.Find("#title").Input("My Title");
         cut.Find("#short").Input("My short Description");
         cut.Find("#content").Input("My content");
@@ -329,7 +328,7 @@ public class CreateNewBlogPostTests : BunitContext
 
         cut.Find("form").Submit();
 
-        token.IsCancellationRequested.ShouldBeTrue();
+        cacheInvalidator.Received(1).ClearCacheAsync();
     }
 
     [Fact]

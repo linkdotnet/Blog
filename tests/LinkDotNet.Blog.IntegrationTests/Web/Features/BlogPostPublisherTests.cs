@@ -49,7 +49,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
 
         await sut.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
 
-        cacheInvalidator.Received().Cancel();
+        await cacheInvalidator.Received().ClearCacheAsync();
     }
     
     [Fact]
@@ -57,6 +57,6 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
     {
         await sut.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
 
-        cacheInvalidator.DidNotReceive().Cancel();
+        await cacheInvalidator.DidNotReceive().ClearCacheAsync();
     }
 }

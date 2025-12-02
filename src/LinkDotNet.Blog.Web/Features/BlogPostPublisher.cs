@@ -47,7 +47,7 @@ public sealed partial class BlogPostPublisher : IJob
 
         if (blogPostsToPublish.Count > 0)
         {
-            cacheInvalidator.Cancel();
+            await cacheInvalidator.ClearCacheAsync();
         }
 
         return blogPostsToPublish.Count;

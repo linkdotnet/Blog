@@ -5,12 +5,8 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Home.Components
-@using LinkDotNet.Blog.Web.Features.Services
-@using Microsoft.Extensions.Caching.Memory
-@using Microsoft.Extensions.Primitives
 @using ZiggyCreatures.Caching.Fusion
 @inject IFusionCache FusionCache
-@inject ICacheTokenProvider CacheTokenProvider
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IOptions<Introduction> Introduction
 @inject IOptions<ApplicationConfiguration> AppConfiguration

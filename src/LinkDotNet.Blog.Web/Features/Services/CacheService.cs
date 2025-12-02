@@ -1,19 +1,16 @@
-using System;
-using System.Threading;
+using System.Threading.Tasks;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
 
-public sealed class CacheService : ICacheTokenProvider, ICacheInvalidator, IDisposable
+public sealed class CacheService : ICacheInvalidator
 {
-    private CancellationTokenSource cancellationTokenSource = new();
+    private readonly IFusionCache fusionCache;
 
-    public CancellationToken Token => cancellationTokenSource.Token;
-
-    public void Cancel()
+    public CacheService(IFusionCache fusionCache)
     {
-        cancellationTokenSource.Cancel();
-        cancellationTokenSource = new();
+        this.fusionCache = fusionCache;
     }
 
-    public void Dispose() => cancellationTokenSource.Dispose();
+    public Task ClearCacheAsync() => fusionCache.ClearAsync().AsTask();
 }

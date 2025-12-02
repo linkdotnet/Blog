@@ -334,7 +334,7 @@
         await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
         if (model.ShouldInvalidateCache)
         {
-            CacheInvalidator.Cancel();
+            await CacheInvalidator.ClearCacheAsync();
         }
 
         InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);

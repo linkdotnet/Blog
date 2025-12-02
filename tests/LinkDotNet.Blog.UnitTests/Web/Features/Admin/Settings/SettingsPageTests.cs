@@ -12,7 +12,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.Settings;
 public class SettingsPageTests : BunitContext
 {
     [Fact]
-    public void GivenSettingsPage_WhenClicking_InvalidateCacheButton_TokenIsCancelled()
+    public void GivenSettingsPage_WhenClicking_InvalidateCacheButton_CacheIsCleared()
     {
         var cacheInvalidator = Substitute.For<ICacheInvalidator>();
         Services.AddScoped(_ => cacheInvalidator);
@@ -24,6 +24,6 @@ public class SettingsPageTests : BunitContext
         
         invalidateCacheButton.Click();
 
-        cacheInvalidator.Received(1).Cancel();
+        cacheInvalidator.Received(1).ClearCacheAsync();
     }
 }
