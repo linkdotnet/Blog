@@ -13,17 +13,20 @@ public sealed partial class UserRecordService : IUserRecordService
     private readonly IRepository<UserRecord> userRecordRepository;
     private readonly NavigationManager navigationManager;
     private readonly AuthenticationStateProvider authenticationStateProvider;
+    private readonly TimeProvider timeProvider;
     private readonly ILogger<UserRecordService> logger;
 
     public UserRecordService(
         IRepository<UserRecord> userRecordRepository,
         NavigationManager navigationManager,
         AuthenticationStateProvider authenticationStateProvider,
+        TimeProvider timeProvider,
         ILogger<UserRecordService> logger)
     {
         this.userRecordRepository = userRecordRepository;
         this.navigationManager = navigationManager;
         this.authenticationStateProvider = authenticationStateProvider;
+        this.timeProvider = timeProvider;
         this.logger = logger;
     }
 
@@ -51,7 +54,7 @@ public sealed partial class UserRecordService : IUserRecordService
 
         var record = new UserRecord
         {
-            DateClicked = DateOnly.FromDateTime(DateTime.UtcNow),
+            DateClicked = DateOnly.FromDateTime(timeProvider.GetUtcNow().DateTime),
             UrlClicked = url,
         };
 

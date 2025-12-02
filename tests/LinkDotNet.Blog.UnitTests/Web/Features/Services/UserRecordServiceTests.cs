@@ -23,6 +23,7 @@ public class UserRecordServiceTests : BunitContext
             repositoryMock,
             fakeNavigationManager,
             fakeAuthenticationStateProvider,
+            TimeProvider.System,
             Substitute.For<ILogger<UserRecordService>>());
     }
 

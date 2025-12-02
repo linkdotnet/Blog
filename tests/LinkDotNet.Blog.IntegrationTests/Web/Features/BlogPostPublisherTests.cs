@@ -19,7 +19,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
     {
         cacheInvalidator = Substitute.For<ICacheInvalidator>();
 
-        sut = new BlogPostPublisher(Repository, cacheInvalidator, Substitute.For<ILogger<BlogPostPublisher>>());
+        sut = new BlogPostPublisher(Repository, cacheInvalidator, TimeProvider.System, Substitute.For<ILogger<BlogPostPublisher>>());
     }
 
     [Fact]

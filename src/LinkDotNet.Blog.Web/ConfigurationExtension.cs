@@ -44,7 +44,9 @@ public static class ConfigurationExtension
                 settings.IsGiscusEnabled = giscusSection.Exists();
 
                 config.Bind(settings);
-            });
+            })
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
         return services;
     }
 
@@ -53,10 +55,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<AuthInformation>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(AuthInformation.AuthInformationSection).Bind(settings);
-            });
+            .BindConfiguration(AuthInformation.AuthInformationSection);
         return services;
     }
 
@@ -65,10 +64,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<Introduction>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(Introduction.IntroductionSection).Bind(settings);
-            });
+            .BindConfiguration(Introduction.IntroductionSection);
         return services;
     }
 
@@ -77,10 +73,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<Social>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(Social.SocialSection).Bind(settings);
-            });
+            .BindConfiguration(Social.SocialSection);
         return services;
     }
 
@@ -89,10 +82,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<ProfileInformation>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(ProfileInformation.ProfileInformationSection).Bind(settings);
-            });
+            .BindConfiguration(ProfileInformation.ProfileInformationSection);
         return services;
     }
 
@@ -101,10 +91,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<GiscusConfiguration>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(settings);
-            });
+            .BindConfiguration(GiscusConfiguration.GiscusConfigurationSection);
         return services;
     }
 
@@ -113,10 +100,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<DisqusConfiguration>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(DisqusConfiguration.DisqusConfigurationSection).Bind(settings);
-            });
+            .BindConfiguration(DisqusConfiguration.DisqusConfigurationSection);
         return services;
     }
 
@@ -125,10 +109,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<SupportMeConfiguration>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(SupportMeConfiguration.SupportMeConfigurationSection).Bind(settings);
-            });
+            .BindConfiguration(SupportMeConfiguration.SupportMeConfigurationSection);
         return services;
     }
 
@@ -137,11 +118,7 @@ public static class ConfigurationExtension
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<UploadConfiguration>()
-            .Configure<IConfiguration>((settings, config) =>
-            {
-                config.GetSection(UploadConfiguration.ConfigurationSection)
-                    .Bind(settings);
-            });
+            .BindConfiguration(UploadConfiguration.ConfigurationSection);
         return services;
     }
 }
