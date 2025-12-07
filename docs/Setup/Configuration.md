@@ -48,6 +48,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 	},
 	"ShowReadingIndicator": true,
 	"SimlarBlogPosts": "true",
+	"ShowBuildInformation": true,
 	"SupportMe": {
 		"KofiToken": "ABC123",
 		"GithubSponsorName": "your-tag-here",
@@ -102,6 +103,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | [Disqus](./../Comments/Disqus.md)             | node           | Enables the comment section via disqus. If left empty the comment section will not be shown.                                                                                     |
 | ShowReadingIndicator                          | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                                     |
 | SimilarBlogPosts                              | boolean        | If set to `true` (default) similar blog posts are shown at the end of a blog post.                                                                                               |
+| ShowBuildInformation                          | boolean        | If set to `true` (default) the build information (target framework and build timestamp) is shown in the footer.                                                                  |
 | [SupportMe](./../Donations/Readme.md)         | node           | Donation sections configuration. If left empty no donation sections will not be shown.                                                                                           |
 | [ImageStorageProvider](./../Media/Readme.md)  | string         | Declares the type of the image storage provider (currently only `Azure`).                                                                                                        |
 | [ImageStorage](./../Media/Readme.md)          | node           | Configuration for the image storage provider.                                                                                                                                    |

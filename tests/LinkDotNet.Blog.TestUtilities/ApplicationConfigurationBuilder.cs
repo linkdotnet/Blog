@@ -14,6 +14,7 @@ public class ApplicationConfigurationBuilder
     private bool isDisqusEnabled;
     private bool showReadingIndicator;
     private bool showSimilarPosts;
+    private bool showBuildInformation = true;
     private string? blogBrandUrl;
     private bool useMultiAuthorMode;
 
@@ -76,6 +77,12 @@ public class ApplicationConfigurationBuilder
         this.showSimilarPosts = showSimilarPosts;
         return this;
     }
+
+    public ApplicationConfigurationBuilder WithShowBuildInformation(bool showBuildInformation)
+    {
+        this.showBuildInformation = showBuildInformation;
+        return this;
+    }
     
     public ApplicationConfigurationBuilder WithBlogBrandUrl(string? blogBrandUrl)
     {
@@ -103,6 +110,7 @@ public class ApplicationConfigurationBuilder
             IsDisqusEnabled = isDisqusEnabled,
             ShowReadingIndicator = showReadingIndicator,
             ShowSimilarPosts = showSimilarPosts,
+            ShowBuildInformation = showBuildInformation,
             BlogBrandUrl = blogBrandUrl,
             UseMultiAuthorMode = useMultiAuthorMode,
         };

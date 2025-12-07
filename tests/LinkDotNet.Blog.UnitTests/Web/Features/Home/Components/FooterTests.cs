@@ -33,4 +33,31 @@ public class FooterTests : BunitContext
 
         cut.Find("span").TextContent.ShouldContain("©");
     }
+
+    [Fact]
+    public void ShouldShowBuildInformationWhenEnabled()
+    {
+        var appConfig = Options.Create(new ApplicationConfigurationBuilder()
+            .WithShowBuildInformation(true)
+            .Build());
+        Services.AddScoped(_ => appConfig);
+
+        var cut = Render<Footer>();
+
+        cut.Markup.ShouldContain("Built At:");
+        cut.Markup.ShouldContain("Blazor");
+    }
+
+    [Fact]
+    public void ShouldNotShowBuildInformationWhenDisabled()
+    {
+        var appConfig = Options.Create(new ApplicationConfigurationBuilder()
+            .WithShowBuildInformation(false)
+            .Build());
+        Services.AddScoped(_ => appConfig);
+
+        var cut = Render<Footer>();
+
+        cut.Markup.ShouldNotContain("Built At:");
+    }
 }

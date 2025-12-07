@@ -1,6 +1,16 @@
 # Migration Guide
 This document describes the changes that need to be made to migrate from one version of the blog to another.
 
+## 11.0 to 12.0
+`ShowBuildInformation` setting was added on the root level of the `appsettings.json` file. This setting controls whether build information (like build date) is shown in the `Footer` component.
+
+```json
+{
+  ...
+  "ShowBuildInformation": true
+}
+```
+
 ## 9.0 to 11.0
 
 A new config has been added `UseMultiAuthorMode` in `appsettings.json`. The default value of this config is `false`. If set to `true` then author name will be associated with blog posts at the time of creation.

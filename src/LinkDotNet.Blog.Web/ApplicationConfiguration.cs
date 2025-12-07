@@ -24,5 +24,7 @@ public sealed record ApplicationConfiguration
 
     public bool ShowSimilarPosts { get; init; }
 
+    public bool ShowBuildInformation { get; init; } = true;
+
     public bool UseMultiAuthorMode { get; init; }
 }
