@@ -6,6 +6,7 @@
 		<PackageReference Include="Blazored.Toast"/>
 		<PackageReference Include="Blazorise.Bootstrap5"/>
 		<PackageReference Include="Blazorise.Markdown"/>
+		<PackageReference Include="LinkDotNet.BuildInformation"/>
 		<PackageReference Include="NCronJob"/>
 		<PackageReference Include="Markdig"/>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"/>

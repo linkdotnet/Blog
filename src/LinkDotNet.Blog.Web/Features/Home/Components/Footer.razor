@@ -4,12 +4,19 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
-<footer class="position-absolute bottom-0 w-100 text-center" style="height: 2.5rem;">
-	<span class="py-2 mb-0 text-body-secondary">© @DateTime.Now.Year @CopyrightName</span>
+<footer class="position-absolute bottom-0 w-100 text-center text-body-secondary" style="height: 2.5rem;">
+	<span>© @DateTime.Now.Year @CopyrightName</span>
+	@if (AppConfiguration.Value.ShowBuildInformation)
+	{
+		<p class="text-gray-300 mb-0">Made with ❤️, @BuildInformation.TargetFrameworkMoniker, and Blazor</p>
+		<p class="text-gray-300">
+			Built At: @(BuildInformation.BuildAt.ToString("dd-MM-yyyy HH:mm")) (UTC)
+		</p>
+	}
 	@if (SupportConfiguration.Value.ShowInFooter)
 	{
 		<div class="pb-2 d-flex justify-content-center">
-			<DonationSection />
+			<DonationSection/>
 		</div>
 	}
 </footer>
