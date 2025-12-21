@@ -1,6 +1,32 @@
 # Migration Guide
 This document describes the changes that need to be made to migrate from one version of the blog to another.
 
+## Automated Upgrade Assistant
+
+Starting with version 12.0, we provide an **Upgrade Assistant** tool that automates most configuration migrations. This tool:
+- Automatically detects your current configuration version
+- Applies necessary transformations to `appsettings.json` files
+- Creates backups before making changes
+- Provides colorful console output with clear warnings and instructions
+
+**Usage:**
+```bash
+# From your blog directory
+dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant
+
+# Preview changes without applying
+dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --dry-run
+
+# See all options
+dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --help
+```
+
+For detailed documentation, see [docs/Migrations/UpgradeAssistant.md](docs/Migrations/UpgradeAssistant.md).
+
+**Note:** While the Upgrade Assistant handles most configuration changes automatically, some migrations still require manual steps (especially database schema changes). These are noted below.
+
+---
+
 ## 11.0 to 12.0
 `ShowBuildInformation` setting was added on the root level of the `appsettings.json` file. This setting controls whether build information (like build date) is shown in the `Footer` component.
 

@@ -30,5 +30,8 @@ bundle.min.css
 /**/coverage*.xml
 /CoverageReport/
 
+# Upgrade Assistant backups
+backups/
+
 # MacOS
 .DS_Store
