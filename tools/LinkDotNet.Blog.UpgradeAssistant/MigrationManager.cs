@@ -80,10 +80,9 @@ public sealed class MigrationManager
             ConsoleOutput.WriteStep($"Applying migration: {migration.FromVersion} → {migration.ToVersion}");
             
             // Re-parse for each migration
-            document.Dispose();
-            document = JsonDocument.Parse(modifiedContent);
+            using var migrationDoc = JsonDocument.Parse(modifiedContent);
             
-            if (migration.Apply(document, ref modifiedContent))
+            if (migration.Apply(migrationDoc, ref modifiedContent))
             {
                 ConsoleOutput.WriteSuccess($"Migration {migration.FromVersion} → {migration.ToVersion} applied successfully.");
                 hasAnyChanges = true;
