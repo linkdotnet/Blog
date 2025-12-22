@@ -17,8 +17,12 @@ public sealed class MigrationManager
             new Migration11To12()
         };
 
-        // Determine current version from the highest ToVersion in migrations
-        _currentVersion = _migrations.Count > 0
+        _currentVersion = DetermineCurrentVersionFromMigrations();
+    }
+
+    private string DetermineCurrentVersionFromMigrations()
+    {
+        return _migrations.Count > 0
             ? _migrations.Max(m => m.ToVersion) ?? "11.0"
             : "11.0";
     }
@@ -31,9 +35,8 @@ public sealed class MigrationManager
             return false;
         }
 
-        // Skip version-controlled appsettings.json file
         var fileName = Path.GetFileName(filePath);
-        if (fileName.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase))
+        if (IsVersionControlledAppsettingsFile(fileName))
         {
             ConsoleOutput.WriteInfo($"Skipping version-controlled file: {fileName}");
             return true;
@@ -78,7 +81,6 @@ public sealed class MigrationManager
         }
         else
         {
-            // Create backup
             var backupPath = CreateBackup(filePath, backupDirectory);
             ConsoleOutput.WriteSuccess($"Backup created: {backupPath}");
         }
@@ -90,7 +92,6 @@ public sealed class MigrationManager
         {
             ConsoleOutput.WriteStep($"Applying migration: {migration.FromVersion} → {migration.ToVersion}");
             
-            // Re-parse for each migration
             using var migrationDoc = JsonDocument.Parse(modifiedContent);
             
             if (migration.Apply(migrationDoc, ref modifiedContent))
@@ -106,7 +107,6 @@ public sealed class MigrationManager
 
         if (hasAnyChanges)
         {
-            // Update version in the content
             modifiedContent = SetVersion(modifiedContent, _currentVersion);
 
             if (!dryRun)
@@ -125,6 +125,11 @@ public sealed class MigrationManager
         return true;
     }
 
+    private static bool IsVersionControlledAppsettingsFile(string fileName)
+    {
+        return fileName.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static string? GetVersion(JsonDocument document)
     {
         if (document.RootElement.TryGetProperty("ConfigVersion", out var versionElement))
@@ -138,10 +143,7 @@ public sealed class MigrationManager
     private List<IMigration> GetApplicableMigrations(string? currentVersion)
     {
         var result = new List<IMigration>();
-
-        // If no version is set, we assume it's the previous major version
         var startVersion = currentVersion ?? "11.0";
-
         var currentMigrationVersion = startVersion;
         var foundMigration = true;
 

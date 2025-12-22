@@ -7,32 +7,7 @@ var dryRun = false;
 var showHelp = false;
 var showVersion = false;
 
-// Parse command-line arguments
-var i = 0;
-while (i < args.Length)
-{
-    switch (args[i])
-    {
-        case "-p" or "--path" when i + 1 < args.Length:
-            i++;
-            targetPath = args[i];
-            break;
-        case "-b" or "--backup-dir" when i + 1 < args.Length:
-            i++;
-            backupDirectory = args[i];
-            break;
-        case "-d" or "--dry-run":
-            dryRun = true;
-            break;
-        case "-h" or "--help":
-            showHelp = true;
-            break;
-        case "-v" or "--version":
-            showVersion = true;
-            break;
-    }
-    i++;
-}
+ParseCommandLineArguments(args, ref targetPath, ref backupDirectory, ref dryRun, ref showHelp, ref showVersion);
 
 if (showHelp)
 {
@@ -46,7 +21,6 @@ if (showVersion)
     return 0;
 }
 
-// Resolve to full paths
 targetPath = Path.GetFullPath(targetPath);
 backupDirectory = Path.GetFullPath(backupDirectory);
 
@@ -153,4 +127,33 @@ static void ShowVersion()
     AnsiConsole.Write(new FigletText("v1.0.0").Color(Color.Cyan1));
     AnsiConsole.MarkupLine("[bold]Blog Upgrade Assistant[/]");
     AnsiConsole.MarkupLine($"[dim]Target Blog Version: 12.0[/]");
+}
+
+static void ParseCommandLineArguments(string[] args, ref string targetPath, ref string backupDirectory, ref bool dryRun, ref bool showHelp, ref bool showVersion)
+{
+    var i = 0;
+    while (i < args.Length)
+    {
+        switch (args[i])
+        {
+            case "-p" or "--path" when i + 1 < args.Length:
+                i++;
+                targetPath = args[i];
+                break;
+            case "-b" or "--backup-dir" when i + 1 < args.Length:
+                i++;
+                backupDirectory = args[i];
+                break;
+            case "-d" or "--dry-run":
+                dryRun = true;
+                break;
+            case "-h" or "--help":
+                showHelp = true;
+                break;
+            case "-v" or "--version":
+                showVersion = true;
+                break;
+        }
+        i++;
+    }
 }

@@ -22,7 +22,6 @@ public sealed class Migration11To12 : IMigration
 
         var hasChanges = false;
 
-        // Add ShowBuildInformation if not present
         if (!rootObject.ContainsKey("ShowBuildInformation"))
         {
             rootObject["ShowBuildInformation"] = true;
