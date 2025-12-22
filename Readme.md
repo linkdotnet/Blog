@@ -27,6 +27,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 - **About Me Page** - Customizable profile page that showcases skills and experience
 - **RSS Feed** - Allow readers to subscribe to content updates
 - **Visit Counter** - Get visitor counters for each blog post in the internal dashboard
+- **Automated Configuration Migration** - Upgrade Assistant tool automatically migrates appsettings.json files between versions
 
 ## In Action
 
