@@ -1,6 +1,6 @@
 # Configuration Upgrade Assistant
 
-The Blog Upgrade Assistant is an automated tool that helps you migrate your `appsettings.json` configuration files to the latest version when upgrading the blog to a new major version.
+The Blog Upgrade Assistant is an automated tool that helps you migrate your `appsettings.json` configuration files to the latest version when upgrading the blog to a new major version. This was introduced in version 12 of the blog. The update software tries to upgrade from version 11 to 12 automatically but not from earlier versions.
 
 ## Why Use the Upgrade Assistant?
 
@@ -109,15 +109,12 @@ The tool uses color-coded output for clarity:
 ═══ Processing: appsettings.json ═══
 
 ℹ Current version: Not set (pre-12.0)
-  → Found 3 migration(s) to apply:
-  →   • 8.0 → 9.0: Moves donation settings to SupportMe section
-  →   • 9.0 → 11.0: Adds UseMultiAuthorMode setting
-  →   • 11.0 → 12.0: Adds ShowBuildInformation setting
-✓ Backup created: ./backups/appsettings_20241221_120000.json
-  → Applying migration: 8.0 → 9.0
-⚠ Added 'ShowSimilarPosts' setting. Set to true to enable similar blog post feature.
-ℹ Note: You'll need to create the SimilarBlogPosts table. See MIGRATION.md for SQL script.
-✓ Migration 8.0 → 9.0 applied successfully.
+  → Found 1 migration(s) to apply:
+  →   • 11.0 → 12.0: Adds ShowBuildInformation setting to control build information display.
+✓ Backup created: ./backups/appsettings_20251221_120000.json
+  → Applying migration: 11.0 → 12.0
+ℹ Added 'ShowBuildInformation' setting. Controls display of build information in the footer.
+✓ Migration 11.0 → 12.0 applied successfully.
 ...
 ✓ File updated successfully: /path/to/blog/appsettings.json
 
@@ -144,8 +141,8 @@ If this field doesn't exist, the tool assumes you're running version 8.0 or earl
 ### Migration Chain
 
 The tool applies migrations sequentially:
-1. Detects current version (e.g., 8.0)
-2. Finds all migrations from current to latest (8.0→9.0, 9.0→11.0, 11.0→12.0)
+1. Detects current version (e.g., 12.0)
+2. Finds all migrations from current to latest (11.0→12.0)
 3. Applies each migration in order
 4. Updates the `ConfigVersion` field to the latest version
 
@@ -165,44 +162,6 @@ The tool is **idempotent** - running it multiple times on the same file is safe:
 
 ## Migration Details
 
-### Version 8.0 → 9.0
-
-**Changes:**
-- Moves `KofiToken`, `GithubSponsorName`, `PatreonName` from root to `SupportMe` section
-- Adds new `SupportMe` configuration options
-- Adds `ShowSimilarPosts` setting
-
-**Before:**
-```json
-{
-  "KofiToken": "abc123",
-  "GithubSponsorName": "myuser",
-  "PatreonName": "mypatron"
-}
-```
-
-**After:**
-```json
-{
-  "SupportMe": {
-    "KofiToken": "abc123",
-    "GithubSponsorName": "myuser",
-    "PatreonName": "mypatron",
-    "ShowUnderBlogPost": true,
-    "ShowUnderIntroduction": false,
-    "ShowInFooter": false,
-    "ShowSupportMePage": false,
-    "SupportMePageDescription": ""
-  },
-  "ShowSimilarPosts": false
-}
-```
-
-**Manual Steps Required:**
-- Create `SimilarBlogPosts` database table (see [MIGRATION.md](../../MIGRATION.md))
-- Set `ShowSimilarPosts` to `true` if you want to use this feature
-
-### Version 9.0 → 11.0
 
 **Changes:**
 - Adds `UseMultiAuthorMode` setting (default: `false`)
@@ -247,31 +206,6 @@ Options:
   -h, --help                Display help message
   -v, --version             Display tool version
 ```
-
-## Best Practices
-
-### Before Running the Tool
-
-1. **Backup your data** - While the tool creates backups, have your own backup strategy
-2. **Read the release notes** - Check [MIGRATION.md](../../MIGRATION.md) for version-specific information
-3. **Test in development** - Try the migration on a development environment first
-4. **Check prerequisites** - Ensure .NET 10.0 SDK is installed
-
-### After Running the Tool
-
-1. **Review the changes** - Open your migrated configuration and verify all values
-2. **Update custom settings** - Adjust any default values added by migrations
-3. **Apply database migrations** - Some versions require database schema changes
-4. **Test your application** - Start the blog and verify everything works
-5. **Keep backups** - Don't delete the backup files until you've verified the migration
-
-### For Production Environments
-
-1. **Use dry-run first** - Always preview changes with `--dry-run`
-2. **Custom backup location** - Use `--backup-dir` to specify a safe backup location
-3. **Version control** - Commit your changes to version control
-4. **Staged rollout** - Migrate development → staging → production
-5. **Monitor logs** - Check application logs after migration
 
 ## Troubleshooting
 
@@ -323,7 +257,7 @@ dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --path /correct/p
 
 Example:
 ```bash
-cp backups/appsettings_20241221_120000.json appsettings.json
+cp backups/appsettings_20251221_120000.json appsettings.json
 ```
 
 ## Advanced Usage
