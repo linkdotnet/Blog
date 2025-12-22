@@ -11,14 +11,13 @@ public class MigrationManagerTests : IDisposable
     }
 
     [Fact]
-    public async Task Should_Migrate_From_8_To_12()
+    public async Task Should_Migrate_From_11_To_12()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.json");
+        var testFile = Path.Combine(_testDirectory, "appsettings.Development.json");
         var json = """
             {
-              "BlogName": "Test Blog",
-              "KofiToken": "test123"
+              "BlogName": "Test Blog"
             }
             """;
         await File.WriteAllTextAsync(testFile, json);
@@ -32,8 +31,6 @@ public class MigrationManagerTests : IDisposable
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile);
         content.ShouldContain("\"ConfigVersion\": \"12.0\"");
-        content.ShouldContain("\"SupportMe\"");
-        content.ShouldContain("\"UseMultiAuthorMode\": false");
         content.ShouldContain("\"ShowBuildInformation\": true");
         
         // Verify backup was created
@@ -45,14 +42,12 @@ public class MigrationManagerTests : IDisposable
     public async Task Should_Not_Modify_Already_Migrated_File()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.json");
+        var testFile = Path.Combine(_testDirectory, "appsettings.Production.json");
         var json = """
             {
               "ConfigVersion": "12.0",
               "BlogName": "Test Blog",
-              "ShowBuildInformation": true,
-              "UseMultiAuthorMode": false,
-              "ShowSimilarPosts": false
+              "ShowBuildInformation": true
             }
             """;
         await File.WriteAllTextAsync(testFile, json);
@@ -69,10 +64,34 @@ public class MigrationManagerTests : IDisposable
     }
 
     [Fact]
+    public async Task Should_Skip_Version_Controlled_Appsettings_Json()
+    {
+        // Arrange
+        var testFile = Path.Combine(_testDirectory, "appsettings.json");
+        var json = """
+            {
+              "BlogName": "Test Blog"
+            }
+            """;
+        await File.WriteAllTextAsync(testFile, json);
+        var manager = new MigrationManager();
+        var backupDir = Path.Combine(_testDirectory, "backups");
+
+        // Act
+        var result = await manager.MigrateFileAsync(testFile, false, backupDir);
+
+        // Assert
+        result.ShouldBeTrue();
+        var content = await File.ReadAllTextAsync(testFile);
+        content.ShouldBe(json); // Should not change
+        Directory.Exists(backupDir).ShouldBeFalse(); // No backup created
+    }
+
+    [Fact]
     public async Task Should_Handle_Invalid_Json()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "invalid.json");
+        var testFile = Path.Combine(_testDirectory, "appsettings.Invalid.json");
         await File.WriteAllTextAsync(testFile, "{ invalid json }");
         var manager = new MigrationManager();
         var backupDir = Path.Combine(_testDirectory, "backups");
@@ -103,11 +122,10 @@ public class MigrationManagerTests : IDisposable
     public async Task DryRun_Should_Not_Modify_File()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.json");
+        var testFile = Path.Combine(_testDirectory, "appsettings.Development.json");
         var json = """
             {
-              "BlogName": "Test Blog",
-              "KofiToken": "test123"
+              "BlogName": "Test Blog"
             }
             """;
         await File.WriteAllTextAsync(testFile, json);
@@ -124,33 +142,6 @@ public class MigrationManagerTests : IDisposable
         
         // Verify no backup was created in dry-run mode
         Directory.Exists(backupDir).ShouldBeFalse();
-    }
-
-    [Fact]
-    public async Task Should_Apply_Partial_Migrations()
-    {
-        // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.json");
-        var json = """
-            {
-              "ConfigVersion": "9.0",
-              "BlogName": "Test Blog"
-            }
-            """;
-        await File.WriteAllTextAsync(testFile, json);
-        var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
-
-        // Act
-        var result = await manager.MigrateFileAsync(testFile, false, backupDir);
-
-        // Assert
-        result.ShouldBeTrue();
-        var content = await File.ReadAllTextAsync(testFile);
-        content.ShouldContain("\"ConfigVersion\": \"12.0\"");
-        content.ShouldContain("\"UseMultiAuthorMode\": false");
-        content.ShouldContain("\"ShowBuildInformation\": true");
-        content.ShouldNotContain("\"SupportMe\""); // Should not apply 8.0->9.0 migration
     }
 
     public void Dispose()

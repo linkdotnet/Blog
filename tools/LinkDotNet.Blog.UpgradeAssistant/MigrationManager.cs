@@ -7,17 +7,20 @@ namespace LinkDotNet.Blog.UpgradeAssistant;
 
 public sealed class MigrationManager
 {
-    private const string CurrentVersion = "12.0";
     private readonly List<IMigration> _migrations;
+    private readonly string _currentVersion;
 
     public MigrationManager()
     {
         _migrations = new List<IMigration>
         {
-            new Migration8To9(),
-            new Migration9To11(),
             new Migration11To12()
         };
+
+        // Determine current version from the highest ToVersion in migrations
+        _currentVersion = _migrations.Count > 0
+            ? _migrations.Max(m => m.ToVersion) ?? "11.0"
+            : "11.0";
     }
 
     public async Task<bool> MigrateFileAsync(string filePath, bool dryRun, string backupDirectory)
@@ -28,7 +31,15 @@ public sealed class MigrationManager
             return false;
         }
 
-        ConsoleOutput.WriteHeader($"Processing: {Path.GetFileName(filePath)}");
+        // Skip version-controlled appsettings.json file
+        var fileName = Path.GetFileName(filePath);
+        if (fileName.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase))
+        {
+            ConsoleOutput.WriteInfo($"Skipping version-controlled file: {fileName}");
+            return true;
+        }
+
+        ConsoleOutput.WriteHeader($"Processing: {fileName}");
 
         var content = await File.ReadAllTextAsync(filePath);
         JsonDocument? document;
@@ -44,7 +55,7 @@ public sealed class MigrationManager
         }
 
         var currentVersion = GetVersion(document);
-        ConsoleOutput.WriteInfo($"Current version: {currentVersion ?? "Not set (pre-12.0)"}");
+        ConsoleOutput.WriteInfo($"Current version: {currentVersion ?? $"Not set (pre-{_currentVersion})"}");
 
         var applicableMigrations = GetApplicableMigrations(currentVersion);
 
@@ -96,7 +107,7 @@ public sealed class MigrationManager
         if (hasAnyChanges)
         {
             // Update version in the content
-            modifiedContent = SetVersion(modifiedContent, CurrentVersion);
+            modifiedContent = SetVersion(modifiedContent, _currentVersion);
 
             if (!dryRun)
             {
@@ -121,15 +132,15 @@ public sealed class MigrationManager
             return versionElement.GetString();
         }
 
-        return null; // Pre-12.0 version
+        return null;
     }
 
     private List<IMigration> GetApplicableMigrations(string? currentVersion)
     {
         var result = new List<IMigration>();
 
-        // If no version is set, we assume it's pre-8.0 or 8.0
-        var startVersion = currentVersion ?? "8.0";
+        // If no version is set, we assume it's the previous major version
+        var startVersion = currentVersion ?? "11.0";
 
         var currentMigrationVersion = startVersion;
         var foundMigration = true;

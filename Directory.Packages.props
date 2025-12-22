@@ -58,5 +58,6 @@
   <ItemGroup Label="Tools">
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="Microsoft.Playwright" Version="1.57.0" />
+    <PackageVersion Include="Spectre.Console" Version="0.49.1" />
   </ItemGroup>
 </Project>
