@@ -1,7 +1,7 @@
 ## Setup
 
 There are two main ways of using this blog:
-* Latest development build: Just clone this repository and you are good to go (aka you are using the `master` branch).
+* Latest development build: Just clone this repository and you are good to go (aka you are using the `master` branch). **Warning:** *It is suggested not to fork this repo for prodution as forks cannot be private.*
 * Latest release: Download the latest release from the [release page](https://github.com/linkdotnet/Blog/releases).
 
 The development builds can be either unstable or use preview version of packages or the .net SDK itself. So only use it if you are willing to help with testing or development.
