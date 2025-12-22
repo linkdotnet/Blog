@@ -1,15 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<OutputType>Exe</OutputType>
 		<IsPackable>false</IsPackable>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\tools\LinkDotNet.Blog.UpgradeAssistant\LinkDotNet.Blog.UpgradeAssistant.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Shouldly" />
 	</ItemGroup>
 
 </Project>

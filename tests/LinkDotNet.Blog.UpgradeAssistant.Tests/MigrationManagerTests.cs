@@ -1,35 +1,37 @@
+using TestContext = Xunit.TestContext;
+
 namespace LinkDotNet.Blog.UpgradeAssistant.Tests;
 
-public class MigrationManagerTests : IDisposable
+public sealed class MigrationManagerTests : IDisposable
 {
-    private readonly string _testDirectory;
+    private readonly string testDirectory;
 
     public MigrationManagerTests()
     {
-        _testDirectory = Path.Combine(Path.GetTempPath(), $"blog-test-{Guid.NewGuid()}");
-        Directory.CreateDirectory(_testDirectory);
+        testDirectory = Path.Combine(Path.GetTempPath(), $"blog-test-{Guid.NewGuid()}");
+        Directory.CreateDirectory(testDirectory);
     }
 
     [Fact]
     public async Task Should_Migrate_From_11_To_12()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.Development.json");
+        var testFile = Path.Combine(testDirectory, "appsettings.Development.json");
         var json = """
             {
               "BlogName": "Test Blog"
             }
             """;
-        await File.WriteAllTextAsync(testFile, json);
+        await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
         var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
+        var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
         var result = await manager.MigrateFileAsync(testFile, false, backupDir);
 
         // Assert
         result.ShouldBeTrue();
-        var content = await File.ReadAllTextAsync(testFile);
+        var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
         content.ShouldContain("\"ConfigVersion\": \"12.0\"");
         content.ShouldContain("\"ShowBuildInformation\": true");
         
@@ -42,7 +44,7 @@ public class MigrationManagerTests : IDisposable
     public async Task Should_Not_Modify_Already_Migrated_File()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.Production.json");
+        var testFile = Path.Combine(testDirectory, "appsettings.Production.json");
         var json = """
             {
               "ConfigVersion": "12.0",
@@ -50,16 +52,16 @@ public class MigrationManagerTests : IDisposable
               "ShowBuildInformation": true
             }
             """;
-        await File.WriteAllTextAsync(testFile, json);
+        await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
         var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
+        var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
         var result = await manager.MigrateFileAsync(testFile, false, backupDir);
 
         // Assert
         result.ShouldBeTrue();
-        var content = await File.ReadAllTextAsync(testFile);
+        var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
         content.ShouldBe(json); // Should not change
     }
 
@@ -67,22 +69,22 @@ public class MigrationManagerTests : IDisposable
     public async Task Should_Skip_Version_Controlled_Appsettings_Json()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.json");
+        var testFile = Path.Combine(testDirectory, "appsettings.json");
         var json = """
             {
               "BlogName": "Test Blog"
             }
             """;
-        await File.WriteAllTextAsync(testFile, json);
+        await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
         var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
+        var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
         var result = await manager.MigrateFileAsync(testFile, false, backupDir);
 
         // Assert
         result.ShouldBeTrue();
-        var content = await File.ReadAllTextAsync(testFile);
+        var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
         content.ShouldBe(json); // Should not change
         Directory.Exists(backupDir).ShouldBeFalse(); // No backup created
     }
@@ -91,10 +93,10 @@ public class MigrationManagerTests : IDisposable
     public async Task Should_Handle_Invalid_Json()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.Invalid.json");
-        await File.WriteAllTextAsync(testFile, "{ invalid json }");
+        var testFile = Path.Combine(testDirectory, "appsettings.Invalid.json");
+        await File.WriteAllTextAsync(testFile, "{ invalid json }", TestContext.Current.CancellationToken);
         var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
+        var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
         var result = await manager.MigrateFileAsync(testFile, false, backupDir);
@@ -107,9 +109,9 @@ public class MigrationManagerTests : IDisposable
     public async Task Should_Handle_Missing_File()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "nonexistent.json");
+        var testFile = Path.Combine(testDirectory, "nonexistent.json");
         var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
+        var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
         var result = await manager.MigrateFileAsync(testFile, false, backupDir);
@@ -122,22 +124,22 @@ public class MigrationManagerTests : IDisposable
     public async Task DryRun_Should_Not_Modify_File()
     {
         // Arrange
-        var testFile = Path.Combine(_testDirectory, "appsettings.Development.json");
+        var testFile = Path.Combine(testDirectory, "appsettings.Development.json");
         var json = """
             {
               "BlogName": "Test Blog"
             }
             """;
-        await File.WriteAllTextAsync(testFile, json);
+        await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
         var manager = new MigrationManager();
-        var backupDir = Path.Combine(_testDirectory, "backups");
+        var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
         var result = await manager.MigrateFileAsync(testFile, true, backupDir);
 
         // Assert
         result.ShouldBeTrue();
-        var content = await File.ReadAllTextAsync(testFile);
+        var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
         content.ShouldBe(json); // Should not change in dry-run mode
         
         // Verify no backup was created in dry-run mode
@@ -146,9 +148,9 @@ public class MigrationManagerTests : IDisposable
 
     public void Dispose()
     {
-        if (Directory.Exists(_testDirectory))
+        if (Directory.Exists(testDirectory))
         {
-            Directory.Delete(_testDirectory, true);
+            Directory.Delete(testDirectory, true);
         }
     }
 }
