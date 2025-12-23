@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
 using Blazored.Toast;
 using HealthChecks.UI.Client;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
@@ -9,98 +9,87 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace LinkDotNet.Blog.Web;
+var builder = WebApplication.CreateBuilder(args);
+RegisterServices(builder);
 
-public class Program
+await using var app = builder.Build();
+ConfigureApp(app);
+
+await app.RunAsync();
+static void RegisterServices(WebApplicationBuilder builder)
 {
-    public static async Task Main(string[] args)
+    builder.Services.AddSecurityHeaderPolicies()
+        .SetDefaultPolicy(p =>
+            p.AddDefaultSecurityHeaders()
+                .AddCrossOriginEmbedderPolicy(policy => policy.UnsafeNone())
+                .AddPermissionsPolicy(policy =>
+                {
+                    policy.AddCamera().None();
+                    policy.AddMicrophone().None();
+                    policy.AddGeolocation().None();
+                }))
+        .AddPolicy("API", p => p.AddDefaultApiSecurityHeaders());
+
+    builder.Services
+        .AddHostingServices()
+        .AddConfiguration()
+        .AddRateLimiting()
+        .AddApplicationServices()
+        .AddStorageProvider(builder.Configuration)
+        .AddImageUploadProvider(builder.Configuration)
+        .AddBlazoredToast()
+        .AddBlazoriseWithBootstrap()
+        .AddResponseCompression()
+        .AddHealthCheckSetup();
+
+    builder.Services.AddAntiforgery();
+
+    if (builder.Environment.IsDevelopment())
     {
-        var builder = WebApplication.CreateBuilder(args);
-        RegisterServices(builder);
+        builder.Services.UseDummyAuthentication();
+    }
+    else
+    {
+        builder.Services.UseAuthentication();
+    }
+}
 
-        await using var app = builder.Build();
-        ConfigureApp(app);
+static void ConfigureApp(WebApplication app)
+{
+    app.UseSecurityHeaders();
 
-        await app.RunAsync();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Error");
+        app.UseHsts();
     }
 
-    private static void RegisterServices(WebApplicationBuilder builder)
-    {
-        builder.Services.AddSecurityHeaderPolicies()
-            .SetDefaultPolicy(p =>
-                p.AddDefaultSecurityHeaders()
-                    .AddCrossOriginEmbedderPolicy(policy => policy.UnsafeNone())
-                    .AddPermissionsPolicy(policy =>
-                    {
-                        policy.AddCamera().None();
-                        policy.AddMicrophone().None();
-                        policy.AddGeolocation().None();
-                    }))
-            .AddPolicy("API", p => p.AddDefaultApiSecurityHeaders());
+    app.UseResponseCompression();
+    app.UseHttpsRedirection();
+    app.MapStaticAssets();
 
-        builder.Services
-            .AddHostingServices()
-            .AddConfiguration()
-            .AddRateLimiting()
-            .AddApplicationServices()
-            .AddStorageProvider(builder.Configuration)
-            .AddImageUploadProvider(builder.Configuration)
-            .AddBlazoredToast()
-            .AddBlazoriseWithBootstrap()
-            .AddResponseCompression()
-            .AddHealthCheckSetup();
-        
-        builder.Services.AddAntiforgery();
-
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Services.UseDummyAuthentication();
-        }
-        else
-        {
-            builder.Services.UseAuthentication();
-        }
-    }
-
-    private static void ConfigureApp(WebApplication app)
-    {
-        app.UseSecurityHeaders();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-        else
-        {
-            app.UseExceptionHandler("/Error");
-            app.UseHsts();
-        }
-
-        app.UseResponseCompression();
-        app.UseHttpsRedirection();
-        app.MapStaticAssets();
-
-        app.MapHealthChecks("/health", new HealthCheckOptions
-        {
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-        })
+    app.MapHealthChecks("/health",
+            new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse, })
         .RequireAuthorization();
 
-        app.UseStatusCodePagesWithReExecute("/NotFound");
-        
-        app.UseRouting();
+    app.UseStatusCodePagesWithReExecute("/NotFound");
 
-        app.UseUserCulture();
+    app.UseRouting();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-        
-        app.UseAntiforgery();
+    app.UseUserCulture();
 
-        app.UseRateLimiter();
-        app.MapControllers();
-        app.MapRazorPages();
-        app.MapRazorComponents<App>()
-            .AddInteractiveServerRenderMode();
-    }
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseAntiforgery();
+
+    app.UseRateLimiter();
+    app.MapControllers();
+    app.MapRazorPages();
+    app.MapRazorComponents<App>()
+        .AddInteractiveServerRenderMode();
 }
