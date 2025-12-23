@@ -1,76 +1,77 @@
-﻿using LinkDotNet.Blog.UpgradeAssistant;
+﻿using CommandLine;
+using LinkDotNet.Blog.UpgradeAssistant;
 using Spectre.Console;
 
-var targetPath = ".";
-var backupDirectory = "backups";
-var dryRun = false;
-var showHelp = false;
-var showVersion = false;
+return await Parser.Default.ParseArguments<CommandLineOptions>(args)
+    .MapResult(
+        async opts => await RunWithOptions(opts),
+        _ => Task.FromResult(1));
 
-ParseCommandLineArguments(args, ref targetPath, ref backupDirectory, ref dryRun, ref showHelp, ref showVersion);
-
-if (showHelp)
+static async Task<int> RunWithOptions(CommandLineOptions options)
 {
-    ShowHelp();
-    return 0;
-}
+    if (options.Help)
+    {
+        ShowHelp();
+        return 0;
+    }
 
-if (showVersion)
-{
-    ShowVersion();
-    return 0;
-}
+    if (options.Version)
+    {
+        ShowVersion();
+        return 0;
+    }
 
-targetPath = Path.GetFullPath(targetPath);
-backupDirectory = Path.GetFullPath(backupDirectory);
+    var targetPath = Path.GetFullPath(options.TargetPath);
+    var backupDirectory = Path.GetFullPath(options.BackupDirectory);
 
-ConsoleOutput.WriteHeader("Blog Upgrade Assistant");
-ConsoleOutput.WriteInfo($"Target: {targetPath}");
-ConsoleOutput.WriteInfo($"Backup directory: {backupDirectory}");
+    ConsoleOutput.WriteHeader("Blog Upgrade Assistant");
+    ConsoleOutput.WriteInfo($"Target: {targetPath}");
+    ConsoleOutput.WriteInfo($"Backup directory: {backupDirectory}");
 
-if (dryRun)
-{
-    ConsoleOutput.WriteWarning("Running in DRY RUN mode - no changes will be saved.");
-}
+    if (options.DryRun)
+    {
+        ConsoleOutput.WriteWarning("Running in DRY RUN mode - no changes will be saved.");
+    }
 
-var manager = new MigrationManager();
-var files = GetAppsettingsFiles(targetPath);
+    var manager = new MigrationManager();
+    var files = GetAppsettingsFiles(targetPath);
 
-if (files.Count == 0)
-{
-    ConsoleOutput.WriteError("No appsettings files found to migrate.");
-    ConsoleOutput.WriteInfo("Please specify a valid path using --path option.");
+    if (files.Count == 0)
+    {
+        ConsoleOutput.WriteError("No appsettings files found to migrate.");
+        ConsoleOutput.WriteInfo("Please specify a valid path using --path option.");
+        return 1;
+    }
+
+    ConsoleOutput.WriteInfo($"Found {files.Count} file(s) to process.");
+    AnsiConsole.WriteLine();
+
+    var allSuccessful = true;
+    foreach (var file in files)
+    {
+        var success = await manager.MigrateFileAsync(file, options.DryRun, backupDirectory);
+        allSuccessful = allSuccessful && success;
+        AnsiConsole.WriteLine();
+    }
+
+    if (allSuccessful)
+    {
+        ConsoleOutput.WriteHeader("Migration Complete");
+        ConsoleOutput.WriteSuccess("All files processed successfully!");
+        
+        if (!options.DryRun)
+        {
+            ConsoleOutput.WriteInfo($"Backups saved to: {backupDirectory}");
+        }
+        
+        ConsoleOutput.WriteInfo("Please review the changes and update any configuration values as needed.");
+        ConsoleOutput.WriteInfo("See MIGRATION.md for additional manual steps (database migrations, etc.).");
+        return 0;
+    }
+
+    ConsoleOutput.WriteError("Some files could not be processed. Please review the errors above.");
     return 1;
 }
-
-ConsoleOutput.WriteInfo($"Found {files.Count} file(s) to process.");
-AnsiConsole.WriteLine();
-
-var allSuccessful = true;
-foreach (var file in files)
-{
-    var success = await manager.MigrateFileAsync(file, dryRun, backupDirectory);
-    allSuccessful = allSuccessful && success;
-    AnsiConsole.WriteLine();
-}
-
-if (allSuccessful)
-{
-    ConsoleOutput.WriteHeader("Migration Complete");
-    ConsoleOutput.WriteSuccess("All files processed successfully!");
-    
-    if (!dryRun)
-    {
-        ConsoleOutput.WriteInfo($"Backups saved to: {backupDirectory}");
-    }
-    
-    ConsoleOutput.WriteInfo("Please review the changes and update any configuration values as needed.");
-    ConsoleOutput.WriteInfo("See MIGRATION.md for additional manual steps (database migrations, etc.).");
-    return 0;
-}
-
-ConsoleOutput.WriteError("Some files could not be processed. Please review the errors above.");
-return 1;
 
 static List<string> GetAppsettingsFiles(string path)
 {
@@ -127,33 +128,4 @@ static void ShowVersion()
     AnsiConsole.Write(new FigletText("v1.0.0").Color(Color.Cyan1));
     AnsiConsole.MarkupLine("[bold]Blog Upgrade Assistant[/]");
     AnsiConsole.MarkupLine($"[dim]Target Blog Version: 12.0[/]");
-}
-
-static void ParseCommandLineArguments(string[] args, ref string targetPath, ref string backupDirectory, ref bool dryRun, ref bool showHelp, ref bool showVersion)
-{
-    var i = 0;
-    while (i < args.Length)
-    {
-        switch (args[i])
-        {
-            case "-p" or "--path" when i + 1 < args.Length:
-                i++;
-                targetPath = args[i];
-                break;
-            case "-b" or "--backup-dir" when i + 1 < args.Length:
-                i++;
-                backupDirectory = args[i];
-                break;
-            case "-d" or "--dry-run":
-                dryRun = true;
-                break;
-            case "-h" or "--help":
-                showHelp = true;
-                break;
-            case "-v" or "--version":
-                showVersion = true;
-                break;
-        }
-        i++;
-    }
 }
