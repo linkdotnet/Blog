@@ -23,8 +23,8 @@
                                     <div class="col-2 col-sm-1">
                                         @if (!string.IsNullOrEmpty(post.PreviewImageUrl))
                                         {
-                                            <img src="@post.PreviewImageUrl" 
-                                                 alt="@post.Title" 
+                                            <img src="@post.PreviewImageUrl"
+                                                 alt="@post.Title"
                                                  class="img-fluid rounded w-100 aspect-ratio-1x1"
                                                  loading="lazy"
                                                  onerror="this.onerror=null; this.src='@(post.PreviewImageUrlFallback ?? "assets/image-placeholder.webp")';">
@@ -42,7 +42,7 @@
                                             <p class="mb-1 small text-body-secondary">
                                                 @MarkdownConverter.ToPlainString(post.ShortDescription)
                                             </p>
-                                            <div class="text-dark-emphasis d-flex flex-wrap gap-2 mt-1">
+                                            <div class="text-body-secondary d-flex flex-wrap gap-2 mt-1">
                                                 <div class="me-2">
                                                     <span class="date"></span>
                                                     <span class="ms-1">@post.UpdatedDate.ToShortDateString()</span>
