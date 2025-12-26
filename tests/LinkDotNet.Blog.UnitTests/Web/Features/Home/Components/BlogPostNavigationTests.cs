@@ -16,7 +16,7 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.FindAll("a").Cast<IHtmlAnchorElement>().Last().Href.ShouldEndWith("/3");
+        cut.FindAll("a").Cast<IHtmlAnchorElement>().Last().Href.ShouldEndWith("/3#posts-header");
     }
 
     [Fact]
@@ -27,7 +27,7 @@ public class BlogPostNavigationTests : BunitContext
         var cut = Render<BlogPostNavigation<BlogPost>>(p =>
             p.Add(param => param.PageList, page));
 
-        cut.FindAll("a").Cast<IHtmlAnchorElement>().First().Href.ShouldEndWith("/1");
+        cut.FindAll("a").Cast<IHtmlAnchorElement>().First().Href.ShouldEndWith("/1#posts-header");
     }
 
     [Fact]
