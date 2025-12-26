@@ -3,6 +3,7 @@ using Blazored.Toast;
 using HealthChecks.UI.Client;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
+using LinkDotNet.Blog.Web.Features.DummyData;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -49,13 +50,14 @@ public class Program
             .AddBlazoriseWithBootstrap()
             .AddResponseCompression()
             .AddHealthCheckSetup();
-        
+
         builder.Services.AddAntiforgery();
 
-        if (builder.Environment.IsDevelopment())
-        {
-            builder.Services.UseDummyAuthentication();
-        }
+    if (builder.Environment.IsDevelopment())
+    {
+        builder.Services.UseDummyAuthentication();
+        builder.Services.UseDummyData();
+    }
         else
         {
             builder.Services.UseAuthentication();
@@ -87,14 +89,14 @@ public class Program
         .RequireAuthorization();
 
         app.UseStatusCodePagesWithReExecute("/NotFound");
-        
+
         app.UseRouting();
 
         app.UseUserCulture();
 
         app.UseAuthentication();
         app.UseAuthorization();
-        
+
         app.UseAntiforgery();
 
         app.UseRateLimiter();

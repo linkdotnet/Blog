@@ -402,7 +402,7 @@ dotnet_naming_rule.parameters_rule.severity             = warning
 dotnet_diagnostic.CA1515.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1515.md
 dotnet_diagnostic.CA1707.severity = error           # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA1707.md
 dotnet_diagnostic.CA2007.severity = none            # https://github.com/atc-net/atc-coding-rules/blob/main/documentation/CodeAnalyzersRules/MicrosoftCodeAnalysis/CA2007.md
-
+dotnet_diagnostic.CA5394.severity = none
 
 # SonarAnalyzer.CSharp
 # https://rules.sonarsource.com/csharp
