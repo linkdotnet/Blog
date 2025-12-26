@@ -19,7 +19,7 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold text-primary mb-0">@Title</h2>
                 <div class="d-flex gap-2">
-                    <span class="badge text-dark px-3 py-2 fw-medium">
+                    <span class="badge text-body-secondary px-3 py-2 fw-medium">
                         @GetStatusText()
                     </span>
                     @if (model.IsDirty)
@@ -45,7 +45,7 @@
                     <div class="card-body p-0">
                                 <div class="p-4 border-bottom">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control form-control-lg border-0 shadow-none fs-3 fw-semibold"
+                                        <input type="text" class="form-control form-control-lg shadow-none fs-3 fw-semibold"
                                                id="title" placeholder="Enter your post title..."
                                                @oninput="args => model.Title = args.Value!.ToString()!"
                                                value="@model.Title"/>
@@ -55,7 +55,7 @@
                                 </div>
 
                                 <div class="p-4 border-bottom">
-                                    <label class="form-label fw-bold text-dark mb-3">Short Description</label>
+                                    <label class="form-label fw-bold mb-3">Short Description</label>
                                     <MarkdownTextArea Id="short" Class="form-control border-0 shadow-none"
                                                       Rows="4" Placeholder="Write a compelling summary..."
                                                       @bind-Value="@model.ShortDescription"
@@ -64,7 +64,7 @@
                                 </div>
 
                                 <div class="p-4 position-relative">
-                                    <label class="form-label fw-bold text-dark mb-3">
+                                    <label class="form-label fw-bold mb-3">
                                         Content                        <span class="badge bg-secondary ms-2 fw-medium">@ReadingTimeCalculator.GetWordCount(model.Content) words</span>
                         <span class="badge bg-info ms-1 fw-medium">~@GetEstimatedReadTime() min read</span>
                                     </label>

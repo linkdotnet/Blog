@@ -49,7 +49,7 @@ public class Program
             .AddBlazoriseWithBootstrap()
             .AddResponseCompression()
             .AddHealthCheckSetup();
-        
+
         builder.Services.AddAntiforgery();
 
         if (builder.Environment.IsDevelopment())
@@ -87,14 +87,14 @@ public class Program
         .RequireAuthorization();
 
         app.UseStatusCodePagesWithReExecute("/NotFound");
-        
+
         app.UseRouting();
 
         app.UseUserCulture();
 
         app.UseAuthentication();
         app.UseAuthorization();
-        
+
         app.UseAntiforgery();
 
         app.UseRateLimiter();
