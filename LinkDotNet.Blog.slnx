@@ -1,0 +1,34 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="MIGRATION.md" />
+    <File Path="Readme.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <File Path="src/.editorconfig" />
+    <File Path="src/Directory.Build.props" />
+    <Project Path="src/LinkDotNet.Blog.Domain/LinkDotNet.Blog.Domain.csproj" />
+    <Project Path="src/LinkDotNet.Blog.Infrastructure/LinkDotNet.Blog.Infrastructure.csproj" />
+    <Project Path="src/LinkDotNet.Blog.Web/LinkDotNet.Blog.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/.editorconfig" />
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests/LinkDotNet.Blog.IntegrationTests/LinkDotNet.Blog.IntegrationTests.csproj" />
+    <Project Path="tests/LinkDotNet.Blog.TestUtilities/LinkDotNet.Blog.TestUtilities.csproj" />
+    <Project Path="tests/LinkDotNet.Blog.UnitTests/LinkDotNet.Blog.UnitTests.csproj" />
+    <Project Path="tests/LinkDotNet.Blog.UpgradeAssistant.Tests/LinkDotNet.Blog.UpgradeAssistant.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <File Path="tools/Directory.Build.props" />
+    <Project Path="tools/LinkDotNet.Blog.CriticalCSS/LinkDotNet.Blog.CriticalCSS.csproj" />
+    <Project Path="tools/LinkDotNet.Blog.UpgradeAssistant/LinkDotNet.Blog.UpgradeAssistant.csproj" />
+  </Folder>
+</Solution>
