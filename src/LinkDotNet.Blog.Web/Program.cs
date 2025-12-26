@@ -3,7 +3,6 @@ using Blazored.Toast;
 using HealthChecks.UI.Client;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
-using LinkDotNet.Blog.Web.Features.DummyData;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -53,11 +52,10 @@ public class Program
 
         builder.Services.AddAntiforgery();
 
-    if (builder.Environment.IsDevelopment())
-    {
-        builder.Services.UseDummyAuthentication();
-        builder.Services.UseDummyData();
-    }
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.UseDummyAuthentication();
+        }
         else
         {
             builder.Services.UseAuthentication();
