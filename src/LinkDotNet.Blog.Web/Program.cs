@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Blazored.Toast;
 using HealthChecks.UI.Client;
-using LinkDotNet.Blog.Web.Authentication;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Authentication.Dummy;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -114,17 +114,38 @@ public class Program
         app.UseRateLimiter();
         app.MapControllers();
         
-        // Minimal API endpoints for authentication
-        app.MapGet("/login", async (ILoginManager loginManager, string? redirectUri) =>
+        // Authentication endpoints for Blazor Interactive Server
+        app.MapGet("/login", (HttpContext context, string? redirectUri) =>
         {
-            await loginManager.SignInAsync(redirectUri ?? "/");
+            var authenticationProperties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties
+            {
+                RedirectUri = redirectUri ?? "/"
+            };
+            return Results.Challenge(authenticationProperties);
         })
+        .AllowAnonymous()
         .ExcludeFromDescription();
         
-        app.MapGet("/logout", async (ILoginManager loginManager, string? redirectUri) =>
+        app.MapGet("/logout", async (HttpContext context, string? redirectUri) =>
         {
-            await loginManager.SignOutAsync(redirectUri ?? "/");
+            var authenticationProperties = new Microsoft.AspNetCore.Authentication.AuthenticationProperties
+            {
+                RedirectUri = redirectUri ?? "/"
+            };
+            
+            // Sign out of cookie authentication
+            await context.SignOutAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
+            
+            // Sign out of OIDC (if using OIDC, this will redirect to provider)
+            if (context.User.Identity?.IsAuthenticated == true)
+            {
+                return Results.SignOut(authenticationProperties, 
+                    new[] { Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme });
+            }
+            
+            return Results.Redirect(redirectUri ?? "/");
         })
+        .RequireAuthorization()
         .ExcludeFromDescription();
         
         app.MapRazorComponents<App>()
