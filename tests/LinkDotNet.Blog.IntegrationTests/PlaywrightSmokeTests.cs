@@ -15,8 +15,8 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
     public PlaywrightSmokeTests(PlaywrightWebApplicationFactory factory)
     {
         this.factory = factory;
-        _ = factory.CreateClient(); // Initialize the factory
-        playwrightTask = new Lazy<Task<IPlaywright>>(() => Playwright.CreateAsync());
+        _ = factory.CreateClient();
+        playwrightTask = new Lazy<Task<IPlaywright>>(Playwright.CreateAsync);
         browserTask = new Lazy<Task<IBrowser>>(async () => 
         {
             var playwright = await playwrightTask.Value;
@@ -47,7 +47,6 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
 
-        // Find and click the first blog post link
         var blogPostLink = await page.QuerySelectorAsync("article a[href*='/blogPost/']");
         blogPostLink.ShouldNotBeNull();
 
@@ -56,7 +55,6 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
 
         await page.GotoAsync($"{factory.ServerAddress.TrimEnd('/')}{href}", new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
 
-        // Verify we're on a blog post page
         var heading = await page.QuerySelectorAsync("h1");
         heading.ShouldNotBeNull();
         var headingText = await heading.TextContentAsync();
@@ -71,21 +69,16 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
 
-        // Look for pagination button/link for page 2
         var page2Link = await page.QuerySelectorAsync("a[href='/2']");
-        if (page2Link is not null)
-        {
-            await page2Link.ClickAsync();
-            await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+        page2Link.ShouldNotBeNull();
+        await page2Link.ClickAsync();
+        await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-            // Verify we're on page 2
-            var currentUrl = page.Url;
-            currentUrl.ShouldContain("/2");
+        var currentUrl = page.Url;
+        currentUrl.ShouldContain("/2");
 
-            // Verify blog posts are shown on page 2
-            var blogPostElements = await page.QuerySelectorAllAsync("article");
-            blogPostElements.Count.ShouldBeGreaterThan(0);
-        }
+        var blogPostElements = await page.QuerySelectorAllAsync("article");
+        blogPostElements.Count.ShouldBeGreaterThan(0);
     }
 
     [Fact]
@@ -96,19 +89,15 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
 
-        // Find the first blog post link
         var blogPostLink = await page.QuerySelectorAsync("article a[href*='/blogPost/']");
         blogPostLink.ShouldNotBeNull();
 
-        // Get the expected URL
         var expectedHref = await blogPostLink.GetAttributeAsync("href");
         expectedHref.ShouldNotBeNull();
 
-        // Click the link
         await blogPostLink.ClickAsync();
         await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-        // Verify navigation occurred
         var currentUrl = page.Url;
         currentUrl.ShouldContain("/blogPost/");
     }
