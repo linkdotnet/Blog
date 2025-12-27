@@ -15,7 +15,6 @@ namespace LinkDotNet.Blog.IntegrationTests;
 public sealed class PlaywrightWebApplicationFactory : WebApplicationFactory<Program>
 {
     private IHost? host;
-    private static readonly string ConnectionString = $"DataSource=file:memdb{Guid.NewGuid():N}?mode=memory&cache=shared";
 
     public string ServerAddress => ClientOptions.BaseAddress.ToString();
 
@@ -28,8 +27,6 @@ public sealed class PlaywrightWebApplicationFactory : WebApplicationFactory<Prog
 
         builder = builder.ConfigureWebHost(b =>
         {
-            b.UseSetting("PersistenceProvider", PersistenceProvider.Sqlite.Key);
-            b.UseSetting("ConnectionString", ConnectionString);
             b.UseSetting("Logging:LogLevel:Default", "Error");
             b.UseSetting("BlogName", "Integration Tests Blog");
             b.ConfigureServices(services =>

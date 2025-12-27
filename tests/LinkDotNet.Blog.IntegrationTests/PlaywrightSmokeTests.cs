@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.TestUtilities;
 using Microsoft.Playwright;
-using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests;
 
@@ -10,20 +9,25 @@ namespace LinkDotNet.Blog.IntegrationTests;
 public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicationFactory>, IAsyncDisposable
 {
     private readonly PlaywrightWebApplicationFactory factory;
-    private readonly IPlaywright playwright;
-    private readonly IBrowser browser;
+    private readonly Lazy<Task<IPlaywright>> playwrightTask;
+    private readonly Lazy<Task<IBrowser>> browserTask;
 
     public PlaywrightSmokeTests(PlaywrightWebApplicationFactory factory)
     {
         this.factory = factory;
         _ = factory.CreateClient(); // Initialize the factory
-        playwright = Playwright.CreateAsync().GetAwaiter().GetResult();
-        browser = playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true }).GetAwaiter().GetResult();
+        playwrightTask = new Lazy<Task<IPlaywright>>(() => Playwright.CreateAsync());
+        browserTask = new Lazy<Task<IBrowser>>(async () => 
+        {
+            var playwright = await playwrightTask.Value;
+            return await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = true });
+        });
     }
 
     [Fact]
     public async Task ShouldNavigateToHomePageAndShowBlogPosts()
     {
+        var browser = await browserTask.Value;
         var page = await browser.NewPageAsync();
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
@@ -38,6 +42,7 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
     [Fact]
     public async Task ShouldNavigateToBlogPostAndShowContent()
     {
+        var browser = await browserTask.Value;
         var page = await browser.NewPageAsync();
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
@@ -61,6 +66,7 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
     [Fact]
     public async Task ShouldNavigateToSecondPageAndShowBlogPosts()
     {
+        var browser = await browserTask.Value;
         var page = await browser.NewPageAsync();
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
@@ -85,6 +91,7 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
     [Fact]
     public async Task ShouldClickOnBlogPostLinkAndNavigate()
     {
+        var browser = await browserTask.Value;
         var page = await browser.NewPageAsync();
 
         await page.GotoAsync(factory.ServerAddress, new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle });
@@ -108,7 +115,16 @@ public sealed class PlaywrightSmokeTests : IClassFixture<PlaywrightWebApplicatio
 
     public async ValueTask DisposeAsync()
     {
-        await browser.DisposeAsync();
-        playwright.Dispose();
+        if (browserTask.IsValueCreated)
+        {
+            var browser = await browserTask.Value;
+            await browser.DisposeAsync();
+        }
+        
+        if (playwrightTask.IsValueCreated)
+        {
+            var playwright = await playwrightTask.Value;
+            playwright.Dispose();
+        }
     }
 }
