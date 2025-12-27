@@ -134,13 +134,13 @@ public class Program
         app.MapControllers();
         
         // Minimal API endpoints for authentication
-        app.MapGet("/login", async (HttpContext context, ILoginManager loginManager, string? redirectUri) =>
+        app.MapGet("/login", async (ILoginManager loginManager, string? redirectUri) =>
         {
             await loginManager.SignInAsync(redirectUri ?? "/");
         })
         .ExcludeFromDescription();
         
-        app.MapGet("/logout", async (HttpContext context, ILoginManager loginManager, string? redirectUri) =>
+        app.MapGet("/logout", async (ILoginManager loginManager, string? redirectUri) =>
         {
             await loginManager.SignOutAsync(redirectUri ?? "/");
         })
