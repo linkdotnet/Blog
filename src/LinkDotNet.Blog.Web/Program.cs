@@ -58,7 +58,7 @@ public class Program
         }
         else
         {
-            builder.Services.UseAuthentication();
+            builder.Services.UseAuthentication(builder.Configuration);
         }
     }
 
