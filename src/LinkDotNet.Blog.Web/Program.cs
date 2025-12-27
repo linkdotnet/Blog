@@ -133,11 +133,14 @@ public class Program
                 RedirectUri = redirectUri ?? "/"
             };
             
+            // Check if user is authenticated before signing out
+            var isAuthenticated = context.User.Identity?.IsAuthenticated == true;
+            
             // Sign out of cookie authentication
             await context.SignOutAsync(Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
             
             // Sign out of OIDC (if using OIDC, this will redirect to provider)
-            if (context.User.Identity?.IsAuthenticated == true)
+            if (isAuthenticated)
             {
                 return Results.SignOut(authenticationProperties, 
                     new[] { Microsoft.AspNetCore.Authentication.OpenIdConnect.OpenIdConnectDefaults.AuthenticationScheme });
