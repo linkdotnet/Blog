@@ -82,28 +82,9 @@ public class Program
                     context.Response.ContentType = "text/html";
                     
                     var requestId = System.Diagnostics.Activity.Current?.Id ?? context.TraceIdentifier;
+                    var errorHtml = GenerateErrorPageHtml(requestId);
                     
-                    await context.Response.WriteAsync($@"<!DOCTYPE html>
-<html>
-<head>
-    <meta charset=""utf-8""/>
-    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no""/>
-    <title>Error</title>
-    <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css"" integrity=""sha512-fw7f+TcMjTb7bpbLJZlP8g2Y4XcCyFZW8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw=="" crossorigin=""anonymous"" referrerpolicy=""no-referrer"" />
-    <link href=""/css/basic.css"" rel=""stylesheet""/>
-</head>
-<body>
-<div class=""main"">
-    <div class=""content px-4"">
-        <h1 class=""text-danger"">Error.</h1>
-        <h2 class=""text-danger"">An error occurred while processing your request.</h2>
-        <p>
-            <strong>Request ID:</strong> <code>{requestId}</code>
-        </p>
-    </div>
-</div>
-</body>
-</html>");
+                    await context.Response.WriteAsync(errorHtml);
                 });
             });
             app.UseHsts();
@@ -148,5 +129,30 @@ public class Program
         
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
+    }
+
+    private static string GenerateErrorPageHtml(string requestId)
+    {
+        return $@"<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=""utf-8""/>
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no""/>
+    <title>Error</title>
+    <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css"" integrity=""sha512-fw7f+TcMjTb7bpbLJZlP8g2Y4XcCyFZW8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw=="" crossorigin=""anonymous"" referrerpolicy=""no-referrer"" />
+    <link href=""/css/basic.css"" rel=""stylesheet""/>
+</head>
+<body>
+<div class=""main"">
+    <div class=""content px-4"">
+        <h1 class=""text-danger"">Error.</h1>
+        <h2 class=""text-danger"">An error occurred while processing your request.</h2>
+        <p>
+            <strong>Request ID:</strong> <code>{requestId}</code>
+        </p>
+    </div>
+</div>
+</body>
+</html>";
     }
 }
