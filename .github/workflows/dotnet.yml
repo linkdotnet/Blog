@@ -32,5 +32,7 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore -c Release
+    - name: Ensure browsers are installed
+      run: npx playwright install chromium --with-deps
     - name: Test
       run: dotnet test -c Release --no-build -p:VSTestUseMSBuildOutput=false
