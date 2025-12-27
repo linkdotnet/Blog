@@ -18,6 +18,5 @@ internal static class DummyExtensions
 
         services.AddAuthorization();
         services.AddHttpContextAccessor();
-        services.AddScoped<ILoginManager, DummyLoginManager>();
     }
 }

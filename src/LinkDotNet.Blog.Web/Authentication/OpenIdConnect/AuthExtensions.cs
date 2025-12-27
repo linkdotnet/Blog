@@ -20,7 +20,7 @@ public static class AuthExtensions
         {
             options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
         })
         .AddCookie()
         .AddOpenIdConnect();
@@ -28,6 +28,5 @@ public static class AuthExtensions
         services.ConfigureOptions<ConfigureOpenIdConnectOptions>();
 
         services.AddHttpContextAccessor();
-        services.AddScoped<ILoginManager, AuthLoginManager>();
     }
 }
