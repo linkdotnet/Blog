@@ -25,8 +25,6 @@ public static class AuthExtensions
         .AddCookie()
         .AddOpenIdConnect();
 
-        services.ConfigureOptions<ConfigureOpenIdConnectOptions>();
-
         services.AddHttpContextAccessor();
         services.AddScoped<ILoginManager, AuthLoginManager>();
     }
