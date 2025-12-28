@@ -27,4 +27,6 @@ public sealed record ApplicationConfiguration
     public bool ShowBuildInformation { get; init; } = true;
 
     public bool UseMultiAuthorMode { get; init; }
+
+    public string LikeIconStyle { get; init; } = "ThumbsUp";
 }

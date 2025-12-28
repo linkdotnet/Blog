@@ -67,7 +67,8 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"ContainerName": "",
 		"CdnEndpoint": ""
 	},
-	"UseMultiAuthorMode": false
+	"UseMultiAuthorMode": false,
+	"LikeIconStyle": "ThumbsUp"
 }
 ```
 
@@ -113,3 +114,4 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ContainerName                                 | string         | The container name for the image storage provider                                                                                                                                |
 | CdnEndpoint                                   | string         | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets.                                  |
 | UseMultiAuthorMode                            | boolean        | The default value is `false`. If set to `true` then author name will be associated with blog posts at the time of creation. This author name will be fetched from the identity provider's `name` or `nickname` or `preferred_username` claim property. |
+| LikeIconStyle                                 | string         | Controls the icon style for the like button. Valid values are `ThumbsUp` (default) or `PlusPlus`. `ThumbsUp` shows a thumbs-up icon, while `PlusPlus` shows a "++" icon suitable for developers. |

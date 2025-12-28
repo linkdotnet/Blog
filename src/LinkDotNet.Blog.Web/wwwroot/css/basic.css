@@ -664,3 +664,20 @@ code {
 	max-height: 100%;
 }
 /*#endregion */
+
+/*region Like.razor PlusPlus Icon */
+.plusplus-icon {
+	font-weight: bold;
+	font-size: 18px;
+	font-family: monospace;
+	line-height: 1;
+}
+
+.plusplus-icon-fill {
+	font-weight: bold;
+	font-size: 18px;
+	font-family: monospace;
+	line-height: 1;
+	color: currentColor;
+}
+/*#endregion */
