@@ -658,26 +658,19 @@ code {
 }
 /*#endregion */
 
-/*region ShortCodeDialog.razor */
+/*#region ShortCodeDialog.razor */
 .markdown-scrollable {
 	overflow: auto;
 	max-height: 100%;
 }
 /*#endregion */
 
-/*region Like.razor PlusPlus Icon */
-.plusplus-icon {
-	font-weight: bold;
-	font-size: 18px;
-	font-family: monospace;
-	line-height: 1;
-}
-
+/*#region Like.razor PlusPlus Icon */
+.plusplus-icon,
 .plusplus-icon-fill {
 	font-weight: bold;
 	font-size: 18px;
 	font-family: monospace;
 	line-height: 1;
-	color: currentColor;
 }
 /*#endregion */

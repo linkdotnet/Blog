@@ -5,7 +5,7 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <button class="btn @ButtonClass d-inline-flex align-items-center gap-2" @onclick="LikeBlogPost">
-    @if (LikeStyle == "PlusPlus")
+    @if (LikeStyle == LikeIconStyle.PlusPlus.Key)
     {
         <span class="plusplus-icon@(HasLiked ? "-fill" : "")">++</span>
     }
