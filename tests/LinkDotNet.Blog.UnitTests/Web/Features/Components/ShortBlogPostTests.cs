@@ -6,7 +6,6 @@ using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using static Microsoft.IO.RecyclableMemoryStreamManager;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 

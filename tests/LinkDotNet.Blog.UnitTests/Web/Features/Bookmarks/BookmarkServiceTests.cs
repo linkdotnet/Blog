@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Services;
-using NSubstitute.ReceivedExtensions;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Bookmarks;
 

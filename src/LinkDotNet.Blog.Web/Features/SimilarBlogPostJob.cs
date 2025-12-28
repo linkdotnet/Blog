@@ -7,7 +7,6 @@ using NCronJob;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Services.Similiarity;
-using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web.Features;
 

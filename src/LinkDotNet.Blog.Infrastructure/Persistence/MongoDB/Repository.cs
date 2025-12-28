@@ -7,7 +7,6 @@ using LinkDotNet.Blog.Domain;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.MongoDB;
 

@@ -5,7 +5,6 @@ using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NCronJob;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
