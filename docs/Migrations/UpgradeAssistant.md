@@ -136,7 +136,7 @@ The tool looks for a `ConfigVersion` field in your `appsettings.json`:
 }
 ```
 
-If this field doesn't exist, the tool assumes you're running version 8.0 or earlier and will apply all necessary migrations.
+If this field doesn't exist, the tool assumes you're running version 11.0 or earlier and will apply all necessary migrations.
 
 ### Migration Chain
 
