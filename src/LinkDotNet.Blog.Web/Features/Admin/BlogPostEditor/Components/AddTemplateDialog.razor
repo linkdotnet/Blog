@@ -132,41 +132,39 @@
         selectedIndex = -1;
     }
 
-    private async Task HandleFocusOut(FocusEventArgs args)
-    {
-        await Task.Delay(150);
-        isOpen = false;
-        await InvokeAsync(StateHasChanged);
-    }
+    private void HandleFocusOut(FocusEventArgs args) => isOpen = false;
 
     private void HandleKeyDown(KeyboardEventArgs args)
     {
-        if (!isOpen && (args.Key == "ArrowDown" || args.Key == "ArrowUp"))
+        switch (isOpen)
         {
-            isOpen = true;
-            FilterTemplates(TemplateName);
-            return;
-        }
+	        case false when args.Key is "ArrowDown" or "ArrowUp":
+		        isOpen = true;
+		        FilterTemplates(TemplateName);
+		        return;
+	        case false:
+		        return;
+	        default:
+		        switch (args.Key)
+		        {
+			        case "ArrowDown":
+				        selectedIndex = Math.Min(selectedIndex + 1, filteredTemplates.Count - 1);
+				        break;
+			        case "ArrowUp":
+				        selectedIndex = Math.Max(selectedIndex - 1, 0);
+				        break;
+			        case "Enter":
+				        if (selectedIndex >= 0 && selectedIndex < filteredTemplates.Count)
+				        {
+					        SelectTemplate(filteredTemplates[selectedIndex]);
+				        }
+				        break;
+			        case "Escape":
+				        isOpen = false;
+				        break;
+		        }
 
-        if (!isOpen) return;
-
-        switch (args.Key)
-        {
-            case "ArrowDown":
-                selectedIndex = Math.Min(selectedIndex + 1, filteredTemplates.Count - 1);
-                break;
-            case "ArrowUp":
-                selectedIndex = Math.Max(selectedIndex - 1, 0);
-                break;
-            case "Enter":
-                if (selectedIndex >= 0 && selectedIndex < filteredTemplates.Count)
-                {
-                    SelectTemplate(filteredTemplates[selectedIndex]);
-                }
-                break;
-            case "Escape":
-                isOpen = false;
-                break;
+		        break;
         }
     }
 

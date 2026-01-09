@@ -55,7 +55,7 @@ public partial class AddBlogPostTemplate : Migration
             maxLength: 256,
             nullable: true,
             oldClrType: typeof(string),
-            oldType: "nvarchar(256)",
+            oldType: "TEXT",
             oldMaxLength: 256,
             oldNullable: true);
     }
