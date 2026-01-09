@@ -43,6 +43,10 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
 
+        var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
+        templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
+        ctx.Services.AddScoped(_ => templateRepository);
+
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
         ctx.Services.AddScoped(_ => currentUserService);
@@ -92,6 +96,10 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+
+        var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
+        templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
+        ctx.Services.AddScoped(_ => templateRepository);
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");

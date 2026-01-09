@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
@@ -39,6 +40,10 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+
+        var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
+        templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
+        ctx.Services.AddScoped(_ => templateRepository);
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
@@ -88,6 +93,10 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
 
+        var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
+        templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
+        ctx.Services.AddScoped(_ => templateRepository);
+
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
         ctx.Services.AddScoped(_ => currentUserService);
@@ -112,6 +121,53 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var blogPostFromDb = await DbContext.BlogPosts.SingleOrDefaultAsync(t => t.Title == "My Title", TestContext.Current.CancellationToken);
         blogPostFromDb.ShouldNotBeNull();
         blogPostFromDb.AuthorName.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task ShouldLoadTemplate()
+    {
+        await using var ctx = new BunitContext();
+        ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
+        var toastService = Substitute.For<IToastService>();
+        ctx.JSInterop.SetupVoid("hljs.highlightAll");
+        ctx.AddAuthorization().SetAuthorized("some username");
+        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped(_ => toastService);
+        ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
+        ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
+        ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
+        ctx.Services.AddScoped(_ => shortCodeRepository);
+
+        var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
+        var template = BlogPostTemplate.Create("My Template", "Title", "Short", "Content");
+        templateRepository.GetAllAsync().Returns(new PagedList<BlogPostTemplate>([template], 1, 1, 1));
+        ctx.Services.AddScoped(_ => templateRepository);
+
+        var currentUserService = Substitute.For<ICurrentUserService>();
+        ctx.Services.AddScoped(_ => currentUserService);
+
+        var options = Substitute.For<IOptions<ApplicationConfiguration>>();
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            UseMultiAuthorMode = false,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+        ctx.Services.AddScoped(_ => options);
+
+        using var cut = ctx.Render<CreateNewBlogPost>(p => p.Add(s => s.Title, string.Empty));
+
+        // Act
+        var templateButton = cut.FindAll("button.dropdown-item").First(b => b.TextContent.Contains("My Template"));
+        templateButton.Click();
+
+        // Assert
+        cut.Find("#title").Attributes["value"]!.Value.ShouldBe("Title");
+        cut.Find("#short").TextContent.ShouldBe("Short");
+        cut.Find("#content").TextContent.ShouldBe("Content");
     }
 
     private static void TriggerNewBlogPost(IRenderedComponent<CreateNewBlogPost> cut)
