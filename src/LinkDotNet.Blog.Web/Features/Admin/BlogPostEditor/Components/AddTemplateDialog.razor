@@ -1,0 +1,184 @@
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@inject IToastService ToastService
+@inject IRepository<BlogPostTemplate> TemplateRepository
+@inject IJSRuntime JSRuntime
+
+<ModalDialog @ref="ModalDialog" Title="Save as Template">
+    <div class="modal-body">
+        <div class="mb-3 position-relative" @onfocusout="HandleFocusOut">
+            <label for="templateName" class="form-label">Template Name</label>
+            <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       id="templateName"
+                       @bind="TemplateName"
+                       @bind:event="oninput"
+                       @onfocus="() => isOpen = true"
+                       @onkeydown="HandleKeyDown"
+                       placeholder="e.g. Weekly Update"
+                       autocomplete="off"/>
+            </div>
+
+            @if (isOpen && filteredTemplates.Any())
+            {
+                <div class="list-group position-absolute w-100 shadow mt-1" style="z-index: 1000; max-height: 200px; overflow-y: auto;">
+                    @foreach (var (template, index) in filteredTemplates.Select((t, i) => (t, i)))
+                    {
+                        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(selectedIndex == index ? "active" : "")"
+                             @onclick="() => SelectTemplate(template)"
+                             @onmouseenter="() => selectedIndex = index"
+                             style="cursor: pointer;">
+                            <span>@template.Name</span>
+                            <button type="button" class="btn btn-link text-danger p-0 border-0" @onclick="() => DeleteTemplate(template)" @onclick:stopPropagation="true">
+                                <i class="bin2" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if (IsOverwriting)
+            {
+                <div class="alert alert-warning mt-2 mb-0">
+                    <small>Warning: A template with this name already exists. Saving will overwrite it.</small>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" @onclick="Close">Cancel</button>
+        <button type="button" class="btn btn-primary" @onclick="Save">Save</button>
+    </div>
+</ModalDialog>
+
+@code {
+    [Parameter]
+    public EventCallback<string> OnSave { get; set; }
+
+    private ModalDialog ModalDialog { get; set; } = default!;
+
+    private string templateName = string.Empty;
+    private string TemplateName
+    {
+        get => templateName;
+        set
+        {
+            if (templateName != value)
+            {
+                templateName = value;
+                FilterTemplates(value);
+            }
+        }
+    }
+
+    private bool isOpen;
+    private int selectedIndex = -1;
+    private IPagedList<BlogPostTemplate> allTemplates = PagedList<BlogPostTemplate>.Empty;
+    private List<BlogPostTemplate> filteredTemplates = [];
+
+    private bool IsOverwriting => allTemplates.Any(t => t.Name.Equals(TemplateName, StringComparison.OrdinalIgnoreCase));
+
+    public async Task Open()
+    {
+        TemplateName = string.Empty;
+        allTemplates = await TemplateRepository.GetAllAsync();
+        filteredTemplates = allTemplates.ToList();
+        isOpen = false;
+        selectedIndex = -1;
+        ModalDialog.Open();
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        ModalDialog.Close();
+    }
+
+    private async Task Save()
+    {
+        if (string.IsNullOrWhiteSpace(TemplateName))
+        {
+            ToastService.ShowError("Please provide a name for the template.");
+            return;
+        }
+
+        await OnSave.InvokeAsync(TemplateName);
+        Close();
+    }
+
+    private void FilterTemplates(string searchTerm)
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            filteredTemplates = allTemplates.ToList();
+            isOpen = true;
+        }
+        else
+        {
+            filteredTemplates = allTemplates
+                .Where(t => t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            isOpen = filteredTemplates.Count > 0;
+        }
+        selectedIndex = filteredTemplates.Count > 0 ? 0 : -1;
+    }
+
+    private void SelectTemplate(BlogPostTemplate template)
+    {
+        TemplateName = template.Name;
+        isOpen = false;
+        selectedIndex = -1;
+    }
+
+    private async Task HandleFocusOut(FocusEventArgs args)
+    {
+        await Task.Delay(150);
+        isOpen = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs args)
+    {
+        if (!isOpen && (args.Key == "ArrowDown" || args.Key == "ArrowUp"))
+        {
+            isOpen = true;
+            FilterTemplates(TemplateName);
+            return;
+        }
+
+        if (!isOpen) return;
+
+        switch (args.Key)
+        {
+            case "ArrowDown":
+                selectedIndex = Math.Min(selectedIndex + 1, filteredTemplates.Count - 1);
+                break;
+            case "ArrowUp":
+                selectedIndex = Math.Max(selectedIndex - 1, 0);
+                break;
+            case "Enter":
+                if (selectedIndex >= 0 && selectedIndex < filteredTemplates.Count)
+                {
+                    SelectTemplate(filteredTemplates[selectedIndex]);
+                }
+                break;
+            case "Escape":
+                isOpen = false;
+                break;
+        }
+    }
+
+    private async Task DeleteTemplate(BlogPostTemplate template)
+    {
+        if (await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure you want to delete template '{template.Name}'?"))
+        {
+            await TemplateRepository.DeleteAsync(template.Id);
+            allTemplates = await TemplateRepository.GetAllAsync();
+            FilterTemplates(TemplateName);
+            ToastService.ShowSuccess($"Template {template.Name} deleted");
+            StateHasChanged();
+        }
+    }
+}

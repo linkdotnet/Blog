@@ -28,6 +28,11 @@ public class CreateNewBlogPostTests : BunitContext
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         Services.AddScoped(_ => shortCodeRepository);
+
+        var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
+        templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
+        Services.AddScoped(_ => templateRepository);
+
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
@@ -360,5 +365,47 @@ public class CreateNewBlogPostTests : BunitContext
         btnConvert.Click();
         content.TextContent.ShouldBeEquivalentTo(htmlContent);
         btnConvert.TextContent.Trim().ShouldBeEquivalentTo("Convert to markdown");
+    }
+
+    [Fact]
+    public void ShouldUpdateTemplateIfExists()
+    {
+        var templateRepository = Services.GetRequiredService<IRepository<BlogPostTemplate>>();
+        var template = BlogPostTemplate.Create("My Template", "Title", "Short", "Content");
+        templateRepository.GetAllAsync().ReturnsForAnyArgs(new PagedList<BlogPostTemplate>([template], 1, 1, 1));
+        var cut = Render<CreateNewBlogPost>();
+
+        var manageButton = cut.FindAll("button.dropdown-item").First(b => b.TextContent.Contains("Manage Templates"));
+        manageButton.Click();
+
+        var dialog = cut.FindComponent<AddTemplateDialog>();
+        dialog.Find("input").Input("My Template");
+        dialog.Find("button.btn-primary").Click();
+
+        templateRepository.Received(1).StoreAsync(Arg.Is<BlogPostTemplate>(t => t.Id == template.Id));
+    }
+
+    [Fact]
+    public void ShouldDeleteTemplate()
+    {
+        var templateRepository = Services.GetRequiredService<IRepository<BlogPostTemplate>>();
+        var template = BlogPostTemplate.Create("My Template", "Title", "Short", "Content");
+        templateRepository.GetAllAsync().ReturnsForAnyArgs(new PagedList<BlogPostTemplate>([template], 1, 1, 1));
+        JSInterop.Setup<bool>("confirm", $"Are you sure you want to delete template '{template.Name}'?")
+            .SetResult(true);
+        var cut = Render<CreateNewBlogPost>();
+
+        var manageButton = cut.FindAll("button.dropdown-item").First(b => b.TextContent.Contains("Manage Templates"));
+        manageButton.Click();
+
+        var dialog = cut.FindComponent<AddTemplateDialog>();
+        // Type the name to filter and show the delete button
+        dialog.Find("input").Input("My Template");
+        
+        dialog.WaitForState(() => dialog.FindAll("button.text-danger").Count > 0);
+        var deleteButton = dialog.FindAll("button.text-danger").First();
+        deleteButton.Click();
+
+        templateRepository.Received(1).DeleteAsync(template.Id);
     }
 }

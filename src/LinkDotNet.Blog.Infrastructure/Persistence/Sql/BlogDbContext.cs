@@ -29,12 +29,15 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<ShortCode> ShortCodes { get; set; }
 
+    public DbSet<BlogPostTemplate> BlogPostTemplates { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostRecordConfiguration());
+        modelBuilder.ApplyConfiguration(new BlogPostTemplateConfiguration());
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
         modelBuilder.ApplyConfiguration(new ShortCodeConfiguration());
         modelBuilder.ApplyConfiguration(new SimilarBlogPostConfiguration());

@@ -7,6 +7,8 @@
 @inject ICacheInvalidator CacheInvalidator
 @inject IInstantJobRegistry InstantJobRegistry
 @inject IRepository<ShortCode> ShortCodeRepository
+@inject IRepository<BlogPostTemplate> TemplateRepository
+@inject IToastService ToastService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
 
@@ -74,6 +76,32 @@
                                     <ValidationMessage For="() => model.Content" class="text-danger small mt-1"></ValidationMessage>
 
                                     <div class="position-absolute top-0 end-0 m-3">
+                                        <div class="btn-group me-2">
+                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                Templates
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <button type="button" class="dropdown-item" @onclick="OpenTemplateDialog">
+                                                        Manage Templates
+                                                    </button>
+                                                </li>
+                                                @if (blogPostTemplates.Any())
+                                                {
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <h6 class="dropdown-header">Load Template</h6>
+                                                    @foreach (var template in blogPostTemplates)
+                                                    {
+                                                        <li>
+                                                            <button type="button" class="dropdown-item" @onclick="() => LoadTemplate(template)">
+                                                                @template.Name
+                                                            </button>
+                                                        </li>
+                                                    }
+                                                }
+                                            </ul>
+                                        </div>
                                         <div class="btn-group">
                                             <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
                                                     data-bs-toggle="dropdown" aria-expanded="false">
@@ -246,6 +274,7 @@
 
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
 <ShortCodeDialog @ref="ShortCodeDialog" ShortCodes="shortCodes"></ShortCodeDialog>
+<AddTemplateDialog @ref="AddTemplateDialog" OnSave="SaveTemplate"></AddTemplateDialog>
 
 <NavigationLock ConfirmExternalNavigation="@model.IsDirty" OnBeforeInternalNavigation="PreventNavigationWhenDirty"></NavigationLock>
 
@@ -264,6 +293,7 @@
 
     private FeatureInfoDialog FeatureDialog { get; set; } = default!;
     private ShortCodeDialog ShortCodeDialog { get; set; } = default!;
+    private AddTemplateDialog AddTemplateDialog { get; set; } = default!;
 
     private CreateNewModel model = new();
 
@@ -273,6 +303,7 @@
 
     private bool canSubmit = true;
     private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
+    private IPagedList<BlogPostTemplate> blogPostTemplates = PagedList<BlogPostTemplate>.Empty;
 
     private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
@@ -281,6 +312,7 @@
     protected override async Task OnInitializedAsync()
     {
         shortCodes = await ShortCodeRepository.GetAllAsync();
+        blogPostTemplates = await TemplateRepository.GetAllAsync();
 
         if (AppConfiguration.Value.UseMultiAuthorMode)
         {
@@ -336,7 +368,7 @@
             await CacheInvalidator.ClearCacheAsync();
         }
 
-        InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
+        _ = InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
         ClearModel();
         canSubmit = true;
     }
@@ -376,6 +408,40 @@
     {
         ShortCodeDialog.Open();
         StateHasChanged();
+    }
+
+    private async Task OpenTemplateDialog()
+    {
+        await AddTemplateDialog.Open();
+    }
+
+    private async Task SaveTemplate(string name)
+    {
+        var existingTemplate = blogPostTemplates.FirstOrDefault(t => t.Name == name);
+        if (existingTemplate != null)
+        {
+            existingTemplate.Update(name, model.Title, model.ShortDescription, model.Content);
+            await TemplateRepository.StoreAsync(existingTemplate);
+            ToastService.ShowSuccess($"Template {name} updated");
+        }
+        else
+        {
+            var template = BlogPostTemplate.Create(name, model.Title, model.ShortDescription, model.Content);
+            await TemplateRepository.StoreAsync(template);
+            ToastService.ShowSuccess($"Template {name} saved");
+        }
+
+        blogPostTemplates = await TemplateRepository.GetAllAsync();
+        StateHasChanged();
+    }
+
+    private void LoadTemplate(BlogPostTemplate template)
+    {
+        model.Title = template.Title;
+        model.ShortDescription = template.ShortDescription;
+        model.Content = template.Content;
+        StateHasChanged();
+        ToastService.ShowInfo($"Template {template.Name} loaded");
     }
 
     /// <summary>
