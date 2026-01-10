@@ -27,6 +27,9 @@ public static class BackgroundServiceRegistrationExtensions
             options.AddJob<SimilarBlogPostJob>(c => c
                 .WithName(nameof(SimilarBlogPostJob))
                 .OnlyIf((IOptions<ApplicationConfiguration> applicationConfiguration) => applicationConfiguration.Value.ShowSimilarPosts));
+            
+            // Run PopularTagsJob every hour to update tag suggestions cache
+            options.AddJob<PopularTagsJob>(p => p.WithCronExpression("0 * * * *"));
         });
     }
 }

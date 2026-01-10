@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
@@ -16,6 +19,7 @@ using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components;
 
@@ -34,9 +38,10 @@ public class CreateNewBlogPostTests : BunitContext
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         Services.AddScoped(_ => templateRepository);
 
-        var blogPostRepository = Substitute.For<IRepository<BlogPost>>();
-        blogPostRepository.GetAllAsync(Arg.Any<Expression<Func<BlogPost, bool>>>(), Arg.Any<Expression<Func<BlogPost, object>>>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<int>()).Returns(PagedList<BlogPost>.Empty);
-        Services.AddScoped(_ => blogPostRepository);
+        var fusionCache = Substitute.For<IFusionCache>();
+        fusionCache.GetOrDefaultAsync<List<string>>(Arg.Any<string>(), token: Arg.Any<CancellationToken>())
+            .Returns(new List<string>());
+        Services.AddScoped(_ => fusionCache);
 
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();

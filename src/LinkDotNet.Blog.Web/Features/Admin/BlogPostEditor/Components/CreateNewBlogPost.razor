@@ -2,13 +2,15 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.Blog.Web.Features
 @using NCronJob
+@using ZiggyCreatures.Caching.Fusion
 @inject IJSRuntime JSRuntime
 @inject ICacheInvalidator CacheInvalidator
 @inject IInstantJobRegistry InstantJobRegistry
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IRepository<BlogPostTemplate> TemplateRepository
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IFusionCache FusionCache
 @inject IToastService ToastService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
@@ -308,8 +310,8 @@
             authorName = await CurrentUserService.GetDisplayNameAsync();
         }
 
-        // Load suggested tags (most used tags)
-        await LoadSuggestedTagsAsync();
+        // Load suggested tags from cache (populated by PopularTagsJob)
+        suggestedTags = await PopularTagsJob.GetPopularTagsAsync(FusionCache);
     }
 
     protected override void OnParametersSet()
@@ -457,51 +459,6 @@
     /// <summary>
     /// Load most frequently used tags from existing blog posts
     /// </summary>
-    private async Task LoadSuggestedTagsAsync()
-    {
-        try
-        {
-            // Get all published blog posts to analyze their tags
-            var blogPosts = await BlogPostRepository.GetAllAsync(
-                filter: bp => bp.IsPublished,
-                pageSize: 100  // Limit to recent posts for performance
-            );
-
-            // Count tag frequency
-            var tagFrequency = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            foreach (var post in blogPosts)
-            {
-                foreach (var tag in post.Tags)
-                {
-                    var normalizedTag = tag.Trim();
-                    if (!string.IsNullOrWhiteSpace(normalizedTag))
-                    {
-                        if (tagFrequency.ContainsKey(normalizedTag))
-                        {
-                            tagFrequency[normalizedTag]++;
-                        }
-                        else
-                        {
-                            tagFrequency[normalizedTag] = 1;
-                        }
-                    }
-                }
-            }
-
-            // Get top tags sorted by frequency
-            suggestedTags = tagFrequency
-                .OrderByDescending(kvp => kvp.Value)
-                .Take(12)
-                .Select(kvp => kvp.Key)
-                .ToList();
-        }
-        catch
-        {
-            // If there's any error loading tags, just continue with empty list
-            suggestedTags = new List<string>();
-        }
-    }
-
     /// <summary>
     /// Add a suggested tag to the current tags
     /// </summary>
