@@ -404,7 +404,7 @@ public class CreateNewBlogPostTests : BunitContext
         
         dialog.WaitForState(() => dialog.FindAll("button.text-danger").Count > 0);
         var deleteButton = dialog.FindAll("button.text-danger").First();
-        deleteButton.Click();
+        deleteButton.MouseDown();
 
         templateRepository.Received(1).DeleteAsync(template.Id);
     }
