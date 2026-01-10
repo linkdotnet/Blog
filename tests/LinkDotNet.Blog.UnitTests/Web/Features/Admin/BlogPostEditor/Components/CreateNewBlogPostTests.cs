@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
@@ -32,6 +33,10 @@ public class CreateNewBlogPostTests : BunitContext
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         Services.AddScoped(_ => templateRepository);
+
+        var blogPostRepository = Substitute.For<IRepository<BlogPost>>();
+        blogPostRepository.GetAllAsync(Arg.Any<Expression<Func<BlogPost, bool>>>(), Arg.Any<Expression<Func<BlogPost, object>>>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<int>()).Returns(PagedList<BlogPost>.Empty);
+        Services.AddScoped(_ => blogPostRepository);
 
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
