@@ -7,7 +7,7 @@
 
 <ModalDialog @ref="ModalDialog" Title="Save as Template">
     <div class="modal-body">
-        <div class="mb-3 position-relative" @onfocusout="HandleFocusOut">
+        <div class="mb-3 position-relative">
             <label for="templateName" class="form-label">Template Name</label>
             <div class="input-group">
                 <input type="text"
@@ -17,6 +17,7 @@
                        @bind:event="oninput"
                        @onfocus="() => isOpen = true"
                        @onkeydown="HandleKeyDown"
+                       @onblur="HandleFocusOut"
                        placeholder="e.g. Weekly Update"
                        autocomplete="off"/>
             </div>
@@ -27,11 +28,11 @@
                     @foreach (var (template, index) in filteredTemplates.Select((t, i) => (t, i)))
                     {
                         <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center @(selectedIndex == index ? "active" : "")"
-                             @onclick="() => SelectTemplate(template)"
+                             @onmousedown="() => SelectTemplate(template)"
                              @onmouseenter="() => selectedIndex = index"
                              style="cursor: pointer;">
                             <span>@template.Name</span>
-                            <button type="button" class="btn btn-link text-danger p-0 border-0" @onclick="() => DeleteTemplate(template)" @onclick:stopPropagation="true">
+                            <button type="button" class="btn btn-link text-danger p-0 border-0" @onmousedown="() => DeleteTemplate(template)" @onmousedown:stopPropagation="true">
                                 <i class="bin2" aria-hidden="true"></i>
                             </button>
                         </div>
