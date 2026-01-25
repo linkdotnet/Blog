@@ -17,7 +17,8 @@ public partial class AddUniqueIndexOnExternalId : Migration
             name: "IX_BlogPosts_ExternalId",
             table: "BlogPosts",
             column: "ExternalId",
-            unique: true);
+            unique: true,
+            filter: "ExternalId IS NOT NULL");
     }
 
     /// <inheritdoc />

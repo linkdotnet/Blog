@@ -78,7 +78,8 @@ namespace LinkDotNet.Blog.Infrastructure.Migrations
 
                     b.HasIndex("ExternalId")
                         .IsUnique()
-                        .HasDatabaseName("IX_BlogPosts_ExternalId");
+                        .HasDatabaseName("IX_BlogPosts_ExternalId")
+                        .HasFilter("ExternalId IS NOT NULL");
 
                     b.HasIndex("IsPublished", "UpdatedDate")
                         .IsDescending(false, true)

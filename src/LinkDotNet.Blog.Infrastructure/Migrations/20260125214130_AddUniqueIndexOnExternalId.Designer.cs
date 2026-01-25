@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LinkDotNet.Blog.Infrastructure.Migrations
 {
     [DbContext(typeof(BlogDbContext))]
-    [Migration("20260125213553_AddUniqueIndexOnExternalId")]
+    [Migration("20260125214130_AddUniqueIndexOnExternalId")]
     partial class AddUniqueIndexOnExternalId
     {
         /// <inheritdoc />
@@ -81,7 +81,8 @@ namespace LinkDotNet.Blog.Infrastructure.Migrations
 
                     b.HasIndex("ExternalId")
                         .IsUnique()
-                        .HasDatabaseName("IX_BlogPosts_ExternalId");
+                        .HasDatabaseName("IX_BlogPosts_ExternalId")
+                        .HasFilter("ExternalId IS NOT NULL");
 
                     b.HasIndex("IsPublished", "UpdatedDate")
                         .IsDescending(false, true)

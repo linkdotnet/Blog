@@ -26,7 +26,8 @@ internal sealed class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
 
         builder.HasIndex(x => x.ExternalId)
             .HasDatabaseName("IX_BlogPosts_ExternalId")
-            .IsUnique();
+            .IsUnique()
+            .HasFilter("ExternalId IS NOT NULL");
 
         builder.HasIndex(x => new { x.IsPublished, x.UpdatedDate })
             .HasDatabaseName("IX_BlogPosts_IsPublished_UpdatedDate")
