@@ -13,7 +13,7 @@ public sealed class MigrationManagerTests : IDisposable
     }
 
     [Fact]
-    public async Task Should_Migrate_From_11_To_12()
+    public async Task Should_Migrate_To_Version_13()
     {
         // Arrange
         var testFile = Path.Combine(testDirectory, "appsettings.Development.json");
