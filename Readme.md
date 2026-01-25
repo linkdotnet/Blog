@@ -14,6 +14,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 ## Features
 
 - **Modern Markdown Editor** - Write blog posts with a feature-rich markdown editor
+- **Markdown Import** - Automatically import blog posts from external repositories (e.g., GitHub)
 - **Bookmarks** - Allow readers to save their favorite articles
 - **Drafts** - Save work in progress and continue later
 - **Scheduled Publishing** - Plan ahead and publish automatically
@@ -41,6 +42,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Storage Provider](./docs/Storage/Readme.md)
 -   [Media Upload](./docs/Media/Readme.md)
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
+-   [Markdown Import](./docs/Features/MarkdownImport/Readme.md)
 -   [Advanced Features](./docs/Features/AdvancedFeatures.md)
 
 ## Installation

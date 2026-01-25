@@ -1,4 +1,5 @@
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.MarkdownImport;
 using NCronJob;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,10 @@ public static class BackgroundServiceRegistrationExtensions
             options.AddJob<SimilarBlogPostJob>(c => c
                 .WithName(nameof(SimilarBlogPostJob))
                 .OnlyIf((IOptions<ApplicationConfiguration> applicationConfiguration) => applicationConfiguration.Value.ShowSimilarPosts));
+
+            options.AddJob<MarkdownImportJob>(p => p.WithCronExpression("*/15 * * * *")
+                .OnlyIf((IOptions<ApplicationConfiguration> applicationConfiguration) => 
+                    applicationConfiguration.Value.MarkdownImport?.Enabled ?? false));
         });
     }
 }

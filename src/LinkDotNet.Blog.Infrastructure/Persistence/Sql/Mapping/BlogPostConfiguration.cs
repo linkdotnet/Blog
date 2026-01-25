@@ -22,6 +22,7 @@ internal sealed class BlogPostConfiguration : IEntityTypeConfiguration<BlogPost>
 
         builder.Property(x => x.Tags).HasMaxLength(2048);
         builder.Property(x => x.AuthorName).HasMaxLength(256).IsRequired(false);
+        builder.Property(x => x.ExternalId).HasMaxLength(256).IsRequired(false);
 
         builder.HasIndex(x => new { x.IsPublished, x.UpdatedDate })
             .HasDatabaseName("IX_BlogPosts_IsPublished_UpdatedDate")

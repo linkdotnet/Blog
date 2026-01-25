@@ -67,7 +67,12 @@ The appsettings.json file has a lot of options to customize the content of the b
 		"ContainerName": "",
 		"CdnEndpoint": ""
 	},
-	"UseMultiAuthorMode": false
+	"UseMultiAuthorMode": false,
+	"MarkdownImport": {
+		"Enabled": false,
+		"SourceType": "FlatDirectory",
+		"Url": ""
+	}
 }
 ```
 
@@ -113,3 +118,7 @@ The appsettings.json file has a lot of options to customize the content of the b
 | ContainerName                                 | string         | The container name for the image storage provider                                                                                                                                |
 | CdnEndpoint                                   | string         | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets.                                  |
 | UseMultiAuthorMode                            | boolean        | The default value is `false`. If set to `true` then author name will be associated with blog posts at the time of creation. This author name will be fetched from the identity provider's `name` or `nickname` or `preferred_username` claim property. |
+| [MarkdownImport](./../Features/MarkdownImport/Readme.md) | node      | Configuration for the markdown import feature. If left empty or `Enabled` is `false`, the feature is disabled.                                                                   |
+| Enabled                                       | boolean        | Enable or disable automatic markdown import from external sources                                                                                                                |
+| SourceType                                    | string         | Type of the markdown source (currently only `FlatDirectory` is supported)                                                                                                        |
+| Url                                           | string         | Base URL where markdown files are located                                                                                                                                        |

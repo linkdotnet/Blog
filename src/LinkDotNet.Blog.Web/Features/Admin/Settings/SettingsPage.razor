@@ -1,5 +1,6 @@
 @page "/settings"
 @using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.Blog.Web.Features.MarkdownImport
 @using NCronJob
 @inject IOptions<ApplicationConfiguration> ApplicationConfiguration
 @inject ICacheInvalidator CacheInvalidator
@@ -35,6 +36,16 @@
 			<td>10 Minutes</td>
 			<td><button class="btn btn-warning" id="run-visit-transformer" @onclick="RunVisitTransformer">Run Transformer</button></td>
 		</tr>
+		@if (ApplicationConfiguration.Value.MarkdownImport?.Enabled == true)
+		{
+			<tr>
+				<td>Run Markdown Import</td>
+				<td>The markdown import job fetches and imports blog posts from external markdown sources.<br/>
+					The job runs every 15 minutes. The job can be run on demand.</td>
+				<td>15 Minutes</td>
+				<td><button class="btn btn-warning" id="run-markdown-import" @onclick="RunMarkdownImport">Run Import</button></td>
+			</tr>
+		}
 		</tbody>
 	</table>
 </div>
@@ -50,5 +61,11 @@
 	{
 		InstantJobRegistry.RunInstantJob<TransformBlogPostRecordsJob>();
 		ToastService.ShowInfo("Transformer was started.");
+	}
+
+	private void RunMarkdownImport()
+	{
+		InstantJobRegistry.RunInstantJob<MarkdownImportJob>();
+		ToastService.ShowInfo("Markdown import was started.");
 	}
 }

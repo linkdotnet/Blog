@@ -1,4 +1,5 @@
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features.MarkdownImport;
 
 namespace LinkDotNet.Blog.TestUtilities;
 
@@ -17,6 +18,7 @@ public class ApplicationConfigurationBuilder
     private bool showBuildInformation = true;
     private string? blogBrandUrl;
     private bool useMultiAuthorMode;
+    private MarkdownImportConfiguration? markdownImport;
 
     public ApplicationConfigurationBuilder WithBlogName(string blogName)
     {
@@ -96,6 +98,17 @@ public class ApplicationConfigurationBuilder
         return this;
     }
 
+    public ApplicationConfigurationBuilder WithMarkdownImport(bool enabled, string sourceType, string url)
+    {
+        this.markdownImport = new MarkdownImportConfiguration
+        {
+            Enabled = enabled,
+            SourceType = sourceType,
+            Url = url
+        };
+        return this;
+    }
+
     public ApplicationConfiguration Build()
     {
         return new ApplicationConfiguration
@@ -113,6 +126,7 @@ public class ApplicationConfigurationBuilder
             ShowBuildInformation = showBuildInformation,
             BlogBrandUrl = blogBrandUrl,
             UseMultiAuthorMode = useMultiAuthorMode,
+            MarkdownImport = markdownImport,
         };
     }
 }

@@ -1,10 +1,12 @@
 using System;
+using System.Net.Http;
 using System.Threading.RateLimiting;
 using Blazorise;
 using Blazorise.Bootstrap5;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
+using LinkDotNet.Blog.Web.Features.MarkdownImport;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +31,17 @@ public static class ServiceExtensions
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
+
+        services.AddScoped<MarkdownImportParser>();
+        services.AddHttpClient<FlatDirectoryMarkdownProvider>((sp, client) =>
+        {
+            var config = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApplicationConfiguration>>().Value;
+            if (!string.IsNullOrEmpty(config.MarkdownImport?.Url))
+            {
+                client.BaseAddress = new Uri(config.MarkdownImport.Url.TrimEnd('/'));
+            }
+        });
+        services.AddScoped<IMarkdownSourceProvider, FlatDirectoryMarkdownProvider>();
 
         services.AddBackgroundServices();
 

@@ -14,7 +14,8 @@ public sealed class MigrationManager
     {
         _migrations = new List<IMigration>
         {
-            new Migration11To12()
+            new Migration11To12(),
+            new Migration12To13()
         };
 
         _currentVersion = DetermineCurrentVersionFromMigrations();

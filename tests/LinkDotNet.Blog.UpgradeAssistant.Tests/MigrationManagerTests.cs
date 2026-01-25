@@ -32,8 +32,9 @@ public sealed class MigrationManagerTests : IDisposable
         // Assert
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
-        content.ShouldContain("\"ConfigVersion\": \"12.0\"");
+        content.ShouldContain("\"ConfigVersion\": \"13.0\"");
         content.ShouldContain("\"ShowBuildInformation\": true");
+        content.ShouldContain("\"MarkdownImport\"");
         
         // Verify backup was created
         var backupFiles = Directory.GetFiles(backupDir);
@@ -47,9 +48,14 @@ public sealed class MigrationManagerTests : IDisposable
         var testFile = Path.Combine(testDirectory, "appsettings.Production.json");
         var json = """
             {
-              "ConfigVersion": "12.0",
+              "ConfigVersion": "13.0",
               "BlogName": "Test Blog",
-              "ShowBuildInformation": true
+              "ShowBuildInformation": true,
+              "MarkdownImport": {
+                "Enabled": false,
+                "SourceType": "FlatDirectory",
+                "Url": ""
+              }
             }
             """;
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);

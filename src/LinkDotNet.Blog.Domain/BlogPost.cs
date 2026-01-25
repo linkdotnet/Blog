@@ -40,6 +40,8 @@ public sealed partial class BlogPost : Entity
 
     public string? AuthorName { get; private set; }
 
+    public string? ExternalId { get; private set; }
+
     private string GenerateSlug()
     {
         if (string.IsNullOrWhiteSpace(Title))
@@ -95,7 +97,8 @@ public sealed partial class BlogPost : Entity
         DateTime? scheduledPublishDate = null,
         IEnumerable<string>? tags = null,
         string? previewImageUrlFallback = null,
-        string? authorName = null)
+        string? authorName = null,
+        string? externalId = null)
     {
         if (scheduledPublishDate is not null && isPublished)
         {
@@ -116,7 +119,8 @@ public sealed partial class BlogPost : Entity
             IsPublished = isPublished,
             Tags = tags?.Select(t => t.Trim()).ToImmutableArray() ?? [],
             ReadingTimeInMinutes = ReadingTimeCalculator.CalculateReadingTime(content),
-            AuthorName = authorName
+            AuthorName = authorName,
+            ExternalId = externalId
         };
 
         return blogPost;
@@ -148,5 +152,6 @@ public sealed partial class BlogPost : Entity
         Tags = from.Tags;
         ReadingTimeInMinutes = from.ReadingTimeInMinutes;
         AuthorName = from.AuthorName;
+        ExternalId = from.ExternalId;
     }
 }
