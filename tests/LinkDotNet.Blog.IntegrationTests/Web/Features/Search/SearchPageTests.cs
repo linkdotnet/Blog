@@ -56,6 +56,34 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         blogPosts.Find(".description h4").TextContent.ShouldBe("Title 1");
     }
 
+    [Fact]
+    public async Task ShouldFindBlogPostWhenTitleMatchesCaseInsensitive()
+    {
+        var blogPost = new BlogPostBuilder().WithTitle("Title").Build();
+        await Repository.StoreAsync(blogPost);
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "title"));
+
+        var blogPosts = cut.WaitForComponent<ShortBlogPost>();
+        blogPosts.Find(".description h4").TextContent.ShouldBe("Title");
+    }
+
+    [Fact]
+    public async Task ShouldFindBlogPostWhenTagMatchesCaseInsensitive()
+    {
+        var blogPost = new BlogPostBuilder().WithTitle("Title").WithTags("Cat").Build();
+        await Repository.StoreAsync(blogPost);
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "cat"));
+
+        var blogPostComponent = cut.WaitForComponent<ShortBlogPost>();
+        blogPostComponent.Find(".description h4").TextContent.ShouldBe("Title");
+    }
+
     private void RegisterServices(BunitContext ctx)
     {
         ctx.Services.AddScoped(_ => Repository);

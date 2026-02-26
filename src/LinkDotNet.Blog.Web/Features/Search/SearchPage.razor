@@ -19,9 +19,8 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        var term = Uri.UnescapeDataString(SearchTerm);
-        blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
-                                                                                || t.Tags.Any(tag => tag == term)),
-            b => b.UpdatedDate);
+	    var term = Uri.UnescapeDataString(SearchTerm);
+	    blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.ToLower().Contains(term.ToLower()) || t.Tags.Any(tag => tag.ToLower() == term.ToLower())),
+		    b => b.UpdatedDate);
     }
 }
