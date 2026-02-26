@@ -5,10 +5,17 @@
 @inject IRepository<BlogPost> BlogPostRepository
 
 <div class="container">
-    <h3 class="pb-3 fw-bold">Results for @SearchTerm</h3>
-    @for (var i = 0; i < blogPosts.Count; i++)
+    <h3 class="pb-3 fw-bold">Results for: @SearchTerm</h3>
+    @if (blogPosts.Count > 0)
     {
-        <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+	    for (var i = 0; i < blogPosts.Count; i++)
+	    {
+		    <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+	    }
+    }
+    else
+    {
+	    <p>No results found.</p>
     }
 </div>
 @code {
