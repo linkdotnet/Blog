@@ -1,4 +1,5 @@
 @using LinkDotNet.Blog.Web.Features.SupportMe.Components
+@using LinkDotNet.Blog.Web.Features.TagDiscovery
 @inject IOptions<ApplicationConfiguration> Configuration
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject NavigationManager NavigationManager
@@ -57,6 +58,16 @@
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
                 <li class="nav-item d-flex align-items-center"><ThemeToggler Class="nav-link"></ThemeToggler></li>
+
+                @if (Configuration.Value.EnableTagDiscoveryPanel)
+                {
+                    <li class="nav-item d-flex align-items-center">
+                        <a class="tag-discovery-btn" @onclick="ToggleTagDiscoveryPanel"
+                            title="Discover new topics"> &#xE936; </a>
+                        <TagDiscoveryPanel IsOpen="@_isOpen" OnClose="CloseTagDiscoveryPanel" />
+                    </li>
+                }
+
                 <li class="d-flex">
                     <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
@@ -67,6 +78,8 @@
 
 @code {
     private string currentUri = string.Empty;
+
+    private bool _isOpen;
 
     protected override void OnInitialized()
     {
@@ -89,5 +102,15 @@
     {
         currentUri = e.Location;
         StateHasChanged();
+    }
+
+    private void ToggleTagDiscoveryPanel()
+    {
+        _isOpen = !_isOpen;
+    }
+
+    private void CloseTagDiscoveryPanel()
+    {
+        _isOpen = false;
     }
 }

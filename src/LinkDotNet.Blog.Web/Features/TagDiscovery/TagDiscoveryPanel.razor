@@ -1,0 +1,50 @@
+@inject ITagQueryService TagQueryService
+@inject IOptions<ApplicationConfiguration> AppConfiguration
+@inject NavigationManager Navigation
+
+@if (!AppConfiguration.Value.EnableTagDiscoveryPanel || !IsOpen) { return; }
+
+<div class="tag-overlay" @onclick="Close"></div>
+
+<div class="tag-panel">
+    <div class="tag-discovery-container">
+        @foreach (var tag in _tags)
+        {
+            <span class="tag-badge" @onclick="() => Navigate(tag.Name)">
+                @tag.Name
+
+                @if (AppConfiguration.Value.ShowTagsWithCountInTagDiscovery)
+                {
+                    <span class="tag-count">@tag.Count</span>
+                }
+            </span>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private IReadOnlyList<TagCount> _tags = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IsOpen && _tags.Count == 0)
+        {
+            _tags = await TagQueryService.GetAllOrderedByUsageAsync();
+        }
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task Navigate(string tag)
+    {
+        var encoded = Uri.EscapeDataString(tag);
+        Navigation.NavigateTo($"/searchByTag/{encoded}");
+        await Close();
+    }
+}

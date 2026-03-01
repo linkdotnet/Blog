@@ -27,4 +27,8 @@ public sealed record ApplicationConfiguration
     public bool ShowBuildInformation { get; init; } = true;
 
     public bool UseMultiAuthorMode { get; init; }
+
+    public bool EnableTagDiscoveryPanel { get; set; }
+
+    public bool ShowTagsWithCountInTagDiscovery { get; set; }
 }
