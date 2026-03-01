@@ -4,6 +4,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
 @inject IRepository<BlogPost> BlogPostRepository
+@inject IRepository<BlogPostVersion> BlogPostVersionRepository
 @inject IToastService ToastService
 
 <PageTitle>Updating: @blogPostFromDb?.Title</PageTitle>
@@ -13,6 +14,7 @@
     <CreateNewBlogPost
         Title="Update Blog Post"
         BlogPost="@blogPostFromDb"
+        Versions="@versions"
         OnBlogPostCreated="@StoreBlogPostAsync"
         ClearAfterCreated="false"></CreateNewBlogPost>
 }
@@ -26,20 +28,37 @@ else
     public required string BlogPostId { get; set; }
 
     private BlogPost? blogPostFromDb;
+    private IReadOnlyList<BlogPostVersion> versions = [];
 
     protected override async Task OnParametersSetAsync()
     {
         ArgumentException.ThrowIfNullOrEmpty(BlogPostId);
 
         blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
+        versions = (await BlogPostVersionRepository.GetAllAsync(
+            v => v.BlogPostId == BlogPostId,
+            v => v.Version)).ToList();
     }
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
 	    ArgumentNullException.ThrowIfNull(blogPostFromDb);
 
+        if (versions.Count == 0)
+        {
+            var initialVersion = BlogPostVersion.Create(blogPostFromDb, 1);
+            await BlogPostVersionRepository.StoreAsync(initialVersion);
+            versions = [initialVersion];
+        }
+
         blogPostFromDb.Update(blogPost);
         await BlogPostRepository.StoreAsync(blogPostFromDb);
+
+        var nextVersion = versions.Max(v => v.Version) + 1;
+        var version = BlogPostVersion.Create(blogPostFromDb, nextVersion);
+        await BlogPostVersionRepository.StoreAsync(version);
+        versions = [version, ..versions];
+
         ToastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
     }
 }

@@ -17,6 +17,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 - **Bookmarks** - Allow readers to save their favorite articles
 - **Drafts** - Save work in progress and continue later
 - **Scheduled Publishing** - Plan ahead and publish automatically
+- **Blog Post Versioning** - Restore previous post states and compare changes between versions in the editor
 - **Similar Blog Posts** - Recommend related content to readers
 - **Comments** - Enable discussions
 - **Media Upload** - Easily include images in your posts (Azure Blob Storage and CDN Support)

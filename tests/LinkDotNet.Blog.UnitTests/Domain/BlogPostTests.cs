@@ -177,4 +177,36 @@ public class BlogPostTests
 
         tags.ShouldBeEmpty();
     }
+
+    [Fact]
+    public void ShouldCreateBlogPostVersionFromBlogPost()
+    {
+        var updatedDate = new DateTime(1991, 5, 17);
+        var blogPost = new BlogPostBuilder()
+            .WithTitle("Title")
+            .WithShortDescription("Description")
+            .WithContent("Content")
+            .WithPreviewImageUrl("Preview")
+            .WithPreviewImageUrlFallback("Fallback")
+            .WithUpdatedDate(updatedDate)
+            .WithTags("tag-1", "tag-2")
+            .WithAuthorName("Test Author")
+            .IsPublished(false)
+            .Build();
+
+        var version = BlogPostVersion.Create(blogPost, 1);
+
+        version.BlogPostId.ShouldBe(blogPost.Id);
+        version.Version.ShouldBe(1);
+        version.Title.ShouldBe("Title");
+        version.ShortDescription.ShouldBe("Description");
+        version.Content.ShouldBe("Content");
+        version.PreviewImageUrl.ShouldBe("Preview");
+        version.PreviewImageUrlFallback.ShouldBe("Fallback");
+        version.UpdatedDate.ShouldBe(updatedDate);
+        version.Tags.ShouldContain("tag-1");
+        version.Tags.ShouldContain("tag-2");
+        version.AuthorName.ShouldBe("Test Author");
+        version.IsPublished.ShouldBeFalse();
+    }
 }

@@ -102,7 +102,7 @@ public sealed partial class BlogPost : Entity
             throw new InvalidOperationException("Can't schedule publish date if the blog post is already published.");
         }
 
-        var blogPostUpdateDate = scheduledPublishDate ?? updatedDate ?? DateTime.UtcNow;
+        var blogPostUpdateDate = updatedDate ?? scheduledPublishDate ?? DateTime.UtcNow;
 
         var blogPost = new BlogPost
         {

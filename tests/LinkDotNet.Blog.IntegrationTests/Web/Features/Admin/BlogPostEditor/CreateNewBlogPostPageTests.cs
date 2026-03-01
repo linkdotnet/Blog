@@ -5,6 +5,7 @@ using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features;
@@ -15,6 +16,7 @@ using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NCronJob;
 using TestContext = Xunit.TestContext;
@@ -32,7 +34,9 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var instantRegistry = Substitute.For<IInstantJobRegistry>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
+        var blogPostVersionRepository = new Repository<BlogPostVersion>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostVersion>>>());
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IRepository<BlogPostVersion>>(_ => blogPostVersionRepository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
@@ -70,6 +74,10 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromDb.ShouldNotBeNull();
         blogPostFromDb.ShortDescription.ShouldBe("My short Description");
         blogPostFromDb.AuthorName.ShouldBe("Test Author");
+        var versionFromDb = await DbContext.BlogPostVersions.SingleOrDefaultAsync(t => t.BlogPostId == blogPostFromDb.Id, TestContext.Current.CancellationToken);
+        versionFromDb.ShouldNotBeNull();
+        versionFromDb.Version.ShouldBe(1);
+        versionFromDb.Title.ShouldBe("My Title");
 
         toastService.Received(1).ShowInfo("Created BlogPost My Title", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
@@ -84,7 +92,9 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var instantRegistry = Substitute.For<IInstantJobRegistry>();
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
+        var blogPostVersionRepository = new Repository<BlogPostVersion>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostVersion>>>());
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IRepository<BlogPostVersion>>(_ => blogPostVersionRepository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);

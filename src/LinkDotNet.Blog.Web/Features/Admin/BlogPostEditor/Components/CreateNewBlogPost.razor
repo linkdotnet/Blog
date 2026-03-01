@@ -133,6 +133,72 @@
                                 </div>
                             </div>
                         </div>
+
+                        @if (BlogPost is not null && Versions.Count > 0)
+                        {
+                            <div class="card shadow-sm border-0 mb-4 hover-shadow-lg transition">
+                                <div class="card-header border-bottom-0 py-3">
+                                    <h6 class="card-title mb-0 text-primary">Version History</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold" for="restore-version-select">Restore Version</label>
+                                        <InputSelect id="restore-version-select" class="form-select" @bind-Value="selectedVersionToRestore">
+                                            @foreach (var version in OrderedVersions)
+                                            {
+                                                <option value="@version.Version">Version @version.Version (@version.UpdatedDate.ToString("yyyy-MM-dd HH:mm"))</option>
+                                            }
+                                        </InputSelect>
+                                    </div>
+                                    <div class="d-grid mb-3">
+                                        <button id="restore-version" type="button" class="btn btn-outline-primary" @onclick="RestoreVersion">
+                                            Restore selected version to editor
+                                        </button>
+                                    </div>
+                                    @if (Versions.Count > 1)
+                                    {
+                                        <hr />
+                                        <label class="form-label fw-bold">Compare Versions</label>
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-6">
+                                                <InputSelect id="compare-version-left" class="form-select" @bind-Value="compareVersionLeft">
+                                                    @foreach (var version in OrderedVersions)
+                                                    {
+                                                        <option value="@version.Version">v@(version.Version)</option>
+                                                    }
+                                                </InputSelect>
+                                            </div>
+                                            <div class="col-6">
+                                                <InputSelect id="compare-version-right" class="form-select" @bind-Value="compareVersionRight">
+                                                    @foreach (var version in OrderedVersions)
+                                                    {
+                                                        <option value="@version.Version">v@(version.Version)</option>
+                                                    }
+                                                </InputSelect>
+                                            </div>
+                                        </div>
+                                        var diffs = GetVersionDiffs();
+                                        @if (diffs.Count == 0)
+                                        {
+                                            <small class="text-muted">No differences for the selected versions.</small>
+                                        }
+                                        else
+                                        {
+                                            <div class="small d-flex flex-column gap-2">
+                                                @foreach (var diff in diffs)
+                                                {
+                                                    <div class="border rounded p-2">
+                                                        <div class="fw-bold">@diff.Field</div>
+                                                        <div class="text-muted">v@(compareVersionLeft): @Truncate(diff.LeftValue)</div>
+                                                        <div class="text-muted">v@(compareVersionRight): @Truncate(diff.RightValue)</div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
 
                     <div class="col-lg-4">
@@ -282,6 +348,9 @@
     [Parameter]
     public BlogPost? BlogPost { get; set; }
 
+    [Parameter]
+    public IReadOnlyList<BlogPostVersion> Versions { get; set; } = [];
+
     [Parameter, EditorRequired]
     public required string Title { get; set; }
 
@@ -306,8 +375,12 @@
     private IPagedList<BlogPostTemplate> blogPostTemplates = PagedList<BlogPostTemplate>.Empty;
 
     private bool IsScheduled => model.ScheduledPublishDate.HasValue;
+    private IEnumerable<BlogPostVersion> OrderedVersions => Versions.OrderByDescending(v => v.Version);
 
     private string? authorName;
+    private int? selectedVersionToRestore;
+    private int? compareVersionLeft;
+    private int? compareVersionRight;
 
     protected override async Task OnInitializedAsync()
     {
@@ -328,6 +401,14 @@
         }
 
         model = CreateNewModel.FromBlogPost(BlogPost);
+
+        if (Versions.Count > 0)
+        {
+            var latestVersion = OrderedVersions.First();
+            selectedVersionToRestore ??= latestVersion.Version;
+            compareVersionLeft ??= latestVersion.Version;
+            compareVersionRight ??= latestVersion.Version;
+        }
     }
 
     private string GetStatusText()
@@ -443,6 +524,77 @@
         StateHasChanged();
         ToastService.ShowInfo($"Template {template.Name} loaded");
     }
+
+    private void RestoreVersion()
+    {
+        if (!selectedVersionToRestore.HasValue)
+        {
+            return;
+        }
+
+        var selectedVersion = Versions.FirstOrDefault(v => v.Version == selectedVersionToRestore.Value);
+        if (selectedVersion is null)
+        {
+            return;
+        }
+
+        var scheduledPublishDate = model.ScheduledPublishDate;
+        model = CreateNewModel.FromBlogPostVersion(selectedVersion, scheduledPublishDate);
+        model.MarkDirty();
+        ToastService.ShowInfo($"Restored version {selectedVersion.Version}");
+    }
+
+    private IReadOnlyList<VersionDiff> GetVersionDiffs()
+    {
+        if (!compareVersionLeft.HasValue || !compareVersionRight.HasValue)
+        {
+            return [];
+        }
+
+        var left = Versions.FirstOrDefault(v => v.Version == compareVersionLeft.Value);
+        var right = Versions.FirstOrDefault(v => v.Version == compareVersionRight.Value);
+        if (left is null || right is null)
+        {
+            return [];
+        }
+
+        var diffs = new List<VersionDiff>();
+        AddIfChanged("Title", left.Title, right.Title, diffs);
+        AddIfChanged("Short Description", left.ShortDescription, right.ShortDescription, diffs);
+        AddIfChanged("Content", left.Content, right.Content, diffs);
+        AddIfChanged("Preview Image Url", left.PreviewImageUrl, right.PreviewImageUrl, diffs);
+        AddIfChanged("Preview Fallback Image Url", left.PreviewImageUrlFallback ?? string.Empty, right.PreviewImageUrlFallback ?? string.Empty, diffs);
+        AddIfChanged("Tags", string.Join(", ", left.Tags), string.Join(", ", right.Tags), diffs);
+        AddIfChanged("Published", left.IsPublished.ToString(), right.IsPublished.ToString(), diffs);
+        AddIfChanged("Updated Date", left.UpdatedDate.ToString("u"), right.UpdatedDate.ToString("u"), diffs);
+        AddIfChanged("Author", left.AuthorName ?? string.Empty, right.AuthorName ?? string.Empty, diffs);
+        return diffs;
+    }
+
+    private static void AddIfChanged(string field, string left, string right, ICollection<VersionDiff> diffs)
+    {
+        if (left == right)
+        {
+            return;
+        }
+
+        diffs.Add(new VersionDiff(field, left, right));
+    }
+
+    private static string Truncate(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
+            return "<empty>";
+        }
+
+        const int maxLength = 120;
+        return input.Length <= maxLength
+            ? input
+            : $"{input[..maxLength]}...";
+    }
+
+    private sealed record VersionDiff(string Field, string LeftValue, string RightValue);
 
     /// <summary>
     /// Convert content from HTML to Markdown and viceversa

@@ -15,6 +15,8 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<BlogPost> BlogPosts { get; set; }
 
+    public DbSet<BlogPostVersion> BlogPostVersions { get; set; }
+
     public DbSet<ProfileInformationEntry> ProfileInformationEntries { get; set; }
 
     public DbSet<Skill> Skills { get; set; }
@@ -36,6 +38,7 @@ public sealed class BlogDbContext : DbContext
         ArgumentNullException.ThrowIfNull(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
+        modelBuilder.ApplyConfiguration(new BlogPostVersionConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostRecordConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostTemplateConfiguration());
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());

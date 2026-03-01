@@ -143,6 +143,64 @@ public class CreateNewBlogPostTests : BunitContext
     }
 
     [Fact]
+    public void ShouldRestoreVersionToEditorAndPreserveScheduleDate()
+    {
+        var scheduledDate = new DateTime(2099, 1, 1);
+        var currentBlogPost = new BlogPostBuilder()
+            .WithTitle("Current title")
+            .WithShortDescription("Current description")
+            .WithContent("Current content")
+            .WithPreviewImageUrl("current-url")
+            .IsPublished(false)
+            .WithScheduledPublishDate(scheduledDate)
+            .Build();
+        var oldDate = new DateTime(1991, 5, 17);
+        var previousVersionPost = new BlogPostBuilder()
+            .WithTitle("Version 1 title")
+            .WithShortDescription("Version 1 description")
+            .WithContent("Version 1 content")
+            .WithPreviewImageUrl("version-url")
+            .IsPublished(false)
+            .WithUpdatedDate(oldDate)
+            .Build();
+        previousVersionPost.Id = currentBlogPost.Id;
+        var version = BlogPostVersion.Create(previousVersionPost, 1);
+        BlogPost? blogPostFromComponent = null;
+
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.OnBlogPostCreated, bp => blogPostFromComponent = bp)
+                .Add(c => c.BlogPost, currentBlogPost)
+                .Add(c => c.Versions, [version]));
+
+        cut.Find("#restore-version").Click();
+        cut.Find("form").Submit();
+
+        blogPostFromComponent.ShouldNotBeNull();
+        blogPostFromComponent.Title.ShouldBe("Version 1 title");
+        blogPostFromComponent.ShortDescription.ShouldBe("Version 1 description");
+        blogPostFromComponent.Content.ShouldBe("Version 1 content");
+        blogPostFromComponent.ScheduledPublishDate.ShouldBe(scheduledDate.ToUniversalTime());
+        blogPostFromComponent.UpdatedDate.ShouldBe(oldDate);
+    }
+
+    [Fact]
+    public void ShouldHideVersionComparerWhenOnlyOneVersionExists()
+    {
+        var currentBlogPost = new BlogPostBuilder().Build();
+        var versionPost = new BlogPostBuilder().WithTitle("Version 1 title").Build();
+        versionPost.Id = currentBlogPost.Id;
+        var version = BlogPostVersion.Create(versionPost, 1);
+
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.BlogPost, currentBlogPost)
+                .Add(c => c.Versions, [version]));
+
+        cut.FindAll("#compare-version-left").ShouldBeEmpty();
+        cut.FindAll("#compare-version-right").ShouldBeEmpty();
+        cut.FindAll("#restore-version").Count.ShouldBe(1);
+    }
+
+    [Fact]
     public void ShouldNotDeleteModelWhenSet()
     {
         BlogPost? blogPost = null;

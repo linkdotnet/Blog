@@ -4,6 +4,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
 @inject IRepository<BlogPost> BlogPostRepository
+@inject IRepository<BlogPostVersion> BlogPostVersionRepository
 @inject IToastService ToastService
 
 <CreateNewBlogPost Title="Create New Blog Post" OnBlogPostCreated="@(StoreBlogPostAsync)"></CreateNewBlogPost>
@@ -12,6 +13,7 @@
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
         await BlogPostRepository.StoreAsync(blogPost);
+        await BlogPostVersionRepository.StoreAsync(BlogPostVersion.Create(blogPost, 1));
         ToastService.ShowInfo($"Created BlogPost {blogPost.Title}");
     }
 }

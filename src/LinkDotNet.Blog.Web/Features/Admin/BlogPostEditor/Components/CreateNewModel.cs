@@ -121,6 +121,27 @@ public sealed class CreateNewModel
         };
     }
 
+    public static CreateNewModel FromBlogPostVersion(BlogPostVersion blogPostVersion, DateTime? scheduledPublishDate)
+    {
+        ArgumentNullException.ThrowIfNull(blogPostVersion);
+
+        return new CreateNewModel
+        {
+            id = blogPostVersion.BlogPostId,
+            Content = blogPostVersion.Content,
+            Tags = string.Join(",", blogPostVersion.Tags),
+            Title = blogPostVersion.Title,
+            ShortDescription = blogPostVersion.ShortDescription,
+            IsPublished = blogPostVersion.IsPublished,
+            PreviewImageUrl = blogPostVersion.PreviewImageUrl,
+            originalUpdatedDate = blogPostVersion.UpdatedDate,
+            PreviewImageUrlFallback = blogPostVersion.PreviewImageUrlFallback ?? string.Empty,
+            scheduledPublishDate = scheduledPublishDate?.ToUniversalTime(),
+            authorName = blogPostVersion.AuthorName,
+            IsDirty = false,
+        };
+    }
+
     public BlogPost ToBlogPost()
     {
         var tagList = string.IsNullOrWhiteSpace(Tags)
@@ -144,6 +165,8 @@ public sealed class CreateNewModel
         blogPost.Id = id;
         return blogPost;
     }
+
+    public void MarkDirty() => IsDirty = true;
 
     private void SetProperty<T>(out T backingField, T value)
     {

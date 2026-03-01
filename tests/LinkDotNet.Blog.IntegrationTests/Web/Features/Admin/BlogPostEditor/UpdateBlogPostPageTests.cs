@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
@@ -16,6 +18,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NCronJob;
 using TestContext = Xunit.TestContext;
@@ -35,8 +38,10 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var instantRegistry = Substitute.For<IInstantJobRegistry>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);
+        var blogPostVersionRepository = new Repository<BlogPostVersion>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostVersion>>>());
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IRepository<BlogPostVersion>>(_ => blogPostVersionRepository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
@@ -73,6 +78,15 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromDb.ShouldNotBeNull();
         blogPostFromDb.ShortDescription.ShouldBe("My new Description");
         blogPostFromDb.AuthorName.ShouldBe("Test Author");
+        var blogPostVersionsFromDb = await DbContext.BlogPostVersions
+            .Where(t => t.BlogPostId == blogPost.Id)
+            .OrderBy(t => t.Version)
+            .ToListAsync(TestContext.Current.CancellationToken);
+        blogPostVersionsFromDb.Count.ShouldBe(2);
+        blogPostVersionsFromDb[0].Version.ShouldBe(1);
+        blogPostVersionsFromDb[0].ShortDescription.ShouldBe("Sub");
+        blogPostVersionsFromDb[1].Version.ShouldBe(2);
+        blogPostVersionsFromDb[1].ShortDescription.ShouldBe("My new Description");
 
         toastService.Received(1).ShowInfo("Updated BlogPost Title", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
@@ -89,8 +103,10 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var instantRegistry = Substitute.For<IInstantJobRegistry>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").WithShortDescription("Sub").Build();
         await Repository.StoreAsync(blogPost);
+        var blogPostVersionRepository = new Repository<BlogPostVersion>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostVersion>>>());
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IRepository<BlogPostVersion>>(_ => blogPostVersionRepository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
@@ -135,6 +151,8 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        var blogPostVersionRepository = new Repository<BlogPostVersion>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostVersion>>>());
+        ctx.Services.AddScoped<IRepository<BlogPostVersion>>(_ => blogPostVersionRepository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
 
