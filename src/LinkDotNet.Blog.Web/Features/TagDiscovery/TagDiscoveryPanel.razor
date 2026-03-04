@@ -4,19 +4,21 @@
 
 @if (!AppConfiguration.Value.EnableTagDiscoveryPanel || !IsOpen) { return; }
 
-<div class="tag-overlay" @onclick="Close"></div>
+<div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
+     style="z-index:1040; backdrop-filter: blur(2px);"
+     @onclick="Close">
+</div>
 
-<div class="tag-panel">
-    <div class="tag-discovery-container">
+<div class="position-fixed top-50 start-50 translate-middle bg-body border rounded shadow p-3"
+     style="max-width: 400px; max-height: 70vh; overflow-y:auto; z-index:1050;">
+    <div class="d-flex flex-wrap gap-2">
         @foreach (var tag in _tags)
         {
-            <span class="tag-badge" @onclick="() => Navigate(tag.Name)">
+            <span class="badge bg-secondary d-flex align-items-center gap-1"
+                  style="cursor: pointer;"
+                  @onclick="() => Navigate(tag.Name)">
                 @tag.Name
-
-                @if (AppConfiguration.Value.ShowTagsWithCountInTagDiscovery)
-                {
-                    <span class="tag-count">@tag.Count</span>
-                }
+                <span class="badge bg-light text-dark">@tag.Count</span>
             </span>
         }
     </div>
@@ -30,7 +32,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if (IsOpen && _tags.Count == 0)
+        if (IsOpen)
         {
             _tags = await TagQueryService.GetAllOrderedByUsageAsync();
         }

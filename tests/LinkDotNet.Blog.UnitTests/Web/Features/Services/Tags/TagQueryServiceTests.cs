@@ -1,6 +1,7 @@
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using MongoDB.Driver;
 using NSubstitute;
@@ -42,9 +43,9 @@ public sealed class TagQueryServiceTests
         // Arrange
         var posts = new List<BlogPost>
         {
-            CreatePost(["CSharp", "Blazor", "DotNet"]),
-            CreatePost(["CSharp", "Blazor"]),
-            CreatePost(["CSharp"])
+            new BlogPostBuilder().WithTags("CSharp", "Blazor", "DotNet").Build(),
+            new BlogPostBuilder().WithTags("CSharp", "Blazor").Build(),
+            new BlogPostBuilder().WithTags("CSharp").Build(),
         };
 
         repository.GetAllAsync()
@@ -72,8 +73,8 @@ public sealed class TagQueryServiceTests
         // Arrange
         var posts = new List<BlogPost>
         {
-            CreatePost(["CSharp", " "]),
-            CreatePost(null!)
+            new BlogPostBuilder().WithTags("CSharp", " ").Build(),
+            new BlogPostBuilder().Build(),
         };
 
         repository.GetAllAsync()
@@ -94,8 +95,8 @@ public sealed class TagQueryServiceTests
         // Arrange
         var posts = new List<BlogPost>
         {
-            CreatePost(["CSharp"]),
-            CreatePost(["Blazor"])
+            new BlogPostBuilder().WithTags("CSharp").Build(),
+            new BlogPostBuilder().WithTags("Blazor").Build(),
         };
 
         repository.GetAllAsync()
@@ -107,19 +108,6 @@ public sealed class TagQueryServiceTests
         // Assert
         result[0].Name.ShouldBe("Blazor");
         result[1].Name.ShouldBe("CSharp");
-    }
-
-    private static BlogPost CreatePost(List<string> tags)
-    {
-        var unique = Guid.NewGuid().ToString("N");
-
-        return BlogPost.Create(
-            $"Post-{unique}",
-            $"Slug-{unique}",
-            $"Excerpt-{unique}",
-            "#",
-            false,
-            tags: tags);
     }
 
     private static PagedList<BlogPost> CreatePagedList(List<BlogPost> posts)

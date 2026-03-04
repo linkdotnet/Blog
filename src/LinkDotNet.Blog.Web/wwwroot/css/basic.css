@@ -645,17 +645,6 @@ code {
 	object-fit: cover;
 }
 
-.tag-discovery-btn {
-	font-family: 'icons';
-	font-weight: 900;
-	content: "\e936";
-	cursor: pointer;
-	padding: 6px;
-	margin: 6px;
-	text-decoration: none;
-	color: var(--bs-navbar-color);
-}
-
 @media only screen and (max-width: 700px) {
 	.blog-outer-box .blog-container {
 		width: 90%;

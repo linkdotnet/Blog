@@ -61,9 +61,10 @@
 
                 @if (Configuration.Value.EnableTagDiscoveryPanel)
                 {
-                    <li class="nav-item d-flex align-items-center">
-                        <a class="tag-discovery-btn" @onclick="ToggleTagDiscoveryPanel"
-                            title="Discover new topics"> &#xE936; </a>
+                    <li class="nav-item d-flex align-items-center me-lg-2 mb-2 mb-lg-0">
+                        <a class="nav-link d-flex align-items-center justify-content-center" @onclick="ToggleTagDiscoveryPanel"
+                           style="font-family: 'icons'; font-weight: 900; cursor: pointer;"
+                           title="Discover new topics"> &#xE936; </a>
                         <TagDiscoveryPanel IsOpen="@_isOpen" OnClose="CloseTagDiscoveryPanel" />
                     </li>
                 }
