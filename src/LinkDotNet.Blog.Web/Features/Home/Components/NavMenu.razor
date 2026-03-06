@@ -65,7 +65,6 @@
                         <a class="nav-link d-flex align-items-center justify-content-center" @onclick="ToggleTagDiscoveryPanel"
                            style="font-family: 'icons'; font-weight: 900; cursor: pointer;"
                            title="Discover new topics"> &#xE936; </a>
-                        <TagDiscoveryPanel IsOpen="@_isOpen" OnClose="CloseTagDiscoveryPanel" />
                     </li>
                 }
 
@@ -76,6 +75,7 @@
         </div>
     </div>
 </nav>
+<TagDiscoveryPanel IsOpen="@_isOpen" OnClose="CloseTagDiscoveryPanel" />
 
 @code {
     private string currentUri = string.Empty;

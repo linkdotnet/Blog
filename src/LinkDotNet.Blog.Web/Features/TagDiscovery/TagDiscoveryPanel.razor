@@ -1,40 +1,69 @@
+@using Microsoft.AspNetCore.Components.Web;
 @inject ITagQueryService TagQueryService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager Navigation
 
-@if (!AppConfiguration.Value.EnableTagDiscoveryPanel || !IsOpen) { return; }
 
-<div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
-     style="z-index:1040; backdrop-filter: blur(2px);"
-     @onclick="Close">
-</div>
-
-<div class="position-fixed top-50 start-50 translate-middle bg-body border rounded shadow p-3"
-     style="max-width: 400px; max-height: 70vh; overflow-y:auto; z-index:1050;">
-    <div class="d-flex flex-wrap gap-2">
-        @foreach (var tag in _tags)
-        {
-            <span class="badge bg-secondary d-flex align-items-center gap-1"
-                  style="cursor: pointer;"
-                  @onclick="() => Navigate(tag.Name)">
-                @tag.Name
-                <span class="badge bg-light text-dark">@tag.Count</span>
-            </span>
-        }
+@if (AppConfiguration.Value.EnableTagDiscoveryPanel && IsOpen)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
+         style="z-index:1040; backdrop-filter: blur(2px);"
+         @onclick="Close">
     </div>
-</div>
+
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+         style="z-index:1050; pointer-events:none;">
+
+        <div @ref="_panelRef"
+             class="bg-body border rounded shadow p-3"
+             style="max-width: 400px; max-height: 70vh; overflow-y:auto; pointer-events:auto;"
+             tabindex="0"
+             @onkeydown="HandleKeyDown">
+
+            @if (_tags.Count == 0)
+            {
+                <div class="text-muted text-center py-2">
+                    No tags available yet.
+                </div>
+            }
+            else
+            {
+                <div class="d-flex flex-wrap gap-2">
+                    @foreach (var tag in _tags)
+                    {
+                        <span class="badge bg-secondary d-flex align-items-center gap-1"
+                              style="cursor: pointer;"
+                              @onclick="() => Navigate(tag.Name)">
+                            @tag.Name
+                            <span class="badge bg-light text-dark">@tag.Count</span>
+                        </span>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+}
 
 @code {
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 
     private IReadOnlyList<TagCount> _tags = [];
+    private ElementReference _panelRef;
 
     protected override async Task OnParametersSetAsync()
     {
         if (IsOpen)
         {
             _tags = await TagQueryService.GetAllOrderedByUsageAsync();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen)
+        {
+            await _panelRef.FocusAsync();
         }
     }
 
@@ -48,5 +77,13 @@
         var encoded = Uri.EscapeDataString(tag);
         Navigation.NavigateTo($"/searchByTag/{encoded}");
         await Close();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+        {
+            await Close();
+        }
     }
 }

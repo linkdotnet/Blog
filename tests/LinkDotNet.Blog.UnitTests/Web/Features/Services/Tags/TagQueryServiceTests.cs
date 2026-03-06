@@ -2,13 +2,18 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ZiggyCreatures.Caching.Fusion;
+
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Services.Tags;
 public sealed class TagQueryServiceTests
@@ -16,11 +21,21 @@ public sealed class TagQueryServiceTests
 
     private readonly IRepository<BlogPost> repository;
     private readonly TagQueryService tagQueryService;
+    private readonly IFusionCache fusionCache;
 
     public TagQueryServiceTests()
     {
         repository = Substitute.For<IRepository<BlogPost>>();
-        tagQueryService = new TagQueryService(repository);
+
+        fusionCache = new FusionCache(
+            new FusionCacheOptions(),
+            logger: null,
+            memoryCache: new MemoryCache(new MemoryCacheOptions())
+        );
+
+        var config = Options.Create(new ApplicationConfigurationBuilder().Build());
+
+        tagQueryService = new TagQueryService(repository, fusionCache, config);
     }
 
     [Fact]
