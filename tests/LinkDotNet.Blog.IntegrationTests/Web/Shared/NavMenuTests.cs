@@ -1,11 +1,12 @@
-using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.Linq;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
@@ -14,6 +15,13 @@ public class NavMenuTests : BunitContext
     public NavMenuTests()
     {
         ComponentFactories.Add<ThemeToggler, ThemeTogglerStub>();
+
+        var tagQueryService = Substitute.For<ITagQueryService>();
+        Services.AddSingleton(tagQueryService);
+
+        Services.AddSingleton(
+            Options.Create(new ApplicationConfigurationBuilder().Build())
+        );
     }
 
     [Fact]
