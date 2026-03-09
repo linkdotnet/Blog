@@ -4,13 +4,13 @@ using System.Text.Json.Nodes;
 namespace LinkDotNet.Blog.UpgradeAssistant.Migrations;
 
 /// <summary>
-/// Migration from version 11.0 to 12.0.
-/// Adds ShowBuildInformation setting.
+/// Migration from version 12.0 to 13.0.
+/// Adds EnableTagDiscoveryPanel setting.
 /// </summary>
-public sealed class Migration11To12 : IMigration
+public sealed class Migration12To13 : IMigration
 {
-    public string FromVersion => "11.0";
-    public string ToVersion => "12.0";
+    public string FromVersion => "12.0";
+    public string ToVersion => "13.0";
 
     public bool Apply(JsonDocument document, ref string jsonContent)
     {
@@ -22,11 +22,11 @@ public sealed class Migration11To12 : IMigration
 
         var hasChanges = false;
 
-        if (!rootObject.ContainsKey("ShowBuildInformation"))
+        if (!rootObject.ContainsKey("EnableTagDiscoveryPanel"))
         {
-            rootObject["ShowBuildInformation"] = true;
+            rootObject["EnableTagDiscoveryPanel"] = true;
             hasChanges = true;
-            ConsoleOutput.WriteInfo("Added 'ShowBuildInformation' setting. Controls display of build information in the footer.");
+            ConsoleOutput.WriteInfo("Added 'EnableTagDiscoveryPanel' setting. Controls whether the Tag Discovery panel is enabled in the UI.");
         }
 
         if (hasChanges)
@@ -40,6 +40,6 @@ public sealed class Migration11To12 : IMigration
 
     public string GetDescription()
     {
-        return "Adds ShowBuildInformation setting to control build information display.";
+        return "Adds EnableTagDiscoveryPanel setting that controls whether the Tag Discovery panel is enabled in the UI.";
     }
 }
