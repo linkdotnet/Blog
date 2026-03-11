@@ -52,10 +52,10 @@ public sealed class MigrationManager
             return false;
         }
 
-        var currentVersion = GetVersion(document);
-        ConsoleOutput.WriteInfo($"Current version: {currentVersion ?? $"Not set (pre-{this.currentVersion})"}");
+        var configVersion = GetVersion(document);
+        ConsoleOutput.WriteInfo($"Current version: {configVersion ?? $"Not set (pre-{this.currentVersion})"}");
 
-        var applicableMigrations = GetApplicableMigrations(currentVersion);
+        var applicableMigrations = GetApplicableMigrations(configVersion);
 
         if (applicableMigrations.Count == 0)
         {
@@ -138,22 +138,14 @@ public sealed class MigrationManager
     private List<IMigration> GetApplicableMigrations(string? currentVersion)
     {
         var result = new List<IMigration>();
-        var startVersion = currentVersion ?? "11.0";
-        var currentMigrationVersion = startVersion;
-        var foundMigration = true;
+        var currentMigrationVersion = currentVersion ?? "11.0";
 
-        while (foundMigration)
+        foreach (var migration in migrations)
         {
-            foundMigration = false;
-            foreach (var migration in migrations)
+            if (migration.FromVersion == currentMigrationVersion)
             {
-                if (migration.FromVersion == currentMigrationVersion)
-                {
-                    result.Add(migration);
-                    currentMigrationVersion = migration.ToVersion;
-                    foundMigration = true;
-                    break;
-                }
+                result.Add(migration);
+                currentMigrationVersion = migration.ToVersion;
             }
         }
 
