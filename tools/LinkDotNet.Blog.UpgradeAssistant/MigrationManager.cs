@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using LinkDotNet.Blog.UpgradeAssistant.Migrations;
 
 namespace LinkDotNet.Blog.UpgradeAssistant;
 
@@ -10,13 +9,9 @@ public sealed class MigrationManager
     private readonly List<IMigration> _migrations;
     private readonly string _currentVersion;
 
-    public MigrationManager()
+    public MigrationManager(IEnumerable<IMigration> migrations)
     {
-        _migrations = new List<IMigration>
-        {
-            new Migration11To12()
-        };
-
+        _migrations = migrations.ToList();
         _currentVersion = DetermineCurrentVersionFromMigrations();
     }
 
