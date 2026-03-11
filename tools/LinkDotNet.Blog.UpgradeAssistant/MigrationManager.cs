@@ -6,19 +6,19 @@ namespace LinkDotNet.Blog.UpgradeAssistant;
 
 public sealed class MigrationManager
 {
-    private readonly List<IMigration> _migrations;
-    private readonly string _currentVersion;
+    private readonly List<IMigration> migrations;
+    private readonly string currentVersion;
 
     public MigrationManager(IEnumerable<IMigration> migrations)
     {
-        _migrations = migrations.ToList();
-        _currentVersion = DetermineCurrentVersionFromMigrations();
+        this.migrations = migrations.ToList();
+        currentVersion = DetermineCurrentVersionFromMigrations();
     }
 
     private string DetermineCurrentVersionFromMigrations()
     {
-        return _migrations.Count > 0
-            ? _migrations.Max(m => m.ToVersion) ?? "11.0"
+        return migrations.Count > 0
+            ? migrations.Max(m => m.ToVersion) ?? "11.0"
             : "11.0";
     }
 
@@ -53,7 +53,7 @@ public sealed class MigrationManager
         }
 
         var currentVersion = GetVersion(document);
-        ConsoleOutput.WriteInfo($"Current version: {currentVersion ?? $"Not set (pre-{_currentVersion})"}");
+        ConsoleOutput.WriteInfo($"Current version: {currentVersion ?? $"Not set (pre-{this.currentVersion})"}");
 
         var applicableMigrations = GetApplicableMigrations(currentVersion);
 
@@ -102,7 +102,7 @@ public sealed class MigrationManager
 
         if (hasAnyChanges)
         {
-            modifiedContent = SetVersion(modifiedContent, _currentVersion);
+            modifiedContent = SetVersion(modifiedContent, this.currentVersion);
 
             if (!dryRun)
             {
@@ -145,7 +145,7 @@ public sealed class MigrationManager
         while (foundMigration)
         {
             foundMigration = false;
-            foreach (var migration in _migrations)
+            foreach (var migration in migrations)
             {
                 if (migration.FromVersion == currentMigrationVersion)
                 {
