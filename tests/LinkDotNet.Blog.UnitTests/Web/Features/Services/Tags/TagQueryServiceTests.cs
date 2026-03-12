@@ -42,8 +42,8 @@ public sealed class TagQueryServiceTests
     public async Task ShouldReturnEmptyWhenNoPosts()
     {
         // Arrange
-        repository.GetAllAsync()
-            .Returns(PagedList<BlogPost>.Empty);
+        repository.GetAllByProjectionAsync(p => p.Tags)
+            .ReturnsForAnyArgs(new PagedList<List<string>>([], 0, 1, 1));
 
         // Act
         var result = await tagQueryService.GetAllOrderedByUsageAsync();
@@ -56,15 +56,16 @@ public sealed class TagQueryServiceTests
     public async Task AggregatesAndSortsTagsByUsage()
     {
         // Arrange
-        var posts = new List<BlogPost>
+        var tagLists = new List<List<string>>
         {
-            new BlogPostBuilder().WithTags("CSharp", "Blazor", "DotNet").Build(),
-            new BlogPostBuilder().WithTags("CSharp", "Blazor").Build(),
-            new BlogPostBuilder().WithTags("CSharp").Build(),
+            new() { "CSharp", "Blazor", "DotNet" },
+            new() { "CSharp", "Blazor" },
+            new() { "CSharp" },
         };
 
-        repository.GetAllAsync()
-            .Returns(CreatePagedList(posts));
+        repository.GetAllByProjectionAsync(p => p.Tags)
+            .ReturnsForAnyArgs(new PagedList<List<string>>(
+                tagLists, tagLists.Count, 1, tagLists.Count));
 
         // Act
         var result = await tagQueryService.GetAllOrderedByUsageAsync();
@@ -86,14 +87,15 @@ public sealed class TagQueryServiceTests
     public async Task ShouldIgnoreNullOrWhitespaceTags()
     {
         // Arrange
-        var posts = new List<BlogPost>
+        var tagLists = new List<List<string>>
         {
-            new BlogPostBuilder().WithTags("CSharp", " ").Build(),
-            new BlogPostBuilder().Build(),
+            new() { "CSharp", " " },
+            new() 
         };
 
-        repository.GetAllAsync()
-            .Returns(CreatePagedList(posts));
+        repository.GetAllByProjectionAsync(p => p.Tags)
+            .ReturnsForAnyArgs(new PagedList<List<string>>(
+                tagLists, tagLists.Count, 1, tagLists.Count ));
 
         // Act
         var result = await tagQueryService.GetAllOrderedByUsageAsync();
@@ -108,14 +110,15 @@ public sealed class TagQueryServiceTests
     public async Task ShouldSortAlphabeticallyWhenCountsAreEqual()
     {
         // Arrange
-        var posts = new List<BlogPost>
+        var tagLists = new List<List<string>>
         {
-            new BlogPostBuilder().WithTags("CSharp").Build(),
-            new BlogPostBuilder().WithTags("Blazor").Build(),
+            new() { "CSharp" },
+            new() { "Blazor" }
         };
 
-        repository.GetAllAsync()
-            .Returns(CreatePagedList(posts));
+        repository.GetAllByProjectionAsync(p => p.Tags)
+            .ReturnsForAnyArgs(new PagedList<List<string>>(
+                tagLists, tagLists.Count, 1, tagLists.Count));
 
         // Act
         var result = await tagQueryService.GetAllOrderedByUsageAsync();
@@ -123,14 +126,5 @@ public sealed class TagQueryServiceTests
         // Assert
         result[0].Name.ShouldBe("Blazor");
         result[1].Name.ShouldBe("CSharp");
-    }
-
-    private static PagedList<BlogPost> CreatePagedList(List<BlogPost> posts)
-    {
-        return new PagedList<BlogPost>(
-                posts,
-                posts.Count,
-                1,
-                posts.Count == 0 ? 1 : posts.Count);
     }
 }

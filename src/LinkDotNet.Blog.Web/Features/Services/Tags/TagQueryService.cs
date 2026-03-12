@@ -1,7 +1,6 @@
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.Extensions.Options;
-using Raven.Client.Documents.Operations.AI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +30,12 @@ public sealed class TagQueryService(
 
     private async Task<IReadOnlyList<TagCount>> LoadTagsAsync()
     {
-        var posts = await blogPostRepository.GetAllAsync();
+        var tagLists = await blogPostRepository.GetAllByProjectionAsync(
+            p => p.Tags);
 
-        var tagCounts = posts
-            .SelectMany(p => p.Tags ?? Enumerable.Empty<string>())
-            .Where(tag => !string.IsNullOrEmpty(tag))
+        var tagCounts = tagLists
+            .SelectMany(tags => tags ?? Enumerable.Empty<string>())
+            .Where(tag => !string.IsNullOrWhiteSpace(tag))
             .GroupBy(tag => tag.Trim())
             .Select(group => new TagCount(
                 group.Key,
@@ -43,6 +43,7 @@ public sealed class TagQueryService(
             .OrderByDescending(tc => tc.Count)
             .ThenBy(tc => tc.Name)
             .ToList();
+
         return tagCounts;
     }
 
