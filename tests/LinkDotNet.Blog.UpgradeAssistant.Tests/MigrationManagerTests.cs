@@ -13,7 +13,7 @@ public sealed class MigrationManagerTests : IDisposable
     }
 
     [Fact]
-    public async Task Should_Migrate_From_11_To_12()
+    public async Task Should_Migrate_Config_To_Latest_Version()
     {
         // Arrange
         var testFile = Path.Combine(testDirectory, "appsettings.Development.json");
@@ -23,7 +23,9 @@ public sealed class MigrationManagerTests : IDisposable
             }
             """;
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
-        var manager = new MigrationManager([new Migration11To12()]);
+        var manager = new MigrationManager([
+            new Migration11To12(),
+            new Migration12To13()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -32,8 +34,8 @@ public sealed class MigrationManagerTests : IDisposable
         // Assert
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
-        content.ShouldContain("\"ConfigVersion\": \"12.0\"");
-        content.ShouldContain("\"ShowBuildInformation\": true");
+        content.ShouldContain("\"ConfigVersion\": \"13.0\"");
+        content.ShouldContain("\"EnableTagDiscoveryPanel\": true");
         
         // Verify backup was created
         var backupFiles = Directory.GetFiles(backupDir);
@@ -47,7 +49,7 @@ public sealed class MigrationManagerTests : IDisposable
         var testFile = Path.Combine(testDirectory, "appsettings.Production.json");
         var json = """
             {
-              "ConfigVersion": "12.0",
+              "ConfigVersion": "13.0",
               "BlogName": "Test Blog",
               "ShowBuildInformation": true
             }

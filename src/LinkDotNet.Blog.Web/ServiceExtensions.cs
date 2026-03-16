@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ public static class ServiceExtensions
         services.AddScoped<IXmlWriter, XmlWriter>();
         services.AddScoped<IFileProcessor, FileProcessor>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<ITagQueryService, TagQueryService>();
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
