@@ -23,7 +23,9 @@ public sealed class MigrationManagerTests : IDisposable
             }
             """;
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
-        var manager = new MigrationManager();
+        var manager = new MigrationManager([
+            new Migration11To12(),
+            new Migration12To13()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -53,7 +55,7 @@ public sealed class MigrationManagerTests : IDisposable
             }
             """;
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
-        var manager = new MigrationManager();
+        var manager = new MigrationManager([new Migration11To12()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -76,7 +78,7 @@ public sealed class MigrationManagerTests : IDisposable
             }
             """;
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
-        var manager = new MigrationManager();
+        var manager = new MigrationManager([new Migration11To12()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -95,7 +97,7 @@ public sealed class MigrationManagerTests : IDisposable
         // Arrange
         var testFile = Path.Combine(testDirectory, "appsettings.Invalid.json");
         await File.WriteAllTextAsync(testFile, "{ invalid json }", TestContext.Current.CancellationToken);
-        var manager = new MigrationManager();
+        var manager = new MigrationManager([new Migration11To12()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -110,7 +112,7 @@ public sealed class MigrationManagerTests : IDisposable
     {
         // Arrange
         var testFile = Path.Combine(testDirectory, "nonexistent.json");
-        var manager = new MigrationManager();
+        var manager = new MigrationManager([new Migration11To12()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -131,7 +133,7 @@ public sealed class MigrationManagerTests : IDisposable
             }
             """;
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
-        var manager = new MigrationManager();
+        var manager = new MigrationManager([new Migration11To12()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act

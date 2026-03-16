@@ -1,30 +1,24 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using LinkDotNet.Blog.UpgradeAssistant.Migrations;
 
 namespace LinkDotNet.Blog.UpgradeAssistant;
 
 public sealed class MigrationManager
 {
-    private readonly List<IMigration> _migrations;
-    private readonly string _currentVersion;
+    private readonly List<IMigration> migrations;
+    private readonly string currentVersion;
 
-    public MigrationManager()
+    public MigrationManager(IEnumerable<IMigration> migrations)
     {
-        _migrations = new List<IMigration>
-        {
-            new Migration11To12(),
-            new Migration12To13()
-        };
-
-        _currentVersion = DetermineCurrentVersionFromMigrations();
+        this.migrations = migrations.ToList();
+        currentVersion = DetermineCurrentVersionFromMigrations();
     }
 
     private string DetermineCurrentVersionFromMigrations()
     {
-        return _migrations.Count > 0
-            ? _migrations.Max(m => m.ToVersion) ?? "11.0"
+        return migrations.Count > 0
+            ? migrations.Max(m => m.ToVersion) ?? "11.0"
             : "11.0";
     }
 
@@ -58,10 +52,10 @@ public sealed class MigrationManager
             return false;
         }
 
-        var currentVersion = GetVersion(document);
-        ConsoleOutput.WriteInfo($"Current version: {currentVersion ?? $"Not set (pre-{_currentVersion})"}");
+        var configVersion = GetVersion(document);
+        ConsoleOutput.WriteInfo($"Current version: {configVersion ?? $"Not set (pre-{this.currentVersion})"}");
 
-        var applicableMigrations = GetApplicableMigrations(currentVersion);
+        var applicableMigrations = GetApplicableMigrations(configVersion);
 
         if (applicableMigrations.Count == 0)
         {
@@ -108,7 +102,7 @@ public sealed class MigrationManager
 
         if (hasAnyChanges)
         {
-            modifiedContent = SetVersion(modifiedContent, _currentVersion);
+            modifiedContent = SetVersion(modifiedContent, this.currentVersion);
 
             if (!dryRun)
             {
@@ -144,22 +138,14 @@ public sealed class MigrationManager
     private List<IMigration> GetApplicableMigrations(string? currentVersion)
     {
         var result = new List<IMigration>();
-        var startVersion = currentVersion ?? "11.0";
-        var currentMigrationVersion = startVersion;
-        var foundMigration = true;
+        var currentMigrationVersion = currentVersion ?? "11.0";
 
-        while (foundMigration)
+        foreach (var migration in migrations)
         {
-            foundMigration = false;
-            foreach (var migration in _migrations)
+            if (migration.FromVersion == currentMigrationVersion)
             {
-                if (migration.FromVersion == currentMigrationVersion)
-                {
-                    result.Add(migration);
-                    currentMigrationVersion = migration.ToVersion;
-                    foundMigration = true;
-                    break;
-                }
+                result.Add(migration);
+                currentMigrationVersion = migration.ToVersion;
             }
         }
 

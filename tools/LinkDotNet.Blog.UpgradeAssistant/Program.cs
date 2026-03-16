@@ -33,7 +33,7 @@ static async Task<int> RunWithOptions(CommandLineOptions options)
         ConsoleOutput.WriteWarning("Running in DRY RUN mode - no changes will be saved.");
     }
 
-    var manager = new MigrationManager();
+    var manager = new MigrationManager(MigrationDiscovery.DiscoverAll());
     var files = GetAppsettingsFiles(targetPath);
 
     if (files.Count == 0)
