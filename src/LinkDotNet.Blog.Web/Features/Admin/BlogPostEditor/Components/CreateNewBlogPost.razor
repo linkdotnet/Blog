@@ -47,7 +47,6 @@
                                 <div class="p-4 border-bottom">
                                     <div class="form-floating">
                                         <input type="text" class="form-control form-control-lg shadow-none fs-3 fw-semibold"
-                                               id="title" placeholder="Enter your post title..."
                                                @oninput="args => model.Title = args.Value!.ToString()!"
                                                value="@model.Title"/>
                                         <label for="title" class="fw-bold">Post Title</label>
@@ -155,9 +154,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="form-floating">
-                                    <InputText type="text" class="form-control" id="tags"
-                                               placeholder="technology, programming, tutorial"
-                                               @bind-Value="model.Tags" />
+                                    <InputText type="text" class="form-control" id="tags" @bind-Value="model.Tags" />
                                     <label for="tags">Tags (comma separated)</label>
                                 </div>
                                 <small class="form-text text-muted mt-2">
@@ -228,18 +225,14 @@
                             <div class="card-body">
                                 <div class="mb-3">
                                     <div class="form-floating">
-                                        <InputText type="url" class="form-control" id="preview"
-                                                   placeholder="https://example.com/image.jpg"
-                                                   @bind-Value="model.PreviewImageUrl" />
+                                        <InputText type="url" class="form-control" id="preview" @bind-Value="model.PreviewImageUrl" />
                                         <label for="preview">Primary Image URL</label>
                                     </div>
                                     <ValidationMessage For="() => model.PreviewImageUrl" class="text-danger small mt-1"></ValidationMessage>
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-floating">
-                                        <InputText type="url" class="form-control" id="fallback-preview"
-                                                   placeholder="https://example.com/fallback.jpg"
-                                                   @bind-Value="model.PreviewImageUrlFallback" />
+                                        <InputText type="url" class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback" />
                                         <label for="fallback-preview">Fallback Image URL</label>
                                     </div>
                                     <ValidationMessage For="() => model.PreviewImageUrlFallback" class="text-danger small mt-1"></ValidationMessage>
