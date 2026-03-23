@@ -11,10 +11,17 @@
 	<h3 class="fw-bold">Draft Blog Posts</h3>
 
 	<div class="content px-4">
-		@for (var i = 0; i < blogPosts.Count; i++)
-		{
-			<ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
-		}
+		@if (blogPosts.Count > 0)
+        {
+            @for (var i = 0; i < blogPosts.Count; i++)
+            {
+                <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+            }
+        }
+        else
+        {
+            <p>No draft blog posts currently. <a href="/create">Create a new blog post</a></p>
+        }
 	</div>
 </div>
 
