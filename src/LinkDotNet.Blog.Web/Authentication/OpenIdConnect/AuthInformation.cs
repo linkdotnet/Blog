@@ -2,8 +2,6 @@ namespace LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 
 public sealed record AuthInformation
 {
-    private string logoutUrl = string.Empty;
-
     public const string AuthInformationSection = "Authentication";
 
     public required string Provider { get; set; }
@@ -16,7 +14,7 @@ public sealed record AuthInformation
 
     public string LogoutUri
     {
-        get => !string.IsNullOrEmpty(logoutUrl) ? logoutUrl : $"https://{Domain}/v2/logout?client_id={ClientId}";
-        set => logoutUrl = value;
-    }
+        get => !string.IsNullOrEmpty(field) ? field : $"https://{Domain}/v2/logout?client_id={ClientId}";
+        set;
+    } = string.Empty;
 }

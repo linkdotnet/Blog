@@ -15,11 +15,8 @@ public static class AuthExtensions
     {
         ArgumentNullException.ThrowIfNull(configuration);
 
-        var authInformation = configuration.GetSection(AuthInformation.AuthInformationSection).Get<AuthInformation>();
-        if (authInformation is null)
-        {
-            throw new InvalidOperationException("Authentication configuration is missing.");
-        }
+        var authInformation = configuration.GetSection(AuthInformation.AuthInformationSection).Get<AuthInformation>()
+            ?? throw new InvalidOperationException("Authentication configuration is missing.");
 
         services.Configure<CookiePolicyOptions>(options =>
         {

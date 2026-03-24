@@ -58,12 +58,12 @@ static async Task<int> RunWithOptions(CommandLineOptions options)
     {
         ConsoleOutput.WriteHeader("Migration Complete");
         ConsoleOutput.WriteSuccess("All files processed successfully!");
-        
+
         if (!options.DryRun)
         {
             ConsoleOutput.WriteInfo($"Backups saved to: {backupDirectory}");
         }
-        
+
         ConsoleOutput.WriteInfo("Please review the changes and update any configuration values as needed.");
         ConsoleOutput.WriteInfo("See MIGRATION.md for additional manual steps (database migrations, etc.).");
         return 0;
@@ -77,7 +77,7 @@ static List<string> GetAppsettingsFiles(string path)
 {
     if (File.Exists(path) && path.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
     {
-        return new List<string> { path };
+        return [path];
     }
 
     if (Directory.Exists(path))
@@ -88,7 +88,7 @@ static List<string> GetAppsettingsFiles(string path)
             .ToList();
     }
 
-    return new List<string>();
+    return [];
 }
 
 static void ShowHelp()
@@ -97,21 +97,21 @@ static void ShowHelp()
     AnsiConsole.WriteLine();
     AnsiConsole.MarkupLine("[bold]Automatically migrates appsettings configuration files to the latest version.[/]");
     AnsiConsole.WriteLine();
-    
+
     var table = new Table()
         .Border(TableBorder.Rounded)
         .AddColumn(new TableColumn("[bold cyan]Option[/]"))
         .AddColumn(new TableColumn("[bold cyan]Description[/]"));
-    
+
     table.AddRow("[yellow]-p, --path <path>[/]", "Path to appsettings file or directory\nDefaults to current directory");
     table.AddRow("[yellow]-d, --dry-run[/]", "Preview changes without applying them");
     table.AddRow("[yellow]-b, --backup-dir <path>[/]", "Custom backup directory path\nDefaults to './backups'");
     table.AddRow("[yellow]-h, --help[/]", "Display this help message");
     table.AddRow("[yellow]-v, --version[/]", "Display tool version");
-    
+
     AnsiConsole.Write(table);
     AnsiConsole.WriteLine();
-    
+
     AnsiConsole.MarkupLine("[bold]Examples:[/]");
     AnsiConsole.MarkupLine("  [dim]# Migrate files in current directory[/]");
     AnsiConsole.MarkupLine("  [green]dotnet run[/]");

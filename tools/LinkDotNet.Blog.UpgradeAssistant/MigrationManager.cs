@@ -86,9 +86,9 @@ public sealed class MigrationManager
         foreach (var migration in applicableMigrations)
         {
             ConsoleOutput.WriteStep($"Applying migration: {migration.FromVersion} → {migration.ToVersion}");
-            
+
             using var migrationDoc = JsonDocument.Parse(modifiedContent);
-            
+
             if (migration.Apply(migrationDoc, ref modifiedContent))
             {
                 ConsoleOutput.WriteSuccess($"Migration {migration.FromVersion} → {migration.ToVersion} applied successfully.");
@@ -127,12 +127,9 @@ public sealed class MigrationManager
 
     private static string? GetVersion(JsonDocument document)
     {
-        if (document.RootElement.TryGetProperty("ConfigVersion", out var versionElement))
-        {
-            return versionElement.GetString();
-        }
-
-        return null;
+        return document.RootElement.TryGetProperty("ConfigVersion", out var versionElement)
+            ? versionElement.GetString()
+            : null;
     }
 
     private List<IMigration> GetApplicableMigrations(string? currentVersion)

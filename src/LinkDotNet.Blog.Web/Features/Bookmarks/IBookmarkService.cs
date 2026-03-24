@@ -5,7 +5,7 @@ namespace LinkDotNet.Blog.Web.Features.Bookmarks;
 
 public interface IBookmarkService
 {
-    public Task<bool> IsBookmarked(string postId);
-    public Task<IReadOnlyList<string>> GetBookmarkedPostIds();
-    public Task SetBookmark(string postId, bool isBookmarked);
+    Task<bool> IsBookmarked(string postId);
+    Task<IReadOnlyList<string>> GetBookmarkedPostIds();
+    Task SetBookmark(string postId, bool isBookmarked);
 }

@@ -33,11 +33,7 @@ public sealed class LocalStorageService : ILocalStorageService
         try
         {
             var result = await localStorage.GetAsync<T>(key);
-            if (!result.Success)
-            {
-                throw new KeyNotFoundException($"Key {key} not found");
-            }
-            return result.Value!;
+            return !result.Success ? throw new KeyNotFoundException($"Key {key} not found") : result.Value!;
         }
         catch (CryptographicException)
         {

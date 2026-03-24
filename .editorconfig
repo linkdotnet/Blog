@@ -67,7 +67,7 @@ dotnet_style_predefined_type_for_member_access = true                           
 
 # Modifier preferences
 # https://docs.microsoft.com/visualstudio/ide/editorconfig-language-conventions#normalize-modifiers
-dotnet_style_require_accessibility_modifiers = always                           # IDE0040
+dotnet_style_require_accessibility_modifiers = for_non_interface_members        # IDE0040
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async   # IDE0036
 dotnet_style_readonly_field = true                                              # IDE0044
 
@@ -88,7 +88,7 @@ dotnet_style_prefer_inferred_anonymous_type_member_names = true                 
 dotnet_style_prefer_auto_properties = true                                      # IDE0050
 dotnet_style_prefer_is_null_check_over_reference_equality_method = true         # IDE0041
 dotnet_style_prefer_conditional_expression_over_assignment = true               # IDE0045
-dotnet_style_prefer_conditional_expression_over_return = true                   # IDE0046
+dotnet_style_prefer_conditional_expression_over_return = false:suggestion       # IDE0046
 dotnet_style_prefer_compound_assignment = true                                  # IDE0054 and IDE0074
 dotnet_style_prefer_simplified_interpolation = true                             # IDE0071
 dotnet_style_prefer_simplified_boolean_expressions = true                       # IDE0075
@@ -424,6 +424,7 @@ dotnet_diagnostic.IDE0055.severity = none # IDE0055: Fix formatting
 dotnet_diagnostic.IDE0058.severity = none # IDE0058: Expression value is never used
 dotnet_diagnostic.IDE0079.severity = warning # IDE0079: Remove unnecessary suppression
 dotnet_diagnostic.IDE0290.severity = none # IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0305.severity = suggestion # IDE0305: Collection initializer can be simplified
 
 # AsyncFixer
 

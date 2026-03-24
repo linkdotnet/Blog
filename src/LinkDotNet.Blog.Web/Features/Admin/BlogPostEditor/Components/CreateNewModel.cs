@@ -8,15 +8,6 @@ public sealed class CreateNewModel
 {
     private DateTime originalUpdatedDate;
     private string id = default!;
-    private string title = string.Empty;
-    private string shortDescription = string.Empty;
-    private string content = string.Empty;
-    private string previewImageUrl = string.Empty;
-    private bool isPublished = true;
-    private bool shouldUpdateDate;
-    private bool shouldInvalidateCache;
-    private string tags = string.Empty;
-    private string previewImageUrlFallback = string.Empty;
     private DateTime? scheduledPublishDate;
     private string? authorName;
 
@@ -24,45 +15,45 @@ public sealed class CreateNewModel
     [MaxLength(256)]
     public string Title
     {
-        get => title;
-        set => SetProperty(out title, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = string.Empty;
 
     [Required]
     public string ShortDescription
     {
-        get => shortDescription;
-        set => SetProperty(out shortDescription, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = string.Empty;
 
     [Required]
     public string Content
     {
-        get => content;
-        set => SetProperty(out content, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = string.Empty;
 
     [Required]
     [MaxLength(1024)]
     public string PreviewImageUrl
     {
-        get => previewImageUrl;
-        set => SetProperty(out previewImageUrl, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = string.Empty;
 
     [Required]
     [PublishedWithScheduledDateValidation]
     public bool IsPublished
     {
-        get => isPublished;
-        set => SetProperty(out isPublished, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = true;
 
     [Required]
     public bool ShouldUpdateDate
     {
-        get => shouldUpdateDate;
-        set => SetProperty(out shouldUpdateDate, value);
+        get;
+        set => SetProperty(out field, value);
     }
 
     [FutureDateValidation]
@@ -74,22 +65,22 @@ public sealed class CreateNewModel
 
     public string Tags
     {
-        get => tags;
-        set => SetProperty(out tags, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = string.Empty;
 
     [MaxLength(256)]
     [FallbackUrlValidation]
     public string PreviewImageUrlFallback
     {
-        get => previewImageUrlFallback;
-        set => SetProperty(out previewImageUrlFallback, value);
-    }
+        get;
+        set => SetProperty(out field, value);
+    } = string.Empty;
 
     public bool ShouldInvalidateCache
     {
-        get => shouldInvalidateCache;
-        set => SetProperty(out shouldInvalidateCache, value);
+        get;
+        set => SetProperty(out field, value);
     }
 
     public string? AuthorName
