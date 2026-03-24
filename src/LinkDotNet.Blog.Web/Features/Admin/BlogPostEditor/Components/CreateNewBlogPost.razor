@@ -46,7 +46,7 @@
                     <div class="card-body p-0">
                                 <div class="p-4 border-bottom">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control form-control-lg shadow-none fs-3 fw-semibold" @oninput="args => model.Title = args.Value!.ToString()!"
+                                        <input type="text" class="form-control form-control-lg shadow-none fs-3 fw-semibold" id="title" @oninput="args => model.Title = args.Value!.ToString()!"
                                                value="@model.Title"/>
                                         <label for="title" class="fw-bold">Post Title</label>
                                     </div>
