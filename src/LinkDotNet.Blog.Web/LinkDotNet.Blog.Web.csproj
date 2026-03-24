@@ -4,8 +4,6 @@
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client"/>
 		<PackageReference Include="Azure.Storage.Blobs"/>
 		<PackageReference Include="Blazored.Toast"/>
-		<PackageReference Include="Blazorise.Bootstrap5"/>
-		<PackageReference Include="Blazorise.Markdown"/>
 		<PackageReference Include="LinkDotNet.BuildInformation"/>
 		<PackageReference Include="NCronJob"/>
 		<PackageReference Include="Markdig"/>
