@@ -1,45 +1,169 @@
 @using System.IO
-@using Blazorise
-@using Blazorise.Markdown
+@using System.Linq
 @using LinkDotNet.Blog.Web.Features.Services.FileUpload
 @using IToastService = Blazored.Toast.Services.IToastService
 @inject IBlobUploadService BlobUploadService
 @inject IToastService ToastService
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 
-<Markdown ElementId="@Id"
-          Placeholder="@Placeholder"
-          Class="@Class"
-          Value="@Value"
-          ValueChanged="s => Value = s"
-          MaxHeight="@Height"
-          PreviewRender="PreviewFunction"
-          ImageAccept="image/*"
-          ImageUploadChanged="UploadFiles"
-          PreviewImagesInEditor="true"/>
+<div id="@Id" class="markdown-editor-container @Class">
+    <div class="markdown-toolbar">
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Undo", "Z")" aria-label="@GetShortcutText("Undo", "Z")" @onclick="Undo" disabled="@(!canUndo)">
+            <i class="bi bi-arrow-counterclockwise"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Redo", "Y")" aria-label="@GetShortcutText("Redo", "Y")" @onclick="Redo" disabled="@(!canRedo)">
+            <i class="bi bi-arrow-clockwise"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Bold", "B")" aria-label="@GetShortcutText("Bold", "B")" @onclick="InsertBold">
+            <i class="bi bi-type-bold"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Italic", "I")" aria-label="@GetShortcutText("Italic", "I")" @onclick="InsertItalic">
+            <i class="bi bi-type-italic"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Heading 1" aria-label="Heading 1" @onclick="InsertH1">
+            <i class="bi bi-type-h1"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Heading 2" aria-label="Heading 2" @onclick="InsertH2">
+            <i class="bi bi-type-h2"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Heading 3" aria-label="Heading 3" @onclick="InsertH3">
+            <i class="bi bi-type-h3"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Quote", "⇧.")" aria-label="@GetShortcutText("Quote", "⇧.")" @onclick="InsertQuote">
+            <i class="bi bi-quote"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Code", "E")" aria-label="@GetShortcutText("Code", "E")" @onclick="InsertCode">
+            <i class="bi bi-code"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Code Block" aria-label="Code Block" @onclick="InsertCodeBlock">
+            <i class="bi bi-code-square"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Horizontal Rule", "⇧H")" aria-label="@GetShortcutText("Horizontal Rule", "⇧H")" @onclick="InsertHorizontalRule">
+            <i class="bi bi-hr"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn" title="@GetShortcutText("Link", "K")" @onclick="InsertLink">
+            <i class="bi bi-link-45deg"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Image" @onclick="ShowImageUpload">
+            <i class="bi bi-image"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn" title="Unordered List" @onclick="InsertUnorderedList">
+            <i class="bi bi-list-ul"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Ordered List" @onclick="InsertOrderedList">
+            <i class="bi bi-list-ol"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Task List" @onclick="InsertTaskList">
+            <i class="bi bi-list-check"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn" title="Strikethrough" @onclick="InsertStrikethrough">
+            <i class="bi bi-type-strikethrough"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Superscript" @onclick="InsertSuperscript">
+            <i class="bi bi-superscript"></i>
+        </button>
+        <button type="button" class="toolbar-btn" title="Subscript" @onclick="InsertSubscript">
+            <i class="bi bi-subscript"></i>
+        </button>
+        <div class="toolbar-divider"></div>
+        <div class="table-btn-wrapper">
+            <button type="button" class="toolbar-btn @(showTablePicker ? "active" : "")" title="Table" @onclick="ToggleTablePicker">
+                <i class="bi bi-table"></i>
+            </button>
+            @if (showTablePicker)
+            {
+                <div class="table-popover-backdrop" @onclick="ToggleTablePicker"></div>
+                <div class="table-popover">
+                    <div class="table-popover-header">Insert Table</div>
+                    <label class="table-popover-field">
+                        <span>Columns</span>
+                        <input type="number" min="1" max="10" @bind="tableCols" />
+                    </label>
+                    <label class="table-popover-field">
+                        <span>Rows</span>
+                        <input type="number" min="1" max="20" @bind="tableRows" />
+                    </label>
+                    <button type="button" class="btn btn-sm btn-primary" @onclick="() => InsertTable(tableCols, tableRows)">Insert</button>
+                </div>
+            }
+        </div>
+        <div class="toolbar-divider"></div>
+        <button type="button" class="toolbar-btn @(viewMode == ViewMode.Preview ? "active" : "")" title="@GetShortcutText("Preview", "⇧P")" @onclick="TogglePreview">
+            <i class="bi bi-eye"></i>
+        </button>
+    </div>
+
+    <div class="editor-content" style="height: @Height">
+        @if (viewMode == ViewMode.Preview)
+        {
+            <div class="markdown-preview preview-only">
+                @((MarkupString)previewHtml)
+            </div>
+        }
+        else
+        {
+            <textarea @ref="textAreaRef"
+                      class="markdown-textarea"
+                      placeholder="@Placeholder"
+                      @bind="Value"
+                      @bind:event="oninput"
+                      @bind:after="OnInputAsync"></textarea>
+        }
+    </div>
+</div>
 
 <UploadFileModalDialog @ref="UploadDialog"></UploadFileModalDialog>
 
+<InputFile @ref="inputFileRef" style="display: none;" accept="image/*" OnChange="HandleFileSelected" multiple />
+
 @code {
-    private string textContent = string.Empty;
+    private enum ViewMode { Editor, Preview }
+
+    public sealed class UndoRedoState
+    {
+        public bool CanUndo { get; set; }
+        public bool CanRedo { get; set; }
+    }
 
     private string Height => $"{Rows * 25}px";
-
+    private ElementReference textAreaRef;
+    private InputFile inputFileRef = default!;
     private UploadFileModalDialog UploadDialog { get; set; } = default!;
+    private ViewMode viewMode = ViewMode.Editor;
+    private string previewHtml = string.Empty;
+    private DotNetObjectReference<MarkdownTextArea>? dotNetHelper;
+    private bool isMac;
+    private bool canUndo;
+    private bool canRedo;
+    private bool showTablePicker;
+    private int tableCols = 2;
+    private int tableRows = 2;
+    private const long MaxFileSizeBytes = 512 * 1024; // 512 KB
 
 #pragma warning disable BL0007
     [Parameter]
     public string Value
     {
-        get => textContent;
+        get;
         set
         {
-            if (textContent != value)
+            if (field != value)
             {
-                textContent = value;
-                ValueChanged.InvokeAsync(value);
+                field = value;
+                _ = InvokeAsync(async () =>
+                {
+                    await ValueChanged.InvokeAsync(value);
+                    await UpdatePreview();
+                });
             }
         }
-    }
+    } = string.Empty;
 #pragma warning restore
 
     [Parameter]
@@ -55,35 +179,237 @@
     [Parameter] public string Placeholder { get; set; } = string.Empty;
 
     [Parameter] public Func<string, Task<string>> PreviewFunction { get; set; } =
-	    s => Task.FromResult(MarkdownConverter.ToMarkupString(s).Value);
+        s => Task.FromResult(MarkdownConverter.ToMarkupString(s).Value);
 
-    private async Task UploadFiles(FileChangedEventArgs arg)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-	    try
-	    {
-		    foreach (var file in arg.Files)
-		    {
-			    using var memoryStream = new MemoryStream();
-			    await file.WriteToStreamAsync(memoryStream);
-			    memoryStream.Position = 0;
-			    var options = await UploadDialog.ShowAsync(file.Name);
-			    if (options is null)
-			    {
-				    await file.Cancel();
-				    continue;
-			    }
+        if (firstRender)
+        {
+            try
+            {
+                isMac = await JSRuntime.InvokeAsync<bool>("markdownEditor.isMac");
+                dotNetHelper = DotNetObjectReference.Create(this);
+            }
+            catch (JSException)
+            {
+                canUndo = false;
+                canRedo = false;
+                return;
+            }
+        }
 
-			    var url = await BlobUploadService.UploadFileAsync(options.Name, memoryStream, new UploadOptions
-			    {
-				    SetCacheControlHeader = options.CacheMedia,
-			    });
-			    file.UploadUrl = url;
-			    ToastService.ShowSuccess($"Successfully uploaded {file.Name}");
-		    }
-	    }
-	    catch (Exception e)
-	    {
-		    ToastService.ShowError($"Error while uploading file: {e.Message}");
-	    }
+        if (viewMode == ViewMode.Editor && dotNetHelper is not null)
+        {
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("markdownEditor.setupKeyboardShortcuts", textAreaRef, dotNetHelper);
+            }
+            catch (JSException)
+            {
+                // Keyboard shortcuts unavailable; toolbar buttons remain functional
+            }
+        }
+    }
+
+    [JSInvokable]
+    public async Task HandleKeyboardShortcut(string action)
+    {
+        switch (action)
+        {
+            case "bold":
+                await InsertBold();
+                break;
+            case "italic":
+                await InsertItalic();
+                break;
+            case "code":
+                await InsertCode();
+                break;
+            case "link":
+                await InsertLink();
+                break;
+            case "quote":
+                await InsertQuote();
+                break;
+            case "hr":
+                await InsertHorizontalRule();
+                break;
+            case "preview":
+                await TogglePreview();
+                break;
+        }
+    }
+
+    private string GetShortcutText(string action, string key)
+    {
+        var modifier = isMac ? "⌘" : "Ctrl";
+        return $"{action} ({modifier}+{key})";
+    }
+
+    private async Task OnInputAsync()
+    {
+        await UpdateUndoRedoState();
+    }
+
+    private async Task UpdatePreview()
+    {
+        if (viewMode == ViewMode.Preview)
+        {
+            previewHtml = await PreviewFunction(Value);
+            StateHasChanged();
+            await InvokeAsync(async () =>
+            {
+                await JSRuntime.InvokeVoidAsync("markdownEditor.highlightCodeBlocks");
+            });
+        }
+    }
+
+    private async Task TogglePreview()
+    {
+        viewMode = viewMode == ViewMode.Editor ? ViewMode.Preview : ViewMode.Editor;
+        if (viewMode == ViewMode.Preview)
+        {
+            await UpdatePreview();
+        }
+    }
+
+    private async Task UpdateUndoRedoState()
+    {
+        try
+        {
+            var state = await JSRuntime.InvokeAsync<UndoRedoState>("markdownEditor.getUndoRedoState", textAreaRef);
+            canUndo = state.CanUndo;
+            canRedo = state.CanRedo;
+        }
+        catch
+        {
+            canUndo = !string.IsNullOrEmpty(Value);
+            canRedo = false;
+        }
+    }
+
+    private async Task Undo()
+    {
+        await JSRuntime.InvokeVoidAsync("markdownEditor.undo", textAreaRef);
+        await UpdateUndoRedoState();
+    }
+
+    private async Task Redo()
+    {
+        await JSRuntime.InvokeVoidAsync("markdownEditor.redo", textAreaRef);
+        await UpdateUndoRedoState();
+    }
+
+    private Task InsertBold() => InsertMarkdown("**", "**");
+    private Task InsertItalic() => InsertMarkdown("*", "*");
+    private Task InsertH1() => InsertMarkdown("# ", "");
+    private Task InsertH2() => InsertMarkdown("## ", "");
+    private Task InsertH3() => InsertMarkdown("### ", "");
+    private Task InsertQuote() => InsertLinePrefixMarkdown("> ");
+    private Task InsertCode() => InsertMarkdown("`", "`");
+    private Task InsertCodeBlock() => InsertMarkdown("```\n", "\n```");
+    private Task InsertLink() => InsertMarkdown("[", "](url)");
+    private Task InsertUnorderedList() => InsertMarkdown("- ", "");
+    private Task InsertOrderedList() => InsertMarkdown("1. ", "");
+    private Task InsertStrikethrough() => InsertMarkdown("~~", "~~");
+    private Task InsertSuperscript() => InsertMarkdown("<sup>", "</sup>");
+    private Task InsertSubscript() => InsertMarkdown("<sub>", "</sub>");
+    private Task InsertTaskList() => InsertMarkdown("- [ ] ", "");
+
+    private void ToggleTablePicker() => showTablePicker = !showTablePicker;
+
+    private async Task InsertLinePrefixMarkdown(string prefix)
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("markdownEditor.insertLinePrefixes", textAreaRef, prefix);
+            await textAreaRef.FocusAsync();
+        }
+        catch
+        {
+            Value += prefix;
+        }
+    }
+
+    private async Task InsertHorizontalRule()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("markdownEditor.insertHorizontalRule", textAreaRef);
+            await textAreaRef.FocusAsync();
+        }
+        catch
+        {
+            Value += "\n\n---\n\n";
+        }
+    }
+
+    private async Task InsertTable(int cols, int rows)
+    {
+        showTablePicker = false;
+        var emptyRow = "| " + string.Join(" | ", Enumerable.Repeat("", cols)) + " |";
+        var separator = "| " + string.Join(" | ", Enumerable.Repeat("---", cols)) + " |";
+        var table = string.Join("\n", new[] { emptyRow, separator }.Concat(Enumerable.Repeat(emptyRow, rows)));
+        await InsertMarkdown(table, "");
+    }
+
+    private async Task InsertMarkdown(string prefix, string suffix)
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("markdownEditor.insertText", textAreaRef, prefix, suffix);
+            await textAreaRef.FocusAsync();
+        }
+        catch
+        {
+            Value += prefix + suffix;
+        }
+    }
+
+    private async Task ShowImageUpload()
+    {
+        await JSRuntime.InvokeVoidAsync("markdownEditor.clickInputFile", inputFileRef.Element);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        dotNetHelper?.Dispose();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        foreach (var file in e.GetMultipleFiles())
+        {
+            try
+            {
+                if (file.Size > MaxFileSizeBytes)
+                {
+                    ToastService.ShowError($"File '{file.Name}' exceeds the maximum allowed size of 512 KB.");
+                    continue;
+                }
+
+                using var memoryStream = new MemoryStream();
+                await file.OpenReadStream(maxAllowedSize: MaxFileSizeBytes).CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+
+                var options = await UploadDialog.ShowAsync(file.Name);
+                if (options is null)
+                {
+                    continue;
+                }
+
+                var url = await BlobUploadService.UploadFileAsync(options.Name, memoryStream, new UploadOptions
+                {
+                    SetCacheControlHeader = options.CacheMedia,
+                });
+
+                await InsertMarkdown($"![{file.Name}]({url})", "");
+                ToastService.ShowSuccess($"Successfully uploaded {file.Name}");
+            }
+            catch (Exception ex)
+            {
+                ToastService.ShowError($"Error while uploading file: {ex.Message}");
+            }
+        }
     }
 }

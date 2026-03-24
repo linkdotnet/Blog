@@ -46,7 +46,6 @@ public class Program
             .AddStorageProvider(builder.Configuration)
             .AddImageUploadProvider(builder.Configuration)
             .AddBlazoredToast()
-            .AddBlazoriseWithBootstrap()
             .AddResponseCompression()
             .AddHealthCheckSetup();
 
