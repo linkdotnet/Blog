@@ -8,7 +8,7 @@
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.27.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.4" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.14" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.14" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.14">
@@ -18,7 +18,7 @@
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="10.0.5" />
     <PackageVersion Include="MongoDB.Driver" Version="3.7.1" />
     <PackageVersion Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
     <PackageVersion Include="RavenDB.Client" Version="7.2.1" />
     <PackageVersion Include="ZiggyCreatures.FusionCache.Locking.AsyncKeyed" Version="2.6.0" />
   </ItemGroup>
