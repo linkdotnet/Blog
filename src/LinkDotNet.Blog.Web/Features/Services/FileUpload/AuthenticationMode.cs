@@ -1,14 +1,7 @@
-using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Generators;
 
 namespace LinkDotNet.Blog.Web.Features.Services.FileUpload;
 
-public sealed record AuthenticationMode : Enumeration<AuthenticationMode>
-{
-    public static readonly AuthenticationMode Default = new(nameof(Default));
+[Enumeration("Default", "ConnectionString")]
+public sealed partial record AuthenticationMode;
 
-    public static readonly AuthenticationMode ConnectionString = new(nameof(ConnectionString));
-
-    public AuthenticationMode(string key) : base(key)
-    {
-    }
-}

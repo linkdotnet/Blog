@@ -5,4 +5,10 @@
 		<RootNamespace>LinkDotNet.Blog.Domain</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\LinkDotNet.Blog.Generators\LinkDotNet.Blog.Generators.csproj"
+		                  OutputItemType="Analyzer"
+		                  ReferenceOutputAssembly="false" />
+	</ItemGroup>
+
 </Project>

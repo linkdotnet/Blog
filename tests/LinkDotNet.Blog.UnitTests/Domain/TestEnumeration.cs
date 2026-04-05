@@ -1,15 +1,7 @@
-﻿using LinkDotNet.Blog.Domain;
+﻿using LinkDotNet.Blog.Generators;
 
 namespace LinkDotNet.Blog.UnitTests.Domain;
 
-public sealed record TestEnumeration : Enumeration<TestEnumeration>
-{
-    public static readonly TestEnumeration One = new TestEnumeration(nameof(One));
+[Enumeration("One", "Two")]
+public sealed partial record TestEnumeration;
 
-    public static readonly TestEnumeration Two = new TestEnumeration(nameof(Two));
-
-    public TestEnumeration(string key)
-        : base(key)
-    {
-    }
-}

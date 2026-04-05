@@ -21,36 +21,40 @@ public static class StorageProviderExtensions
         var provider = configuration["PersistenceProvider"] ?? throw new InvalidOperationException("No persistence provider configured");
         var persistenceProvider = PersistenceProvider.Create(provider);
 
-        if (persistenceProvider == PersistenceProvider.RavenDb)
-        {
-            services.UseRavenDbAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider == PersistenceProvider.Sqlite)
-        {
-            services.UseSqliteAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider == PersistenceProvider.SqlServer)
-        {
-            services.UseSqlAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider == PersistenceProvider.MySql)
-        {
-            services.UseMySqlAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider == PersistenceProvider.MongoDB)
-        {
-            services.UseMongoDBAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider == PersistenceProvider.PostgreSql)
-        {
-            services.UsePostgreSqlAsStorageProvider();
-            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-        }
+        persistenceProvider.Match(
+            onSqlServer: () =>
+            {
+                services.UseSqlAsStorageProvider();
+                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+            },
+            onSqlite:
+            () =>
+            {
+                services.UseSqliteAsStorageProvider();
+                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+            },
+            onMySql:
+            () =>
+            {
+                services.UseMySqlAsStorageProvider();
+                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+            },
+            onMongoDB: () =>
+            {
+                services.UseMongoDBAsStorageProvider();
+                services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
+            },
+            onPostgreSql: () =>
+            {
+                services.UsePostgreSqlAsStorageProvider();
+                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+            },
+            onRavenDb: () =>
+            {
+                services.UseRavenDbAsStorageProvider();
+                services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
+            }
+        );
 
         return services;
     }

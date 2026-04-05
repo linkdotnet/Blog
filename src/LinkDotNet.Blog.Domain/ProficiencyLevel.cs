@@ -1,13 +1,7 @@
-﻿namespace LinkDotNet.Blog.Domain;
+﻿using LinkDotNet.Blog.Generators;
 
-public sealed record ProficiencyLevel : Enumeration<ProficiencyLevel>
-{
-    public static readonly ProficiencyLevel Familiar = new(nameof(Familiar));
-    public static readonly ProficiencyLevel Proficient = new(nameof(Proficient));
-    public static readonly ProficiencyLevel Expert = new(nameof(Expert));
+namespace LinkDotNet.Blog.Domain;
 
-    private ProficiencyLevel(string key)
-        : base(key)
-    {
-    }
-}
+[Enumeration("Familiar", "Proficient", "Expert")]
+public sealed partial record ProficiencyLevel;
+

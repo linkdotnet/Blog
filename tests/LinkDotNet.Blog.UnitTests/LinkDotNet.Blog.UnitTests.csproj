@@ -8,6 +8,9 @@
 	<ItemGroup>
 		<ProjectReference Include="..\LinkDotNet.Blog.TestUtilities\LinkDotNet.Blog.TestUtilities.csproj" />
 		<ProjectReference Include="..\..\src\LinkDotNet.Blog.Web\LinkDotNet.Blog.Web.csproj" />
+		<ProjectReference Include="..\..\src\LinkDotNet.Blog.Generators\LinkDotNet.Blog.Generators.csproj"
+		                  OutputItemType="Analyzer"
+		                  ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>
