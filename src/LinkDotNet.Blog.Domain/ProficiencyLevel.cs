@@ -1,6 +1,6 @@
 ﻿namespace LinkDotNet.Blog.Domain;
 
-public sealed class ProficiencyLevel : Enumeration<ProficiencyLevel>
+public sealed record ProficiencyLevel : Enumeration<ProficiencyLevel>
 {
     public static readonly ProficiencyLevel Familiar = new(nameof(Familiar));
     public static readonly ProficiencyLevel Proficient = new(nameof(Proficient));

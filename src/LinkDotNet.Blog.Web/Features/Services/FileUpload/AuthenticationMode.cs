@@ -2,7 +2,7 @@ using LinkDotNet.Blog.Domain;
 
 namespace LinkDotNet.Blog.Web.Features.Services.FileUpload;
 
-public class AuthenticationMode : Enumeration<AuthenticationMode>
+public sealed record AuthenticationMode : Enumeration<AuthenticationMode>
 {
     public static readonly AuthenticationMode Default = new(nameof(Default));
 

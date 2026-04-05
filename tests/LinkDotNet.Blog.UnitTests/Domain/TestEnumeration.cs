@@ -2,7 +2,7 @@
 
 namespace LinkDotNet.Blog.UnitTests.Domain;
 
-public sealed class TestEnumeration : Enumeration<TestEnumeration>
+public sealed record TestEnumeration : Enumeration<TestEnumeration>
 {
     public static readonly TestEnumeration One = new TestEnumeration(nameof(One));
 

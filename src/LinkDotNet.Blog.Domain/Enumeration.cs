@@ -6,34 +6,22 @@ using System.Reflection;
 namespace LinkDotNet.Blog.Domain;
 
 #pragma warning disable CA1724
-public abstract class Enumeration<TEnumeration>
-   where TEnumeration : Enumeration<TEnumeration>
-#pragma warning restore
+public abstract record Enumeration<TEnumeration>(string Key)
+#pragma warning restore CA1724
+    where TEnumeration : Enumeration<TEnumeration>
 {
-    protected Enumeration(string key)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(key);
-        Key = key;
-    }
-
     public static FrozenSet<TEnumeration> All { get; } = GetEnumerations();
 
-    public string Key { get; }
+    public static bool operator ==(Enumeration<TEnumeration>? a, string? b)
+        => a is not null && b is not null && a.Key.Equals(b, StringComparison.Ordinal);
 
-    public static bool operator ==(Enumeration<TEnumeration>? a, Enumeration<TEnumeration>? b)
-        => a is not null && b is not null && a.Key.Equals(b.Key, StringComparison.Ordinal);
-
-    public static bool operator !=(Enumeration<TEnumeration>? a, Enumeration<TEnumeration>? b) => !(a == b);
+    public static bool operator !=(Enumeration<TEnumeration>? a, string? b) => !(a == b);
 
     public static TEnumeration Create(string key)
         => All.SingleOrDefault(p => p.Key == key)
            ?? throw new InvalidOperationException($"{key} is not a valid value for {typeof(TEnumeration).Name}");
 
-    public override int GetHashCode() => Key.GetHashCode(StringComparison.Ordinal);
-
-    public override bool Equals(object? obj) => obj?.GetType() == typeof(TEnumeration) && ((TEnumeration)obj).Key == Key;
-
-    public override string ToString() => Key;
+    public sealed override string ToString() => Key;
 
     private static FrozenSet<TEnumeration> GetEnumerations()
     {
@@ -46,3 +34,4 @@ public abstract class Enumeration<TEnumeration>
             .ToFrozenSet();
     }
 }
+
