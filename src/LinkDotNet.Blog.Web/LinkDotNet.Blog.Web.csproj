@@ -8,6 +8,10 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
+		<PackageReference Include="LinkDotNet.Enumeration">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="NCronJob"/>
 		<PackageReference Include="Markdig"/>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"/>
@@ -23,9 +27,6 @@
 	<ItemGroup>
 		<ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj"/>
 		<ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj"/>
-		<ProjectReference Include="..\LinkDotNet.Blog.Generators\LinkDotNet.Blog.Generators.csproj"
-		                  OutputItemType="Analyzer"
-		                  ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>

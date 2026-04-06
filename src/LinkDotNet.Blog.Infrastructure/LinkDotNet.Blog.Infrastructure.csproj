@@ -6,6 +6,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="LinkDotNet.Enumeration">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite"  />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
@@ -19,9 +23,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
-		<ProjectReference Include="..\LinkDotNet.Blog.Generators\LinkDotNet.Blog.Generators.csproj"
-		                  OutputItemType="Analyzer"
-		                  ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 </Project>

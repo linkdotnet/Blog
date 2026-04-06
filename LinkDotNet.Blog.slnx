@@ -15,7 +15,6 @@
     <File Path="src/.editorconfig" />
     <File Path="src/Directory.Build.props" />
     <Project Path="src/LinkDotNet.Blog.Domain/LinkDotNet.Blog.Domain.csproj" />
-    <Project Path="src/LinkDotNet.Blog.Generators/LinkDotNet.Blog.Generators.csproj" />
     <Project Path="src/LinkDotNet.Blog.Infrastructure/LinkDotNet.Blog.Infrastructure.csproj" />
     <Project Path="src/LinkDotNet.Blog.Web/LinkDotNet.Blog.Web.csproj" />
   </Folder>
@@ -23,7 +22,6 @@
     <File Path="tests/.editorconfig" />
     <File Path="tests/Directory.Build.props" />
     <Project Path="tests/LinkDotNet.Blog.IntegrationTests/LinkDotNet.Blog.IntegrationTests.csproj" />
-    <Project Path="tests/LinkDotNet.Blog.Generators.Tests/LinkDotNet.Blog.Generators.Tests.csproj" />
     <Project Path="tests/LinkDotNet.Blog.TestUtilities/LinkDotNet.Blog.TestUtilities.csproj" />
     <Project Path="tests/LinkDotNet.Blog.UnitTests/LinkDotNet.Blog.UnitTests.csproj" />
     <Project Path="tests/LinkDotNet.Blog.UpgradeAssistant.Tests/LinkDotNet.Blog.UpgradeAssistant.Tests.csproj" />

@@ -1,4 +1,4 @@
-using LinkDotNet.Blog.Generators;
+using LinkDotNet.Enumeration;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence;
 
