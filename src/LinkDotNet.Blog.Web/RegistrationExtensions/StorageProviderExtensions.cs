@@ -22,39 +22,26 @@ public static class StorageProviderExtensions
         var persistenceProvider = PersistenceProvider.Create(provider);
 
         persistenceProvider.Match(
-            onSqlServer: () =>
-            {
-                services.UseSqlAsStorageProvider();
-                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-            },
-            onSqlite:
-            () =>
-            {
-                services.UseSqliteAsStorageProvider();
-                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-            },
-            onMySql:
-            () =>
-            {
-                services.UseMySqlAsStorageProvider();
-                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-            },
-            onMongoDB: () =>
-            {
-                services.UseMongoDBAsStorageProvider();
-                services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
-            },
-            onPostgreSql: () =>
-            {
-                services.UsePostgreSqlAsStorageProvider();
-                services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-            },
-            onRavenDb: () =>
-            {
-                services.UseRavenDbAsStorageProvider();
-                services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
-            }
+            onSqlServer: services.UseSqlAsStorageProvider,
+            onSqlite: services.UseSqliteAsStorageProvider,
+            onMySql: services.UseMySqlAsStorageProvider,
+            onPostgreSql: services.UsePostgreSqlAsStorageProvider,
+            onMongoDB: services.UseMongoDBAsStorageProvider,
+            onRavenDb: services.UseRavenDbAsStorageProvider
         );
+
+        if (persistenceProvider.IsSql())
+        {
+            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
+        }
+        else if (persistenceProvider.IsRavenDb())
+        {
+            services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
+        }
+        else if (persistenceProvider.IsMongoDB())
+        {
+            services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
+        }
 
         return services;
     }
