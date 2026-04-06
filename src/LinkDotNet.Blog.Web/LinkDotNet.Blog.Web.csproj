@@ -4,7 +4,10 @@
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client"/>
 		<PackageReference Include="Azure.Storage.Blobs"/>
 		<PackageReference Include="Blazored.Toast"/>
-		<PackageReference Include="LinkDotNet.BuildInformation"/>
+		<PackageReference Include="LinkDotNet.BuildInformation">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
 		<PackageReference Include="NCronJob"/>
 		<PackageReference Include="Markdig"/>
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"/>
