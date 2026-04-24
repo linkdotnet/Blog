@@ -26,6 +26,7 @@ public static class ServiceExtensions
         services.AddScoped<IFileProcessor, FileProcessor>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITagQueryService, TagQueryService>();
+        services.AddScoped<IBlogPostVersionService, BlogPostVersionService>();
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());

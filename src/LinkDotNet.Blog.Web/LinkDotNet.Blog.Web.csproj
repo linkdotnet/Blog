@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<ItemGroup>
-		<PackageReference Include="AspNetCore.HealthChecks.UI.Client"/>
-		<PackageReference Include="Azure.Storage.Blobs"/>
-		<PackageReference Include="Blazored.Toast"/>
+		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
+		<PackageReference Include="Azure.Storage.Blobs" />
+		<PackageReference Include="Blazored.Toast" />
+		<PackageReference Include="DiffPlex" />
 		<PackageReference Include="LinkDotNet.BuildInformation">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
@@ -12,21 +13,21 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="NCronJob"/>
-		<PackageReference Include="Markdig"/>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect"/>
+		<PackageReference Include="NCronJob" />
+		<PackageReference Include="Markdig" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders"/>
-		<PackageReference Include="ReverseMarkdown"/>
-		<PackageReference Include="System.ServiceModel.Syndication"/>
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" />
+		<PackageReference Include="ReverseMarkdown" />
+		<PackageReference Include="System.ServiceModel.Syndication" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj"/>
-		<ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj"/>
+		<ProjectReference Include="..\LinkDotNet.Blog.Domain\LinkDotNet.Blog.Domain.csproj" />
+		<ProjectReference Include="..\LinkDotNet.Blog.Infrastructure\LinkDotNet.Blog.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

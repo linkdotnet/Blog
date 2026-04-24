@@ -1,0 +1,398 @@
+@using DiffPlex
+@using DiffPlex.DiffBuilder
+@using DiffPlex.DiffBuilder.Model
+@using LinkDotNet.Blog.Domain
+@using System.Collections.Generic
+@using System.Net
+@using System.Text
+
+<div class="modal @modalClass overflow-auto" tabindex="-1" role="dialog" style="display:@modalDisplay;">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header py-2">
+                <div>
+                    <h5 class="modal-title mb-0">Version Diff</h5>
+                    @if (version is not null)
+                    {
+                        <small class="text-muted">
+                            v@(version.VersionNumber)
+                            <span class="opacity-50">(@version.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm"))</span>
+                            &rarr; Current
+                        </small>
+                    }
+                </div>
+                <button type="button" class="btn-close ms-3" @onclick="Close" aria-label="Close"></button>
+            </div>
+
+            @if (version is not null && current is not null)
+            {
+                <div class="modal-body p-0 d-flex flex-column" style="min-height: 0;">
+                    <ul class="nav nav-tabs bg-light border-bottom px-3 pt-2 flex-shrink-0">
+                        <li class="nav-item">
+                            <button type="button" class="nav-link @(activeTab == DiffTab.Fields ? "active" : "")"
+                                    @onclick='() => activeTab = DiffTab.Fields'>
+                                Fields
+                                @if (changedFieldCount > 0)
+                                {
+                                    <span class="badge rounded-pill bg-warning text-dark ms-1" style="font-size: 0.7rem;">
+                                        @changedFieldCount changed
+                                    </span>
+                                }
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="nav-link @(activeTab == DiffTab.Content ? "active" : "")"
+                                    @onclick='() => activeTab = DiffTab.Content'>
+                                Content
+                                @if (insertedLines > 0 || deletedLines > 0)
+                                {
+                                    <span class="badge rounded-pill bg-success ms-1" style="font-size: 0.7rem;">+@insertedLines</span>
+                                    <span class="badge rounded-pill bg-danger ms-1" style="font-size: 0.7rem;">-@deletedLines</span>
+                                }
+                            </button>
+                        </li>
+                    </ul>
+
+                    @if (activeTab == DiffTab.Fields)
+                    {
+                        <div class="overflow-auto p-3 flex-grow-1" style="min-height: 0;">
+                            <table class="table table-sm table-bordered align-middle mb-0">
+                                <thead class="table-light sticky-top">
+                                    <tr>
+                                        <th style="width: 14%">Field</th>
+                                        <th style="width: 43%">
+                                            v@(version.VersionNumber)
+                                            <small class="text-muted fw-normal ms-1">
+                                                @version.CreatedAt.ToLocalTime().ToString("MMM dd HH:mm")
+                                            </small>
+                                        </th>
+                                        <th style="width: 43%">Current</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @FieldRow("Title", version.Title, current.Title)
+                                    @FieldRow("Author", version.AuthorName ?? "", current.AuthorName ?? "")
+                                    @FieldRow("Short Description", version.ShortDescription, current.ShortDescription)
+                                    @FieldRow("Image URL", version.PreviewImageUrl, current.PreviewImageUrl)
+                                    @FieldRow("Fallback Image URL", version.PreviewImageUrlFallback ?? "", current.PreviewImageUrlFallback ?? "")
+                                    @FieldRow("Tags", version.TagsAsString, current.TagsAsString)
+                                    @FieldRow("Published", version.IsPublished ? "Yes" : "No", current.IsPublished ? "Yes" : "No")
+                                    @FieldRow("Updated Date",
+                                        version.UpdatedDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                        current.UpdatedDate.ToString("yyyy-MM-dd HH:mm:ss"))
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+
+                    @if (activeTab == DiffTab.Content)
+                    {
+                        <div class="overflow-auto p-3 flex-grow-1" style="min-height: 0;">
+                            @if (contentLines.Count > 0)
+                            {
+                                <div class="mb-2 d-flex gap-2 align-items-center flex-wrap">
+                                    <span class="badge bg-success">+@insertedLines added</span>
+                                    <span class="badge bg-danger">-@deletedLines removed</span>
+                                    <span class="text-muted small">@unchangedLines unchanged lines</span>
+                                </div>
+                                <div class="border rounded" style="font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.8rem; overflow-x: auto;">
+                                    @foreach (var line in contentLines)
+                                    {
+                                        @if (line.IsCollapse)
+                                        {
+                                            <div class="d-flex align-items-center py-1 px-2 text-muted"
+                                                 style="background: #f6f8fa; border-top: 1px solid #e1e4e8; user-select: none;">
+                                                <span style="min-width: 3.5em;" class="me-1 opacity-50 text-end">···</span>
+                                                <span style="min-width: 3.5em;" class="me-2 opacity-50 text-end">···</span>
+                                                <span class="ms-1 small fst-italic">@line.CollapseCount unchanged lines</span>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="d-flex @line.CssClass"
+                                                 style="line-height: 1.6; border-top: 1px solid rgba(0,0,0,0.04);">
+                                                <span class="text-end px-2 flex-shrink-0 border-end"
+                                                      style="min-width: 3.5em; color: #767676; background: rgba(0,0,0,0.03); user-select: none;">
+                                                    @line.OldNum
+                                                </span>
+                                                <span class="text-end px-2 flex-shrink-0 border-end"
+                                                      style="min-width: 3.5em; color: #767676; background: rgba(0,0,0,0.03); user-select: none;">
+                                                    @line.NewNum
+                                                </span>
+                                                <span class="px-2 flex-shrink-0 fw-bold"
+                                                      style="min-width: 1.5em; user-select: none; opacity: 0.7;">
+                                                    @line.Prefix
+                                                </span>
+                                                <span class="px-1 flex-grow-1"
+                                                      style="white-space: pre-wrap; word-break: break-all; padding-top: 1px;">
+                                                    @line.Text
+                                                </span>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success mb-0">Content is identical.</div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" @onclick="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (showBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    private sealed record DiffDisplayLine(
+        string OldNum,
+        string NewNum,
+        string Prefix,
+        string Text,
+        string CssClass,
+        bool IsCollapse = false,
+        int CollapseCount = 0);
+
+    private enum DiffTab { Fields, Content }
+
+    private const int ContextLines = 3;
+
+    private string modalDisplay = "none;";
+    private string modalClass = string.Empty;
+    private bool showBackdrop;
+    private DiffTab activeTab = DiffTab.Fields;
+
+    private BlogPostVersion? version;
+    private BlogPost? current;
+
+    private IReadOnlyList<DiffDisplayLine> contentLines = [];
+    private int insertedLines;
+    private int deletedLines;
+    private int unchangedLines;
+    private int changedFieldCount;
+
+    public void Open(BlogPostVersion v, BlogPost currentPost)
+    {
+        version = v;
+        current = currentPost;
+        activeTab = DiffTab.Fields;
+        Compute();
+        modalDisplay = "block;";
+        modalClass = "show";
+        showBackdrop = true;
+        StateHasChanged();
+    }
+
+    public void Close()
+    {
+        modalDisplay = "none;";
+        modalClass = string.Empty;
+        showBackdrop = false;
+        StateHasChanged();
+    }
+
+    private void Compute()
+    {
+        if (version is null || current is null)
+        {
+            return;
+        }
+
+        changedFieldCount = CountChangedFields();
+        contentLines = BuildContentDiff(version.Content, current.Content);
+        insertedLines = contentLines.Count(l => l.Prefix == "+");
+        deletedLines = contentLines.Count(l => l.Prefix == "-");
+        unchangedLines = contentLines.Count(l => l.Prefix == " " && !l.IsCollapse);
+    }
+
+    private int CountChangedFields()
+    {
+        var count = 0;
+        if (version!.Title != current!.Title) count++;
+        if ((version.AuthorName ?? "") != (current.AuthorName ?? "")) count++;
+        if (version.ShortDescription != current.ShortDescription) count++;
+        if (version.PreviewImageUrl != current.PreviewImageUrl) count++;
+        if ((version.PreviewImageUrlFallback ?? "") != (current.PreviewImageUrlFallback ?? "")) count++;
+        if (version.TagsAsString != current.TagsAsString) count++;
+        if (version.IsPublished != current.IsPublished) count++;
+        if (version.UpdatedDate != current.UpdatedDate) count++;
+        return count;
+    }
+
+    private static IReadOnlyList<DiffDisplayLine> BuildContentDiff(string oldText, string newText)
+    {
+        var rawLines = InlineDiffBuilder.Diff(oldText, newText).Lines;
+        var visible = new bool[rawLines.Count];
+
+        for (var i = 0; i < rawLines.Count; i++)
+        {
+            if (rawLines[i].Type == ChangeType.Unchanged)
+            {
+                continue;
+            }
+
+            var from = Math.Max(0, i - ContextLines);
+            var to = Math.Min(rawLines.Count - 1, i + ContextLines);
+            for (var j = from; j <= to; j++)
+            {
+                visible[j] = true;
+            }
+        }
+
+        var result = new List<DiffDisplayLine>(rawLines.Count);
+        var oldLine = 0;
+        var newLine = 0;
+        var pendingCollapse = 0;
+
+        for (var i = 0; i < rawLines.Count; i++)
+        {
+            var piece = rawLines[i];
+
+            if (!visible[i] && piece.Type == ChangeType.Unchanged)
+            {
+                oldLine++;
+                newLine++;
+                pendingCollapse++;
+                continue;
+            }
+
+            if (pendingCollapse > 0)
+            {
+                result.Add(new DiffDisplayLine("", "", " ", "", "", IsCollapse: true, CollapseCount: pendingCollapse));
+                pendingCollapse = 0;
+            }
+
+            string oldNum, newNum, prefix, cssClass;
+            switch (piece.Type)
+            {
+                case ChangeType.Deleted:
+                    oldLine++;
+                    oldNum = oldLine.ToString();
+                    newNum = "";
+                    prefix = "-";
+                    cssClass = "bg-danger-subtle";
+                    break;
+                case ChangeType.Inserted:
+                    newLine++;
+                    oldNum = "";
+                    newNum = newLine.ToString();
+                    prefix = "+";
+                    cssClass = "bg-success-subtle";
+                    break;
+                case ChangeType.Modified:
+                    oldLine++;
+                    newLine++;
+                    oldNum = oldLine.ToString();
+                    newNum = newLine.ToString();
+                    prefix = "~";
+                    cssClass = "bg-warning-subtle";
+                    break;
+                default:
+                    if (piece.Type == ChangeType.Unchanged)
+                    {
+                        oldLine++;
+                        newLine++;
+                    }
+
+                    oldNum = piece.Type == ChangeType.Unchanged ? oldLine.ToString() : "";
+                    newNum = piece.Type == ChangeType.Unchanged ? newLine.ToString() : "";
+                    prefix = " ";
+                    cssClass = "";
+                    break;
+            }
+
+            result.Add(new DiffDisplayLine(oldNum, newNum, prefix, piece.Text ?? "", cssClass));
+        }
+
+        if (pendingCollapse > 0)
+        {
+            result.Add(new DiffDisplayLine("", "", " ", "", "", IsCollapse: true, CollapseCount: pendingCollapse));
+        }
+
+        return result;
+    }
+
+    private static RenderFragment FieldRow(string fieldName, string old, string @new) => builder =>
+    {
+        var changed = old != @new;
+
+        builder.OpenElement(0, "tr");
+
+        builder.OpenElement(1, "td");
+        builder.AddAttribute(2, "class", "fw-semibold text-nowrap align-top");
+        builder.AddContent(3, fieldName);
+        builder.CloseElement();
+
+        builder.OpenElement(4, "td");
+        builder.AddAttribute(5, "class", changed ? "align-top bg-danger-subtle" : "align-top");
+        builder.AddMarkupContent(6, BuildWordDiff(old, @new, isOldSide: true).Value);
+        builder.CloseElement();
+
+        builder.OpenElement(7, "td");
+        builder.AddAttribute(8, "class", changed ? "align-top bg-success-subtle" : "align-top");
+        builder.AddMarkupContent(9, BuildWordDiff(old, @new, isOldSide: false).Value);
+        builder.CloseElement();
+
+        builder.CloseElement();
+    };
+
+    private static MarkupString BuildWordDiff(string old, string @new, bool isOldSide)
+    {
+        if (old == @new)
+        {
+            return new MarkupString(WebUtility.HtmlEncode(isOldSide ? old : @new));
+        }
+
+        var differ = new Differ();
+        var diff = differ.CreateWordDiffs(old, @new, ignoreWhitespace: false, [' ']);
+        var pieces = isOldSide ? diff.PiecesOld : diff.PiecesNew;
+
+        var changedIndices = new HashSet<int>();
+        foreach (var block in diff.DiffBlocks)
+        {
+            if (isOldSide)
+            {
+                for (var i = block.DeleteStartA; i < block.DeleteStartA + block.DeleteCountA; i++)
+                {
+                    changedIndices.Add(i);
+                }
+            }
+            else
+            {
+                for (var i = block.InsertStartB; i < block.InsertStartB + block.InsertCountB; i++)
+                {
+                    changedIndices.Add(i);
+                }
+            }
+        }
+
+        var sb = new StringBuilder();
+        for (var i = 0; i < pieces.Count; i++)
+        {
+            var encoded = WebUtility.HtmlEncode(pieces[i]);
+            if (changedIndices.Contains(i))
+            {
+                var style = isOldSide
+                    ? "background:#ffcdd2; border-radius:2px; padding:0 2px;"
+                    : "background:#c8e6c9; border-radius:2px; padding:0 2px;";
+                sb.Append($"<mark style=\"{style}\">{encoded}</mark>");
+            }
+            else
+            {
+                sb.Append(encoded);
+            }
+        }
+
+        return new MarkupString(sb.ToString());
+    }
+}

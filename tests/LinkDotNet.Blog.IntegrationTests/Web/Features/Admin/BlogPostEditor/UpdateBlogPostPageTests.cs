@@ -11,6 +11,7 @@ using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components;
@@ -39,6 +40,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -74,7 +76,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         blogPostFromDb.ShortDescription.ShouldBe("My new Description");
         blogPostFromDb.AuthorName.ShouldBe("Test Author");
 
-        toastService.Received(1).ShowInfo("Updated BlogPost Title", null);
+        toastService.Received(1).ShowSuccess($"Saved new version of \"{blogPost.Title}\"", null);
         instantRegistry.Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }
 
@@ -93,6 +95,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -137,6 +140,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
