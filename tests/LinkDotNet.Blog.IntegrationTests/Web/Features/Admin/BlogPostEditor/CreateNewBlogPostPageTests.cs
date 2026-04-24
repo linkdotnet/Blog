@@ -37,6 +37,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -89,6 +90,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -136,6 +138,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
+        ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);

@@ -1,6 +1,7 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
 @using LinkDotNet.Blog.Web.Features.Services
 @using NCronJob
 @inject IJSRuntime JSRuntime
@@ -11,6 +12,7 @@
 @inject IToastService ToastService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
+@inject IBlogPostVersionService BlogPostVersionService
 
 <PageTitle>Creating new Blog Post</PageTitle>
 
@@ -259,6 +261,33 @@
                                 </div>
                             </div>
                         </div>
+                        @if (!string.IsNullOrEmpty(BlogPostId) && versionHistory.Count > 0)
+                        {
+                            <div class="card shadow-sm border-0 hover-shadow-lg transition mt-4">
+                                <div class="card-header border-bottom-0 py-3 d-flex justify-content-between align-items-center">
+                                    <h6 class="card-title mb-0 text-primary">Version History</h6>
+                                    <span class="badge bg-secondary">@versionHistory.Count</span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="list-group list-group-flush" style="max-height: 320px; overflow-y: auto;">
+                                        @foreach (var v in versionHistory)
+                                        {
+                                            <div class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
+                                                <div class="me-2" style="min-width: 0;">
+                                                    <div class="fw-semibold small">v@(v.VersionNumber)</div>
+                                                    <div class="text-muted" style="font-size: 0.72rem;">@v.CreatedAt.ToString("MMM dd, yyyy HH:mm")</div>
+                                                    <div class="text-truncate text-muted" style="max-width: 130px; font-size: 0.72rem;" title="@v.Title">@v.Title</div>
+                                                </div>
+                                                <div class="d-flex flex-column gap-1 flex-shrink-0">
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => OpenDiff(v)">Diff</button>
+                                                    <button type="button" class="btn btn-outline-warning btn-sm" @onclick="() => RestoreVersionAsync(v)">Restore</button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
     </EditForm>
@@ -267,6 +296,7 @@
 <FeatureInfoDialog @ref="FeatureDialog"></FeatureInfoDialog>
 <ShortCodeDialog @ref="ShortCodeDialog" ShortCodes="shortCodes"></ShortCodeDialog>
 <AddTemplateDialog @ref="AddTemplateDialog" OnSave="SaveTemplate"></AddTemplateDialog>
+<VersionDiffDialog @ref="DiffDialog"></VersionDiffDialog>
 
 <NavigationLock ConfirmExternalNavigation="@model.IsDirty" OnBeforeInternalNavigation="PreventNavigationWhenDirty"></NavigationLock>
 
@@ -283,9 +313,18 @@
     [Parameter]
     public bool ClearAfterCreated { get; set; } = true;
 
+    [Parameter]
+    public string? BlogPostId { get; set; }
+
+    [Parameter]
+    public EventCallback<BlogPostVersion> OnVersionRestored { get; set; }
+
     private FeatureInfoDialog FeatureDialog { get; set; } = default!;
     private ShortCodeDialog ShortCodeDialog { get; set; } = default!;
     private AddTemplateDialog AddTemplateDialog { get; set; } = default!;
+    private VersionDiffDialog DiffDialog { get; set; } = default!;
+
+    private IReadOnlyList<BlogPostVersion> versionHistory = [];
 
     private CreateNewModel model = new();
 
@@ -312,7 +351,7 @@
         }
     }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (BlogPost is null)
         {
@@ -320,6 +359,11 @@
         }
 
         model = CreateNewModel.FromBlogPost(BlogPost);
+
+        if (!string.IsNullOrEmpty(BlogPostId))
+        {
+            versionHistory = await BlogPostVersionService.GetVersionHistoryAsync(BlogPostId);
+        }
     }
 
     private string GetStatusText()
@@ -371,6 +415,28 @@
         {
             model = new CreateNewModel();
         }
+    }
+
+    private void OpenDiff(BlogPostVersion version)
+    {
+        DiffDialog.Open(version, BlogPost!);
+        StateHasChanged();
+    }
+
+    private async Task RestoreVersionAsync(BlogPostVersion version)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>(
+            "confirm",
+            $"Restore version {version.VersionNumber} (\"{version.Title}\")? The current state will be saved as a new version first.");
+
+        if (!confirmed)
+        {
+            return;
+        }
+
+        await OnVersionRestored.InvokeAsync(version);
+        versionHistory = await BlogPostVersionService.GetVersionHistoryAsync(BlogPostId!);
+        StateHasChanged();
     }
 
     private async Task PreventNavigationWhenDirty(LocationChangingContext context)

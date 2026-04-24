@@ -31,6 +31,8 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<BlogPostTemplate> BlogPostTemplates { get; set; }
 
+    public DbSet<BlogPostVersion> BlogPostVersions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -38,6 +40,7 @@ public sealed class BlogDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BlogPostConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostRecordConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostTemplateConfiguration());
+        modelBuilder.ApplyConfiguration(new BlogPostVersionConfiguration());
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
         modelBuilder.ApplyConfiguration(new ShortCodeConfiguration());
         modelBuilder.ApplyConfiguration(new SimilarBlogPostConfiguration());

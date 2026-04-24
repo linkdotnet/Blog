@@ -1,9 +1,11 @@
-﻿@page "/update/{blogPostId}"
+@page "/update/{blogPostId}"
 @attribute [Authorize]
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
+@using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
 @inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostVersionService BlogPostVersionService
 @inject IToastService ToastService
 
 <PageTitle>Updating: @blogPostFromDb?.Title</PageTitle>
@@ -14,7 +16,10 @@
         Title="Update Blog Post"
         BlogPost="@blogPostFromDb"
         OnBlogPostCreated="@StoreBlogPostAsync"
-        ClearAfterCreated="false"></CreateNewBlogPost>
+        OnVersionRestored="@HandleVersionRestoredAsync"
+        ClearAfterCreated="false"
+        BlogPostId="@BlogPostId">
+    </CreateNewBlogPost>
 }
 else
 {
@@ -36,10 +41,20 @@ else
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
-	    ArgumentNullException.ThrowIfNull(blogPostFromDb);
+        ArgumentNullException.ThrowIfNull(blogPostFromDb);
 
-        blogPostFromDb.Update(blogPost);
-        await BlogPostRepository.StoreAsync(blogPostFromDb);
-        ToastService.ShowInfo($"Updated BlogPost {blogPost.Title}");
+        await BlogPostVersionService.SaveNewVersionAsync(blogPostFromDb, blogPost);
+        ToastService.ShowSuccess($"Saved new version of \"{blogPost.Title}\"");
+        blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
+    }
+
+    private async Task HandleVersionRestoredAsync(BlogPostVersion version)
+    {
+        ArgumentNullException.ThrowIfNull(blogPostFromDb);
+
+        await BlogPostVersionService.RestoreVersionAsync(blogPostFromDb, version);
+        ToastService.ShowSuccess($"Restored version {version.VersionNumber}");
+        blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
+        StateHasChanged();
     }
 }

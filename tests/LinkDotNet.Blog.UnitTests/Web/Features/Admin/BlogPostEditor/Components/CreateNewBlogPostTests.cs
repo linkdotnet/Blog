@@ -9,6 +9,7 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Routing;
@@ -53,6 +54,10 @@ public class CreateNewBlogPostTests : BunitContext
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
         Services.AddScoped(_ => currentUserService);
+
+        var versionService = Substitute.For<IBlogPostVersionService>();
+        versionService.GetVersionHistoryAsync(Arg.Any<string>()).Returns([]);
+        Services.AddScoped(_ => versionService);
     }
 
     [Fact]
