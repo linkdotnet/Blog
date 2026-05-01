@@ -20,7 +20,7 @@
     <PackageVersion Include="Microting.EntityFrameworkCore.MySql" Version="10.0.7" />
     <PackageVersion Include="MongoDB.Driver" Version="3.8.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
-    <PackageVersion Include="RavenDB.Client" Version="7.2.1" />
+    <PackageVersion Include="RavenDB.Client" Version="7.2.2" />
     <PackageVersion Include="ZiggyCreatures.FusionCache.Locking.AsyncKeyed" Version="2.6.0" />
   </ItemGroup>
   <ItemGroup Label="Web">
