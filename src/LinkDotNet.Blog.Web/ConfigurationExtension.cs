@@ -113,12 +113,11 @@ public static class ConfigurationExtension
         return services;
     }
 
-    private static IServiceCollection AddImageUploadConfiguration(this IServiceCollection services)
+    private static void AddImageUploadConfiguration(this IServiceCollection services)
     {
         ArgumentNullException.ThrowIfNull(services);
 
         services.AddOptions<UploadConfiguration>()
             .BindConfiguration(UploadConfiguration.ConfigurationSection);
-        return services;
     }
 }
