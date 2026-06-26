@@ -13,6 +13,7 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
 @inject IBlogPostVersionService BlogPostVersionService
+@inject ITagQueryService TagQueryService
 
 <PageTitle>Creating new Blog Post</PageTitle>
 
@@ -154,22 +155,17 @@
                                 <h6 class="card-title mb-0 text-primary">Tags</h6>
                             </div>
                             <div class="card-body">
-                                <div class="form-floating">
-                                    <InputText type="text" class="form-control" id="tags" @bind-Value="model.Tags" />
-                                    <label for="tags">Tags (comma separated)</label>
+                                <div class="position-relative">
+                                    <label for="tags" class="form-label fw-bold">Tags</label>
+                                    <TagInput Id="tags"
+                                              Suggestions="availableTags"
+                                              Placeholder="Add or select tags"
+                                              @bind-Value="model.Tags">
+                                    </TagInput>
                                 </div>
                                 <small class="form-text text-muted mt-2">
                                     Add relevant tags to improve content discoverability and SEO. Use specific, searchable terms that describe your content.
                                 </small>
-                                @if (!string.IsNullOrWhiteSpace(model.Tags))
-                                {
-                                    <div class="mt-2">
-                                        @foreach (var tag in model.Tags.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                                        {
-                                            <span class="badge bg-secondary me-1 mb-1">@tag.Trim()</span>
-                                        }
-                                    </div>
-                                }
                             </div>
                         </div>
 
@@ -335,6 +331,8 @@
     private bool canSubmit = true;
     private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
     private IPagedList<BlogPostTemplate> blogPostTemplates = PagedList<BlogPostTemplate>.Empty;
+    private IReadOnlyList<string> availableTags = [];
+    private IReadOnlyList<string> originalTags = [];
 
     private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
@@ -344,6 +342,7 @@
     {
         shortCodes = await ShortCodeRepository.GetAllAsync();
         blogPostTemplates = await TemplateRepository.GetAllAsync();
+        await LoadAvailableTagsAsync();
 
         if (AppConfiguration.Value.UseMultiAuthorMode)
         {
@@ -359,6 +358,7 @@
         }
 
         model = CreateNewModel.FromBlogPost(BlogPost);
+        originalTags = BlogPost.Tags.ToList();
 
         if (!string.IsNullOrEmpty(BlogPostId))
         {
@@ -398,14 +398,23 @@
     {
         canSubmit = false;
         model.AuthorName = authorName;
-        await OnBlogPostCreated.InvokeAsync(model.ToBlogPost());
+        var blogPost = model.ToBlogPost();
+        var tagsChanged = !HaveSameTagSet(originalTags, blogPost.Tags);
+        await OnBlogPostCreated.InvokeAsync(blogPost);
         if (model.ShouldInvalidateCache)
         {
             await CacheInvalidator.ClearCacheAsync();
         }
 
+        if (tagsChanged)
+        {
+            await TagQueryService.ClearTagCacheAsync();
+            await LoadAvailableTagsAsync();
+        }
+
         _ = InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
         ClearModel();
+        originalTags = ClearAfterCreated ? [] : blogPost.Tags.ToList();
         canSubmit = true;
     }
 
@@ -434,7 +443,15 @@
             return;
         }
 
+        var tagsChanged = BlogPost is not null && !HaveSameTagSet(BlogPost.Tags, version.Tags);
         await OnVersionRestored.InvokeAsync(version);
+        if (tagsChanged)
+        {
+            await TagQueryService.ClearTagCacheAsync();
+            await LoadAvailableTagsAsync();
+            originalTags = version.Tags.ToList();
+        }
+
         versionHistory = await BlogPostVersionService.GetVersionHistoryAsync(BlogPostId!);
         StateHasChanged();
     }
@@ -518,5 +535,27 @@
             var converter = new ReverseMarkdown.Converter();
             model.Content = converter.Convert(model.Content);
         }
+    }
+
+    private async Task LoadAvailableTagsAsync()
+    {
+        availableTags = (await TagQueryService.GetAllOrderedByUsageAsync())
+            .Select(tag => tag.Name)
+            .ToList();
+    }
+
+    private static bool HaveSameTagSet(IEnumerable<string>? left, IEnumerable<string>? right)
+    {
+        var leftTags = ToTagSet(left);
+        var rightTags = ToTagSet(right);
+        return leftTags.SetEquals(rightTags);
+    }
+
+    private static HashSet<string> ToTagSet(IEnumerable<string>? tags)
+    {
+        return (tags ?? [])
+            .Where(tag => !string.IsNullOrWhiteSpace(tag))
+            .Select(tag => tag.Trim())
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
     }
 }

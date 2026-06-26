@@ -10,6 +10,7 @@ using MongoDB.Driver;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZiggyCreatures.Caching.Fusion;
@@ -126,5 +127,21 @@ public sealed class TagQueryServiceTests
         // Assert
         result[0].Name.ShouldBe("Blazor");
         result[1].Name.ShouldBe("CSharp");
+    }
+
+    [Fact]
+    public async Task ClearTagCacheAsync_RemovesCachedTagUsageList()
+    {
+        repository.GetAllByProjectionAsync(p => p.Tags)
+            .ReturnsForAnyArgs(
+                new PagedList<List<string>>([new() { "Cached" }], 1, 1, 1),
+                new PagedList<List<string>>([new() { "Reloaded" }], 1, 1, 1));
+
+        var cached = await tagQueryService.GetAllOrderedByUsageAsync();
+        await tagQueryService.ClearTagCacheAsync();
+        var reloaded = await tagQueryService.GetAllOrderedByUsageAsync();
+
+        cached.Single().Name.ShouldBe("Cached");
+        reloaded.Single().Name.ShouldBe("Reloaded");
     }
 }

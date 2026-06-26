@@ -243,6 +243,27 @@ code {
 }
 /*#endregion */
 
+/*region TagInput.razor */
+.tag-input {
+	position: relative;
+}
+
+.tag-input-field {
+	min-width: 8rem;
+	width: auto;
+}
+
+.tag-input-remove {
+	font-size: .55rem;
+}
+
+.tag-input-suggestions {
+	z-index: 1000;
+	max-height: 14rem;
+	overflow-y: auto;
+}
+/*#endregion */
+
 /*region NavMenu.razor */
 .barcode {
 	text-decoration: none;

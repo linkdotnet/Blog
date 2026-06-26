@@ -28,6 +28,11 @@ public sealed class TagQueryService(
         });
     }
 
+    public async Task ClearTagCacheAsync()
+    {
+        await fusionCache.RemoveAsync(TagCacheKey);
+    }
+
     private async Task<IReadOnlyList<TagCount>> LoadTagsAsync()
     {
         var tagLists = await blogPostRepository.GetAllByProjectionAsync(
@@ -46,5 +51,4 @@ public sealed class TagQueryService(
 
         return tagCounts;
     }
-
 }

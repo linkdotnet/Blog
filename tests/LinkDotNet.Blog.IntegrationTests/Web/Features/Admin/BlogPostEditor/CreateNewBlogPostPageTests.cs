@@ -13,6 +13,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -38,6 +39,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
+        ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -91,6 +93,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
+        ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -139,6 +142,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
+        ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -180,8 +184,16 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#published").Change(false);
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
 
         cut.Find("form").Submit();
+    }
+
+    private static ITagQueryService EmptyTagQueryService()
+    {
+        var tagQueryService = Substitute.For<ITagQueryService>();
+        tagQueryService.GetAllOrderedByUsageAsync().Returns([]);
+        tagQueryService.ClearTagCacheAsync().Returns(Task.CompletedTask);
+        return tagQueryService;
     }
 }

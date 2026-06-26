@@ -1,0 +1,242 @@
+@using Microsoft.AspNetCore.Components.Web
+
+<div class="tag-input">
+    <div class="border rounded p-2 bg-body">
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+            @foreach (var tag in selectedTags)
+            {
+                <span class="badge rounded-pill bg-secondary d-inline-flex align-items-center gap-1 py-2">
+                    @tag
+                    <button type="button"
+                            class="btn-close btn-close-white tag-input-remove"
+                            aria-label="Remove @tag"
+                            @onclick="() => RemoveTagAsync(tag)">
+                    </button>
+                </span>
+            }
+
+            <input id="@Id"
+                   class="form-control border-0 shadow-none flex-grow-1 tag-input-field"
+                   value="@currentInput"
+                   @oninput="HandleInputAsync"
+                   @onfocus="HandleFocus"
+                   @onkeydown="HandleKeyDownAsync"
+                   @onblur="HandleBlurAsync"
+                   placeholder="@Placeholder"
+                   autocomplete="off" />
+        </div>
+    </div>
+
+    @if (isOpen)
+    {
+        var filteredSuggestions = GetFilteredSuggestions();
+
+        if (filteredSuggestions.Count > 0)
+        {
+            <div class="list-group position-absolute w-100 shadow mt-1 tag-input-suggestions">
+                @foreach (var (suggestion, index) in filteredSuggestions.Select((tag, i) => (tag, i)))
+                {
+                    <button type="button"
+                            class="list-group-item list-group-item-action @(selectedIndex == index ? "active" : "")"
+                            @onmousedown="() => SelectSuggestionAsync(suggestion)"
+                            @onmousedown:preventDefault="true"
+                            @onmouseenter="() => selectedIndex = index">
+                        @suggestion
+                    </button>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; } = "tags";
+
+    [Parameter]
+    public string Placeholder { get; set; } = "Add tags";
+
+    [Parameter]
+    public string Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<string> Suggestions { get; set; } = [];
+
+    private readonly List<string> selectedTags = [];
+    private string currentInput = string.Empty;
+    private string? lastValue;
+    private bool isOpen;
+    private int selectedIndex = -1;
+
+    private IReadOnlyList<string> GetFilteredSuggestions()
+    {
+        var searchTerm = currentInput.Trim();
+        return Suggestions
+            .Where(tag => !string.IsNullOrWhiteSpace(tag))
+            .Select(tag => tag.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .Where(tag => selectedTags.All(selected => !selected.Equals(tag, StringComparison.OrdinalIgnoreCase)))
+            .Where(tag => string.IsNullOrWhiteSpace(searchTerm) || tag.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (lastValue == Value)
+        {
+            return;
+        }
+
+        selectedTags.Clear();
+        AddTags(ParseTags(Value), notifyChanged: false);
+        lastValue = Value;
+    }
+
+    private async Task HandleInputAsync(ChangeEventArgs args)
+    {
+        currentInput = args.Value?.ToString() ?? string.Empty;
+
+        if (currentInput.Contains(','))
+        {
+            await AddCurrentInputAsync();
+            return;
+        }
+
+        OpenSuggestions();
+    }
+
+    private void HandleFocus()
+    {
+        OpenSuggestions();
+    }
+
+    private async Task HandleBlurAsync(FocusEventArgs _)
+    {
+        await AddCurrentInputAsync();
+        isOpen = false;
+    }
+
+    private async Task HandleKeyDownAsync(KeyboardEventArgs args)
+    {
+        switch (args.Key)
+        {
+            case "ArrowDown":
+                MoveSelection(1);
+                break;
+            case "ArrowUp":
+                MoveSelection(-1);
+                break;
+            case "Enter":
+                var suggestions = GetFilteredSuggestions();
+                if (isOpen && selectedIndex >= 0 && selectedIndex < suggestions.Count)
+                {
+                    await SelectSuggestionAsync(suggestions[selectedIndex]);
+                }
+                else
+                {
+                    await AddCurrentInputAsync();
+                }
+                break;
+            case ",":
+                await AddCurrentInputAsync();
+                break;
+            case "Escape":
+                isOpen = false;
+                selectedIndex = -1;
+                break;
+        }
+    }
+
+    private void MoveSelection(int offset)
+    {
+        var suggestions = GetFilteredSuggestions();
+        if (suggestions.Count == 0)
+        {
+            isOpen = false;
+            selectedIndex = -1;
+            return;
+        }
+
+        isOpen = true;
+        selectedIndex = selectedIndex < 0
+            ? 0
+            : Math.Clamp(selectedIndex + offset, 0, suggestions.Count - 1);
+    }
+
+    private async Task SelectSuggestionAsync(string suggestion)
+    {
+        if (AddTags([suggestion], notifyChanged: true))
+        {
+            await NotifyValueChangedAsync();
+        }
+
+        currentInput = string.Empty;
+        isOpen = false;
+        selectedIndex = -1;
+    }
+
+    private async Task AddCurrentInputAsync()
+    {
+        if (AddTags(ParseTags(currentInput), notifyChanged: true))
+        {
+            await NotifyValueChangedAsync();
+        }
+
+        currentInput = string.Empty;
+        isOpen = false;
+        selectedIndex = -1;
+    }
+
+    private async Task RemoveTagAsync(string tag)
+    {
+        selectedTags.RemoveAll(selected => selected.Equals(tag, StringComparison.OrdinalIgnoreCase));
+        await NotifyValueChangedAsync();
+        OpenSuggestions();
+    }
+
+    private bool AddTags(IEnumerable<string> tags, bool notifyChanged)
+    {
+        var changed = false;
+        foreach (var tag in tags)
+        {
+            if (selectedTags.Any(selected => selected.Equals(tag, StringComparison.OrdinalIgnoreCase)))
+            {
+                continue;
+            }
+
+            selectedTags.Add(tag);
+            changed = true;
+        }
+
+        if (notifyChanged && changed)
+        {
+            lastValue = string.Join(",", selectedTags);
+        }
+
+        return changed;
+    }
+
+    private async Task NotifyValueChangedAsync()
+    {
+        var value = string.Join(",", selectedTags);
+        lastValue = value;
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private void OpenSuggestions()
+    {
+        var suggestions = GetFilteredSuggestions();
+        isOpen = suggestions.Count > 0;
+        selectedIndex = isOpen ? Math.Clamp(selectedIndex, 0, suggestions.Count - 1) : -1;
+    }
+
+    private static IEnumerable<string> ParseTags(string? value)
+    {
+        return (value ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(tag => !string.IsNullOrWhiteSpace(tag));
+    }
+}
