@@ -14,6 +14,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +42,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -96,6 +98,7 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
@@ -169,5 +172,13 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         cut.Find("#short").Input("My new Description");
 
         cut.Find("form").Submit();
+    }
+
+    private static ITagQueryService EmptyTagQueryService()
+    {
+        var tagQueryService = Substitute.For<ITagQueryService>();
+        tagQueryService.GetAllOrderedByUsageAsync().Returns([]);
+        tagQueryService.ClearTagCacheAsync().Returns(Task.CompletedTask);
+        return tagQueryService;
     }
 }

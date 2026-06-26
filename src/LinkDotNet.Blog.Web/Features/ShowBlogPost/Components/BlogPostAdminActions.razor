@@ -1,10 +1,12 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Services.Tags
 @using NCronJob
 @inject NavigationManager NavigationManager
 @inject IToastService ToastService
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IInstantJobRegistry InstantJobRegistry
+@inject ITagQueryService TagQueryService
 
 <AuthorizeView>
 	<div class="d-flex justify-content-start gap-2">
@@ -30,6 +32,7 @@
     private async Task DeleteBlogPostAsync()
     {
         await BlogPostRepository.DeleteAsync(BlogPostId);
+        await TagQueryService.ClearTagCacheAsync();
         InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(true);
         ToastService.ShowSuccess("The Blog Post was successfully deleted");
         NavigationManager.NavigateTo("/");

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
@@ -12,6 +13,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -22,6 +24,7 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Admin.BlogPostEditor.Components
 public class CreateNewBlogPostTests : BunitContext
 {
     private readonly ICacheInvalidator cacheInvalidator = Substitute.For<ICacheInvalidator>();
+    private readonly ITagQueryService tagQueryService = Substitute.For<ITagQueryService>();
     private readonly IOptions<ApplicationConfiguration> options;
 
     public CreateNewBlogPostTests()
@@ -58,6 +61,10 @@ public class CreateNewBlogPostTests : BunitContext
         var versionService = Substitute.For<IBlogPostVersionService>();
         versionService.GetVersionHistoryAsync(Arg.Any<string>()).Returns([]);
         Services.AddScoped(_ => versionService);
+
+        tagQueryService.GetAllOrderedByUsageAsync().Returns([new TagCount("ExistingTag", 3)]);
+        tagQueryService.ClearTagCacheAsync().Returns(Task.CompletedTask);
+        Services.AddScoped(_ => tagQueryService);
     }
 
     [Fact]
@@ -72,7 +79,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#preview").Change("My preview url");
         cut.Find("#fallback-preview").Change("My fallback preview url");
         cut.Find("#published").Change(false);
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
 
         cut.Find("form").Submit();
 
@@ -112,7 +119,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#preview").Change("My preview url");
         cut.Find("#fallback-preview").Change("My fallback preview url");
         cut.Find("#published").Change(false);
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
 
         cut.Find("form").Submit();
 
@@ -158,7 +165,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#short").Input("My short Description");
         cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
         cut.Find("form").Submit();
         blogPost = null;
 
@@ -178,7 +185,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#short").Input("My short Description");
         cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
         cut.Find("form").Submit();
         blogPost = null;
 
@@ -202,7 +209,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#short").Input("My short Description");
         cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
         cut.Find("#updatedate").Change(false);
         cut.Find("form").Submit();
 
@@ -231,7 +238,7 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("#content").Input("My content");
         cut.Find("#preview").Change("My preview url");
         cut.Find("#published").Change(false);
-        cut.Find("#tags").Change("Tag1,Tag2,Tag3");
+        cut.Find("#tags").Input("Tag1,Tag2,Tag3");
 
         cut.Find("form").Submit();
 
@@ -264,7 +271,7 @@ public class CreateNewBlogPostTests : BunitContext
         JSInterop.Setup<bool>("confirm", "You have unsaved changes. Are you sure you want to continue?")
             .SetResult(false);
         var cut = Render<CreateNewBlogPost>();
-        cut.Find("#tags").Change("Hey");
+        cut.Find("#tags").Input("Hey,");
         var fakeNavigationManager = Services.GetRequiredService<BunitNavigationManager>();
 
         fakeNavigationManager.NavigateTo("/internal");
@@ -339,6 +346,106 @@ public class CreateNewBlogPostTests : BunitContext
         cut.Find("form").Submit();
 
         cacheInvalidator.Received(1).ClearCacheAsync();
+    }
+
+    [Fact]
+    public void ShouldRenderSuggestionsFromTagQueryService()
+    {
+        var cut = Render<CreateNewBlogPost>();
+
+        cut.Find("#tags").Focus();
+
+        cut.Markup.ShouldContain("ExistingTag");
+    }
+
+    [Fact]
+    public void GivenNewPostWithTags_WhenCacheCheckboxIsOff_TagCacheIsInvalidatedAndSuggestionsReload()
+    {
+        var cut = Render<CreateNewBlogPost>();
+        cut.Find("#title").Input("My Title");
+        cut.Find("#short").Input("My short Description");
+        cut.Find("#content").Input("My content");
+        cut.Find("#preview").Change("My preview url");
+        cut.Find("#published").Change(false);
+        cut.Find("#tags").Input("Tag1,Tag2");
+
+        cut.Find("form").Submit();
+
+        tagQueryService.Received(1).ClearTagCacheAsync();
+        cacheInvalidator.DidNotReceive().ClearCacheAsync();
+        tagQueryService.Received(2).GetAllOrderedByUsageAsync();
+    }
+
+    [Fact]
+    public void GivenExistingPostWithUnchangedTags_WhenCacheCheckboxIsOff_CacheIsNotInvalidated()
+    {
+        var blogPost = new BlogPostBuilder()
+            .WithTags("Tag1", "Tag2")
+            .Build();
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.Find("form").Submit();
+
+        cacheInvalidator.DidNotReceive().ClearCacheAsync();
+    }
+
+    [Fact]
+    public void GivenExistingPostWithUnchangedTags_WhenCacheCheckboxIsOn_CacheIsInvalidated()
+    {
+        var blogPost = new BlogPostBuilder()
+            .WithTags("Tag1", "Tag2")
+            .Build();
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.Find("#invalidate-cache").Change(true);
+        cut.Find("form").Submit();
+
+        cacheInvalidator.Received(1).ClearCacheAsync();
+    }
+
+    [Fact]
+    public void GivenExistingPostWithChangedTags_WhenCacheCheckboxIsOff_TagCacheIsInvalidated()
+    {
+        var blogPost = new BlogPostBuilder()
+            .WithTags("Tag1")
+            .Build();
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost));
+
+        cut.Find("#tags").Input("Tag2,");
+        cut.Find("form").Submit();
+
+        tagQueryService.Received(1).ClearTagCacheAsync();
+        cacheInvalidator.DidNotReceive().ClearCacheAsync();
+    }
+
+    [Fact]
+    public void GivenVersionRestore_WhenTagsDiffer_TagCacheIsInvalidated()
+    {
+        var blogPost = new BlogPostBuilder()
+            .WithTags("Current")
+            .Build();
+        blogPost.Id = "post-1";
+        var restoredPost = new BlogPostBuilder()
+            .WithTags("Restored")
+            .Build();
+        restoredPost.Id = blogPost.Id;
+        var version = BlogPostVersion.CreateSnapshot(restoredPost, 1);
+        var versionService = Services.GetRequiredService<IBlogPostVersionService>();
+        versionService.GetVersionHistoryAsync(blogPost.Id).Returns([version]);
+        JSInterop.Setup<bool>("confirm", $"Restore version {version.VersionNumber} (\"{version.Title}\")? The current state will be saved as a new version first.")
+            .SetResult(true);
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost)
+                .Add(c => c.BlogPostId, blogPost.Id));
+
+        cut.FindAll("button").Single(button => button.TextContent == "Restore").Click();
+
+        tagQueryService.Received(1).ClearTagCacheAsync();
+        cacheInvalidator.DidNotReceive().ClearCacheAsync();
+        tagQueryService.Received(2).GetAllOrderedByUsageAsync();
     }
 
     [Fact]
