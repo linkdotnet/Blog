@@ -594,49 +594,36 @@ code {
 /*#endregion */
 
 /*#region ReadingIndicator.razor */
-.progress-container {
+.reading-progress {
 	position: fixed;
-	bottom: 20px;
-	right: 20px;
-	z-index: 1000;
+	inset: 0 0 auto 0;
+	height: 3px;
+	z-index: 1030;
 	opacity: 0;
-	transition: opacity 1.5s;
+	pointer-events: none;
+	transition: opacity 0.4s ease;
 }
 
-.progress-container.visible {
+.reading-progress.visible {
 	opacity: 1;
 }
 
-@keyframes fadeOut {
-	to {
-		opacity: 0;
+.reading-progress-bar {
+	height: 100%;
+	width: 100%;
+	transform: scaleX(0);
+	transform-origin: left center;
+	background: var(--bs-primary);
+	box-shadow: 0 0 10px rgba(var(--bs-primary-rgb), 0.6);
+	transition: transform 0.12s ease-out;
+	will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reading-progress,
+	.reading-progress-bar {
+		transition: none;
 	}
-}
-
-.progress-circle {
-	width: 50px;
-	height: 50px;
-}
-
-.progress-bg {
-	fill: none;
-	stroke: #f3f3f3;
-	stroke-width: 4;
-}
-
-.progress-bar {
-	fill: none;
-	stroke: #4caf50;
-	stroke-width: 4;
-	stroke-linecap: round;
-	transform-origin: center;
-	transform: rotate(-90deg);
-	stroke-dasharray: 100, 100;
-	stroke-dashoffset: 100;
-}
-
-[data-bs-theme='light'] .progress-bg {
-	stroke: #444444;
 }
 /*#endregion */
 

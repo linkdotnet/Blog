@@ -1,52 +1,45 @@
-let progressTimeout;
-let rafId;
+let cleanup = null;
 
-function getContentHeight(className) {
-    const content = document.querySelector(className);
-    if (!content) {
-        return 0;
-    }
-    const contentRect = content.getBoundingClientRect();
-    return contentRect.height;
-}
+export function initReadingProgress(containerSelector, progressContainer, progressBar) {
+    // Re-init (e.g. Blazor re-render) tears down any previous listeners first.
+    cleanup?.();
 
-function showProgressIndicator(progressContainer) {
-    progressContainer.classList.add("visible");
-    progressContainer.style.animation = 'none';
-}
+    let hideTimeout;
+    let ticking = false;
 
-function hideProgressIndicator(progressContainer) {
-    progressContainer.style.animation = 'fadeOut 0.5s forwards';
-    setTimeout(() => {
-        progressContainer.classList.remove('visible');
-    }, 500);
-}
+    const update = () => {
+        ticking = false;
+        const container = document.querySelector(containerSelector);
+        if (!container) {
+            return;
+        }
 
-window.initCircularReadingProgress = (parentContainer, progressContainer) => {
-		if (window.circularProgressScrollListenerAdded) {
-			return;
-		}
-
-    const progressBar = document.getElementById('progressBar');
-
-    const onScroll = () => {
-        clearTimeout(progressTimeout);
-
-        const contentHeight = getContentHeight(parentContainer);
+        const contentHeight = container.getBoundingClientRect().height;
         const windowHeight = document.documentElement.clientHeight;
-        const scrollAmount = document.documentElement.scrollTop;
-        const maxScrollAmount = contentHeight - windowHeight;
-        const progress = Math.max(0, Math.min(100, (scrollAmount / maxScrollAmount) * 100));
-        progressBar.style.strokeDashoffset = 100 - progress;
+        const scrolled = document.documentElement.scrollTop;
+        const maxScroll = contentHeight - windowHeight;
+        const progress = maxScroll <= 0 ? 1 : Math.min(1, Math.max(0, scrolled / maxScroll));
 
-        showProgressIndicator(progressContainer);
+        progressBar.style.transform = `scaleX(${progress})`;
 
-        progressTimeout = setTimeout(() => {
-            hideProgressIndicator(progressContainer);
-        }, 2000);
-
-        rafId = null;
+        progressContainer.classList.add('visible');
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => progressContainer.classList.remove('visible'), 2000);
     };
 
-    window.addEventListener('scroll', onScroll);
-};
+    const onScroll = () => {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(update);
+        }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    cleanup = () => {
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onScroll);
+        clearTimeout(hideTimeout);
+    };
+}
