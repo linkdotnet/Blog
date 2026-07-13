@@ -63,6 +63,21 @@ public class Program
 
     private static void ConfigureApp(WebApplication app)
     {
+         var policyCollection = new HeaderPolicyCollection()
+                .AddFrameOptionsDeny()
+                .AddContentTypeOptionsNoSniff()
+                .AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365)
+                .AddReferrerPolicyStrictOriginWhenCrossOrigin()
+                .RemoveServerHeader()
+                .AddContentSecurityPolicy(builder =>
+                {
+                    builder.AddObjectSrc().OverHttps();
+                    builder.AddFormAction().Self();
+                    builder.AddFrameAncestors().None();
+                })
+                .AddCrossOriginOpenerPolicy(x => x.SameOrigin());
+                .AddCustomHeader("X-My-Test-Header", "Header value");
+
         app.UseSecurityHeaders();
 
         if (app.Environment.IsDevelopment())
