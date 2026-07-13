@@ -76,7 +76,6 @@ public class Program
                     builder.AddFrameAncestors().None();
                 })
                 .AddCrossOriginOpenerPolicy(x => x.SameOrigin());
-                .AddCustomHeader("X-My-Test-Header", "Header value");
 
         app.UseSecurityHeaders();
 
