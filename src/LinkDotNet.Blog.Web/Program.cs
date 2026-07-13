@@ -29,6 +29,12 @@ public class Program
         builder.Services.AddSecurityHeaderPolicies()
             .SetDefaultPolicy(p =>
                 p.AddDefaultSecurityHeaders()
+                    .AddContentSecurityPolicy(csp =>
+                    {
+                        csp.AddObjectSrc().OverHttps();
+                        csp.AddFormAction().Self();
+                        csp.AddFrameAncestors().None();
+                    })
                     .AddCrossOriginEmbedderPolicy(policy => policy.UnsafeNone())
                     .AddPermissionsPolicy(policy =>
                     {
@@ -63,20 +69,6 @@ public class Program
 
     private static void ConfigureApp(WebApplication app)
     {
-         var policyCollection = new HeaderPolicyCollection()
-                .AddFrameOptionsDeny()
-                .AddContentTypeOptionsNoSniff()
-                .AddStrictTransportSecurityMaxAgeIncludeSubDomains(maxAgeInSeconds: 60 * 60 * 24 * 365)
-                .AddReferrerPolicyStrictOriginWhenCrossOrigin()
-                .RemoveServerHeader()
-                .AddContentSecurityPolicy(builder =>
-                {
-                    builder.AddObjectSrc().OverHttps();
-                    builder.AddFormAction().Self();
-                    builder.AddFrameAncestors().None();
-                })
-                .AddCrossOriginOpenerPolicy(x => x.SameOrigin());
-
         app.UseSecurityHeaders();
 
         if (app.Environment.IsDevelopment())
