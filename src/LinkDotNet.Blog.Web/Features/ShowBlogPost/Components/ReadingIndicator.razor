@@ -1,22 +1,25 @@
 @inject IJSRuntime JSRuntime
 
-<div class="reading-progress" @ref="progressContainer" aria-hidden="true">
-	<div class="reading-progress-bar" @ref="progressBar"></div>
+<div class="progress-container" @ref="progressContainer">
+	<svg class="progress-circle" viewBox="0 0 36 36">
+		<circle class="progress-bg" cx="18" cy="18" r="15.91549431" />
+		<circle class="progress-bar" id="progressBar" cx="18" cy="18" r="15.91549431" />
+	</svg>
 </div>
+
 
 @code {
 	[Parameter, EditorRequired]
 	public required string ContainerCssSelector { get; set; }
 
 	private ElementReference progressContainer;
-	private ElementReference progressBar;
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 		if (firstRender)
 		{
-			await using var module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/ReadingIndicator.razor.js");
-			await module.InvokeVoidAsync("initReadingProgress", ContainerCssSelector, progressContainer, progressBar);
+			await using var _ = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/Components/ReadingIndicator.razor.js");
+			await JSRuntime.InvokeVoidAsync("initCircularReadingProgress", ContainerCssSelector, progressContainer);
 		}
 	}
 }
