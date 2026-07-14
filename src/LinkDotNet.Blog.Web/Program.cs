@@ -29,6 +29,12 @@ public class Program
         builder.Services.AddSecurityHeaderPolicies()
             .SetDefaultPolicy(p =>
                 p.AddDefaultSecurityHeaders()
+                    .AddContentSecurityPolicy(csp =>
+                    {
+                        csp.AddObjectSrc().OverHttps();
+                        csp.AddFormAction().Self();
+                        csp.AddFrameAncestors().None();
+                    })
                     .AddCrossOriginEmbedderPolicy(policy => policy.UnsafeNone())
                     .AddPermissionsPolicy(policy =>
                     {
