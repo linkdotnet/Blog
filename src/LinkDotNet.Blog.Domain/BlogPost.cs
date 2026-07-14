@@ -30,6 +30,8 @@ public sealed partial class BlogPost : Entity
 
     public int Likes { get; set; }
 
+    public int Order { get; set; }
+
     public bool IsScheduled => ScheduledPublishDate is not null;
 
     public string TagsAsString => string.Join(",", Tags);
@@ -39,6 +41,10 @@ public sealed partial class BlogPost : Entity
     public string Slug => GenerateSlug();
 
     public string? AuthorName { get; private set; }
+
+    public string? SeriesId { get; private set; }
+
+    public Series? Series { get; private set; }
 
     private string GenerateSlug()
     {
@@ -95,7 +101,9 @@ public sealed partial class BlogPost : Entity
         DateTime? scheduledPublishDate = null,
         IEnumerable<string>? tags = null,
         string? previewImageUrlFallback = null,
-        string? authorName = null)
+        string? authorName = null,
+        string? seriesId = null,
+        int order = 0)
     {
         if (scheduledPublishDate is not null && isPublished)
         {
@@ -116,7 +124,9 @@ public sealed partial class BlogPost : Entity
             IsPublished = isPublished,
             Tags = tags?.Select(t => t.Trim()).ToImmutableArray() ?? [],
             ReadingTimeInMinutes = ReadingTimeCalculator.CalculateReadingTime(content),
-            AuthorName = authorName
+            AuthorName = authorName,
+            SeriesId = seriesId,
+            Order = order
         };
 
         return blogPost;
@@ -126,6 +136,22 @@ public sealed partial class BlogPost : Entity
     {
         ScheduledPublishDate = null;
         IsPublished = true;
+    }
+
+    public void RemoveFromSeries()
+    {
+        SeriesId = null;
+        Series = null;
+        Order = 0;
+    }
+
+    public void AssignToSeries(string seriesId, int order)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(seriesId);
+
+        SeriesId = seriesId;
+        Series = null;
+        Order = order;
     }
 
     public void Update(BlogPost from)
@@ -148,5 +174,7 @@ public sealed partial class BlogPost : Entity
         Tags = from.Tags;
         ReadingTimeInMinutes = from.ReadingTimeInMinutes;
         AuthorName = from.AuthorName;
+        SeriesId = from.SeriesId;
+        Order = from.Order;
     }
 }

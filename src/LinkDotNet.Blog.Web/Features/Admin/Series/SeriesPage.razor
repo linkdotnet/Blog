@@ -1,0 +1,321 @@
+@page "/series"
+@using System.ComponentModel.DataAnnotations
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+@inject IRepository<Series> SeriesRepository
+@inject IRepository<BlogPost> BlogPostRepository
+@inject IToastService ToastService
+
+<PageTitle>Blog Series</PageTitle>
+
+<div class="container">
+	<h3 class="fw-bold">Blog Series</h3>
+	<div class="alert alert-info" role="alert">
+		<h4 class="alert-heading">What are Blog Series?</h4>
+		<p>Blog series are a manual grouping of related blog posts that you want present to readers in a specific order. You can assign blog posts to a series when creating or editing blog posts or on this page.</p>
+		<p class="fst-italic">A blog post can only belong to one series.</p>
+	</div>
+	<EditForm Model="@model" OnValidSubmit="SaveSeries">
+		<DataAnnotationsValidator />
+		<div class="mb-3">
+			<label for="series-name" class="form-label">Series Name</label>
+			<InputText Id="series-name" class="form-control" @bind-Value="@model.Name" />
+			<ValidationMessage For="() => model.Name" />
+		</div>
+		<div class="d-flex justify-content-start gap-2">
+		<button type="submit" class="btn btn-primary">@(string.IsNullOrEmpty(model.Id) ? "Add Series" : "Save Series")</button>
+		@if (!string.IsNullOrEmpty(model.Id))
+		{
+			<button type="button" class="btn btn-secondary" @onclick="CancelEdit">Cancel</button>
+		}
+		</div>
+	</EditForm>
+	<hr>
+	@if (series.Count > 0)
+	{
+		<div class="accordion mt-3" id="seriesAccordion">
+			<label for="series-name" class="form-label"><b>Current Series:</b></label>
+			@foreach (var s in series)
+			{
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="heading-@s.Id">
+						<button class="accordion-button @(expandedSeriesId == s.Id ? string.Empty : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@s.Id" aria-expanded="@(expandedSeriesId == s.Id)" aria-controls="collapse-@s.Id" @onclick="() => ToggleAccordion(s.Id)">
+							@s.Name
+						</button>
+					</h2>
+					<div id="collapse-@s.Id" class="accordion-collapse collapse @(expandedSeriesId == s.Id ? "show" : "")" aria-labelledby="heading-@s.Id">
+						<div class="accordion-body">
+                            <div class="mb-3">
+                                <h6>Blog Posts in this Series:</h6>
+                                <div class="list-group list-group-flush border rounded">
+                                    @if (postsInSeries.TryGetValue(s.Id, out var posts) && posts.Any())
+                                    {
+                                        @foreach (var post in posts)
+                                        {
+                                            <div class="list-group-item d-flex justify-content-between align-items-center"
+                                                 draggable="true"
+                                                 @ondragstart="() => OnDragStart(post)"
+                                                 @ondragover:preventDefault
+                                                 @ondrop="() => OnDrop(post, s.Id)">
+                                                <div>
+                                                    <i class="menu"></i> @post.Title
+                                                    @if (!post.IsPublished)
+                                                    {
+                                                        <span class="badge bg-secondary ms-2">Draft</span>
+                                                    }
+                                                </div>
+                                                <span class="badge bg-primary rounded-pill">@post.Order</span>
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div class="list-group-item text-muted small">No posts assigned to this series.</div>
+                                    }
+                                </div>
+                                <small class="text-muted mt-2 d-block">Drag and drop to reorder posts.</small>
+                            </div>
+                            <div class="mb-3">
+                                <h6>Add Blog Posts to this Series:</h6>
+                                <input type="text" class="form-control mb-2" placeholder="Search blog posts by title..."
+                                       value="@GetSearchTerm(s.Id)"
+                                       @oninput="e => OnSearchInput(s.Id, e.Value?.ToString() ?? string.Empty)" />
+                                @if (searchResults.TryGetValue(s.Id, out var results) && !string.IsNullOrWhiteSpace(GetSearchTerm(s.Id)))
+                                {
+                                    <div class="list-group list-group-flush border rounded" style="max-height: 240px; overflow-y: auto;">
+                                        @if (results.Count == 0)
+                                        {
+                                            <div class="list-group-item text-muted small">No matching posts found.</div>
+                                        }
+                                        else
+                                        {
+                                            @foreach (var post in results)
+                                            {
+                                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        @post.Title
+                                                        @if (!post.IsPublished)
+                                                        {
+                                                            <span class="badge bg-secondary ms-2">Draft</span>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(post.SeriesId) && post.SeriesId != s.Id)
+                                                        {
+                                                            <span class="badge bg-warning text-dark ms-2">In another series</span>
+                                                        }
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-success" @onclick="() => AddPostToSeries(post, s.Id)">
+                                                        Add
+                                                    </button>
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+							<hr/>
+							<div class="d-flex justify-content-start gap-2">
+								<button id="edit-series" type="button" class="btn btn-primary d-flex align-items-center gap-2" @onclick="() => EditSeries(s)" aria-label="edit">
+									<i class="pencil"></i>
+									<div class="vr"></div><span>Edit</span>
+								</button>
+								<button id="delete-series" type="button" class="btn btn-danger d-flex align-items-center gap-2" @onclick="() => DeleteSeries(s.Id)" aria-label="delete">
+									<i class="bin2"></i>
+									<div class="vr"></div><span>Delete</span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	} else
+    {
+	    <p>No series exist.</p>
+    }
+</div>
+
+@code {
+    private Model model = new();
+    private List<Series> series = [];
+    private string? expandedSeriesId;
+    private Dictionary<string, List<BlogPost>> postsInSeries = new();
+    private BlogPost? draggedPost;
+    private Dictionary<string, string> searchTerms = new();
+    private Dictionary<string, List<BlogPost>> searchResults = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        series = (await SeriesRepository.GetAllAsync(orderBy: s => s.Name, descending: false)).ToList();
+    }
+
+    private async Task ToggleAccordion(string seriesId)
+    {
+        expandedSeriesId = expandedSeriesId == seriesId ? null : seriesId;
+        if (expandedSeriesId != null && !postsInSeries.ContainsKey(expandedSeriesId))
+        {
+            await LoadPostsForSeries(expandedSeriesId);
+        }
+    }
+
+    private async Task LoadPostsForSeries(string seriesId)
+    {
+        var result = await BlogPostRepository.GetAllAsync(
+            filter: b => b.SeriesId == seriesId,
+            orderBy: b => b.Order,
+            descending: false
+        );
+        postsInSeries[seriesId] = result.ToList();
+    }
+
+    private void OnDragStart(BlogPost post)
+    {
+        draggedPost = post;
+    }
+
+    private async Task OnDrop(BlogPost targetPost, string seriesId)
+    {
+        if (draggedPost == null || draggedPost.Id == targetPost.Id || draggedPost.SeriesId != seriesId)
+        {
+            return;
+        }
+
+        var posts = postsInSeries[seriesId];
+        var draggedIndex = posts.IndexOf(draggedPost);
+        var targetIndex = posts.IndexOf(targetPost);
+
+        posts.RemoveAt(draggedIndex);
+        posts.Insert(targetIndex, draggedPost);
+
+        // Update order
+        for (int i = 0; i < posts.Count; i++)
+        {
+            posts[i].Order = i + 1;
+        }
+
+        await BlogPostRepository.StoreBulkAsync(posts);
+        ToastService.ShowSuccess("Order updated");
+        draggedPost = null;
+        StateHasChanged();
+    }
+
+    private async Task SaveSeries()
+    {
+        if (!string.IsNullOrEmpty(model.Id))
+        {
+            var existing = series.FirstOrDefault(s => s.Id == model.Id);
+            if (existing != null)
+            {
+                existing.Name = model.Name;
+                await SeriesRepository.StoreAsync(existing);
+
+                // Refresh cached blog posts that assigned to this series so updated name appears on blog posts
+                var assignedPosts = (await BlogPostRepository.GetAllAsync(filter: b => b.SeriesId == existing.Id)).ToList();
+                foreach (var post in assignedPosts)
+                {
+                    await BlogPostRepository.StoreAsync(post);
+                }
+
+                ToastService.ShowSuccess("Series updated");
+            }
+        }
+        else
+        {
+            var newSeries = new Series { Name = model.Name };
+            await SeriesRepository.StoreAsync(newSeries);
+            series.Add(newSeries);
+            series = series.OrderBy(s => s.Name).ToList();
+            ToastService.ShowSuccess("Series created");
+        }
+
+        model = new Model();
+    }
+
+    private async Task DeleteSeries(string id)
+    {
+        var assignedPosts = (await BlogPostRepository.GetAllAsync(filter: b => b.SeriesId == id)).ToList();
+        foreach (var post in assignedPosts)
+        {
+            post.RemoveFromSeries();
+            await BlogPostRepository.StoreAsync(post);
+        }
+
+        await SeriesRepository.DeleteAsync(id);
+        series.RemoveAll(s => s.Id == id);
+        postsInSeries.Remove(id);
+        if (expandedSeriesId == id)
+        {
+            expandedSeriesId = null;
+        }
+        ToastService.ShowSuccess("Series deleted");
+    }
+
+    private void EditSeries(Series s)
+    {
+        model.Id = s.Id;
+        model.Name = s.Name;
+    }
+
+    private void CancelEdit()
+    {
+        model = new Model();
+    }
+
+    private string GetSearchTerm(string seriesId) =>
+        searchTerms.TryGetValue(seriesId, out var term) ? term : string.Empty;
+
+    private async Task OnSearchInput(string seriesId, string term)
+    {
+        searchTerms[seriesId] = term;
+
+        var trimmed = term?.Trim() ?? string.Empty;
+        if (string.IsNullOrEmpty(trimmed))
+        {
+            searchResults.Remove(seriesId);
+            return;
+        }
+
+        var lowered = trimmed.ToLowerInvariant();
+        var matches = await BlogPostRepository.GetAllAsync(
+            filter: b => b.SeriesId != seriesId && b.Title.ToLower().Contains(lowered),
+            orderBy: b => b.Title,
+            descending: false,
+            page: 1,
+            pageSize: 20);
+        searchResults[seriesId] = matches.ToList();
+    }
+
+    private async Task AddPostToSeries(BlogPost post, string seriesId)
+    {
+        if (!postsInSeries.ContainsKey(seriesId))
+        {
+            await LoadPostsForSeries(seriesId);
+        }
+
+        var posts = postsInSeries[seriesId];
+        post.AssignToSeries(seriesId, posts.Count + 1);
+        await BlogPostRepository.StoreAsync(post);
+
+        posts.Add(post);
+        postsInSeries[seriesId] = posts;
+
+        if (searchResults.TryGetValue(seriesId, out var results))
+        {
+            results.RemoveAll(p => p.Id == post.Id);
+        }
+
+        ToastService.ShowSuccess($"Added \"{post.Title}\" to the series");
+        StateHasChanged();
+    }
+
+    private sealed class Model
+    {
+        public string Id { get; set; } = string.Empty;
+
+        [Required]
+        [MaxLength(256)]
+        public string Name { get; set; } = string.Empty;
+    }
+}

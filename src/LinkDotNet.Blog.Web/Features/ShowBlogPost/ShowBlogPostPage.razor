@@ -90,6 +90,10 @@ else if (BlogPost is not null)
 				<div class="blogpost-content">
 					@(EnrichWithShortCodes(BlogPost.Content))
 				</div>
+
+				<div class="pt-2">
+					<SeriesNavigation Series="@BlogPost.Series" CurrentBlogPostId="@BlogPost.Id"></SeriesNavigation>
+				</div>
 			</div>
 			<div class="d-flex justify-content-between py-2 border-top border-bottom align-items-center">
 				<Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>

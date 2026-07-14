@@ -1,0 +1,44 @@
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@inject IRepository<BlogPost> BlogPostRepository
+
+@if (Series != null)
+{
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title text-primary">Series: @Series.Name</h5>
+            <div class="list-group list-group-flush small">
+	            @for (var i = 0; i < postsInSeries.Count; i++)
+	            {
+		            var post = postsInSeries[i];
+		            <a href="/blogPost/@post.Id/@post.Slug" class="list-group-item list-group-item-action @(post.Id == CurrentBlogPostId ? "active" : "") py-1">
+			            @(i + 1). @post.Title
+		            </a>
+	            }
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public Series? Series { get; set; }
+
+    [Parameter, EditorRequired]
+    public required string CurrentBlogPostId { get; set; }
+
+    private List<BlogPost> postsInSeries = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Series != null)
+        {
+            var result = await BlogPostRepository.GetAllAsync(
+                filter: b => b.SeriesId == Series.Id && b.IsPublished,
+                orderBy: b => b.Order,
+                descending: false
+            );
+            postsInSeries = result.ToList();
+        }
+    }
+}

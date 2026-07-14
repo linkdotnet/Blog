@@ -39,7 +39,14 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask<TEntity?> GetByIdAsync(string id)
     {
         await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        return await blogDbContext.Set<TEntity>().FirstOrDefaultAsync(b => b.Id == id);
+        var query = blogDbContext.Set<TEntity>().AsQueryable();
+
+        if (typeof(TEntity) == typeof(BlogPost))
+        {
+            query = query.Include("Series");
+        }
+
+        return await query.FirstOrDefaultAsync(b => b.Id == id);
     }
 
     public ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
@@ -150,7 +157,15 @@ public sealed partial class Repository<TEntity> : IRepository<TEntity>
             var count = 0;
             foreach (var record in records)
             {
-                await blogDbContext.Set<TEntity>().AddAsync(record);
+                if (string.IsNullOrEmpty(record.Id))
+                {
+                    await blogDbContext.Set<TEntity>().AddAsync(record);
+                }
+                else
+                {
+                    blogDbContext.Entry(record).State = EntityState.Modified;
+                }
+
                 if (++count % 1000 == 0)
                 {
                     LogBatch(count);

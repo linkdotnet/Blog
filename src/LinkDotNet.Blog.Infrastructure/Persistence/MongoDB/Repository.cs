@@ -40,7 +40,20 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         var filter = Builders<TEntity>.Filter.Eq(e => e.Id, id);
         using var result = await Collection.FindAsync(filter);
-        return await result.FirstOrDefaultAsync();
+        var entity = await result.FirstOrDefaultAsync();
+
+        if (entity is BlogPost { SeriesId: not null } blogPost)
+        {
+            var seriesCollection = database.GetCollection<Series>(nameof(Series));
+            var seriesFilter = Builders<Series>.Filter.Eq(s => s.Id, blogPost.SeriesId);
+            var seriesResult = await seriesCollection.FindAsync(seriesFilter);
+            var series = await seriesResult.FirstOrDefaultAsync();
+
+            var seriesProperty = typeof(BlogPost).GetProperty(nameof(BlogPost.Series));
+            seriesProperty?.SetValue(blogPost, series);
+        }
+
+        return entity;
     }
 
     public async ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
@@ -105,9 +118,9 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     {
         ArgumentNullException.ThrowIfNull(records);
 
-        if (records.Count != 0)
+        foreach (var record in records)
         {
-            await Collection.InsertManyAsync(records);
+            await StoreAsync(record);
         }
     }
 }
