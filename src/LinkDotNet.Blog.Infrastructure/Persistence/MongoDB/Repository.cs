@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Domain;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace LinkDotNet.Blog.Infrastructure.Persistence.MongoDB;
 
@@ -73,6 +74,24 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         return await query
             .Select(selector)
             .ToPagedListAsync(page, pageSize);
+    }
+
+    public async ValueTask<IReadOnlyList<TResult>> GetGroupedByAsync<TKey, TResult>(
+        Expression<Func<TEntity, TKey>> keySelector,
+        Expression<Func<IGrouping<TKey, TEntity>, TResult>> resultSelector,
+        Expression<Func<TEntity, bool>>? filter = null)
+    {
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(resultSelector);
+
+        var query = Collection.AsQueryable();
+
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
+
+        return await query.GroupBy(keySelector).Select(resultSelector).ToListAsync();
     }
 
     public async ValueTask StoreAsync(TEntity entity)

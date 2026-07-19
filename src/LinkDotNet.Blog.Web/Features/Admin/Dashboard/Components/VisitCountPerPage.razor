@@ -73,14 +73,15 @@
 			orderBy: o => o.UpdatedDate);
 	}
 
-	private static async Task<IPagedList<BlogPostRecord>> GetRelevantBlogPostRecords(
+	private static async Task<IReadOnlyList<BlogPostClickAggregate>> GetRelevantBlogPostRecords(
 		IRepository<BlogPostRecord> blogPostRecordRepository,
 		Filter filter)
 	{
-		return await blogPostRecordRepository.GetAllAsync(
-			ur => (!filter.StartDate.HasValue || ur.DateClicked >= filter.StartDate)
-			      && (!filter.EndDate.HasValue || ur.DateClicked <= filter.EndDate),
-			orderBy: o => o.DateClicked);
+		return await blogPostRecordRepository.GetGroupedByAsync(
+			r => r.BlogPostId,
+			g => new BlogPostClickAggregate { BlogPostId = g.Key, ClickCount = g.Sum(x => x.Clicks) },
+			filter: r => (!filter.StartDate.HasValue || r.DateClicked >= filter.StartDate)
+			             && (!filter.EndDate.HasValue || r.DateClicked <= filter.EndDate));
 	}
 
     private async Task<IReadOnlyCollection<VisitCountPageData>> LoadBlogPostInformationAsync()
@@ -88,27 +89,21 @@
 	    var stopwatch = Stopwatch.StartNew();
 
 	    var blogPosts = await GetRelevantBlogPostsAsync(BlogPostRepository, filter);
-	    var userRecords = await GetRelevantBlogPostRecords(BlogPostRecordRepository, filter);
+	    var clickAggregates = await GetRelevantBlogPostRecords(BlogPostRecordRepository, filter);
 
 	    var time = stopwatch.ElapsedMilliseconds;
 	    Logger.LogDebug("Retrieving data took {ElapsedMilliseconds}ms", time);
 
 	    var blogPostDictionary = blogPosts.ToDictionary(bp => bp.Id, bp => bp);
-	    var loadBlogPostInformation = userRecords
-		    .GroupBy(s => s.BlogPostId)
-		    .Where(s => blogPostDictionary.ContainsKey(s.Key))
-		    .Select(s => new
-		    {
-			    Count = s.Sum(l => l.Clicks),
-			    BlogPost = blogPostDictionary[s.Key]
-		    })
-		    .OrderByDescending(s => s.Count)
+	    var loadBlogPostInformation = clickAggregates
+		    .Where(s => blogPostDictionary.ContainsKey(s.BlogPostId))
+		    .OrderByDescending(s => s.ClickCount)
 		    .Select(s => new VisitCountPageData
 		    {
-			    Id = s.BlogPost.Id,
-			    Likes = s.BlogPost.Likes,
-			    Title = s.BlogPost.Title,
-			    ClickCount = s.Count,
+			    Id = blogPostDictionary[s.BlogPostId].Id,
+			    Likes = blogPostDictionary[s.BlogPostId].Likes,
+			    Title = blogPostDictionary[s.BlogPostId].Title,
+			    ClickCount = s.ClickCount,
 		    }).ToImmutableArray();
 
 	    Logger.LogDebug("Processing data took {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds - time);

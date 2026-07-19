@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -71,6 +72,31 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
         }
 
         return await query.Select(selector).ToPagedListAsync(page, pageSize);
+    }
+
+    public async ValueTask<IReadOnlyList<TResult>> GetGroupedByAsync<TKey, TResult>(
+        Expression<Func<TEntity, TKey>> keySelector,
+        Expression<Func<IGrouping<TKey, TEntity>, TResult>> resultSelector,
+        Expression<Func<TEntity, bool>>? filter = null)
+    {
+        ArgumentNullException.ThrowIfNull(keySelector);
+        ArgumentNullException.ThrowIfNull(resultSelector);
+
+        using var session = documentStore.OpenAsyncSession();
+        var query = session.Query<TEntity>();
+        if (filter is not null)
+        {
+            query = query.Where(filter);
+        }
+
+        // RavenDB dynamic map-reduce cannot apply a range filter (e.g. on DateClicked)
+        // before the group/reduce, so we filter server-side and group in memory. The
+        // filter keeps the materialized set small; this matches the existing full-scan
+        // behavior of the other read methods for this provider.
+        var items = await query.ToListAsync();
+        var key = keySelector.Compile();
+        var result = resultSelector.Compile();
+        return items.GroupBy(key).Select(result).ToList();
     }
 
     public async ValueTask StoreAsync(TEntity entity)

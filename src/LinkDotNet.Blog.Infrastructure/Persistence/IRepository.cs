@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -28,6 +29,11 @@ public interface IRepository<TEntity>
         bool descending = true,
         int page = 1,
         int pageSize = int.MaxValue);
+
+    ValueTask<IReadOnlyList<TResult>> GetGroupedByAsync<TKey, TResult>(
+        Expression<Func<TEntity, TKey>> keySelector,
+        Expression<Func<IGrouping<TKey, TEntity>, TResult>> resultSelector,
+        Expression<Func<TEntity, bool>>? filter = null);
 
     ValueTask StoreAsync(TEntity entity);
 

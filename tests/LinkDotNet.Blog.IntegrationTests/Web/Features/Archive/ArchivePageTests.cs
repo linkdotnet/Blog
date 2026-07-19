@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -123,6 +124,11 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
             await Task.Delay(250);
             return PagedList<TProjection>.Empty;
         }
+
+        public ValueTask<IReadOnlyList<TResult>> GetGroupedByAsync<TKey, TResult>(
+            Expression<Func<BlogPost, TKey>> keySelector,
+            Expression<Func<IGrouping<TKey, BlogPost>, TResult>> resultSelector,
+            Expression<Func<BlogPost, bool>>? filter = null) => throw new NotImplementedException();
 
         public ValueTask StoreAsync(BlogPost entity) => throw new NotImplementedException();
 

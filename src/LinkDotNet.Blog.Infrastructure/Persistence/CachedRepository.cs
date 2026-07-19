@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -42,6 +43,12 @@ public sealed class CachedRepository<T> : IRepository<T>
         int page = 1,
         int pageSize = int.MaxValue) =>
         await repository.GetAllByProjectionAsync(selector, filter, orderBy, descending, page, pageSize);
+
+    public async ValueTask<IReadOnlyList<TResult>> GetGroupedByAsync<TKey, TResult>(
+        Expression<Func<T, TKey>> keySelector,
+        Expression<Func<IGrouping<TKey, T>, TResult>> resultSelector,
+        Expression<Func<T, bool>>? filter = null) =>
+        await repository.GetGroupedByAsync(keySelector, resultSelector, filter);
 
     public async ValueTask StoreAsync(T entity)
     {
