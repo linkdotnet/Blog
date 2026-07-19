@@ -510,6 +510,6 @@ public class MarkdownTextAreaTests : BunitContext
             new InputFileChangeEventArgs(new[] { mockFile })));
 
         toastService.Received(1).ShowError(
-            Arg.Is<string>(msg => msg.Contains("large-image.jpg") && msg.Contains("512 KB")));
+            Arg.Is<string>(msg => msg != null && msg.Contains("large-image.jpg") && msg.Contains("512 KB")));
     }
 }

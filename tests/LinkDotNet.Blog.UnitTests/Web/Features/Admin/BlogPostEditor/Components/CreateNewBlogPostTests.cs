@@ -494,7 +494,7 @@ public class CreateNewBlogPostTests : BunitContext
         dialog.Find("input").Input("My Template");
         dialog.Find("button.btn-primary").Click();
 
-        templateRepository.Received(1).StoreAsync(Arg.Is<BlogPostTemplate>(t => t.Id == template.Id));
+        templateRepository.Received(1).StoreAsync(Arg.Is<BlogPostTemplate>(t => t != null && t.Id == template.Id));
     }
 
     [Fact]
