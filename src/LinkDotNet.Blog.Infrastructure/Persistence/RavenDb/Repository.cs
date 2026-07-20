@@ -37,7 +37,16 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     public async ValueTask<TEntity?> GetByIdAsync(string id)
     {
         using var session = documentStore.OpenAsyncSession();
-        return await session.LoadAsync<TEntity>(id);
+        var entity = await session.LoadAsync<TEntity>(id);
+
+        if (entity is BlogPost { SeriesId: not null } blogPost)
+        {
+            var series = await session.LoadAsync<Series>(blogPost.SeriesId);
+            var seriesProperty = typeof(BlogPost).GetProperty(nameof(BlogPost.Series));
+            seriesProperty?.SetValue(blogPost, series);
+        }
+
+        return entity;
     }
 
     public ValueTask<IPagedList<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>>? filter = null,
