@@ -31,6 +31,19 @@ public class GiscusTests : BunitContext
     }
 
     [Fact]
+    public void ShouldSetAnchorOnContainerSoLoginRedirectsBackToComments()
+    {
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithIsGiscusEnabled(true).Build()));
+        Services.AddScoped(_ => Options.Create(new GiscusConfigurationBuilder().Build()));
+        JSInterop.SetupModule("./Features/ShowBlogPost/Components/Giscus.razor.js");
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Render<Giscus>();
+
+        cut.Find("div.giscus").Id.ShouldBe("comments");
+    }
+
+    [Fact]
     public void ShouldNotInitGiscusWhenNoInformationProvided()
     {
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
