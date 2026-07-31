@@ -4,6 +4,9 @@
 
 The appsettings.json file has a lot of options to customize the content of the blog. The following table shows which values are used when.
 
+Browser spellchecking uses the `<html lang="en">` value in
+`src/LinkDotNet.Blog.Web/App.razor`. Change `en` to your blog's language so the browser selects the correct dictionary.
+
 ```json
 {
 	"BlogName": "linkdotnet",

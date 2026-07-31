@@ -53,7 +53,7 @@
     <EditForm Model="@model" OnValidSubmit="SaveShortCode">
         <div class="mb-3">
             <label for="short-code-name" class="form-label">Name</label>
-            <InputText Id="short-code-name" class="form-control" @bind-Value="@model.Name" />
+            <InputText Id="short-code-name" class="form-control" spellcheck="true" @bind-Value="@model.Name" />
         </div>
         <div class="mb-3">
             <label for="short-code-content" class="form-label">Shortcode Content</label>
