@@ -42,7 +42,7 @@
     <PackageVersion Include="NSubstitute" Version="6.0.0" />
     <PackageVersion Include="RavenDB.TestDriver" Version="7.2.4" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="bunit" Version="2.7.2" />
+    <PackageVersion Include="bunit" Version="2.8.6" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
