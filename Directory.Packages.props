@@ -40,7 +40,7 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageVersion Include="NSubstitute" Version="6.0.0" />
-    <PackageVersion Include="RavenDB.TestDriver" Version="7.2.4" />
+    <PackageVersion Include="RavenDB.TestDriver" Version="7.2.5" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="bunit" Version="2.7.2" />
     <PackageVersion Include="coverlet.collector" Version="10.0.1">
