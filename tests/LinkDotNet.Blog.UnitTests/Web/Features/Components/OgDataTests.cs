@@ -27,6 +27,28 @@ public class OgDataTests : BunitContext
     }
 
     [Fact]
+    public void ShouldRenderImagePreviewRobotsDirectiveByDefault()
+    {
+        ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent)!);
+
+        var cut = Render<OgData>(p => p.Add(s => s.Title, "Title"));
+
+        AssertMetaTagExistsWithValue(cut, "robots", "max-image-preview:large");
+    }
+
+    [Fact]
+    public void ShouldRenderGivenRobotsDirective()
+    {
+        ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent)!);
+
+        var cut = Render<OgData>(p => p
+            .Add(s => s.Title, "Title")
+            .Add(s => s.Robots, "noindex, follow"));
+
+        AssertMetaTagExistsWithValue(cut, "robots", "noindex, follow");
+    }
+
+    [Fact]
     public void ShouldNotSetMetaInformationWhenNotProvided()
     {
         ComponentFactories.AddStub<HeadContent>(ps => ps.Get(p => p.ChildContent)!);

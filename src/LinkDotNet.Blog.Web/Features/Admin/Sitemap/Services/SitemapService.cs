@@ -34,7 +34,6 @@ public sealed class SitemapService : ISitemapService
         urlSet.Urls.Add(new SitemapUrl { Location = baseUri });
         urlSet.Urls.Add(new SitemapUrl { Location = $"{baseUri}archive" });
         urlSet.Urls.AddRange(CreateUrlsForBlogPosts(blogPosts, baseUri));
-        urlSet.Urls.AddRange(CreateUrlsForTags(blogPosts, baseUri));
 
         return urlSet;
     }
@@ -43,19 +42,10 @@ public sealed class SitemapService : ISitemapService
     {
         return blogPosts.Select(b => new SitemapUrl
         {
-            Location = $"{baseUri}blogPost/{b.Id}",
+            Location = string.IsNullOrEmpty(b.Slug)
+                ? $"{baseUri}blogPost/{b.Id}"
+                : $"{baseUri}blogPost/{b.Id}/{b.Slug}",
             LastModified = b.UpdatedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
         }).ToImmutableArray();
-    }
-
-    private static IEnumerable<SitemapUrl> CreateUrlsForTags(IEnumerable<BlogPost> blogPosts, string baseUri)
-    {
-        return blogPosts
-            .SelectMany(b => b.Tags)
-            .Distinct()
-            .Select(t => new SitemapUrl
-            {
-                Location = $"{baseUri}searchByTag/{Uri.EscapeDataString(t)}",
-            });
     }
 }

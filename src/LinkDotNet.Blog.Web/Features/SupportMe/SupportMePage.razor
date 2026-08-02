@@ -11,7 +11,7 @@
     <OgData Title="@("Support Me - " + ProfileInformation.Value.Name)"
             Description="@("Support Me - " + ProfileInformation.Value.Name)"
             Keywords="@($"Donation,Support,{ProfileInformation.Value.Name})")"
-            AbsolutePreviewImageUrl="@ImageUrl"></OgData>
+            AbsolutePreviewImageUrl="@ImageUrl" />
 
     <div class="container">
         @if (!string.IsNullOrEmpty(SupportConfiguration.Value.SupportMePageDescription))

@@ -26,12 +26,30 @@ public sealed class SitemapServiceTests : SqlDatabaseTestBase<BlogPost>
             .Build();
         await Repository.StoreAsync(publishedBlogPost);
         await Repository.StoreAsync(unpublishedBlogPost);
-        
+
         var sitemap = await sut.CreateSitemapAsync("https://www.linkdotnet.blog");
-        
+
         sitemap.Urls.Count.ShouldBe(3);
         sitemap.Urls.ShouldContain(u => u.Location == "https://www.linkdotnet.blog/");
         sitemap.Urls.ShouldContain(u => u.Location == "https://www.linkdotnet.blog/archive");
-        sitemap.Urls.ShouldContain(u => u.Location == "https://www.linkdotnet.blog/blogPost/" + publishedBlogPost.Id);
+        sitemap.Urls.ShouldContain(u => u.Location == "https://www.linkdotnet.blog/blogPost/" + publishedBlogPost.Id + "/title-1");
+    }
+
+    [Fact]
+    public async Task ShouldNotIncludeTagPages()
+    {
+        // Tag pages are thin listing pages that search engines consistently refuse
+        // to index, so submitting them only spends crawl budget that should go to
+        // the posts themselves.
+        var blogPost = new BlogPostBuilder()
+            .WithTitle("Title 1")
+            .WithTags("C#", ".NET")
+            .IsPublished()
+            .Build();
+        await Repository.StoreAsync(blogPost);
+
+        var sitemap = await sut.CreateSitemapAsync("https://www.linkdotnet.blog");
+
+        sitemap.Urls.ShouldNotContain(u => u.Location.Contains("searchByTag", StringComparison.Ordinal));
     }
 }

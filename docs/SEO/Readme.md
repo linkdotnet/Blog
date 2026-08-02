@@ -36,6 +36,14 @@ This blog also offers an RSS feed ([RSS 2.0 specification](https://validator.w3.
 
 This blog automatically generates a [sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) that lists all blog posts, the archive and pages of the blog.
 
+Tag pages (`/searchByTag/...`) are deliberately left out. They are thin listing pages that search engines routinely crawl and then decline to index, so listing them mostly asserts an importance they do not have.
+
+### Tag pages and indexing
+
+Tag pages are served with `<meta name="robots" content="noindex, follow">`. Search engines crawl these pages and then decline to index them anyway, so the tag states that outright instead of leaving it to be re-decided on every crawl. The pages keep working normally for visitors; only crawlers are affected.
+
+Note that `follow` erodes over time - search engines crawl non-indexed pages less and less often - so do not rely on tag pages to route link equity to your posts.
+
 ## JSON LD
 This blog supports a JSON-LD for structured data. The current support is limited / rudimentary. Information like `Headline` (the title of the blog post), `Author`, `PublishDated` and `PreviewImage` are present.
 

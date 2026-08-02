@@ -2,9 +2,15 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Components
 @inject IRepository<BlogPost> BlogPostRepository
 
 <PageTitle>Search for tag: @Tag</PageTitle>
+@* Tag pages are thin listing pages that search engines crawl and then decline to
+   index anyway. Saying so outright keeps them out of the index profile. *@
+<OgData Title="@($"Posts tagged with {Tag}")"
+        Description="@($"All blog posts tagged with {Tag}.")"
+        Robots="noindex, follow" />
 
 <div class="container">
     <h3 class="pb-3 fw-bold">All posts with Tag <em>@Tag</em></h3>
@@ -19,6 +25,7 @@
     public required string Tag { get; set; }
 
     IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
+
     protected override async Task OnParametersSetAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);

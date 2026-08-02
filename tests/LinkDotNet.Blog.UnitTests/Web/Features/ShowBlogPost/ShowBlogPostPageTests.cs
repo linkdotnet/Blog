@@ -164,7 +164,27 @@ public class ShowBlogPostPageTests : BunitContext
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
         
-        cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.ShouldBe("blogPost/1");
+        cut.FindComponent<OgData>().Instance.CanonicalRelativeUrl.ShouldBe("blogPost/1/sample");
+    }
+
+    [Fact]
+    public void ShouldRenderStructuredDataIntoPageBody()
+    {
+        // Regression: the JSON-LD block used to be nested inside OgData's HeadContent.
+        // HeadOutlet does not emit script tags, so it never reached the rendered page.
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var blogPost = new BlogPostBuilder()
+            .WithTitle("sample")
+            .Build();
+        blogPost.Id = "1";
+        repositoryMock.GetByIdAsync("1").Returns(blogPost);
+        Services.AddScoped(_ => repositoryMock);
+
+        var cut = Render<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        var script = cut.Find("script[type='application/ld+json']");
+        script.TextContent.ShouldContain("sample");
     }
 
     [Fact]

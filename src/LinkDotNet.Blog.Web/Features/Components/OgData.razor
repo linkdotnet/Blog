@@ -4,6 +4,7 @@
 <HeadContent>
     <meta name="title" property="og:title" content="@Title" />
     <link rel="canonical" href="@GetCanoncialUri()" />
+    <meta name="robots" content="@Robots" />
     @if (AbsolutePreviewImageUrl is not null)
     {
         <meta name="image" property="og:image" content="@AbsolutePreviewImageUrl"/>
@@ -18,12 +19,6 @@
     {
         <meta name="description" property="og:description" content="@Description" />
     }
-
-    @if (ChildContent is not null)
-    {
-	    @ChildContent
-    }
-
 </HeadContent>
 @code {
 
@@ -42,8 +37,8 @@
     [Parameter]
     public string? CanonicalRelativeUrl { get; set; }
 
-	[Parameter]
-	public RenderFragment? ChildContent { get; set; }
+    [Parameter]
+    public string Robots { get; set; } = "max-image-preview:large";
 
 	private string GetCanoncialUri()
     {
