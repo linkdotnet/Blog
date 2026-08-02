@@ -9,6 +9,8 @@
 @inject IInstantJobRegistry InstantJobRegistry
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IRepository<BlogPostTemplate> TemplateRepository
+@inject IRepository<Series> SeriesRepository
+@inject IRepository<BlogPost> BlogPostRepository
 @inject IToastService ToastService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService
@@ -147,6 +149,77 @@
                                         @(BlogPost != null ? "Update Post" : "Create Post")
                                     </button>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="card shadow-sm border-0 mb-4 hover-shadow-lg transition">
+                            <div class="card-header border-bottom-0 py-3">
+                                <h6 class="card-title mb-0 text-primary">Blog Series</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <label for="series" class="form-label fw-bold mb-0">Select Series</label>
+                                        <button id="toggle-add-series" type="button" class="btn btn-sm btn-outline-primary"
+                                                title="Add new series" aria-label="Add new series"
+                                                @onclick="ToggleAddSeries">
+                                            <i class="plus"></i> @(showAddSeries ? "Cancel Add" : "Add Series")
+                                        </button>
+                                    </div>
+                                    <InputSelect id="series" class="form-select" @bind-Value="model.SeriesId" @bind-Value:after="LoadPostsForSeries">
+                                        <option value="">None</option>
+                                        @foreach (var s in blogSeries)
+                                        {
+                                            <option value="@s.Id">@s.Name</option>
+                                        }
+                                    </InputSelect>
+                                    @if (showAddSeries)
+                                    {
+                                        <div class="input-group mt-2">
+                                            <input id="new-series-title" type="text" class="form-control"
+                                                   placeholder="New series title"
+                                                   maxlength="256"
+                                                   @bind="newSeriesTitle"
+                                                   @bind:event="oninput"
+                                                   @onkeydown="OnNewSeriesKeyDown" />
+                                            <button id="add-series" type="button" class="btn btn-primary"
+                                                    disabled="@string.IsNullOrWhiteSpace(newSeriesTitle)"
+                                                    @onclick="AddSeriesAsync">
+                                                Add Series
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                                @if (!string.IsNullOrEmpty(model.SeriesId) && postsInSeries.Any())
+                                {
+                                    <div class="mt-3">
+                                        <h6 class="small fw-bold">Series Order:</h6>
+                                        <div class="list-group list-group-flush border rounded shadow-sm">
+                                            @for (var i = 0; i < postsInSeries.Count; i++)
+                                            {
+                                                var post = postsInSeries[i];
+                                                var displayOrder = i + 1;
+                                                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 @(post.Id == BlogPostId ? "bg-primary fw-bold" : "")"
+                                                     style="cursor: move;"
+                                                     draggable="true"
+                                                     @ondragstart="() => OnDragStart(post)"
+                                                     @ondragover:preventDefault
+                                                     @ondrop="() => OnDrop(post)">
+                                                    <div class="text-truncate me-2" title="@post.Title">
+                                                        <i class="menu small text-muted me-1"></i> @post.Title
+                                                    </div>
+                                                    <span class="badge bg-secondary rounded-pill small">@displayOrder</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <small class="form-text text-muted mt-2 d-block" style="font-size: 0.75rem;">
+                                            Drag posts to reorder.
+                                        </small>
+                                    </div>
+                                }
+                                <small class="form-text text-muted mt-2 d-block">
+                                    Assigning a post to a series will display it as part of that series to readers.
+                                </small>
                             </div>
                         </div>
 
@@ -331,8 +404,15 @@
     private bool canSubmit = true;
     private IPagedList<ShortCode> shortCodes = PagedList<ShortCode>.Empty;
     private IPagedList<BlogPostTemplate> blogPostTemplates = PagedList<BlogPostTemplate>.Empty;
+    private IReadOnlyList<Series> blogSeries = [];
     private IReadOnlyList<string> availableTags = [];
     private IReadOnlyList<string> originalTags = [];
+
+    private List<BlogPost> postsInSeries = [];
+    private BlogPost? draggedPost;
+
+    private bool showAddSeries;
+    private string newSeriesTitle = string.Empty;
 
     private bool IsScheduled => model.ScheduledPublishDate.HasValue;
 
@@ -342,6 +422,7 @@
     {
         shortCodes = await ShortCodeRepository.GetAllAsync();
         blogPostTemplates = await TemplateRepository.GetAllAsync();
+        blogSeries = (await SeriesRepository.GetAllAsync(orderBy: s => s.Name, descending: false)).ToList();
         await LoadAvailableTagsAsync();
 
         if (AppConfiguration.Value.UseMultiAuthorMode)
@@ -364,6 +445,109 @@
         {
             versionHistory = await BlogPostVersionService.GetVersionHistoryAsync(BlogPostId);
         }
+
+        if (!string.IsNullOrEmpty(model.SeriesId))
+        {
+            await LoadPostsForSeries();
+        }
+    }
+
+    private async Task LoadPostsForSeries()
+    {
+        if (string.IsNullOrEmpty(model.SeriesId))
+        {
+            postsInSeries = [];
+            return;
+        }
+
+        var result = await BlogPostRepository.GetAllAsync(
+            filter: b => b.SeriesId == model.SeriesId,
+            orderBy: b => b.Order,
+            descending: false
+        );
+        postsInSeries = result.ToList();
+
+        // For a post that isn't part of the series yet (new post, or an existing post being
+        // assigned to a different series), place it at the end instead of the beginning.
+        var isInSeries = !string.IsNullOrEmpty(BlogPostId)
+            && postsInSeries.Any(p => p.Id == BlogPostId);
+        if (!isInSeries)
+        {
+            model.Order = postsInSeries.Count + 1;
+        }
+    }
+
+    private void OnDragStart(BlogPost post)
+    {
+        draggedPost = post;
+    }
+
+    private async Task OnDrop(BlogPost targetPost)
+    {
+        if (draggedPost == null || draggedPost.Id == targetPost.Id)
+        {
+            return;
+        }
+
+        var draggedIndex = postsInSeries.IndexOf(draggedPost);
+        var targetIndex = postsInSeries.IndexOf(targetPost);
+
+        postsInSeries.RemoveAt(draggedIndex);
+        postsInSeries.Insert(targetIndex, draggedPost);
+
+        // Update orders
+        for (int i = 0; i < postsInSeries.Count; i++)
+        {
+            postsInSeries[i].Order = i + 1;
+        }
+
+        await BlogPostRepository.StoreBulkAsync(postsInSeries);
+        ToastService.ShowSuccess("Series order updated");
+        draggedPost = null;
+        StateHasChanged();
+    }
+
+    private void ToggleAddSeries()
+    {
+        showAddSeries = !showAddSeries;
+        newSeriesTitle = string.Empty;
+    }
+
+    private async Task OnNewSeriesKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await AddSeriesAsync();
+        }
+    }
+
+    private async Task AddSeriesAsync()
+    {
+        var title = newSeriesTitle?.Trim();
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return;
+        }
+
+        var existing = blogSeries.FirstOrDefault(s => string.Equals(s.Name, title, StringComparison.OrdinalIgnoreCase));
+        if (existing is not null)
+        {
+            model.SeriesId = existing.Id;
+            await LoadPostsForSeries();
+            ToastService.ShowInfo("Series already exists; selected existing one");
+        }
+        else
+        {
+            var newSeries = new Series { Name = title };
+            await SeriesRepository.StoreAsync(newSeries);
+            blogSeries = (await SeriesRepository.GetAllAsync(orderBy: s => s.Name, descending: false)).ToList();
+            model.SeriesId = newSeries.Id;
+            await LoadPostsForSeries();
+            ToastService.ShowSuccess("Series created");
+        }
+
+        showAddSeries = false;
+        newSeriesTitle = string.Empty;
     }
 
     private string GetStatusText()
