@@ -9,4 +9,11 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<!-- S8969/S8970 (null-forgiving operator) are also switched off in .editorconfig, but
+		     severities configured there never reach diagnostics reported against .razor files,
+		     so the Razor generated code needs the suppression here as well. -->
+		<NoWarn>$(NoWarn);S8969;S8970</NoWarn>
+	</PropertyGroup>
+
 </Project>

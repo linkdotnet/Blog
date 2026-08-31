@@ -1,5 +1,6 @@
 #!/bin/bash
 
-dotnet test --collect:"XPlat Code Coverage" --no-build --verbosity normal -p:CollectCoverage=true -p:CoverletOutputFormat="opencover"
+rm -rf ./TestResults ./CoverageReport
+dotnet test -c Release --coverage --coverage-output-format cobertura
 dotnet tool install --global dotnet-reportgenerator-globaltool
-reportgenerator.exe -reports:".\tests\*\coverage.opencover.xml" -targetdir:".\CoverageReport" -reporttypes:"htmlsummary"
+reportgenerator -reports:"./TestResults/*.cobertura.xml" -targetdir:"./CoverageReport" -reporttypes:"htmlsummary"

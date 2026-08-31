@@ -37,4 +37,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -c Release
     - name: Test
-      run: dotnet test -c Release --no-build -p:VSTestUseMSBuildOutput=false
+      run: dotnet test -c Release --no-build
