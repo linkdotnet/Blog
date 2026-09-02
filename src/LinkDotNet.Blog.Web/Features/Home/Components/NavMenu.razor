@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 @implements IDisposable
 
-<nav class="navbar navbar-expand-lg navbar-light w-100">
+<nav class="navbar navbar-expand-lg w-100">
     <div class="container-fluid">
         @if (!string.IsNullOrEmpty(Configuration.Value.BlogBrandUrl))
         {
@@ -19,20 +19,26 @@
         {
             <a class="nav-brand barcode ms-5" href="/">@Configuration.Value.BlogName</a>
         }
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+        <div class="navbar-top-actions d-flex align-items-center d-lg-none ms-auto">
+            <button type="button" class="nav-icon-button" @onclick="ToggleSearchOverlay"
+                    title="Search" aria-label="Search">
+                <i class="search"></i>
+            </button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 column-gap-4">
-	            <li><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
-	            <li><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
-	            <li><a class="nav-link" href="/bookmarks"><i class="bookmark"></i> Bookmarks</a>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+	            <li class="nav-item"><a class="nav-link" href="/"><i class="home"></i> <span class="nav-label">Home</span></a></li>
+	            <li class="nav-item"><a class="nav-link" href="/archive"><i class="books"></i> <span class="nav-label">Archive</span></a></li>
+	            <li class="nav-item"><a class="nav-link" href="/bookmarks"><i class="bookmark"></i> <span class="nav-label">Bookmarks</span></a>
 		        </li>
 	            @if (Configuration.Value.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="AboutMe">
-                            <i class="profile"></i> About me
+                            <i class="profile"></i> <span class="nav-label">About me</span>
                         </a>
                     </li>
                 }
@@ -41,14 +47,14 @@
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="SupportMe">
-                            <i class="coin-dollar"></i> Support me
+                            <i class="coin-dollar"></i> <span class="nav-label">Support me</span>
                         </a>
                     </li>
                 }
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="rssDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="RSS Selector">
-                        <i class="rss2"></i> RSS
+                        <i class="rss2"></i> <span class="nav-label">RSS</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="rssDropdown">
 	                    <li><a class="dropdown-item" href="/feed.rss" target="_blank" aria-label="RSS with All Posts">All Posts (Summary)</a></li>
@@ -57,30 +63,44 @@
                 </li>
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
+            </ul>
+
+            @* On mobile the utilities strip only earns a divider when it holds more
+               than the lone theme toggle - otherwise it is a single orphaned icon. *@
+            <hr class="dropdown-divider my-2 @(Configuration.Value.EnableTagDiscoveryPanel ? "d-lg-none" : "d-none")">
+
+            <ul class="navbar-nav navbar-utilities mb-2 mb-lg-0 me-5 @(Configuration.Value.EnableTagDiscoveryPanel ? "navbar-utilities--strip" : "")">
                 <li class="nav-item d-flex align-items-center"><ThemeToggler Class="nav-link"></ThemeToggler></li>
 
                 @if (Configuration.Value.EnableTagDiscoveryPanel)
                 {
                     <li class="nav-item d-flex align-items-center me-lg-2 mb-2 mb-lg-0">
-                        <a class="nav-link d-flex align-items-center justify-content-center" @onclick="ToggleTagDiscoveryPanel"
-                           style="font-family: 'icons'; font-weight: 900; cursor: pointer;"
-                           title="Discover new topics"> &#xE936; </a>
+                        <button type="button" class="nav-icon-button" @onclick="ToggleTagDiscoveryPanel"
+                                title="Discover new topics" aria-label="Discover new topics">
+                            <i class="price-tags"></i>
+                        </button>
                     </li>
                 }
 
-                <li class="d-flex">
-                    <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
-                </li>
+                @if (!_isSearchOpen)
+                {
+                    <li class="d-none d-lg-flex">
+                        <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
+                    </li>
+                }
             </ul>
         </div>
     </div>
 </nav>
 <TagDiscoveryPanel IsOpen="@_isOpen" OnClose="CloseTagDiscoveryPanel" />
+<SearchOverlay IsOpen="@_isSearchOpen" OnClose="CloseSearchOverlay" SearchEntered="NavigateToSearchPage" />
 
 @code {
     private string currentUri = string.Empty;
 
     private bool _isOpen;
+
+    private bool _isSearchOpen;
 
     protected override void OnInitialized()
     {
@@ -90,6 +110,7 @@
 
     private void NavigateToSearchPage(string searchTerm)
     {
+        _isSearchOpen = false;
         var escapeDataString = Uri.EscapeDataString(searchTerm);
         NavigationManager.NavigateTo($"search/{escapeDataString}");
     }
@@ -113,5 +134,15 @@
     private void CloseTagDiscoveryPanel()
     {
         _isOpen = false;
+    }
+
+    private void ToggleSearchOverlay()
+    {
+        _isSearchOpen = !_isSearchOpen;
+    }
+
+    private void CloseSearchOverlay()
+    {
+        _isSearchOpen = false;
     }
 }

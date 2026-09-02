@@ -1,15 +1,23 @@
-﻿<div class="search-bar">
-	<input type="text" class="search-bar-input" placeholder="search" aria-label="search" spellcheck="true" @bind-value="searchTerm"
-	       @onkeyup="@CheckForEnter" title="Search for blog post via title or tags"/>
-	<button class="search-bar-button" aria-label="search submit" @onclick="CallSearchEntered"><i class="search"></i></button>
+﻿<div class="search-bar-slot @(FullWidth ? "search-bar-slot--full" : "")">
+	<div class="search-bar @(FullWidth ? "search-bar--full" : "")">
+		<input @ref="_inputRef" type="text" class="search-bar-input" placeholder="search" aria-label="search" @bind-value="searchTerm"
+		       @onkeyup="@CheckForEnter" title="Search for blog post via title or tags"/>
+		<button class="search-bar-button" aria-label="search submit" @onclick="CallSearchEntered"><i class="search"></i></button>
+	</div>
 </div>
 
 
 @code {
     private string searchTerm = string.Empty;
+    private ElementReference _inputRef;
 
     [Parameter]
     public EventCallback<string> SearchEntered { get; set; }
+
+    [Parameter]
+    public bool FullWidth { get; set; }
+
+    public async Task FocusAsync() => await _inputRef.FocusAsync();
 
     private async Task CallSearchEntered()
     {
@@ -26,7 +34,7 @@
     {
         if (e.Code is "Enter" or "NumpadEnter")
         {
-            await SearchEntered.InvokeAsync(searchTerm);
+            await CallSearchEntered();
         }
     }
 

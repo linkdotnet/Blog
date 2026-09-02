@@ -1,0 +1,64 @@
+@using Microsoft.AspNetCore.Components.Web;
+
+@if (IsOpen)
+{
+    <div class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25"
+         style="z-index:1040; backdrop-filter: blur(2px);"
+         @onclick="Close">
+    </div>
+
+    <div class="position-fixed top-0 start-0 w-100 d-flex justify-content-center"
+         style="z-index:1050; pointer-events:none; padding-top: 15vh;">
+
+        <div class="bg-body border rounded shadow p-3 w-100"
+             style="max-width: 500px; margin: 0 1rem; pointer-events:auto;"
+             @onkeydown="HandleKeyDown">
+
+            <SearchInput @ref="_searchInput" FullWidth="true" SearchEntered="OnSearchEntered"></SearchInput>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<string> SearchEntered { get; set; }
+
+    private SearchInput? _searchInput;
+    private bool _shouldFocus;
+
+    protected override void OnParametersSet()
+    {
+        if (IsOpen)
+        {
+            _shouldFocus = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen && _shouldFocus && _searchInput is not null)
+        {
+            _shouldFocus = false;
+            await _searchInput.FocusAsync();
+        }
+    }
+
+    private async Task OnSearchEntered(string searchTerm)
+    {
+        await SearchEntered.InvokeAsync(searchTerm);
+    }
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape")
+        {
+            await Close();
+        }
+    }
+}

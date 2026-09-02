@@ -271,9 +271,151 @@ code {
 	font-size: 2.5rem;
 }
 
-::deep .navbar-nav li {
-	padding-left: 1rem;
+.navbar .navbar-nav {
+	column-gap: 12px;
+	align-items: center;
+}
+
+.navbar .navbar-nav > li {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	white-space: nowrap;
+}
+
+/* The search button next to the hamburger. Mobile only - on desktop the
+   search pill inside the utilities list is used instead. */
+.navbar .navbar-top-actions {
+	column-gap: .5rem;
+}
+
+.navbar .navbar-nav .nav-link {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: .15rem;
+	text-align: center;
+	padding: .25rem .35rem;
+}
+
+.navbar .navbar-nav .nav-link > i {
+	font-size: 1.15rem;
+	line-height: 1;
+}
+
+.navbar .nav-label {
+	font-size: .75rem;
+	line-height: 1.1;
+}
+
+.navbar .navbar-nav .dropdown-toggle {
+	position: relative;
+}
+
+.navbar .navbar-nav .dropdown-toggle .nav-label {
+	display: inline-flex;
+	align-items: center;
+	gap: .25rem;
+}
+
+.navbar .navbar-nav .dropdown-toggle::after {
+	position: absolute;
+	right: -.35rem;
+	bottom: .45rem;
+}
+
+.navbar .nav-icon-button {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: .15rem;
+	padding: .25rem .35rem;
+	border: 0;
+	background: transparent;
+	color: var(--bs-navbar-color);
+	cursor: pointer;
+}
+
+.navbar .nav-icon-button:hover {
+	color: var(--bs-navbar-hover-color);
+}
+
+.navbar .nav-icon-button > i {
+	font-size: 1.15rem;
+	line-height: 1;
+}
+
+.navbar .navbar-nav .nav-link > svg {
+	display: block;
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+	.navbar .nav-brand.ms-5 {
+		margin-left: 1rem !important;
+	}
+
+	.navbar .navbar-utilities.me-5 {
+		margin-right: 1rem !important;
+	}
+
+	.navbar .navbar-nav .nav-link,
+	.navbar .nav-icon-button {
+		padding-left: .15rem;
+		padding-right: .15rem;
+	}
+
+	.navbar .barcode {
+		font-size: 2rem;
+	}
+}
+
+@media (max-width: 991.98px) {
+	.navbar .navbar-nav {
+		align-items: stretch;
+	}
+
+	.navbar .navbar-nav > li {
+		justify-content: flex-start;
+	}
+
+	.navbar .navbar-nav .nav-link,
+	.navbar .nav-icon-button {
+		flex-direction: row;
+		justify-content: flex-start;
+		gap: .5rem;
+	}
+
+	/* Roomier rows so every entry is a comfortable touch target. */
+	.navbar .navbar-nav .nav-link {
+		padding-top: .6rem;
+		padding-bottom: .6rem;
+	}
+
+	.navbar .nav-label {
+		font-size: 1rem;
+	}
+
+	.navbar .navbar-nav .dropdown-toggle::after {
+		position: static;
+	}
+	.navbar .navbar-utilities--strip {
+		flex-direction: row;
+		align-items: center;
+		gap: 1.25rem;
+		padding: .25rem .35rem .5rem;
+	}
+
+	.navbar .navbar-utilities--strip > li {
+		width: auto;
+	}
+
+	.navbar .navbar-utilities--strip .nav-icon-button,
+	.navbar .navbar-utilities--strip .nav-link {
+		padding-top: .25rem;
+		padding-bottom: .25rem;
+	}
 }
 /*endregion */
 
@@ -535,6 +677,12 @@ code {
 /*#endregion */
 
 /*region SearchInput.razor */
+.search-bar-slot {
+	width: 170px;
+	display: flex;
+	justify-content: flex-end;
+}
+
 .search-bar {
 	border: 2px solid;
 	display: flex;
@@ -542,9 +690,12 @@ code {
 	overflow: hidden;
 	height: 40px;
 	padding: 3px;
-	width: 40px;
 	position: relative;
 	transition: width 300ms ease-in-out;
+}
+
+.search-bar:not(.search-bar--full) {
+	width: 40px;
 }
 
 .search-bar-input {
@@ -581,15 +732,33 @@ code {
 	color: var(--bs-navbar-color);
 }
 
-.search-bar:focus-within {
+.search-bar:not(.search-bar--full):focus-within {
 	width: 170px;
 }
 
-.search-bar:focus-within .search-bar-input {
+.search-bar:not(.search-bar--full):focus-within .search-bar-input {
 	cursor: initial;
 	opacity: 1;
 	z-index: initial;
 	max-width: 130px;
+}
+
+	}
+.search-bar-slot--full {
+	width: 100%;
+}
+
+.search-bar--full {
+	width: 100%;
+	height: 44px;
+}
+
+.search-bar--full .search-bar-input {
+	position: static;
+	opacity: 1;
+	cursor: initial;
+	z-index: initial;
+	font-size: 1rem;
 }
 /*#endregion */
 
