@@ -131,7 +131,7 @@ The tool looks for a `ConfigVersion` field in your `appsettings.json`:
 
 ```json
 {
-  "ConfigVersion": "12.0",
+  "ConfigVersion": "15.0",
   ...
 }
 ```
@@ -142,7 +142,7 @@ If this field doesn't exist, the tool assumes you're running version 11.0 or ear
 
 The tool applies migrations sequentially:
 1. Detects current version (e.g., 12.0)
-2. Finds all migrations from current to latest (11.0→12.0)
+2. Finds all migrations from current to latest (12.0→13.0→15.0)
 3. Applies each migration in order
 4. Updates the `ConfigVersion` field to the latest version
 
@@ -191,6 +191,38 @@ The tool is **idempotent** - running it multiple times on the same file is safe:
 
 **Manual Steps Required:**
 - None (setting is optional)
+
+### Version 12.0 → 13.0
+
+**Changes:**
+- Adds `EnableTagDiscoveryPanel` setting (default: `true`)
+
+**After:**
+```json
+{
+  "EnableTagDiscoveryPanel": true
+}
+```
+
+**Manual Steps Required:**
+- None (setting is optional)
+
+### Version 13.0 → 15.0
+
+Version 14.0 had no configuration changes, so this migration goes directly from 13.0 to 15.0.
+
+**Changes:**
+- Adds `EnableBrokenLinkChecker` setting (default: `true`)
+
+**After:**
+```json
+{
+  "EnableBrokenLinkChecker": true
+}
+```
+
+**Manual Steps Required:**
+- Create the `BrokenLinks` table (see [MIGRATION.md](../../MIGRATION.md))
 
 ## Command-Line Reference
 
