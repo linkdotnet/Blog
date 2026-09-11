@@ -161,7 +161,7 @@ else if (BlogPost is not null)
 	{
 		if (shortCodes.Count == 0)
 		{
-			return MarkdownConverter.ToMarkupString(content);
+			return MarkdownConverter.ToMarkupStringWithHeadingAnchors(content, NavigationManager.Uri);
 		}
 
 		var sb = new StringBuilder(content);
@@ -170,7 +170,7 @@ else if (BlogPost is not null)
 			sb.Replace($"[[{shortCode.Name}]]", shortCode.MarkdownContent);
 		}
 
-		return MarkdownConverter.ToMarkupString(sb.ToString());
+		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(sb.ToString(), NavigationManager.Uri);
 	}
 
     private async Task UpdateLikes(bool hasLiked)

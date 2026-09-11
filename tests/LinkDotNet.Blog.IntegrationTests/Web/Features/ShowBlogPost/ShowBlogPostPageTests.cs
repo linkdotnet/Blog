@@ -10,6 +10,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -188,6 +189,24 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
 
         cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
         cut.FindAll("i.user-tie").ShouldBeEmpty();
+    }
+
+    [Fact]
+    public async Task ShouldRenderHeadingAnchorsWithFullPageUrl()
+    {
+        using var ctx = new BunitContext();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.AddAuthorization();
+        RegisterComponents(ctx);
+        var blogPost = new BlogPostBuilder().WithContent("## My Heading").IsPublished().Build();
+        await Repository.StoreAsync(blogPost);
+        ctx.Services.GetRequiredService<NavigationManager>().NavigateTo($"blogPost/{blogPost.Id}#other");
+
+        var cut = ctx.Render<ShowBlogPostPage>(
+            p => p.Add(b => b.BlogPostId, blogPost.Id));
+
+        cut.Find(".blogpost-content h2 .heading-anchor").GetAttribute("href")
+            .ShouldBe($"http://localhost/blogPost/{blogPost.Id}#my-heading");
     }
 
     private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null, bool useMultiAuthorMode = false)

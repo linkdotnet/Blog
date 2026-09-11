@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Markdig;
@@ -26,6 +27,38 @@ public static class MarkdownConverter
         return string.IsNullOrEmpty(markdown)
             ? default
             : (MarkupString)Markdown.ToHtml(markdown, MarkdownPipeline);
+    }
+
+    public static MarkupString ToMarkupStringWithHeadingAnchors(string markdown, string currentUri)
+    {
+        ArgumentNullException.ThrowIfNull(currentUri);
+
+        if (string.IsNullOrEmpty(markdown))
+        {
+            return default;
+        }
+
+        var document = Markdown.Parse(markdown, MarkdownPipeline);
+        // Blazor resolves a bare "#anchor" against the base href (the home page), so the link needs the full page URL
+        var pageUri = currentUri.Split('#')[0];
+
+        foreach (var heading in document.Descendants<HeadingBlock>().ToList())
+        {
+            var id = heading.GetAttributes().Id;
+            if (heading.Inline is null || string.IsNullOrEmpty(id))
+            {
+                continue;
+            }
+
+            var anchor = new LinkInline($"{pageUri}#{id}", string.Empty);
+            anchor.AppendChild(new LiteralInline("#"));
+            var attributes = anchor.GetAttributes();
+            attributes.AddClass("heading-anchor ms-2 link-secondary link-opacity-25 link-opacity-100-hover link-underline-opacity-0");
+            attributes.AddProperty("aria-label", "Link to this section");
+            heading.Inline.AppendChild(anchor);
+        }
+
+        return (MarkupString)document.ToHtml(MarkdownPipeline);
     }
 
     public static string? ToPlainString(string markdown)

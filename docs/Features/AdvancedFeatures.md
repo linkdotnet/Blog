@@ -15,6 +15,7 @@
   - [Examples](#examples)
   - [Notes](#notes)
 - [Callouts](#callouts)
+- [Heading Anchors](#heading-anchors)
 
 This page lists some of the more advanced or less-used features of the blog software.
 
@@ -137,4 +138,7 @@ Callouts highlight important information inside a blog post. They use the same s
 ```
 
 Supported kinds are `NOTE`, `TIP`, `IMPORTANT`, `WARNING` and `CAUTION`.
+
+## Heading Anchors
+Every heading inside a blog post gets a `#` link next to it (visible on hover). Clicking it navigates to the section, so the URL can be copied and shared.
 
