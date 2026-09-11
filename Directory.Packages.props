@@ -5,7 +5,7 @@
   <ItemGroup Label="Code Analyzers">
     <PackageVersion Include="DiffPlex" Version="1.9.0" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
-    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.33.0.1635" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
+    <GlobalPackageReference Include="SonarAnalyzer.CSharp" Version="10.34.0.3385" PrivateAssets="All" IncludeAssets="Runtime;Build;Native;contentFiles;Analyzers" />
   </ItemGroup>
   <ItemGroup Label="Infrastructure">
     <PackageVersion Include="Azure.Storage.Blobs" Version="12.29.2" />
