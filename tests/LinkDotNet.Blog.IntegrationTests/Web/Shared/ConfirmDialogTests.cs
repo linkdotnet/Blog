@@ -12,7 +12,7 @@ public class ConfirmDialogTests
         var cut = ctx.Render<ConfirmDialog>(
             b => b
                 .Add(p => p.OnYesPressed, _ => okWasClicked = true));
-        cut.Instance.Open();
+        cut.InvokeAsync(cut.Instance.Open);
 
         cut.Find("#ok").Click();
 

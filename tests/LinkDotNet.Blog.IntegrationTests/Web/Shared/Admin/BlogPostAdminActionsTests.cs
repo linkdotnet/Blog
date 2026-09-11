@@ -40,6 +40,16 @@ public class BlogPostAdminActionsTests : BunitContext
     }
 
     [Fact]
+    public async Task ShouldShowConfirmDialogWhenDeleteClicked()
+    {
+        var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, "2"));
+
+        await cut.Find("#delete-blogpost").ClickAsync();
+
+        cut.Find(".modal").ClassList.ShouldContain("show");
+    }
+
+    [Fact]
     public async Task ShouldClearTagCacheWhenBlogPostIsDeleted()
     {
         const string blogPostId = "2";
