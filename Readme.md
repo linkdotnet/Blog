@@ -14,6 +14,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 ## Features
 
 - **Modern Markdown Editor** - Write blog posts with a feature-rich markdown editor
+- **Callouts** - Highlight notes, tips and warnings with GitHub-style callouts
 - **Bookmarks** - Allow readers to save their favorite articles
 - **Drafts** - Save work in progress and continue later
 - **Scheduled Publishing** - Plan ahead and publish automatically
@@ -27,6 +28,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 - **About Me Page** - Customizable profile page that showcases skills and experience
 - **RSS Feed** - Allow readers to subscribe to content updates
 - **Visit Counter** - Get visitor counters for each blog post in the internal dashboard
+- **Broken Link Checker** - External links of all blog posts are checked daily and broken ones are listed in the admin area
 - **Automated Configuration Migration** - Upgrade Assistant tool automatically migrates appsettings.json files between versions
 - **Automated Database Migrations** - Seamless database schema updates using Entity Framework Migrations
 
