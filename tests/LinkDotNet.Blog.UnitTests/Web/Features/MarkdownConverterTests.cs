@@ -75,4 +75,20 @@ public class MarkdownConverterTests
     {
         MarkdownConverter.ToMarkupStringWithHeadingAnchors(string.Empty, "https://localhost").Value.ShouldBeNull();
     }
+
+    [Fact]
+    public void ShouldLazyLoadImages()
+    {
+        var html = MarkdownConverter.ToMarkupString("![alt](https://localhost/image.png)").Value;
+
+        html.ShouldBe("""<p><img src="https://localhost/image.png" class="img-fluid" loading="lazy" alt="alt" /></p>""" + "\n");
+    }
+
+    [Fact]
+    public void ShouldNotAddLazyLoadingToLinks()
+    {
+        var html = MarkdownConverter.ToMarkupString("[link](https://localhost)").Value;
+
+        html.ShouldNotContain("loading=");
+    }
 }
