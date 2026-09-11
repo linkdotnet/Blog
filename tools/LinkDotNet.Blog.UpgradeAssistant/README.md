@@ -67,7 +67,7 @@ dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --backup-dir ./my
 
 ## Supported Migrations
 
-The tool currently supports migrations from version 8.0 to 12.0:
+The tool currently supports migrations from version 8.0 to 15.0:
 
 ### 8.0 → 9.0
 - Moves donation settings (`KofiToken`, `GithubSponsorName`, `PatreonName`) to `SupportMe` section
@@ -79,13 +79,19 @@ The tool currently supports migrations from version 8.0 to 12.0:
 ### 11.0 → 12.0
 - Adds `ShowBuildInformation` setting
 
+### 12.0 → 13.0
+- Adds `EnableTagDiscoveryPanel` setting
+
+### 13.0 → 15.0
+- Adds `EnableBrokenLinkChecker` setting (14.0 had no configuration changes)
+
 ## Configuration Version
 
 After migration, your `appsettings.json` will include a `ConfigVersion` field:
 
 ```json
 {
-  "ConfigVersion": "12.0",
+  "ConfigVersion": "15.0",
   ...
 }
 ```

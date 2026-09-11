@@ -43,6 +43,14 @@ public class MarkdownConverterTests
     }
 
     [Fact]
+    public void HeadingAnchorShouldCopyLinkToClipboard()
+    {
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors("## Hello World", "https://localhost/blogPost/1").Value;
+
+        html.ShouldContain("""title="Copy link to this section" onclick="navigator.clipboard?.writeText(this.href)""");
+    }
+
+    [Fact]
     public void ShouldReplaceExistingFragmentInHeadingAnchor()
     {
         var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors(

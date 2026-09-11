@@ -141,7 +141,7 @@ Callouts highlight important information inside a blog post. They use the same s
 Supported kinds are `NOTE`, `TIP`, `IMPORTANT`, `WARNING` and `CAUTION`.
 
 ## Heading Anchors
-Every heading inside a blog post gets a `#` link next to it (visible on hover). Clicking it navigates to the section, so the URL can be copied and shared.
+Every heading inside a blog post gets a `#` link next to it (visible on hover). Clicking it navigates to the section and copies the link to the clipboard, so it can be shared right away.
 
 ## Broken Link Checker
 The broken link checker runs every day at 03:00 and checks all external (`http` and `https`) links and images of published blog posts. Broken links are listed under "Broken links" in the Admin menu, together with the blog post and the reason (for example `404 (NotFound)` or `Timeout`).

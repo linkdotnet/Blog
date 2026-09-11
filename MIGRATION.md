@@ -56,6 +56,16 @@ The `EnableBrokenLinkChecker` setting was added on the root level of the `appset
 }
 ```
 
+## 12.0 to 13.0
+`EnableTagDiscoveryPanel` setting was added on the root level of the `appsettings.json` file. This setting controls whether the Tag Discovery panel is shown in the navigation bar.
+
+```json
+{
+  ...
+  "EnableTagDiscoveryPanel": true
+}
+```
+
 ## 11.0 to 12.0
 `ShowBuildInformation` setting was added on the root level of the `appsettings.json` file. This setting controls whether build information (like build date) is shown in the `Footer` component.
 

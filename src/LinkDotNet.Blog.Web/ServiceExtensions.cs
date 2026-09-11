@@ -32,7 +32,7 @@ public static class ServiceExtensions
         {
             client.Timeout = TimeSpan.FromSeconds(10);
             client.DefaultRequestHeaders.UserAgent.ParseAdd("LinkDotNet.Blog-LinkChecker");
-        });
+        }).RemoveAllLoggers();
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
