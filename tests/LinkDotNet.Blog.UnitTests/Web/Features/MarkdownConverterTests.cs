@@ -30,4 +30,49 @@ public class MarkdownConverterTests
         html.ShouldContain("<blockquote");
         html.ShouldNotContain("markdown-alert");
     }
+
+    [Fact]
+    public void ShouldAddHeadingAnchorWithFullUrl()
+    {
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors(
+            "## Hello World",
+            "https://localhost/blogPost/1/slug").Value;
+
+        html.ShouldContain("""<h2 id="hello-world">Hello World<a href="https://localhost/blogPost/1/slug#hello-world" class="heading-anchor """);
+        html.ShouldContain("""aria-label="Link to this section">#</a></h2>""");
+    }
+
+    [Fact]
+    public void ShouldReplaceExistingFragmentInHeadingAnchor()
+    {
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors(
+            "# First\n\n## Second",
+            "https://localhost/blogPost/1#first").Value;
+
+        html.ShouldContain("href=\"https://localhost/blogPost/1#first\"");
+        html.ShouldContain("href=\"https://localhost/blogPost/1#second\"");
+        html.ShouldNotContain("#first#");
+    }
+
+    [Fact]
+    public void ShouldNotAddHeadingAnchorsToRegularMarkup()
+    {
+        var html = MarkdownConverter.ToMarkupString("## Hello World").Value;
+
+        html.ShouldNotContain("heading-anchor");
+    }
+
+    [Fact]
+    public void ShouldNotAddHeadingAnchorToTableOfContents()
+    {
+        var toc = MarkdownConverter.GenerateToc("## Hello World");
+
+        toc.ShouldHaveSingleItem().Text.ShouldBe("Hello World");
+    }
+
+    [Fact]
+    public void ShouldReturnEmptyMarkupForEmptyContentWithHeadingAnchors()
+    {
+        MarkdownConverter.ToMarkupStringWithHeadingAnchors(string.Empty, "https://localhost").Value.ShouldBeNull();
+    }
 }
