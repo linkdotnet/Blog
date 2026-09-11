@@ -18,6 +18,12 @@ internal static class MarkdownPipelineBuilderExtensions
         pipeline.Extensions.Add(new CalloutExtension());
         return pipeline;
     }
+
+    public static MarkdownPipelineBuilder UseLazyLoadImages(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.Add(new LazyLoadImageExtension());
+        return pipeline;
+    }
 }
 
 internal sealed class CopyCodeBlockToClipboardExtension : IMarkdownExtension

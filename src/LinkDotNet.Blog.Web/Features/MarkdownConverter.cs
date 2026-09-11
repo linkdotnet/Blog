@@ -20,6 +20,7 @@ public static class MarkdownConverter
         .UseBootstrap()
         .UseCopyCodeBlock()
         .UseCallouts()
+        .UseLazyLoadImages()
         .Build();
 
     public static MarkupString ToMarkupString(string markdown)
