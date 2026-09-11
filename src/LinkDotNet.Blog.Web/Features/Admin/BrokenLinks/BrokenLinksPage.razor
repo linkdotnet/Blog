@@ -1,0 +1,63 @@
+@page "/broken-links"
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
+@inject IRepository<BrokenLink> BrokenLinkRepository
+@inject IOptions<ApplicationConfiguration> ApplicationConfiguration
+@attribute [Authorize]
+
+<PageTitle>Broken Links</PageTitle>
+
+<div class="container">
+	<h3 class="fw-bold">Broken Links</h3>
+	@if (!ApplicationConfiguration.Value.EnableBrokenLinkChecker)
+	{
+		<div class="alert alert-info" id="broken-link-checker-disabled">
+			The broken link checker is disabled. Set <code>EnableBrokenLinkChecker</code> to <code>true</code> in the <code>appsettings.json</code> to enable it.
+		</div>
+	}
+	else if (brokenLinks is null)
+	{
+		<Loading></Loading>
+	}
+	else if (brokenLinks.Count == 0)
+	{
+		<div class="alert alert-success" id="no-broken-links">No broken links found.</div>
+	}
+	else
+	{
+		<p class="text-body-secondary">@brokenLinks.Count broken link(s) found. Last checked on @brokenLinks.Max(b => b.CheckedDate).ToString("g") (UTC).</p>
+		<div class="table-responsive">
+			<table class="table table-striped table-hover align-middle">
+				<thead>
+				<tr>
+					<th scope="col">Blog post</th>
+					<th scope="col">URL</th>
+					<th scope="col">Reason</th>
+				</tr>
+				</thead>
+				<tbody>
+				@foreach (var brokenLink in brokenLinks)
+				{
+					<tr>
+						<td><a href="blogPost/@brokenLink.BlogPostId">@brokenLink.BlogPostTitle</a></td>
+						<td class="text-break"><a href="@brokenLink.Url" target="_blank" rel="noreferrer noopener">@brokenLink.Url</a></td>
+						<td><span class="badge text-bg-danger text-wrap">@brokenLink.Reason</span></td>
+					</tr>
+				}
+				</tbody>
+			</table>
+		</div>
+	}
+</div>
+
+@code {
+	private IReadOnlyCollection<BrokenLink>? brokenLinks;
+
+	protected override async Task OnInitializedAsync()
+	{
+		if (ApplicationConfiguration.Value.EnableBrokenLinkChecker)
+		{
+			brokenLinks = (await BrokenLinkRepository.GetAllAsync(orderBy: b => b.BlogPostTitle, descending: false)).ToArray();
+		}
+	}
+}
