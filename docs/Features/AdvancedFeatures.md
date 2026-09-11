@@ -14,6 +14,7 @@
     - [Layout Mode](#layout-mode)
   - [Examples](#examples)
   - [Notes](#notes)
+- [Callouts](#callouts)
 
 This page lists some of the more advanced or less-used features of the blog software.
 
@@ -126,3 +127,14 @@ dotnet run -- --help
 - The generated CSS is minified for optimal performance
 - When using layout mode, existing `<style>` tags will be replaced
 - If no `<style>` tag exists in layout mode, it will be inserted before `</head>`
+
+## Callouts
+Callouts highlight important information inside a blog post. They use the same syntax as GitHub:
+
+```markdown
+> [!NOTE]
+> Useful information that users should know.
+```
+
+Supported kinds are `NOTE`, `TIP`, `IMPORTANT`, `WARNING` and `CAUTION`.
+

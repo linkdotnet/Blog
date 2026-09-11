@@ -12,6 +12,12 @@ internal static class MarkdownPipelineBuilderExtensions
         pipeline.Extensions.Add(new CopyCodeBlockToClipboardExtension());
         return pipeline;
     }
+
+    public static MarkdownPipelineBuilder UseCallouts(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.Add(new CalloutExtension());
+        return pipeline;
+    }
 }
 
 internal sealed class CopyCodeBlockToClipboardExtension : IMarkdownExtension

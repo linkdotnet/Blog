@@ -18,6 +18,7 @@ public static class MarkdownConverter
         .UseEmojiAndSmiley()
         .UseBootstrap()
         .UseCopyCodeBlock()
+        .UseCallouts()
         .Build();
 
     public static MarkupString ToMarkupString(string markdown)
