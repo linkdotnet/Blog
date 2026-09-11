@@ -18,7 +18,7 @@
     </PackageVersion>
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="10.0.12" />
     <PackageVersion Include="Microting.EntityFrameworkCore.MySql" Version="10.0.11" />
-    <PackageVersion Include="MongoDB.Driver" Version="3.11.1" />
+    <PackageVersion Include="MongoDB.Driver" Version="3.11.2" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageVersion Include="RavenDB.Client" Version="7.2.6" />
     <PackageVersion Include="ZiggyCreatures.FusionCache.Locking.AsyncKeyed" Version="2.7.2" />
@@ -42,7 +42,7 @@
     <PackageVersion Include="RavenDB.TestDriver" Version="7.2.6" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="bunit" Version="2.10.3" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.0" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.11.2" />
     <PackageVersion Include="xunit.v3" Version="4.0.0" />
   </ItemGroup>
   <ItemGroup Label="Tools">
