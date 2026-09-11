@@ -452,6 +452,23 @@ public class MarkdownTextAreaTests : BunitContext
     }
 
     [Fact]
+    public async Task ShouldInsertNoteCalloutAtCursor()
+    {
+        SetupServices();
+        JSInterop.SetupVoid("markdownEditor.insertText", _ => true);
+
+        var cut = Render<MarkdownTextArea>(p => p
+            .Add(c => c.Value, "")
+            .Add(c => c.Rows, 10));
+
+        await cut.Find("button[title='Callout']").ClickAsync();
+
+        var invocation = JSInterop.Invocations.Single(i => i.Identifier == "markdownEditor.insertText");
+        invocation.Arguments[1].ShouldBe("> [!NOTE]\n> ");
+        invocation.Arguments[2].ShouldBe(string.Empty);
+    }
+
+    [Fact]
     public async Task ShouldCallInsertLinePrefixesForBlockQuote()
     {
         SetupServices();

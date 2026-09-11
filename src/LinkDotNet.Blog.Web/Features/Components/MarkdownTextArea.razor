@@ -35,6 +35,9 @@
         <button type="button" class="toolbar-btn" title="@GetShortcutText("Quote", "⇧.")" aria-label="@GetShortcutText("Quote", "⇧.")" @onclick="InsertQuote">
             <i class="bi bi-quote"></i>
         </button>
+        <button type="button" class="toolbar-btn" title="Callout" aria-label="Callout" @onclick="InsertCallout">
+            <i class="bi bi-info-square"></i>
+        </button>
         <button type="button" class="toolbar-btn" title="@GetShortcutText("Code", "E")" aria-label="@GetShortcutText("Code", "E")" @onclick="InsertCode">
             <i class="bi bi-code"></i>
         </button>
@@ -306,6 +309,7 @@
     private Task InsertH2() => InsertMarkdown("## ", "");
     private Task InsertH3() => InsertMarkdown("### ", "");
     private Task InsertQuote() => InsertLinePrefixMarkdown("> ");
+    private Task InsertCallout() => InsertMarkdown("> [!NOTE]\n> ", "");
     private Task InsertCode() => InsertMarkdown("`", "`");
     private Task InsertCodeBlock() => InsertMarkdown("```\n", "\n```");
     private Task InsertLink() => InsertMarkdown("[", "](url)");
