@@ -1,3 +1,4 @@
+using System.Linq;
 using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
@@ -111,6 +112,22 @@ public class AccessControlTests : BunitContext
         var cut = Render<AccessControl>();
 
         cut.FindAll("a:contains('Test Author')").ShouldHaveSingleItem();
+    }
+
+    [Fact]
+    public void ShouldHaveUniqueIdsAndMatchingLabelsForDropdowns()
+    {
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<AccessControl>();
+
+        var toggles = cut.FindAll(".dropdown-toggle");
+        toggles.Count.ShouldBe(2);
+        toggles.Select(t => t.Id).Distinct().Count().ShouldBe(2);
+        foreach (var toggle in toggles)
+        {
+            cut.FindAll($"ul[aria-labelledby='{toggle.Id}']").ShouldHaveSingleItem();
+        }
     }
 
     [Fact]

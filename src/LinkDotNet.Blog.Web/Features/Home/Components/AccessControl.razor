@@ -5,11 +5,11 @@
 <AuthorizeView>
     <Authorized>
         <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown"
                aria-expanded="false">
                 <i class="user-tie"></i> Admin
             </a>
-            <ul class="dropdown-menu ps-0" aria-labelledby="navbarDropdown">
+            <ul class="dropdown-menu ps-0" aria-labelledby="adminDropdown">
                 <li><h6 class="dropdown-header">Blog posts</h6></li>
                 <li><a class="dropdown-item" href="create">Create new</a></li>
                 <li><a class="dropdown-item" href="draft">Show drafts</a></li>
@@ -31,10 +31,10 @@
         @if (authorName is not null)
         {
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="authorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="user-tie"></i> @authorName
                 </a>
-                <ul class="dropdown-menu ps-0" aria-labelledby="navbarDropdown">
+                <ul class="dropdown-menu ps-0" aria-labelledby="authorDropdown">
                     <li><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
                 </ul>
             </li>
