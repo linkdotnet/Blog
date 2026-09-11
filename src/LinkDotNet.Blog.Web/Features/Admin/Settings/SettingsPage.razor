@@ -1,5 +1,6 @@
 @page "/settings"
 @using LinkDotNet.Blog.Web.Features.Services
+@using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services
 @using NCronJob
 @inject IOptions<ApplicationConfiguration> ApplicationConfiguration
 @inject ICacheInvalidator CacheInvalidator
@@ -35,6 +36,13 @@
 			<td>10 Minutes</td>
 			<td><button class="btn btn-warning" id="run-visit-transformer" @onclick="RunVisitTransformer">Run Transformer</button></td>
 		</tr>
+		<tr>
+			<td>Broken Link Checker</td>
+			<td>Checks all external links of published blog posts and lists the broken ones under <a href="broken-links">Broken links</a>.<br/>
+				The job runs every day at 03:00. It can be turned off via <code>EnableBrokenLinkChecker</code> in the appsettings.json.</td>
+			<td>@(ApplicationConfiguration.Value.EnableBrokenLinkChecker ? "Enabled" : "Disabled")</td>
+			<td><button class="btn btn-warning" id="run-broken-link-checker" @onclick="RunBrokenLinkChecker" disabled="@(!ApplicationConfiguration.Value.EnableBrokenLinkChecker)">Run Checker</button></td>
+		</tr>
 		</tbody>
 	</table>
 </div>
@@ -50,5 +58,11 @@
 	{
 		InstantJobRegistry.RunInstantJob<TransformBlogPostRecordsJob>();
 		ToastService.ShowInfo("Transformer was started.");
+	}
+
+	private void RunBrokenLinkChecker()
+	{
+		InstantJobRegistry.RunInstantJob<BrokenLinkCheckerJob>();
+		ToastService.ShowInfo("Broken link checker was started.");
 	}
 }

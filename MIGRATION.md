@@ -27,6 +27,35 @@ For detailed documentation, see [docs/Migrations/UpgradeAssistant.md](docs/Migra
 
 ---
 
+## 14.0 to 15.0
+
+### Broken link checker
+A new `BrokenLinks` table is introduced to store the results of the broken link checker. For SQL providers, run the `AddBrokenLinks` Entity Framework migration or execute the following script:
+
+```sql
+CREATE TABLE BrokenLinks
+(
+	Id [VARCHAR](900) NOT NULL,
+	BlogPostId [NVARCHAR](256) NOT NULL,
+	BlogPostTitle [NVARCHAR](256) NOT NULL,
+	Url NVARCHAR(MAX) NOT NULL,
+	Reason [NVARCHAR](1024) NOT NULL,
+	CheckedDate DATETIME2 NOT NULL,
+)
+
+ALTER TABLE BrokenLinks
+ADD CONSTRAINT PK_BrokenLinks PRIMARY KEY (Id)
+```
+
+The `EnableBrokenLinkChecker` setting was added on the root level of the `appsettings.json` file (handled by the Upgrade Assistant). The default is `true`, set it to `false` to turn the checker off.
+
+```json
+{
+  ...
+  "EnableBrokenLinkChecker": true
+}
+```
+
 ## 11.0 to 12.0
 `ShowBuildInformation` setting was added on the root level of the `appsettings.json` file. This setting controls whether build information (like build date) is shown in the `Footer` component.
 

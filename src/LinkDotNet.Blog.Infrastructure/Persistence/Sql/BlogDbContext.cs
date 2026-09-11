@@ -33,6 +33,8 @@ public sealed class BlogDbContext : DbContext
 
     public DbSet<BlogPostVersion> BlogPostVersions { get; set; }
 
+    public DbSet<BrokenLink> BrokenLinks { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ArgumentNullException.ThrowIfNull(modelBuilder);
@@ -41,6 +43,7 @@ public sealed class BlogDbContext : DbContext
         modelBuilder.ApplyConfiguration(new BlogPostRecordConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostTemplateConfiguration());
         modelBuilder.ApplyConfiguration(new BlogPostVersionConfiguration());
+        modelBuilder.ApplyConfiguration(new BrokenLinkConfiguration());
         modelBuilder.ApplyConfiguration(new ProfileInformationEntryConfiguration());
         modelBuilder.ApplyConfiguration(new ShortCodeConfiguration());
         modelBuilder.ApplyConfiguration(new SimilarBlogPostConfiguration());

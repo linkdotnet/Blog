@@ -52,6 +52,25 @@ public class AccessControlTests : BunitContext
         cut.FindAll("a:contains('Log out')").ShouldHaveSingleItem();
     }
 
+    [Theory]
+    [InlineData(true, 1)]
+    [InlineData(false, 0)]
+    public void ShouldShowBrokenLinksOnlyWhenCheckerIsEnabled(bool enableBrokenLinkChecker, int expectedLinks)
+    {
+        options.Value.Returns(new ApplicationConfiguration()
+        {
+            EnableBrokenLinkChecker = enableBrokenLinkChecker,
+            BlogName = "Test",
+            ConnectionString = "Test",
+            DatabaseName = "Test"
+        });
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<AccessControl>();
+
+        cut.FindAll("a[href='broken-links']").Count.ShouldBe(expectedLinks);
+    }
+
     [Fact]
     public void LoginShouldHaveCurrentUriAsRedirectUri()
     {

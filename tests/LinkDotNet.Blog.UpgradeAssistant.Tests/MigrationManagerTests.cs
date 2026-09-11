@@ -25,7 +25,8 @@ public sealed class MigrationManagerTests : IDisposable
         await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
         var manager = new MigrationManager([
             new Migration11To12(),
-            new Migration12To13()]);
+            new Migration12To13(),
+            new Migration13To15()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -34,8 +35,9 @@ public sealed class MigrationManagerTests : IDisposable
         // Assert
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
-        content.ShouldContain("\"ConfigVersion\": \"13.0\"");
+        content.ShouldContain("\"ConfigVersion\": \"15.0\"");
         content.ShouldContain("\"EnableTagDiscoveryPanel\": true");
+        content.ShouldContain("\"EnableBrokenLinkChecker\": true");
         
         // Verify backup was created
         var backupFiles = Directory.GetFiles(backupDir);

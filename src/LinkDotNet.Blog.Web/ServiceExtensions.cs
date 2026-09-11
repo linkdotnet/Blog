@@ -1,6 +1,7 @@
 using System;
 using System.Threading.RateLimiting;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
+using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Services;
@@ -27,6 +28,11 @@ public static class ServiceExtensions
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITagQueryService, TagQueryService>();
         services.AddScoped<IBlogPostVersionService, BlogPostVersionService>();
+        services.AddHttpClient<ILinkChecker, LinkChecker>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(10);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("LinkDotNet.Blog-LinkChecker");
+        });
 
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());

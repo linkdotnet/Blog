@@ -1,4 +1,5 @@
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services;
 using NCronJob;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +28,9 @@ public static class BackgroundServiceRegistrationExtensions
             options.AddJob<SimilarBlogPostJob>(c => c
                 .WithName(nameof(SimilarBlogPostJob))
                 .OnlyIf((IOptions<ApplicationConfiguration> applicationConfiguration) => applicationConfiguration.Value.ShowSimilarPosts));
+            options.AddJob<BrokenLinkCheckerJob>(c => c
+                .WithCronExpression("0 3 * * *")
+                .OnlyIf((IOptions<ApplicationConfiguration> applicationConfiguration) => applicationConfiguration.Value.EnableBrokenLinkChecker));
         });
     }
 }

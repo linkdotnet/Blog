@@ -71,7 +71,8 @@ Browser spellchecking uses the `<html lang="en">` value in
 		"CdnEndpoint": ""
 	},
 	"UseMultiAuthorMode": false,
-	"EnableTagDiscoveryPanel": true
+	"EnableTagDiscoveryPanel": true,
+	"EnableBrokenLinkChecker": true
 }
 ```
 
@@ -118,3 +119,4 @@ Browser spellchecking uses the `<html lang="en">` value in
 | CdnEndpoint                                   | string         | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets.                                  |
 | UseMultiAuthorMode                            | boolean        | The default value is `false`. If set to `true` then author name will be associated with blog posts at the time of creation. This author name will be fetched from the identity provider's `name` or `nickname` or `preferred_username` claim property. |
 | EnableTagDiscoveryPanel                       | boolean        | The default value is `true`. Enables the Tag Discovery Panel, which helps users discover topics by browsing popular tags.                                                        |
+| EnableBrokenLinkChecker                       | boolean        | The default value is `true`. Checks all external links of published blog posts once a day and lists broken ones on the "Broken links" admin page.                               |
