@@ -22,6 +22,7 @@ public static class MarkdownConverter
         .UseCallouts()
         .UseLazyLoadImages()
         .UseExternalLinks()
+        .UseResponsiveTables()
         .Build();
 
     public static MarkupString ToMarkupString(string markdown)
@@ -123,6 +124,8 @@ public static class MarkdownConverter
                         break;
                     case HtmlEntityInline htmlEntity:
                         stringBuilder.Append(htmlEntity.Transcoded);
+                        break;
+                    case HtmlInline:
                         break;
                     default:
                         stringBuilder.Append(current);

@@ -30,6 +30,12 @@ internal static class MarkdownPipelineBuilderExtensions
         pipeline.Extensions.Add(new ExternalLinkExtension());
         return pipeline;
     }
+
+    public static MarkdownPipelineBuilder UseResponsiveTables(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.Add(new ResponsiveTableExtension());
+        return pipeline;
+    }
 }
 
 internal sealed class CopyCodeBlockToClipboardExtension : IMarkdownExtension

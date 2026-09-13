@@ -79,6 +79,14 @@ public class MarkdownConverterTests
     }
 
     [Fact]
+    public void ShouldGenerateTocTextForHeadingWithExternalLink()
+    {
+        var toc = MarkdownConverter.GenerateToc("## [Markdig](https://github.com/xoofx/markdig)");
+
+        toc.ShouldHaveSingleItem().Text.ShouldBe("Markdig");
+    }
+
+    [Fact]
     public void ShouldReturnEmptyMarkupForEmptyContentWithHeadingAnchors()
     {
         MarkdownConverter.ToMarkupStringWithHeadingAnchors(string.Empty, "https://localhost").Value.ShouldBeNull();
@@ -160,5 +168,26 @@ public class MarkdownConverterTests
         var html = MarkdownConverter.ToMarkupString("    var x = 1;").Value;
 
         html.ShouldNotContain("code-lang-badge");
+    }
+
+    [Fact]
+    public void ShouldRenderTaskListCheckboxes()
+    {
+        var html = MarkdownConverter.ToMarkupString("- [ ] Todo item\n- [x] Done item\n- Regular item").Value;
+
+        html.ShouldContain("contains-task-list");
+        html.ShouldContain("""<li class="task-list-item"><input disabled="disabled" type="checkbox" /> Todo item</li>""");
+        html.ShouldContain("""<li class="task-list-item"><input disabled="disabled" type="checkbox" checked="checked" /> Done item</li>""");
+        html.ShouldContain("<li>Regular item</li>");
+    }
+
+    [Fact]
+    public void ShouldWrapTablesInResponsiveContainer()
+    {
+        var html = MarkdownConverter.ToMarkupString("| A | B |\n|---|---|\n| 1 | 2 |").Value;
+
+        html.ShouldContain("""<div class="table-container">""");
+        html.ShouldContain("""<table class="table">""");
+        html.ShouldContain("</table>\n</div>");
     }
 }

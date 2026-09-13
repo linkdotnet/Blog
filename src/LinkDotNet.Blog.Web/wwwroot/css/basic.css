@@ -671,6 +671,21 @@ code {
 	object-fit: cover;
 }
 
+.blogpost-content .contains-task-list {
+	list-style: none;
+	padding-left: 0.5rem;
+}
+
+.blogpost-content .task-list-item input[type="checkbox"] {
+	accent-color: var(--bs-primary);
+	margin-right: 0.4rem;
+}
+
+.blogpost-content .task-list-item:has(input:checked) {
+	color: var(--bs-secondary-color);
+	text-decoration: line-through;
+}
+
 @media only screen and (max-width: 700px) {
 	.blog-outer-box .blog-container {
 		width: 90%;
