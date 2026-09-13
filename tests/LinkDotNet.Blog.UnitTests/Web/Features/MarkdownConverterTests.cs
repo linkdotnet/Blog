@@ -147,27 +147,45 @@ public class MarkdownConverterTests
     }
 
     [Fact]
-    public void ShouldRenderLanguageBadgeForFencedCodeBlock()
+    public void ShouldRenderLanguageInCodeBlockHeaderWhenEnabled()
     {
-        var html = MarkdownConverter.ToMarkupString("```csharp\nvar x = 1;\n```").Value;
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors("```csharp\nvar x = 1;\n```", "https://localhost/blogPost/1", showCodeBlockLanguage: true).Value;
 
-        html.ShouldContain("""<span class="badge bg-secondary position-absolute top-0 start-0 m-2 code-lang-badge">csharp</span>""");
+        html.ShouldContain("""<div class="code-block-header d-flex align-items-center"><span class="code-block-lang">csharp</span>""");
     }
 
     [Fact]
-    public void ShouldNotRenderLanguageBadgeWithoutLanguage()
+    public void ShouldNotRenderLanguageWhenDisabled()
     {
-        var html = MarkdownConverter.ToMarkupString("```\nvar x = 1;\n```").Value;
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors("```csharp\nvar x = 1;\n```", "https://localhost/blogPost/1").Value;
 
-        html.ShouldNotContain("code-lang-badge");
+        html.ShouldContain("code-block-header");
+        html.ShouldContain("this.closest('.code-block').querySelector('pre code').textContent");
+        html.ShouldNotContain("code-block-lang");
     }
 
     [Fact]
-    public void ShouldNotRenderLanguageBadgeForIndentedCodeBlock()
+    public void ShouldNotRenderLanguageWithoutLanguage()
     {
-        var html = MarkdownConverter.ToMarkupString("    var x = 1;").Value;
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors("```\nvar x = 1;\n```", "https://localhost/blogPost/1", showCodeBlockLanguage: true).Value;
 
-        html.ShouldNotContain("code-lang-badge");
+        html.ShouldNotContain("code-block-lang");
+    }
+
+    [Fact]
+    public void ShouldNotRenderLanguageForIndentedCodeBlock()
+    {
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors("    var x = 1;", "https://localhost/blogPost/1", showCodeBlockLanguage: true).Value;
+
+        html.ShouldNotContain("code-block-lang");
+    }
+
+    [Fact]
+    public void ShouldEscapeLanguageInCodeBlockHeader()
+    {
+        var html = MarkdownConverter.ToMarkupStringWithHeadingAnchors("```a<b\nvar x = 1;\n```", "https://localhost/blogPost/1", showCodeBlockLanguage: true).Value;
+
+        html.ShouldContain("""<span class="code-block-lang">a&lt;b</span>""");
     }
 
     [Fact]

@@ -7,9 +7,9 @@ namespace LinkDotNet.Blog.Web.Features;
 
 internal static class MarkdownPipelineBuilderExtensions
 {
-    public static MarkdownPipelineBuilder UseCopyCodeBlock(this MarkdownPipelineBuilder pipeline)
+    public static MarkdownPipelineBuilder UseCopyCodeBlock(this MarkdownPipelineBuilder pipeline, bool showLanguage)
     {
-        pipeline.Extensions.Add(new CopyCodeBlockToClipboardExtension());
+        pipeline.Extensions.Add(new CopyCodeBlockToClipboardExtension(showLanguage));
         return pipeline;
     }
 
@@ -38,7 +38,7 @@ internal static class MarkdownPipelineBuilderExtensions
     }
 }
 
-internal sealed class CopyCodeBlockToClipboardExtension : IMarkdownExtension
+internal sealed class CopyCodeBlockToClipboardExtension(bool showLanguage) : IMarkdownExtension
 {
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
@@ -58,25 +58,26 @@ internal sealed class CopyCodeBlockToClipboardExtension : IMarkdownExtension
         }
 
         htmlRenderer.ObjectRenderers.Remove(originalCodeBlockRenderer);
-        htmlRenderer.ObjectRenderers.Add(new CustomCodeBlockRenderer());
+        htmlRenderer.ObjectRenderers.Add(new CustomCodeBlockRenderer(showLanguage));
     }
 }
 
-internal sealed class CustomCodeBlockRenderer : CodeBlockRenderer
+internal sealed class CustomCodeBlockRenderer(bool showLanguage) : CodeBlockRenderer
 {
     protected override void Write(HtmlRenderer renderer, CodeBlock obj)
     {
-        renderer.Write("""<div class="position-relative">""");
-        if (obj is FencedCodeBlock { Info.Length: > 0 } fenced)
+        renderer.Write("""<div class="code-block"><div class="code-block-header d-flex align-items-center">""");
+        if (showLanguage && obj is FencedCodeBlock { Info.Length: > 0 } fenced)
         {
-            renderer.Write($"""<span class="badge bg-secondary position-absolute top-0 start-0 m-2 code-lang-badge">{fenced.Info}</span>""");
+            renderer.Write("""<span class="code-block-lang">""").WriteEscape(fenced.Info).Write("</span>");
         }
         renderer.Write("""
-                       <button class="btn btn-sm position-absolute top-0 end-0 m-2 border border-primary text-primary copy-btn"
+                       <button class="btn btn-sm py-0 ms-auto border border-primary text-primary copy-btn"
                                type="button"
-                               onclick="navigator.clipboard.writeText(this.parentElement.querySelector('pre code').textContent)">
+                               onclick="navigator.clipboard.writeText(this.closest('.code-block').querySelector('pre code').textContent)">
                                <i class="copy"></i>
                        </button>
+                       </div>
                        """);
         base.Write(renderer, obj);
         renderer.Write("</div>");

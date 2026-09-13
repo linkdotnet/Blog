@@ -131,7 +131,7 @@ The tool looks for a `ConfigVersion` field in your `appsettings.json`:
 
 ```json
 {
-  "ConfigVersion": "15.0",
+  "ConfigVersion": "16.0",
   ...
 }
 ```
@@ -142,7 +142,7 @@ If this field doesn't exist, the tool assumes you're running version 11.0 or ear
 
 The tool applies migrations sequentially:
 1. Detects current version (e.g., 12.0)
-2. Finds all migrations from current to latest (12.0→13.0→15.0)
+2. Finds all migrations from current to latest (12.0→13.0→15.0→16.0)
 3. Applies each migration in order
 4. Updates the `ConfigVersion` field to the latest version
 
@@ -223,6 +223,21 @@ Version 14.0 had no configuration changes, so this migration goes directly from 
 
 **Manual Steps Required:**
 - Create the `BrokenLinks` table (see [MIGRATION.md](../../MIGRATION.md))
+
+### Version 15.0 → 16.0
+
+**Changes:**
+- Adds `ShowCodeBlockLanguage` setting (default: `true`)
+
+**After:**
+```json
+{
+  "ShowCodeBlockLanguage": true
+}
+```
+
+**Manual Steps Required:**
+- None (setting is optional)
 
 ## Command-Line Reference
 

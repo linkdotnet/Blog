@@ -27,6 +27,18 @@ For detailed documentation, see [docs/Migrations/UpgradeAssistant.md](docs/Migra
 
 ---
 
+## 15.0 to 16.0
+
+### Code block language
+Code blocks now have a header that contains the copy button and, optionally, the language of the code block. The `ShowCodeBlockLanguage` setting was added on the root level of the `appsettings.json` file (handled by the Upgrade Assistant). The default is `true`, set it to `false` to hide the language.
+
+```json
+{
+  ...
+  "ShowCodeBlockLanguage": true
+}
+```
+
 ## 14.0 to 15.0
 
 ### Broken link checker

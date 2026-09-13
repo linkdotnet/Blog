@@ -13,17 +13,8 @@ namespace LinkDotNet.Blog.Web.Features;
 
 public static class MarkdownConverter
 {
-    private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
-        .UseAdvancedExtensions()
-        .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-        .UseEmojiAndSmiley()
-        .UseBootstrap()
-        .UseCopyCodeBlock()
-        .UseCallouts()
-        .UseLazyLoadImages()
-        .UseExternalLinks()
-        .UseResponsiveTables()
-        .Build();
+    private static readonly MarkdownPipeline MarkdownPipeline = CreatePipeline(showCodeBlockLanguage: false);
+    private static readonly MarkdownPipeline MarkdownPipelineWithCodeBlockLanguage = CreatePipeline(showCodeBlockLanguage: true);
 
     public static MarkupString ToMarkupString(string markdown)
     {
@@ -32,7 +23,7 @@ public static class MarkdownConverter
             : (MarkupString)Markdown.ToHtml(markdown, MarkdownPipeline);
     }
 
-    public static MarkupString ToMarkupStringWithHeadingAnchors(string markdown, string currentUri)
+    public static MarkupString ToMarkupStringWithHeadingAnchors(string markdown, string currentUri, bool showCodeBlockLanguage = false)
     {
         ArgumentNullException.ThrowIfNull(currentUri);
 
@@ -41,7 +32,8 @@ public static class MarkdownConverter
             return default;
         }
 
-        var document = Markdown.Parse(markdown, MarkdownPipeline);
+        var pipeline = showCodeBlockLanguage ? MarkdownPipelineWithCodeBlockLanguage : MarkdownPipeline;
+        var document = Markdown.Parse(markdown, pipeline);
         // Blazor resolves a bare "#anchor" against the base href (the home page), so the link needs the full page URL
         var pageUri = currentUri.Split('#')[0];
 
@@ -63,7 +55,7 @@ public static class MarkdownConverter
             heading.Inline.AppendChild(anchor);
         }
 
-        return (MarkupString)document.ToHtml(MarkdownPipeline);
+        return (MarkupString)document.ToHtml(pipeline);
     }
 
     public static string? ToPlainString(string markdown)
@@ -88,6 +80,18 @@ public static class MarkdownConverter
             })
             .ToArray();
     }
+
+    private static MarkdownPipeline CreatePipeline(bool showCodeBlockLanguage) => new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
+        .UseEmojiAndSmiley()
+        .UseBootstrap()
+        .UseCopyCodeBlock(showCodeBlockLanguage)
+        .UseCallouts()
+        .UseLazyLoadImages()
+        .UseExternalLinks()
+        .UseResponsiveTables()
+        .Build();
 
     private static string InlineToString(ContainerInline? inline)
     {

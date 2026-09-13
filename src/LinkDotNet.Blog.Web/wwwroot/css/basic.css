@@ -132,9 +132,16 @@ code {
 	}
 }
 
-.code-lang-badge {
-	font-size: 0.7rem;
-	opacity: 0.85;
+/* Colors match the github-dark-dimmed highlight.js theme */
+.code-block-header {
+	padding: 0.25rem 0.5rem;
+	background-color: #2d333b;
+	border-bottom: 1px solid #444c56;
+}
+
+.code-block-lang {
+	font-size: 0.75rem;
+	color: #768390;
 }
 
 /* Template defined css */

@@ -18,6 +18,7 @@ public class ApplicationConfigurationBuilder
     private string? blogBrandUrl;
     private bool useMultiAuthorMode;
     private bool enableBrokenLinkChecker = true;
+    private bool showCodeBlockLanguage = true;
 
     public ApplicationConfigurationBuilder WithBlogName(string blogName)
     {
@@ -103,6 +104,12 @@ public class ApplicationConfigurationBuilder
         return this;
     }
 
+    public ApplicationConfigurationBuilder WithShowCodeBlockLanguage(bool showCodeBlockLanguage)
+    {
+        this.showCodeBlockLanguage = showCodeBlockLanguage;
+        return this;
+    }
+
     public ApplicationConfiguration Build()
     {
         return new ApplicationConfiguration
@@ -121,6 +128,7 @@ public class ApplicationConfigurationBuilder
             BlogBrandUrl = blogBrandUrl,
             UseMultiAuthorMode = useMultiAuthorMode,
             EnableBrokenLinkChecker = enableBrokenLinkChecker,
+            ShowCodeBlockLanguage = showCodeBlockLanguage,
         };
     }
 }

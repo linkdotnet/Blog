@@ -31,4 +31,6 @@ public sealed record ApplicationConfiguration
     public bool EnableTagDiscoveryPanel { get; set; }
 
     public bool EnableBrokenLinkChecker { get; init; } = true;
+
+    public bool ShowCodeBlockLanguage { get; init; } = true;
 }

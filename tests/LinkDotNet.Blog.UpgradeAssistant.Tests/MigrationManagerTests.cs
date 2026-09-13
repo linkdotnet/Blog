@@ -26,7 +26,8 @@ public sealed class MigrationManagerTests : IDisposable
         var manager = new MigrationManager([
             new Migration11To12(),
             new Migration12To13(),
-            new Migration13To15()]);
+            new Migration13To15(),
+            new Migration15To16()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -35,13 +36,44 @@ public sealed class MigrationManagerTests : IDisposable
         // Assert
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
-        content.ShouldContain("\"ConfigVersion\": \"15.0\"");
+        content.ShouldContain("\"ConfigVersion\": \"16.0\"");
         content.ShouldContain("\"EnableTagDiscoveryPanel\": true");
         content.ShouldContain("\"EnableBrokenLinkChecker\": true");
+        content.ShouldContain("\"ShowCodeBlockLanguage\": true");
         
         // Verify backup was created
         var backupFiles = Directory.GetFiles(backupDir);
         backupFiles.ShouldNotBeEmpty();
+    }
+
+    [Fact]
+    public async Task Should_Migrate_Config_With_Version_Between_Migrations()
+    {
+        // Arrange
+        var testFile = Path.Combine(testDirectory, "appsettings.Production.json");
+        var json = """
+            {
+              "ConfigVersion": "14.0",
+              "BlogName": "Test Blog",
+              "EnableBrokenLinkChecker": true
+            }
+            """;
+        await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
+        var manager = new MigrationManager([
+            new Migration11To12(),
+            new Migration13To15(),
+            new Migration15To16()]);
+        var backupDir = Path.Combine(testDirectory, "backups");
+
+        // Act
+        var result = await manager.MigrateFileAsync(testFile, false, backupDir);
+
+        // Assert
+        result.ShouldBeTrue();
+        var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
+        content.ShouldContain("\"ConfigVersion\": \"16.0\"");
+        content.ShouldContain("\"ShowCodeBlockLanguage\": true");
+        content.ShouldNotContain("ShowBuildInformation");
     }
 
     [Fact]

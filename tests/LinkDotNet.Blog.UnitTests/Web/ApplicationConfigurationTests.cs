@@ -47,7 +47,8 @@ public class ApplicationConfigurationTests
             { "Authentication:ClientId","123"},
             { "Authentication:ClientSecret","qwe"},
             { "Authentication:Domain","example.com"},
-            { "UseMultiAuthorMode","true"}
+            { "UseMultiAuthorMode","true"},
+            { "ShowCodeBlockLanguage","false"}
 
         };
         var configuration = new ConfigurationBuilder()
@@ -68,6 +69,7 @@ public class ApplicationConfigurationTests
         appConfiguration.ShowReadingIndicator.ShouldBeTrue();
         appConfiguration.ShowBuildInformation.ShouldBeTrue();
         appConfiguration.UseMultiAuthorMode.ShouldBeTrue();
+        appConfiguration.ShowCodeBlockLanguage.ShouldBeFalse();
 
         var giscusConfiguration = new GiscusConfigurationBuilder().Build();
         configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);

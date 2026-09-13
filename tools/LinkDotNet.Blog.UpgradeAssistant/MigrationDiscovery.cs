@@ -10,7 +10,8 @@ public static class MigrationDiscovery
             {
                 new Migration11To12(),
                 new Migration12To13(),
-                new Migration13To15()
+                new Migration13To15(),
+                new Migration15To16()
             }
             .OrderBy(m => Version.TryParse(m.FromVersion, out var v) ? v : new Version(0, 0))
             .ThenBy(m => Version.TryParse(m.ToVersion, out var v) ? v : new Version(0, 0))

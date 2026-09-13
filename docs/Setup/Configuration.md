@@ -72,7 +72,8 @@ Browser spellchecking uses the `<html lang="en">` value in
 	},
 	"UseMultiAuthorMode": false,
 	"EnableTagDiscoveryPanel": true,
-	"EnableBrokenLinkChecker": true
+	"EnableBrokenLinkChecker": true,
+	"ShowCodeBlockLanguage": true
 }
 ```
 
@@ -120,3 +121,4 @@ Browser spellchecking uses the `<html lang="en">` value in
 | UseMultiAuthorMode                            | boolean        | The default value is `false`. If set to `true` then author name will be associated with blog posts at the time of creation. This author name will be fetched from the identity provider's `name` or `nickname` or `preferred_username` claim property. |
 | EnableTagDiscoveryPanel                       | boolean        | The default value is `true`. Enables the Tag Discovery Panel, which helps users discover topics by browsing popular tags.                                                        |
 | EnableBrokenLinkChecker                       | boolean        | The default value is `true`. Checks all external links of published blog posts once a day and lists broken ones on the "Broken links" admin page.                               |
+| ShowCodeBlockLanguage                         | boolean        | The default value is `true`. Shows the language of a fenced code block (e.g. `csharp`) in the header of the code block.                                                        |

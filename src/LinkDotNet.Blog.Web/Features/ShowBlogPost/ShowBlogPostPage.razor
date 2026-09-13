@@ -161,7 +161,7 @@ else if (BlogPost is not null)
 	{
 		if (shortCodes.Count == 0)
 		{
-			return MarkdownConverter.ToMarkupStringWithHeadingAnchors(content, NavigationManager.Uri);
+			return MarkdownConverter.ToMarkupStringWithHeadingAnchors(content, NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
 		}
 
 		var sb = new StringBuilder(content);
@@ -170,7 +170,7 @@ else if (BlogPost is not null)
 			sb.Replace($"[[{shortCode.Name}]]", shortCode.MarkdownContent);
 		}
 
-		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(sb.ToString(), NavigationManager.Uri);
+		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(sb.ToString(), NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
 	}
 
     private async Task UpdateLikes(bool hasLiked)

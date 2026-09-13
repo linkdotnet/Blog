@@ -18,7 +18,7 @@ public sealed class MigrationManager
     private string DetermineCurrentVersionFromMigrations()
     {
         return migrations.Count > 0
-            ? migrations.Max(m => m.ToVersion) ?? "11.0"
+            ? migrations.Max(m => Version.Parse(m.ToVersion))!.ToString()
             : "11.0";
     }
 
@@ -134,19 +134,12 @@ public sealed class MigrationManager
 
     private List<IMigration> GetApplicableMigrations(string? currentVersion)
     {
-        var result = new List<IMigration>();
-        var currentMigrationVersion = currentVersion ?? "11.0";
+        var startVersion = Version.Parse(currentVersion ?? "11.0");
 
-        foreach (var migration in migrations)
-        {
-            if (migration.FromVersion == currentMigrationVersion)
-            {
-                result.Add(migration);
-                currentMigrationVersion = migration.ToVersion;
-            }
-        }
-
-        return result;
+        return migrations
+            .Where(m => Version.Parse(m.ToVersion) > startVersion)
+            .OrderBy(m => Version.Parse(m.ToVersion))
+            .ToList();
     }
 
     private static string CreateBackup(string filePath, string backupDirectory)
