@@ -132,6 +132,11 @@ code {
 	}
 }
 
+.code-lang-badge {
+	font-size: 0.7rem;
+	opacity: 0.85;
+}
+
 /* Template defined css */
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;
