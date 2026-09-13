@@ -99,4 +99,66 @@ public class MarkdownConverterTests
 
         html.ShouldNotContain("loading=");
     }
+
+    [Fact]
+    public void ShouldMarkAbsoluteLinksAsExternal()
+    {
+        var html = MarkdownConverter.ToMarkupString("[link](https://localhost)").Value;
+
+        html.ShouldContain("target=\"_blank\"");
+        html.ShouldContain("rel=\"noopener noreferrer\"");
+        html.ShouldContain("class=\"external-link\"");
+        html.ShouldContain("""<i class="bi bi-box-arrow-up-right ms-1" aria-hidden="true"></i>""");
+    }
+
+    [Fact]
+    public void ShouldNotMarkRelativeLinksAsExternal()
+    {
+        var html = MarkdownConverter.ToMarkupString("[post](/blogPost/1)").Value;
+
+        html.ShouldNotContain("external-link");
+        html.ShouldNotContain("target=");
+    }
+
+    [Fact]
+    public void ShouldNotMarkFragmentLinksAsExternal()
+    {
+        var html = MarkdownConverter.ToMarkupString("[jump](#section)").Value;
+
+        html.ShouldNotContain("external-link");
+        html.ShouldNotContain("target=");
+    }
+
+    [Fact]
+    public void ShouldNotMarkExternalImagesAsExternalLinks()
+    {
+        var html = MarkdownConverter.ToMarkupString("![alt](https://localhost/image.png)").Value;
+
+        html.ShouldNotContain("external-link");
+        html.ShouldNotContain("bi-box-arrow-up-right");
+    }
+
+    [Fact]
+    public void ShouldRenderLanguageBadgeForFencedCodeBlock()
+    {
+        var html = MarkdownConverter.ToMarkupString("```csharp\nvar x = 1;\n```").Value;
+
+        html.ShouldContain("""<span class="badge bg-secondary position-absolute top-0 start-0 m-2 code-lang-badge">csharp</span>""");
+    }
+
+    [Fact]
+    public void ShouldNotRenderLanguageBadgeWithoutLanguage()
+    {
+        var html = MarkdownConverter.ToMarkupString("```\nvar x = 1;\n```").Value;
+
+        html.ShouldNotContain("code-lang-badge");
+    }
+
+    [Fact]
+    public void ShouldNotRenderLanguageBadgeForIndentedCodeBlock()
+    {
+        var html = MarkdownConverter.ToMarkupString("    var x = 1;").Value;
+
+        html.ShouldNotContain("code-lang-badge");
+    }
 }

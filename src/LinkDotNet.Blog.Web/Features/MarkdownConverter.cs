@@ -21,6 +21,7 @@ public static class MarkdownConverter
         .UseCopyCodeBlock()
         .UseCallouts()
         .UseLazyLoadImages()
+        .UseExternalLinks()
         .Build();
 
     public static MarkupString ToMarkupString(string markdown)

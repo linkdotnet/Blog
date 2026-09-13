@@ -24,6 +24,12 @@ internal static class MarkdownPipelineBuilderExtensions
         pipeline.Extensions.Add(new LazyLoadImageExtension());
         return pipeline;
     }
+
+    public static MarkdownPipelineBuilder UseExternalLinks(this MarkdownPipelineBuilder pipeline)
+    {
+        pipeline.Extensions.Add(new ExternalLinkExtension());
+        return pipeline;
+    }
 }
 
 internal sealed class CopyCodeBlockToClipboardExtension : IMarkdownExtension
@@ -55,6 +61,10 @@ internal sealed class CustomCodeBlockRenderer : CodeBlockRenderer
     protected override void Write(HtmlRenderer renderer, CodeBlock obj)
     {
         renderer.Write("""<div class="position-relative">""");
+        if (obj is FencedCodeBlock { Info.Length: > 0 } fenced)
+        {
+            renderer.Write($"""<span class="badge bg-secondary position-absolute top-0 start-0 m-2 code-lang-badge">{fenced.Info}</span>""");
+        }
         renderer.Write("""
                        <button class="btn btn-sm position-absolute top-0 end-0 m-2 border border-primary text-primary copy-btn"
                                type="button"
