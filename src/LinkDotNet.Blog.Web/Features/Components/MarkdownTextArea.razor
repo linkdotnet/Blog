@@ -211,6 +211,15 @@
             {
                 // Keyboard shortcuts unavailable; toolbar buttons remain functional
             }
+
+            try
+            {
+                await JSRuntime.InvokeVoidAsync("markdownEditor.setupPasteHandler", textAreaRef, dotNetHelper);
+            }
+            catch (JSException)
+            {
+                // Paste-to-upload unavailable; the image toolbar button remains functional
+            }
         }
     }
 
@@ -396,24 +405,60 @@
                 await file.OpenReadStream(maxAllowedSize: MaxFileSizeBytes).CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
 
-                var options = await UploadDialog.ShowAsync(file.Name);
-                if (options is null)
-                {
-                    continue;
-                }
-
-                var url = await BlobUploadService.UploadFileAsync(options.Name, memoryStream, new UploadOptions
-                {
-                    SetCacheControlHeader = options.CacheMedia,
-                });
-
-                await InsertMarkdown($"![{file.Name}]({url})", "");
-                ToastService.ShowSuccess($"Successfully uploaded {file.Name}");
+                await UploadAndInsertImageAsync(memoryStream, file.Name);
             }
             catch (Exception ex)
             {
                 ToastService.ShowError($"Error while uploading file: {ex.Message}");
             }
         }
+    }
+
+    [JSInvokable]
+    public async Task HandlePastedImage(string base64Content, string mimeType)
+    {
+        try
+        {
+            var bytes = Convert.FromBase64String(base64Content);
+            if (bytes.LongLength > MaxFileSizeBytes)
+            {
+                ToastService.ShowError("Pasted image exceeds the maximum allowed size of 512 KB.");
+                return;
+            }
+
+            var extension = mimeType switch
+            {
+                "image/png" => "png",
+                "image/jpeg" => "jpg",
+                "image/gif" => "gif",
+                "image/webp" => "webp",
+                _ => "png",
+            };
+            var fileName = $"pasted-image-{DateTime.UtcNow:yyyyMMddHHmmssfff}.{extension}";
+
+            using var memoryStream = new MemoryStream(bytes);
+            await UploadAndInsertImageAsync(memoryStream, fileName);
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error while uploading pasted image: {ex.Message}");
+        }
+    }
+
+    private async Task UploadAndInsertImageAsync(Stream content, string fileName)
+    {
+        var options = await UploadDialog.ShowAsync(fileName);
+        if (options is null)
+        {
+            return;
+        }
+
+        var url = await BlobUploadService.UploadFileAsync(options.Name, content, new UploadOptions
+        {
+            SetCacheControlHeader = options.CacheMedia,
+        });
+
+        await InsertMarkdown($"![{fileName}]({url})", "");
+        ToastService.ShowSuccess($"Successfully uploaded {fileName}");
     }
 }

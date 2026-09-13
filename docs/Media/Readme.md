@@ -1,6 +1,6 @@
 # Media Upload
 
-The blog supports uploading media assets (images, etc.) directly to Azure Blob Storage while writing blog posts.
+The blog supports uploading media assets (images, etc.) while writing blog posts, either to Azure Blob Storage or to local disk.
 
 ## Configuration
 
@@ -20,7 +20,7 @@ The following settings in `appsettings.json` control media upload functionality:
 
 | Property                        | Type   | Description                                                                                                          |
 | ------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------- |
-| ImageStorageProvider            | string | Currently only supports `Azure` for Azure Blob Storage.                                                             |
+| ImageStorageProvider            | string | `Azure` for Azure Blob Storage, or `Local` to store files on disk under `wwwroot/uploads` (useful for self-hosting without a cloud provider). Any other value disables uploads. |
 | AuthenticationMode | string | Authentication method - either `Default` for Microsoft Entra ID or `ConnectionString` for connection string auth |
 | ConnectionString   | string | Azure Storage connection string (only used and mandatory when AuthenticationMode is `ConnectionString`)                          |
 | ServiceUrl         | string | Azure Blob Storage service URL (only used and mandatory when AuthenticationMode is `Default`)                                    |
@@ -46,7 +46,7 @@ Uses a storage account connection string for authentication:
 ## Usage
 
 1. Start writing a blog post in the markdown editor
-2. Drag & drop images onto the editor
+2. Use the image toolbar button, or paste an image directly from the clipboard (e.g. a screenshot)
 3. A dialog appears asking for:
    - File name (can include subdirectories)
    - Whether to enable browser caching via `Cache-Control` headers (currently set to one week)

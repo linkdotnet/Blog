@@ -16,6 +16,10 @@ public static class ImageUploadProviderExtensions
         {
             services.AddScoped<IBlobUploadService, AzureBlobStorageService>();
         }
+        else if (imageProvider == "Local")
+        {
+            services.AddScoped<IBlobUploadService, LocalDiskStorageService>();
+        }
         else
         {
             services.AddScoped<IBlobUploadService, NoopStorageService>();
