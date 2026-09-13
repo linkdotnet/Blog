@@ -184,5 +184,38 @@ window.markdownEditor = {
         });
 
         textarea._keyboardListenerAttached = true;
+    },
+
+    setupPasteHandler: function(textareaElement, dotNetHelper) {
+        if (textareaElement._pasteListenerAttached) {
+            return;
+        }
+
+        textareaElement.addEventListener('paste', function(e) {
+            const items = e.clipboardData && e.clipboardData.items;
+            if (!items) {
+                return;
+            }
+
+            const imageItem = Array.from(items).find(item => item.type.startsWith('image/'));
+            if (!imageItem) {
+                return;
+            }
+
+            e.preventDefault();
+            const file = imageItem.getAsFile();
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const base64 = ev.target.result.split(',')[1];
+                dotNetHelper.invokeMethodAsync('HandlePastedImage', base64, imageItem.type);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        textareaElement._pasteListenerAttached = true;
     }
 };

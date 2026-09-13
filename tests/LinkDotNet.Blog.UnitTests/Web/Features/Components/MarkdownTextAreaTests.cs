@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
@@ -19,6 +21,7 @@ public class MarkdownTextAreaTests : BunitContext
         JSInterop.Setup<bool>("markdownEditor.isMac", _ => true).SetResult(false);
         JSInterop.SetupVoid("markdownEditor.setupKeyboardShortcuts", _ => true).SetVoidResult();
         JSInterop.SetupVoid("markdownEditor.setupKeyboardShortcuts", invocation => invocation.Arguments.Count == 2).SetVoidResult();
+        JSInterop.SetupVoid("markdownEditor.setupPasteHandler", _ => true).SetVoidResult();
         JSInterop.SetupVoid("markdownEditor.highlightCodeBlocks");
     }
 
@@ -329,6 +332,20 @@ public class MarkdownTextAreaTests : BunitContext
     }
 
     [Fact]
+    public async Task ShouldCallSetupPasteHandlerOnFirstRender()
+    {
+        SetupServices();
+
+        var cut = Render<MarkdownTextArea>(p => p
+            .Add(c => c.Value, "")
+            .Add(c => c.Rows, 10));
+
+        await cut.InvokeAsync(() => Task.CompletedTask);
+
+        JSInterop.Invocations.ShouldContain(i => i.Identifier == "markdownEditor.setupPasteHandler");
+    }
+
+    [Fact]
     public void ShouldHaveStrikethroughButton()
     {
         SetupServices();
@@ -512,6 +529,7 @@ public class MarkdownTextAreaTests : BunitContext
         Services.AddScoped(_ => toastService);
         JSInterop.Setup<bool>("markdownEditor.isMac", _ => true).SetResult(false);
         JSInterop.SetupVoid("markdownEditor.setupKeyboardShortcuts", _ => true).SetVoidResult();
+        JSInterop.SetupVoid("markdownEditor.setupPasteHandler", _ => true).SetVoidResult();
         JSInterop.SetupVoid("markdownEditor.highlightCodeBlocks");
 
         var cut = Render<MarkdownTextArea>(p => p
@@ -528,5 +546,53 @@ public class MarkdownTextAreaTests : BunitContext
 
         toastService.Received(1).ShowError(
             Arg.Is<string>(msg => msg != null && msg.Contains("large-image.jpg") && msg.Contains("512 KB")));
+    }
+
+    [Fact]
+    public async Task ShouldShowErrorWhenPastedImageExceedsMaxSize()
+    {
+        var toastService = Substitute.For<IToastService>();
+        SetupServices();
+        Services.AddScoped(_ => toastService);
+
+        var cut = Render<MarkdownTextArea>(p => p
+            .Add(c => c.Value, "")
+            .Add(c => c.Rows, 10));
+
+        var oversizedContent = Convert.ToBase64String(new byte[(600 * 1024) + 1]);
+
+        await cut.InvokeAsync(() => cut.Instance.HandlePastedImage(oversizedContent, "image/png"));
+
+        toastService.Received(1).ShowError(
+            Arg.Is<string>(msg => msg != null && msg.Contains("512 KB")));
+    }
+
+    [Fact]
+    public async Task ShouldUploadAndInsertMarkdownWhenImagePasted()
+    {
+        SetupServices();
+        var blobUploadService = Substitute.For<IBlobUploadService>();
+        blobUploadService.UploadFileAsync(Arg.Any<string>(), Arg.Any<Stream>(), Arg.Any<UploadOptions>())
+            .Returns("https://cdn.example.com/pasted-image.png");
+        Services.AddScoped(_ => blobUploadService);
+
+        var capturedValue = string.Empty;
+        var cut = Render<MarkdownTextArea>(p => p
+            .Add(c => c.Value, "")
+            .Add(c => c.Rows, 10)
+            .Add(c => c.ValueChanged, v => capturedValue = v));
+
+        var content = Convert.ToBase64String(new byte[] { 1, 2, 3 });
+        var task = cut.InvokeAsync(() => cut.Instance.HandlePastedImage(content, "image/png"));
+
+        await cut.Find("form").SubmitAsync();
+        await task;
+
+        capturedValue.ShouldContain("![pasted-image-");
+        capturedValue.ShouldContain("](https://cdn.example.com/pasted-image.png)");
+        await blobUploadService.Received(1).UploadFileAsync(
+            Arg.Is<string>(name => name.StartsWith("pasted-image-") && name.EndsWith(".png")),
+            Arg.Any<Stream>(),
+            Arg.Any<UploadOptions>());
     }
 }

@@ -35,3 +35,6 @@ backups/
 
 # MacOS
 .DS_Store
+
+# Local image storage provider uploads
+src/LinkDotNet.Blog.Web/wwwroot/uploads/
