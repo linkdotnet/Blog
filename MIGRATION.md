@@ -1,4 +1,4 @@
-# Migration Guide
+﻿# Migration Guide
 This document describes the changes that need to be made to migrate from one version of the blog to another.
 
 ## Automated Upgrade Assistant
@@ -28,6 +28,24 @@ For detailed documentation, see [docs/Migrations/UpgradeAssistant.md](docs/Migra
 ---
 
 ## 15.0 to 16.0
+
+### Blog post record index
+
+The index on `BlogPostRecords` was replaced. Both queries that read this table (the dashboard visit counter and `TransformBlogPostRecordsJob`) filter on `DateClicked` only, but the old index led with `BlogPostId` and could therefore never be seeked. The replacement leads with `DateClicked` and carries `BlogPostId` and `Clicks`, which makes the dashboard's `GROUP BY BlogPostId, SUM(Clicks)` index-only.
+
+For SQL providers, run the `ChangeBlogPostRecordIndex` Entity Framework migration, or execute `scripts/2026-09-13-BlogPostRecordIndex.sql` (SQL Server, includes an optional `__EFMigrationsHistory` baseline). The portable equivalent is:
+
+```sql
+DROP INDEX IX_BlogPostRecords_BlogPostId_DateClicked ON BlogPostRecords;
+CREATE INDEX IX_BlogPostRecords_DateClicked_BlogPostId_Clicks
+    ON BlogPostRecords (DateClicked, BlogPostId, Clicks);
+```
+
+> **The `DROP` may fail because the old index does not exist.** That is expected on most installations, and safe to ignore. `BlogDbContext` bootstraps its schema with `Database.EnsureCreated()`, which only acts on an empty database and never writes `__EFMigrationsHistory`. On a database that already had tables when it was first started, no Entity Framework migration has ever been applied — including `AddBlogPostRecordIndex`, which introduced the old index. Check what you actually have with `EXEC sp_helpindex 'BlogPostRecords'` before running anything.
+
+### Visit counts are no longer double-counted
+
+`ShowBlogPostPage` recorded a visit on every render rather than only the first, so each page view was counted at least twice. This is now fixed. Expect the numbers on the dashboard to drop by roughly half from the upgrade date onward — that is the correction, not a drop in traffic. Historical data is left untouched and is not comparable with data recorded after the upgrade.
 
 ### Code block language
 Code blocks now have a header that contains the copy button and, optionally, the language of the code block. The `ShowCodeBlockLanguage` setting was added on the root level of the `appsettings.json` file (handled by the Upgrade Assistant). The default is `true`, set it to `false` to hide the language.

@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
@@ -59,6 +59,21 @@ public class ShowBlogPostPageTests : BunitContext
             p => p.Add(s => s.BlogPostId, blogPostId));
 
         cut.FindComponents<Loading>().Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public void ShouldTrackVisitOnlyOncePerPageView()
+    {
+        var userRecordService = Substitute.For<IUserRecordService>();
+        Services.AddScoped(_ => userRecordService);
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        repositoryMock.GetByIdAsync("1").Returns(new BlogPostBuilder().Build());
+        Services.AddScoped(_ => repositoryMock);
+
+        var cut = Render<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.WaitForAssertion(() => userRecordService.Received(1).StoreUserRecordAsync());
     }
 
     [Fact]

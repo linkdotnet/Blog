@@ -72,6 +72,56 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
     }
 
     [Fact]
+    public async Task ShouldFilterByStartDateOnly()
+    {
+        var blogPost = new BlogPostBuilder().WithTitle("1").WithUpdatedDate(new DateTime(2020, 1, 1)).Build();
+        await Repository.StoreAsync(blogPost);
+        var before = new BlogPostRecord
+            { BlogPostId = blogPost.Id, DateClicked = new DateOnly(2019, 12, 31), Clicks = 7 };
+        var onStart = new BlogPostRecord
+            { BlogPostId = blogPost.Id, DateClicked = new DateOnly(2020, 1, 1), Clicks = 3 };
+        var after = new BlogPostRecord
+            { BlogPostId = blogPost.Id, DateClicked = new DateOnly(2021, 1, 1), Clicks = 4 };
+        await DbContext.BlogPostRecords.AddRangeAsync(before, onStart, after);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await using var ctx = new BunitContext();
+        ctx.ComponentFactories.Add<DateRangeSelector, DateRangeSelectorStub>();
+        RegisterRepositories(ctx);
+        var cut = ctx.Render<VisitCountPerPage>();
+        var filter = new Filter { StartDate = new DateOnly(2020, 1, 1) };
+
+        await cut.InvokeAsync(() => cut.FindComponent<DateRangeSelectorStub>().Instance.FilterChanged.InvokeAsync(filter));
+
+        cut.WaitForElement("td");
+        cut.WaitForAssertion(() => cut.Find("#total-clicks").TextContent.ShouldBe("7 clicks in total"));
+    }
+
+    [Fact]
+    public async Task ShouldFilterByEndDateOnly()
+    {
+        var blogPost = new BlogPostBuilder().WithTitle("1").WithUpdatedDate(new DateTime(2020, 1, 1, 14, 0, 0)).Build();
+        await Repository.StoreAsync(blogPost);
+        var before = new BlogPostRecord
+            { BlogPostId = blogPost.Id, DateClicked = new DateOnly(2019, 12, 31), Clicks = 7 };
+        var onEnd = new BlogPostRecord
+            { BlogPostId = blogPost.Id, DateClicked = new DateOnly(2020, 1, 1), Clicks = 3 };
+        var after = new BlogPostRecord
+            { BlogPostId = blogPost.Id, DateClicked = new DateOnly(2021, 1, 1), Clicks = 4 };
+        await DbContext.BlogPostRecords.AddRangeAsync(before, onEnd, after);
+        await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await using var ctx = new BunitContext();
+        ctx.ComponentFactories.Add<DateRangeSelector, DateRangeSelectorStub>();
+        RegisterRepositories(ctx);
+        var cut = ctx.Render<VisitCountPerPage>();
+        var filter = new Filter { EndDate = new DateOnly(2020, 1, 1) };
+
+        await cut.InvokeAsync(() => cut.FindComponent<DateRangeSelectorStub>().Instance.FilterChanged.InvokeAsync(filter));
+
+        cut.WaitForElement("td");
+        cut.WaitForAssertion(() => cut.Find("#total-clicks").TextContent.ShouldBe("10 clicks in total"));
+    }
+
+    [Fact]
     public async Task ShouldShowTotalClickCount()
     {
         var blogPost1 = new BlogPostBuilder().WithTitle("1").WithLikes(2).Build();

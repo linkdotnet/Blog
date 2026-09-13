@@ -1,4 +1,4 @@
-@page "/blogPost/{blogPostId}/{slug?}"
+﻿@page "/blogPost/{blogPostId}/{slug?}"
 @using System.Text
 @using Markdig
 @using LinkDotNet.Blog.Domain
@@ -150,9 +150,15 @@ else if (BlogPost is not null)
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JsRuntime.InvokeVoidAsync("highlightCodeBlocks");
-        _ = UserRecordService.StoreUserRecordAsync();
 
-        if (BlogPost is not null && firstRender)
+        if (!firstRender)
+        {
+	        return;
+        }
+
+        await UserRecordService.StoreUserRecordAsync();
+
+        if (BlogPost is not null)
         {
 	        isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
 	        StateHasChanged();
