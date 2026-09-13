@@ -10,7 +10,7 @@
 			</h2>
 			<div id="toc-accordion-body" class="accordion-collapse collapse" aria-labelledby="toc-header">
 				<nav class="nav flex-column p-2">
-					@foreach (var item in MarkdownConverter.GenerateToc(Content))
+					@foreach (var item in toc)
 					{
 						@TocLink(item)
 					}

@@ -1,3 +1,4 @@
+using System.Linq;
 using Markdig;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -20,12 +21,10 @@ internal sealed class LazyLoadImageExtension : IMarkdownExtension
 
     private static void AddLazyLoading(MarkdownDocument document)
     {
-        foreach (var image in document.Descendants<LinkInline>())
+        var allImagesBesidesFirst = document.Descendants<LinkInline>().Where(link => link.IsImage).Skip(1);
+        foreach (var image in allImagesBesidesFirst)
         {
-            if (image.IsImage)
-            {
-                image.GetAttributes().AddPropertyIfNotExist("loading", "lazy");
-            }
+            image.GetAttributes().AddPropertyIfNotExist("loading", "lazy");
         }
     }
 }

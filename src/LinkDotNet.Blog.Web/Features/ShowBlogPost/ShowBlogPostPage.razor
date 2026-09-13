@@ -90,7 +90,7 @@ else if (BlogPost is not null)
 				</div>
 
 				<div class="blogpost-content">
-					@(EnrichWithShortCodes(BlogPost.Content))
+					@renderedContent
 				</div>
 			</div>
 			<div class="d-flex justify-content-between py-2 border-top border-bottom align-items-center">
@@ -130,6 +130,7 @@ else if (BlogPost is not null)
 		: $"blogPost/{BlogPost.Id}/{BlogPost.Slug}";
 	private IReadOnlyCollection<ShortCode> shortCodes = [];
 	private bool isBookmarked;
+	private MarkupString renderedContent;
 
 	private BlogPost? BlogPost { get; set; }
 
@@ -142,12 +143,13 @@ else if (BlogPost is not null)
     {
 	    isLoading = true;
 	    BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
+	    renderedContent = BlogPost is null ? default : EnrichWithShortCodes(BlogPost.Content);
 	    isLoading = false;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        await JsRuntime.InvokeVoidAsync("hljs.highlightAll");
+        await JsRuntime.InvokeVoidAsync("highlightCodeBlocks");
         _ = UserRecordService.StoreUserRecordAsync();
 
         if (BlogPost is not null && firstRender)
