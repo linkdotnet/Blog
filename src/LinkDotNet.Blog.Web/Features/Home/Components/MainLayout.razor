@@ -2,10 +2,11 @@
 @inherits LayoutComponentBase
 
 <BlazoredToasts Position="ToastPosition.BottomRight" />
+<a class="visually-hidden-focusable" href="#main-content">Skip to main content</a>
 <div class="position-relative min-vh-100">
     <NavMenu/>
 
-    <main class="pb-5">
+    <main id="main-content" class="pb-5" tabindex="-1">
         @Body
     </main>
     <Footer></Footer>
