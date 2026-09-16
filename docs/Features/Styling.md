@@ -6,6 +6,8 @@
 - [Icons](#icons)
 - [Brand Image vs. Blog Name](#brand-image-vs-blog-name)
 - [Introduction Background Image](#introduction-background-image)
+- [Favicon \& Site Icons](#favicon--site-icons)
+- [Code Block Highlighting](#code-block-highlighting)
 
 This page lists what can currently be styled and where in the code to find it. There is no
 in-app theme picker yet - styling is done via CSS custom properties. All values live in a
@@ -120,3 +122,36 @@ With `Introduction:BackgroundUrl` set:
 Without `Introduction:BackgroundUrl` set:
 
 ![Introduction card with no background image](./images/intro-without-background.webp)
+
+## Favicon & Site Icons
+
+The browser tab icon, touch icons and manifest are static files in
+`src/LinkDotNet.Blog.Web/wwwroot/` - there is no `appsettings.json` option for these, so
+replace the files directly to rebrand them:
+
+- `favicon.ico` - default tab icon (served by browser convention, not explicitly linked).
+- `favicon-16x16.png`, `favicon-32x32.png`, `apple-touch-icon.png` - linked in the `<head>` of
+  `App.razor` (lines 10-12).
+- `android-chrome-192x192.png`, `android-chrome-256x256.png`, `site.webmanifest` - used by
+  Android/PWA install prompts (`site.webmanifest` is linked in `App.razor` line 13 and
+  references the two PNGs itself).
+- `safari-pinned-tab.svg` - Safari pinned-tab mask icon, linked in `App.razor` line 14.
+- `mstile-150x150.png`, `browserconfig.xml` - legacy Windows tile icon/config, not explicitly
+  linked (picked up by convention).
+
+Keep the same filenames and dimensions when replacing these so the existing `<link>` tags in
+`App.razor` keep working without changes.
+
+## Code Block Highlighting
+
+Fenced code blocks in blog posts are syntax-highlighted with [highlight.js](https://highlightjs.org/),
+loaded from a CDN in `App.razor`:
+
+- Theme CSS (line 29): `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/<version>/styles/github-dark-dimmed.min.css`
+- Script (line 50): `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/<version>/highlight.min.js`
+
+The current theme is **github-dark-dimmed**, not the plain "GitHub" theme. To use a different
+palette, swap the `href` of the CSS `<link>` tag for another [highlight.js theme name](https://highlightjs.org/examples)
+(e.g. `github.min.css`, `github-dark.min.css`, `monokai.min.css`), keeping the same version
+number as the script tag. There is no `appsettings.json` option for this - it's a direct edit
+to `App.razor`.
