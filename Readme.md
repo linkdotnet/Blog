@@ -44,6 +44,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Media Upload](./docs/Media/Readme.md)
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
 -   [Advanced Features](./docs/Features/AdvancedFeatures.md)
+-   [Styling](./docs/Features/Styling.md)
 
 ## Installation
 
