@@ -33,6 +33,7 @@ public class BlogPostAdminActionsTests : BunitContext
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         Services.AddSingleton(repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         await cut.Find("#delete-blogpost").ClickAsync();
@@ -71,6 +72,7 @@ public class BlogPostAdminActionsTests : BunitContext
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         
         Services.AddSingleton(repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
         await cut.Find("#delete-blogpost").ClickAsync();
 

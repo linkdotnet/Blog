@@ -165,8 +165,12 @@ public class ProfileTests : BunitContext
     private (IRepository<ProfileInformationEntry> repoMock, ISortOrderCalculator calcMock) RegisterServices()
     {
         var repoMock = Substitute.For<IRepository<ProfileInformationEntry>>();
+        var skillRepository = Substitute.For<IRepository<Skill>>();
+        var talkRepository = Substitute.For<IRepository<Talk>>();
         var calcMock = Substitute.For<ISortOrderCalculator>();
         Services.AddScoped(_ => repoMock);
+        Services.AddScoped(_ => skillRepository);
+        Services.AddScoped(_ => talkRepository);
         Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         Services.AddScoped(_ => calcMock);
         repoMock.GetAllAsync(

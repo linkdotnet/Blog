@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.TestUtilities.Fakes;
@@ -8,6 +10,7 @@ using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.AboutMe.Components;
@@ -18,7 +21,11 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 
     public TalksTests()
     {
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IRepository<Talk>>(_ => Repository);
+        ctx.Services.AddScoped<IRepository<ProfileInformationEntry>>(_ =>
+            new Repository<ProfileInformationEntry>(DbContextFactory, Substitute.For<ILogger<Repository<ProfileInformationEntry>>>()));
+        ctx.Services.AddScoped<IRepository<Skill>>(_ =>
+            new Repository<Skill>(DbContextFactory, Substitute.For<ILogger<Repository<Skill>>>()));
         ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
     }

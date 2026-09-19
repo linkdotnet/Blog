@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,7 +58,7 @@ public class StorageProviderExtensionsTests
         collection.AddStorageProvider(config);
 
         var serviceProvider = collection.BuildServiceProvider();
-        serviceProvider.GetService<IRepository<BlogPost>>().ShouldBeOfType<CachedRepository<BlogPost>>();
+        serviceProvider.GetService<IBlogPostRepository>().ShouldBeOfType<CachedBlogPostRepository>();
         serviceProvider.GetService<IRepository<Skill>>().ShouldNotBeOfType<CachedRepository<BlogPost>>();
     }
 }

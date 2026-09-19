@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.Dashboard.Components;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -169,8 +170,14 @@ public class VisitCountPerPageTests : SqlDatabaseTestBase<BlogPost>
 
     private void RegisterRepositories(BunitContext ctx)
     {
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new Repository<BlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPost>>>()));
-        ctx.Services.AddScoped<IRepository<BlogPostRecord>>(_ => new Repository<BlogPostRecord>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostRecord>>>()));
+        var blogPostRepository = new Repository<BlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPost>>>());
+        var blogPostRecordRepository = new Repository<BlogPostRecord>(DbContextFactory, Substitute.For<ILogger<Repository<BlogPostRecord>>>());
+        var userRecordRepository = new Repository<UserRecord>(DbContextFactory, Substitute.For<ILogger<Repository<UserRecord>>>());
+        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => blogPostRepository);
+        ctx.Services.AddScoped<IRepository<BlogPostRecord>>(_ => blogPostRecordRepository);
+        ctx.Services.AddScoped<IRepository<UserRecord>>(_ => userRecordRepository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(blogPostRepository));
+        ctx.Services.AddScoped<IAnalyticsRepository>(_ => new AnalyticsRepository(userRecordRepository, blogPostRecordRepository));
     }
 
     private async Task SaveBlogPostArticleClicked(string blogPostId, int count)

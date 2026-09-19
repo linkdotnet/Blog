@@ -30,8 +30,9 @@ public class SimilarBlogPostSectionTests : SqlDatabaseTestBase<BlogPost>
         await DbContext.SimilarBlogPosts.AddAsync(similarBlogPost1, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         await using var context = new BunitContext();
-        context.Services.AddScoped<IRepository<SimilarBlogPost>>(_ =>
-            new Repository<SimilarBlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<SimilarBlogPost>>>()));
+        var similarBlogPostRepository = new Repository<SimilarBlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<SimilarBlogPost>>>());
+        context.Services.AddScoped<IRepository<SimilarBlogPost>>(_ => similarBlogPostRepository);
+        context.Services.AddScoped<ISimilarBlogPostRepository>(_ => new SimilarBlogPostRepository(similarBlogPostRepository));
         context.Services.AddScoped(_ => Repository);
         context.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         

@@ -78,6 +78,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new BunitContext();
         ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new SlowRepository());
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(new SlowRepository()));
 
         var cut = ctx.Render<ArchivePage>();
 

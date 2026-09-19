@@ -3,10 +3,13 @@ using System.Threading.Tasks;
 using AngleSharp.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Skills;
@@ -19,8 +22,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().WithSkillName("C#").Build();
         using var ctx = new BunitContext();
         await Repository.StoreAsync(skill);
-        ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
+        RegisterAboutMeRepository(ctx);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -36,8 +38,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     public async Task ShouldAddSkill()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
+        RegisterAboutMeRepository(ctx);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -65,8 +66,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         using var ctx = new BunitContext();
         var skill = new SkillBuilder().Build();
         await Repository.StoreAsync(skill);
-        ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
+        RegisterAboutMeRepository(ctx);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
 
         var cut = ctx.Render<SkillTable>(p =>
@@ -82,8 +82,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
         await DbContext.AddAsync(skill, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
+        RegisterAboutMeRepository(ctx);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -104,8 +103,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().WithProficiencyLevel(ProficiencyLevel.Familiar).Build();
         await DbContext.AddAsync(skill, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        ctx.Services.AddScoped(_ => Repository);
-        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
+        RegisterAboutMeRepository(ctx);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -117,5 +115,15 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
         skillFromDb.ShouldNotBeNull();
         skillFromDb.ProficiencyLevel.ShouldBe(ProficiencyLevel.Familiar);
+    }
+
+    private void RegisterAboutMeRepository(BunitContext ctx)
+    {
+        ctx.Services.AddScoped<IRepository<Skill>>(_ => Repository);
+        ctx.Services.AddScoped<IRepository<ProfileInformationEntry>>(_ =>
+            new Repository<ProfileInformationEntry>(DbContextFactory, Substitute.For<ILogger<Repository<ProfileInformationEntry>>>()));
+        ctx.Services.AddScoped<IRepository<Talk>>(_ =>
+            new Repository<Talk>(DbContextFactory, Substitute.For<ILogger<Repository<Talk>>>()));
+        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
     }
 }
