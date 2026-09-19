@@ -1,9 +1,9 @@
-@page "/short-codes"
+﻿@page "/short-codes"
 @using System.ComponentModel.DataAnnotations
 @using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 
-@inject IRepository<ShortCode> ShortCodeRepository
+@inject IShortCodeRepository ShortCodeRepository
 @inject IToastService ToastService
 
 <PageTitle>Shortcodes</PageTitle>

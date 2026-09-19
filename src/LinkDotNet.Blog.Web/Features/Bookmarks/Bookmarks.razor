@@ -1,8 +1,8 @@
-@page "/bookmarks"
+﻿@page "/bookmarks"
 @using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @inject IBookmarkService BookmarkService
-@inject IRepository<BlogPost> BlogPostRepository;
+@inject IBlogPostRepository BlogPostRepository;
 
 <div class="container">
 	<h3 class="pb-3 fw-bold">Bookmarks</h3>

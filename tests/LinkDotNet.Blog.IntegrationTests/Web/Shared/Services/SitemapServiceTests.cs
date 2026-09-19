@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Services;
@@ -11,7 +12,7 @@ public sealed class SitemapServiceTests : SqlDatabaseTestBase<BlogPost>
     private readonly SitemapService sut;
 
     public SitemapServiceTests()
-        => sut = new SitemapService(Repository);
+        => sut = new SitemapService(new BlogPostRepository(Repository));
 
     [Fact]
     public async Task ShouldSaveSitemapUrlInCorrectFormat()

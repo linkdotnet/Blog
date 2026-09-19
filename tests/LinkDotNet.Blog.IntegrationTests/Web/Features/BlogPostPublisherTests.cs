@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.Logging;
 using NCronJob;
@@ -19,7 +20,7 @@ public sealed class BlogPostPublisherTests : SqlDatabaseTestBase<BlogPost>
     {
         cacheInvalidator = Substitute.For<ICacheInvalidator>();
 
-        sut = new BlogPostPublisher(Repository, cacheInvalidator, TimeProvider.System, Substitute.For<ILogger<BlogPostPublisher>>());
+        sut = new BlogPostPublisher(new BlogPostRepository(Repository), cacheInvalidator, TimeProvider.System, Substitute.For<ILogger<BlogPostPublisher>>());
     }
 
     [Fact]

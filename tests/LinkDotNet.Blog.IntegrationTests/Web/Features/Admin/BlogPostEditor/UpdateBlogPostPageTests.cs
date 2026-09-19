@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
@@ -15,6 +15,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,17 +40,20 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost);
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
-        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, new BlogPostRepository(Repository)));
         ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
 
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         ctx.Services.AddScoped(_ => templateRepository);
+        ctx.Services.AddScoped<IBlogPostTemplateRepository>(_ => new BlogPostTemplateRepository(templateRepository));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
@@ -95,17 +99,20 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost);
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
-        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, new BlogPostRepository(Repository)));
         ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
 
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         ctx.Services.AddScoped(_ => templateRepository);
+        ctx.Services.AddScoped<IBlogPostTemplateRepository>(_ => new BlogPostTemplateRepository(templateRepository));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
@@ -141,9 +148,10 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
-        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, new BlogPostRepository(Repository)));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");

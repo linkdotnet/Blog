@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Blazored.Toast.Services;
@@ -14,6 +14,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -34,6 +35,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
@@ -43,10 +45,12 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
 
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         ctx.Services.AddScoped(_ => templateRepository);
+        ctx.Services.AddScoped<IBlogPostTemplateRepository>(_ => new BlogPostTemplateRepository(templateRepository));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
@@ -88,6 +92,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
@@ -97,10 +102,12 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
 
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         ctx.Services.AddScoped(_ => templateRepository);
+        ctx.Services.AddScoped<IBlogPostTemplateRepository>(_ => new BlogPostTemplateRepository(templateRepository));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");
@@ -137,6 +144,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.JSInterop.SetupVoid("hljs.highlightAll");
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
@@ -146,11 +154,13 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
 
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         var template = BlogPostTemplate.Create("My Template", "Title", "Short", "Content");
         templateRepository.GetAllAsync().Returns(new PagedList<BlogPostTemplate>([template], 1, 1, 1));
         ctx.Services.AddScoped(_ => templateRepository);
+        ctx.Services.AddScoped<IBlogPostTemplateRepository>(_ => new BlogPostTemplateRepository(templateRepository));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         ctx.Services.AddScoped(_ => currentUserService);

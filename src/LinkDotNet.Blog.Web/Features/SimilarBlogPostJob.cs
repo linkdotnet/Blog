@@ -1,23 +1,23 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NCronJob;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Services.Similiarity;
 
 namespace LinkDotNet.Blog.Web.Features;
 
 public class SimilarBlogPostJob : IJob
 {
-    private readonly IRepository<BlogPost> blogPostRepository;
-    private readonly IRepository<SimilarBlogPost> similarBlogPostRepository;
+    private readonly IBlogPostRepository blogPostRepository;
+    private readonly ISimilarBlogPostRepository similarBlogPostRepository;
 
     public SimilarBlogPostJob(
-        IRepository<BlogPost> blogPostRepository,
-        IRepository<SimilarBlogPost> similarBlogPostRepository)
+        IBlogPostRepository blogPostRepository,
+        ISimilarBlogPostRepository similarBlogPostRepository)
     {
         this.blogPostRepository = blogPostRepository;
         this.similarBlogPostRepository = similarBlogPostRepository;
@@ -40,9 +40,8 @@ public class SimilarBlogPostJob : IJob
         var documents = blogPosts.Select(bp => TextProcessor.TokenizeAndNormalize([bp.Title, bp.ShortDescription, ..bp.Tags])).ToList();
 
         var similarities = blogPosts.Select(bp => GetSimilarityForBlogPost(bp, documents, blogPosts)).ToArray();
-        var ids = await similarBlogPostRepository.GetAllByProjectionAsync(s => s.Id);
-        await similarBlogPostRepository.DeleteBulkAsync(ids);
-        await similarBlogPostRepository.StoreBulkAsync(similarities);
+        var ids = await similarBlogPostRepository.GetAllIdsAsync();
+        await similarBlogPostRepository.ReplaceAllAsync(ids, similarities);
 
     }
 

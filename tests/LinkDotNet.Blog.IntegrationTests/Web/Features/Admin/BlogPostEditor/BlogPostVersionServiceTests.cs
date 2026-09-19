@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.EntityFrameworkCore;
 using TestContext = Xunit.TestContext;
 
@@ -15,7 +16,7 @@ public class BlogPostVersionServiceTests : SqlDatabaseTestBase<BlogPost>
 
     public BlogPostVersionServiceTests()
     {
-        sut = new BlogPostVersionService(DbContextFactory, Repository);
+        sut = new BlogPostVersionService(DbContextFactory, new BlogPostRepository(Repository));
     }
 
     [Fact]

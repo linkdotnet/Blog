@@ -1,9 +1,10 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.Extensions.Logging;
 using NCronJob;
 
@@ -29,7 +30,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
         
-        var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository);
+        var job = new SimilarBlogPostJob(new BlogPostRepository(Repository), new SimilarBlogPostRepository(similarBlogPostRepository));
         var context = Substitute.For<IJobExecutionContext>();
         context.Parameter.Returns(true);
         await job.RunAsync(context, CancellationToken.None);
@@ -48,7 +49,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
         
-        var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository);
+        var job = new SimilarBlogPostJob(new BlogPostRepository(Repository), new SimilarBlogPostRepository(similarBlogPostRepository));
         await job.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();

@@ -1,10 +1,10 @@
 ﻿@using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using LinkDotNet.Blog.Web.Features.Services.Tags
 @using NCronJob
 @inject NavigationManager NavigationManager
 @inject IToastService ToastService
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostRepository BlogPostRepository
 @inject IInstantJobRegistry InstantJobRegistry
 @inject ITagQueryService TagQueryService
 

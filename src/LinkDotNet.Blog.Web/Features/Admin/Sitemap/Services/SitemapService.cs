@@ -5,15 +5,15 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 public sealed class SitemapService : ISitemapService
 {
-    private readonly IRepository<BlogPost> repository;
+    private readonly IBlogPostRepository repository;
 
-    public SitemapService(IRepository<BlogPost> repository)
+    public SitemapService(IBlogPostRepository repository)
     {
         this.repository = repository;
     }

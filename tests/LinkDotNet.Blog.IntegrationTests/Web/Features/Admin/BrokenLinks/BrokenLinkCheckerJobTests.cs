@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.Extensions.Logging;
 using NCronJob;
 
@@ -87,5 +88,5 @@ public class BrokenLinkCheckerJobTests : SqlDatabaseTestBase<BlogPost>
         (await brokenLinkRepository.GetAllAsync()).ShouldBeEmpty();
     }
 
-    private BrokenLinkCheckerJob CreateSut() => new(Repository, brokenLinkRepository, linkChecker, timeProvider);
+    private BrokenLinkCheckerJob CreateSut() => new(new BlogPostRepository(Repository), new BrokenLinkRepository(brokenLinkRepository), linkChecker, timeProvider);
 }

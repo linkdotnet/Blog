@@ -1,9 +1,9 @@
 ﻿@page "/draft"
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @attribute [Authorize]
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostRepository BlogPostRepository
 
 <PageTitle>Drafts</PageTitle>
 

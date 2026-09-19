@@ -5,6 +5,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
@@ -166,6 +167,7 @@ public class ProfileTests : BunitContext
         var repoMock = Substitute.For<IRepository<ProfileInformationEntry>>();
         var calcMock = Substitute.For<ISortOrderCalculator>();
         Services.AddScoped(_ => repoMock);
+        Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         Services.AddScoped(_ => calcMock);
         repoMock.GetAllAsync(
                 Arg.Any<Expression<Func<ProfileInformationEntry, bool>>>(),

@@ -4,6 +4,7 @@ using AngleSharp.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill;
 using Microsoft.Extensions.DependencyInjection;
 using TestContext = Xunit.TestContext;
@@ -19,6 +20,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         using var ctx = new BunitContext();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -35,6 +37,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     {
         using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -63,6 +66,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         var skill = new SkillBuilder().Build();
         await Repository.StoreAsync(skill);
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
 
         var cut = ctx.Render<SkillTable>(p =>
@@ -79,6 +83,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         await DbContext.AddAsync(skill, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));
@@ -100,6 +105,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
         await DbContext.AddAsync(skill, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IAboutMeRepository, AboutMeRepository>();
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>
             p.Add(s => s.ShowAdminActions, true));

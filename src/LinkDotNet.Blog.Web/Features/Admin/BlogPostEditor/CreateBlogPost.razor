@@ -1,9 +1,9 @@
 ﻿@page "/create"
 @attribute [Authorize]
 @using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
-@inject IRepository<BlogPost> BlogPostRepository
+@using LinkDotNet.Blog.Web.Features.Repositories
+@inject IBlogPostRepository BlogPostRepository
 @inject IToastService ToastService
 
 <CreateNewBlogPost Title="Create New Blog Post" OnBlogPostCreated="@(StoreBlogPostAsync)"></CreateNewBlogPost>

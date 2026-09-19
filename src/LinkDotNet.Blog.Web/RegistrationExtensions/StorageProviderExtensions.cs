@@ -1,5 +1,6 @@
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -30,28 +31,22 @@ public static class StorageProviderExtensions
             onRavenDb: services.UseRavenDbAsStorageProvider
         );
 
-        if (persistenceProvider.IsSql())
-        {
-            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider.IsRavenDb())
-        {
-            services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider.IsMongoDB())
-        {
-            services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
-        }
+        services.RegisterTypedRepositories();
 
         return services;
     }
 
-    private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
-        where TRepo : class, IRepository<BlogPost>
+    private static void RegisterTypedRepositories(this IServiceCollection services)
     {
-        services.AddScoped<TRepo>();
-        services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(
-                provider.GetRequiredService<TRepo>(),
-                provider.GetRequiredService<IFusionCache>()));
+        services.AddScoped<BlogPostRepository>();
+        services.AddScoped<IBlogPostRepository>(provider => new CachedBlogPostRepository(
+            provider.GetRequiredService<BlogPostRepository>(),
+            provider.GetRequiredService<IFusionCache>()));
+        services.AddScoped<ISimilarBlogPostRepository, SimilarBlogPostRepository>();
+        services.AddScoped<IAboutMeRepository, AboutMeRepository>();
+        services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
+        services.AddScoped<IBrokenLinkRepository, BrokenLinkRepository>();
+        services.AddScoped<IShortCodeRepository, ShortCodeRepository>();
+        services.AddScoped<IBlogPostTemplateRepository, BlogPostTemplateRepository>();
     }
 }

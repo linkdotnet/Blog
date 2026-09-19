@@ -3,6 +3,7 @@ using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +17,9 @@ public class BlogPostAdminActionsTests : BunitContext
 
     public BlogPostAdminActionsTests()
     {
-        Services.AddSingleton(Substitute.For<IRepository<BlogPost>>());
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        Services.AddSingleton(repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         Services.AddSingleton(Substitute.For<IToastService>());
         Services.AddSingleton(Substitute.For<IInstantJobRegistry>());
         tagQueryService.ClearTagCacheAsync().Returns(Task.CompletedTask);

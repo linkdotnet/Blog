@@ -6,6 +6,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.Extensions.Logging;
 using NCronJob;
 using TestContext = Xunit.TestContext;
@@ -26,9 +27,8 @@ public class TransformBlogPostRecordsJobTests : SqlDatabaseTestBase<BlogPost>
             new Repository<UserRecord>(DbContextFactory, Substitute.For<ILogger<Repository<UserRecord>>>());
         
         sut = new TransformBlogPostRecordsJob(
-            Repository,
-            userRecordRepository,
-            blogPostRecordRepository,
+            new BlogPostRepository(Repository),
+            new AnalyticsRepository(userRecordRepository, blogPostRecordRepository),
             Substitute.For<ILogger<TransformBlogPostRecordsJob>>());
     }
     

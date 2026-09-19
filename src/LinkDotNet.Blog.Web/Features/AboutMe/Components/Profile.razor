@@ -1,8 +1,8 @@
 ﻿@using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using LinkDotNet.Blog.Web.Features.Services
 
-@inject IRepository<ProfileInformationEntry> Repository
+@inject IAboutMeRepository Repository
 @inject ISortOrderCalculator SortOrderCalculator
 <div class="profile-card">
 	<div class="profile-name">
@@ -60,7 +60,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        profileInformationEntries = (await Repository.GetAllAsync(orderBy: d => d.SortOrder, descending: false)).ToList();
+        profileInformationEntries = (await Repository.GetProfileInformationEntriesAsync()).ToList();
     }
 
     private void ShowDeleteDialog(string key)
@@ -73,7 +73,7 @@
     {
         var entryToDelete = profileInformationEntries.Single(p => p.Content == currentDeleteKey);
         profileInformationEntries.Remove(entryToDelete);
-        await Repository.DeleteAsync(entryToDelete.Id);
+        await Repository.DeleteProfileInformationEntryAsync(entryToDelete.Id);
     }
 
     private async Task AddValue(string toAdd)
@@ -82,7 +82,7 @@
         var newEntry = ProfileInformationEntry.Create(toAdd, sortOrder);
 
         profileInformationEntries.Add(newEntry);
-        await Repository.StoreAsync(newEntry);
+        await Repository.StoreProfileInformationEntryAsync(newEntry);
     }
 
     private int GetSortOrder()
@@ -104,7 +104,7 @@
 
         var newSortOrder = SortOrderCalculator.GetSortOrder(dropTarget, profileInformationEntries);
         currentDragItem.SortOrder = newSortOrder;
-        await Repository.StoreAsync(currentDragItem);
+        await Repository.StoreProfileInformationEntryAsync(currentDragItem);
         currentDragItem = null;
         profileInformationEntries.Sort((a, b) => a.SortOrder.CompareTo(b.SortOrder));
         StateHasChanged();

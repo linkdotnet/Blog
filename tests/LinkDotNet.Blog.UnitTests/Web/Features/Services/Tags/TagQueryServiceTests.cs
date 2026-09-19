@@ -1,8 +1,8 @@
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
@@ -20,13 +20,13 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Services.Tags;
 public sealed class TagQueryServiceTests
 {
 
-    private readonly IRepository<BlogPost> repository;
+    private readonly IBlogPostRepository repository;
     private readonly TagQueryService tagQueryService;
     private readonly IFusionCache fusionCache;
 
     public TagQueryServiceTests()
     {
-        repository = Substitute.For<IRepository<BlogPost>>();
+        repository = Substitute.For<IBlogPostRepository>();
 
         fusionCache = new FusionCache(
             new FusionCacheOptions(),

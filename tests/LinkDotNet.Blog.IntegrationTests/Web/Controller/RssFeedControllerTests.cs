@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Controller;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -48,7 +49,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var cut = new RssFeedController(introductionConfig, config, Repository)
+        var cut = new RssFeedController(introductionConfig, config, new BlogPostRepository(Repository))
         {
             ControllerContext = controllerContext,
         };
@@ -126,7 +127,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var cut = new RssFeedController(introductionConfig, config, Repository)
+        var cut = new RssFeedController(introductionConfig, config, new BlogPostRepository(Repository))
         {
             ControllerContext = controllerContext,
         };
@@ -204,7 +205,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var cut = new RssFeedController(introductionConfig, config, Repository)
+        var cut = new RssFeedController(introductionConfig, config, new BlogPostRepository(Repository))
         {
             ControllerContext = controllerContext,
         };
@@ -272,7 +273,7 @@ public class RssFeedControllerTests : SqlDatabaseTestBase<BlogPost>
             .Build();
         await Repository.StoreAsync(blogPost1);
         await Repository.StoreAsync(blogPost2);
-        var cut = new RssFeedController(introductionConfig, config, Repository)
+        var cut = new RssFeedController(introductionConfig, config, new BlogPostRepository(Repository))
         {
             ControllerContext = controllerContext,
         };

@@ -25,6 +25,7 @@ public static class SqlRegistrationExtensions
         });
 
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IPersistenceHealthCheck, SqlPersistenceHealthCheck>();
     }
 
     public static void UseSqliteAsStorageProvider(this IServiceCollection services)
@@ -43,6 +44,7 @@ public static class SqlRegistrationExtensions
                 ;
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IPersistenceHealthCheck, SqlPersistenceHealthCheck>();
     }
 
     public static void UseMySqlAsStorageProvider(this IServiceCollection services)
@@ -65,6 +67,7 @@ public static class SqlRegistrationExtensions
                 ;
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IPersistenceHealthCheck, SqlPersistenceHealthCheck>();
     }
 
     public static void UsePostgreSqlAsStorageProvider(this IServiceCollection services)
@@ -83,5 +86,6 @@ public static class SqlRegistrationExtensions
                     ;
             });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IPersistenceHealthCheck, SqlPersistenceHealthCheck>();
     }
 }

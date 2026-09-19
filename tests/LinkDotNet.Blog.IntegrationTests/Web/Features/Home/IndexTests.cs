@@ -1,8 +1,9 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Bunit.Extensions.WaitForHelpers;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -222,6 +223,7 @@ public class IndexTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterComponents(BunitContext ctx, string? profilePictureUri = null, bool useMultiAuthorMode = false)
     {
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri, useMultiAuthorMode).ApplicationConfiguration));
         ctx.Services.AddScoped(_ => Options.Create(CreateSampleAppConfiguration(profilePictureUri, useMultiAuthorMode).Introduction));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());

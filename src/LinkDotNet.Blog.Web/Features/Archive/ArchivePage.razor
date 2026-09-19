@@ -1,9 +1,9 @@
-@page "/archive"
-@using LinkDotNet.Blog.Infrastructure.Persistence
+﻿@page "/archive"
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using LinkDotNet.Blog.Domain
 @using System.Collections.Immutable
 @using System.Globalization
-@inject IRepository<BlogPost> Repository
+@inject IBlogPostRepository Repository
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <PageTitle>Archive @AppConfiguration.Value.BlogName</PageTitle>

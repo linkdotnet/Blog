@@ -1,12 +1,12 @@
 ﻿@using System.Linq.Expressions
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using System.Collections.Immutable
 @using System.Diagnostics
 @using Microsoft.Extensions.Logging
-@inject IRepository<BlogPost> BlogPostRepository
-@inject IRepository<BlogPostRecord> BlogPostRecordRepository
+@inject IBlogPostRepository BlogPostRepository
+@inject IAnalyticsRepository AnalyticsRepository
 @inject ILogger<VisitCountPerPage> Logger;
 
 <div class="card">
@@ -60,7 +60,7 @@
     }
 
 	private static async ValueTask<IPagedList<BlogPostVisitData>> GetRelevantBlogPostsAsync(
-		IRepository<BlogPost> blogPostRepository,
+		IBlogPostRepository blogPostRepository,
 		Filter filter)
 	{
 		Expression<Func<BlogPost, bool>>? blogPostFilter = filter.EndDate.HasValue
@@ -74,10 +74,10 @@
 	}
 
 	private static async Task<IReadOnlyList<BlogPostClickAggregate>> GetRelevantBlogPostRecords(
-		IRepository<BlogPostRecord> blogPostRecordRepository,
+		IAnalyticsRepository analyticsRepository,
 		Filter filter)
 	{
-		return await blogPostRecordRepository.GetGroupedByAsync(
+		return await analyticsRepository.GetGroupedBlogPostRecordsAsync(
 			r => r.BlogPostId,
 			g => new BlogPostClickAggregate { BlogPostId = g.Key, ClickCount = g.Sum(x => x.Clicks) },
 			filter: r => (!filter.StartDate.HasValue || r.DateClicked >= filter.StartDate)
@@ -89,7 +89,7 @@
 	    var stopwatch = Stopwatch.StartNew();
 
 	    var blogPosts = await GetRelevantBlogPostsAsync(BlogPostRepository, filter);
-	    var clickAggregates = await GetRelevantBlogPostRecords(BlogPostRecordRepository, filter);
+	    var clickAggregates = await GetRelevantBlogPostRecords(AnalyticsRepository, filter);
 
 	    var time = stopwatch.ElapsedMilliseconds;
 	    Logger.LogDebug("Retrieving data took {ElapsedMilliseconds}ms", time);

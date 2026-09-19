@@ -1,7 +1,7 @@
-@page "/broken-links"
+﻿@page "/broken-links"
 @using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
-@inject IRepository<BrokenLink> BrokenLinkRepository
+@using LinkDotNet.Blog.Web.Features.Repositories
+@inject IBrokenLinkRepository BrokenLinkRepository
 @inject IOptions<ApplicationConfiguration> ApplicationConfiguration
 @attribute [Authorize]
 
@@ -57,7 +57,7 @@
 	{
 		if (ApplicationConfiguration.Value.EnableBrokenLinkChecker)
 		{
-			brokenLinks = (await BrokenLinkRepository.GetAllAsync(orderBy: b => b.BlogPostTitle, descending: false)).ToArray();
+			brokenLinks = (await BrokenLinkRepository.GetAllAsync()).ToArray();
 		}
 	}
 }

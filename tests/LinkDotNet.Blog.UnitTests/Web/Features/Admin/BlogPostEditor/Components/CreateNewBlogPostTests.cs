@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
@@ -11,6 +11,7 @@ using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
@@ -32,10 +33,12 @@ public class CreateNewBlogPostTests : BunitContext
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         Services.AddScoped(_ => shortCodeRepository);
+        Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
 
         var templateRepository = Substitute.For<IRepository<BlogPostTemplate>>();
         templateRepository.GetAllAsync().Returns(PagedList<BlogPostTemplate>.Empty);
         Services.AddScoped(_ => templateRepository);
+        Services.AddScoped<IBlogPostTemplateRepository>(_ => new BlogPostTemplateRepository(templateRepository));
 
         JSInterop.SetupVoid("hljs.highlightAll");
         ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();

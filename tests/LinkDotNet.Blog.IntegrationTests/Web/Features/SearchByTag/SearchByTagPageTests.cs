@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.SearchByTag;
 using Microsoft.AspNetCore.Components;
@@ -48,6 +49,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     {
         using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.ComponentFactories.Add<PageTitle, PageTitleStub>();
 
         var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
@@ -67,6 +69,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterServices(BunitContext ctx)
     {
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
     }
     

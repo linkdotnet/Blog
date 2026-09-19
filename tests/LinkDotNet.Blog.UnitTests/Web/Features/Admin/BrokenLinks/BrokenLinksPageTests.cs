@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +18,7 @@ public class BrokenLinksPageTests : BunitContext
 
     public BrokenLinksPageTests()
     {
-        Services.AddScoped(_ => repository);
+        Services.RegisterBrokenLinkRepository(repository);
     }
 
     [Fact]

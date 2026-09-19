@@ -1,9 +1,9 @@
 ﻿@page "/searchByTag/{tag}"
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using LinkDotNet.Blog.Web.Features.Components
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostRepository BlogPostRepository
 
 <PageTitle>Search for tag: @Tag</PageTitle>
 @* Tag pages are thin listing pages that search engines crawl and then decline to

@@ -1,14 +1,14 @@
-@using LinkDotNet.Blog.Domain
+﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
 @using LinkDotNet.Blog.Web.Features.Services
 @using NCronJob
 @inject IJSRuntime JSRuntime
 @inject ICacheInvalidator CacheInvalidator
 @inject IInstantJobRegistry InstantJobRegistry
-@inject IRepository<ShortCode> ShortCodeRepository
-@inject IRepository<BlogPostTemplate> TemplateRepository
+@inject IShortCodeRepository ShortCodeRepository
+@inject IBlogPostTemplateRepository TemplateRepository
 @inject IToastService ToastService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject ICurrentUserService CurrentUserService

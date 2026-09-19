@@ -1,6 +1,6 @@
-@using LinkDotNet.Blog.Domain
-@using LinkDotNet.Blog.Infrastructure.Persistence
-@inject IRepository<Talk> Repository
+﻿@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Repositories
+@inject IAboutMeRepository Repository
 
 @if (talks.Any() || ShowAdminActions)
 {
@@ -27,18 +27,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        talks = (await Repository.GetAllAsync(orderBy: t => t.PublishedDate, descending: true)).ToList();
+        talks = (await Repository.GetTalksAsync()).ToList();
     }
 
     private async Task DeleteTalk(Talk talk)
     {
         talks.Remove(talk);
-        await Repository.DeleteAsync(talk.Id);
+        await Repository.DeleteTalkAsync(talk.Id);
     }
 
     private async Task StoreTalk(Talk talk)
     {
         talks.Add(talk);
-        await Repository.StoreAsync(talk);
+        await Repository.StoreTalkAsync(talk);
     }
 }

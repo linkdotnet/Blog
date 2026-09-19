@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Options;
@@ -26,12 +26,12 @@ public sealed class RssFeedController : ControllerBase
     private readonly string description;
     private readonly string blogName;
     private readonly int blogPostsPerPage;
-    private readonly IRepository<BlogPost> blogPostRepository;
+    private readonly IBlogPostRepository blogPostRepository;
 
     public RssFeedController(
         IOptions<Introduction> introductionConfiguration,
         IOptions<ApplicationConfiguration> applicationConfiguration,
-        IRepository<BlogPost> blogPostRepository)
+        IBlogPostRepository blogPostRepository)
     {
         ArgumentNullException.ThrowIfNull(introductionConfiguration);
         ArgumentNullException.ThrowIfNull(applicationConfiguration);

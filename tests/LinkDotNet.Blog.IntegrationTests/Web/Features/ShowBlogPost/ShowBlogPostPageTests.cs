@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
@@ -10,6 +10,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.EntityFrameworkCore;
@@ -131,6 +132,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var returnValues = new PagedList<ShortCode>([shortCode], 1, 1, 1);
         shortCodesRepository.GetAllAsync().Returns(returnValues);
         ctx.Services.AddScoped(_ => shortCodesRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodesRepository));
         var blogPost = new BlogPostBuilder().WithContent("This is a [[ONE]] shortcode").IsPublished().Build();
         await Repository.StoreAsync(blogPost);
         
@@ -212,6 +214,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
     private void RegisterComponents(BunitContext ctx, ILocalStorageService? localStorageService = null, bool useMultiAuthorMode = false)
     {
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
@@ -221,6 +224,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
+        ctx.Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
     }
 }

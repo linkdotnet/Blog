@@ -1,5 +1,5 @@
-using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -24,7 +24,7 @@ internal sealed class DummyDataSeeder : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         using var scope = serviceProvider.CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<IRepository<BlogPost>>();
+        var repository = scope.ServiceProvider.GetRequiredService<IBlogPostRepository>();
 
         var blogPosts = GenerateDummyBlogPosts(options.NumberOfBlogPosts);
         await repository.StoreBulkAsync(blogPosts);

@@ -1,8 +1,8 @@
-@using LinkDotNet.Blog.Domain
+﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @inject IToastService ToastService
-@inject IRepository<BlogPostTemplate> TemplateRepository
+@inject IBlogPostTemplateRepository TemplateRepository
 @inject IJSRuntime JSRuntime
 
 <ModalDialog @ref="ModalDialog" Title="Save as Template">

@@ -11,6 +11,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +30,7 @@ public class ShowBlogPostPageTests : BunitContext
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         Services.AddScoped(_ => shortCodeRepository);
+        Services.AddScoped<IShortCodeRepository>(_ => new ShortCodeRepository(shortCodeRepository));
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
@@ -47,6 +49,7 @@ public class ShowBlogPostPageTests : BunitContext
         const string blogPostId = "2";
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         repositoryMock.GetByIdAsync(blogPostId)!
             .Returns(new ValueTask<BlogPost>(Task.Run(async () => 
             {
@@ -69,6 +72,7 @@ public class ShowBlogPostPageTests : BunitContext
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         repositoryMock.GetByIdAsync("1").Returns(new BlogPostBuilder().Build());
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -83,6 +87,7 @@ public class ShowBlogPostPageTests : BunitContext
         var blogPost = new BlogPostBuilder().WithTitle("Title").Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -104,6 +109,7 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -120,6 +126,7 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -137,6 +144,7 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -157,6 +165,7 @@ public class ShowBlogPostPageTests : BunitContext
             .Build();
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         Services.AddScoped(_ => Options.Create(appConfiguration));
 
         var cut = Render<ShowBlogPostPage>(
@@ -175,6 +184,7 @@ public class ShowBlogPostPageTests : BunitContext
         blogPost.Id = "1";
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -194,6 +204,7 @@ public class ShowBlogPostPageTests : BunitContext
         blogPost.Id = "1";
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -212,6 +223,7 @@ public class ShowBlogPostPageTests : BunitContext
         blogPost.Id = "1";
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(true).Build()));
 
         var cut = Render<ShowBlogPostPage>(
@@ -231,6 +243,7 @@ public class ShowBlogPostPageTests : BunitContext
         blogPost.Id = "1";
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(false).Build()));
 
         var cut = Render<ShowBlogPostPage>(
@@ -248,6 +261,7 @@ public class ShowBlogPostPageTests : BunitContext
         blogPost.Id = "1";
         repositoryMock.GetByIdAsync("1").Returns(blogPost);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(repositoryMock));
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(true).Build()));
 
         var cut = Render<ShowBlogPostPage>(

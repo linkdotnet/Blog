@@ -1,8 +1,8 @@
 ﻿@page "/search/{searchTerm}"
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
-@inject IRepository<BlogPost> BlogPostRepository
+@using LinkDotNet.Blog.Web.Features.Repositories
+@inject IBlogPostRepository BlogPostRepository
 
 <div class="container">
     <h3 class="pb-3 fw-bold">Results for: @SearchTerm</h3>

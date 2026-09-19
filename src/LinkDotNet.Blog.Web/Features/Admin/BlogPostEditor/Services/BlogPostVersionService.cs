@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,11 +12,11 @@ namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 public sealed class BlogPostVersionService : IBlogPostVersionService
 {
     private readonly IDbContextFactory<BlogDbContext> dbContextFactory;
-    private readonly IRepository<BlogPost> blogPostRepository;
+    private readonly IBlogPostRepository blogPostRepository;
 
     public BlogPostVersionService(
         IDbContextFactory<BlogDbContext> dbContextFactory,
-        IRepository<BlogPost> blogPostRepository)
+        IBlogPostRepository blogPostRepository)
     {
         this.dbContextFactory = dbContextFactory;
         this.blogPostRepository = blogPostRepository;

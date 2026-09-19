@@ -1,31 +1,28 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
 using NCronJob;
 using Microsoft.Extensions.Logging;
+using LinkDotNet.Blog.Web.Features.Repositories;
 
 namespace LinkDotNet.Blog.Web.Features;
 
 public sealed partial class TransformBlogPostRecordsJob : IJob
 {
-    private readonly IRepository<BlogPost> blogPostRepository;
-    private readonly IRepository<UserRecord> userRecordRepository;
-    private readonly IRepository<BlogPostRecord> blogPostRecordRepository;
+    private readonly IBlogPostRepository blogPostRepository;
+    private readonly IAnalyticsRepository analyticsRepository;
     private readonly ILogger<TransformBlogPostRecordsJob> logger;
 
     public TransformBlogPostRecordsJob(
-        IRepository<BlogPost> blogPostRepository,
-        IRepository<UserRecord> userRecordRepository,
-        IRepository<BlogPostRecord> blogPostRecordRepository,
+        IBlogPostRepository blogPostRepository,
+        IAnalyticsRepository analyticsRepository,
         ILogger<TransformBlogPostRecordsJob> logger)
     {
         this.blogPostRepository = blogPostRepository;
-        this.userRecordRepository = userRecordRepository;
-        this.blogPostRecordRepository = blogPostRecordRepository;
+        this.analyticsRepository = analyticsRepository;
         this.logger = logger;
     }
 
@@ -78,7 +75,7 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
     private async Task TransformRecordsAsync()
     {
         var blogPosts = await blogPostRepository.GetAllAsync();
-        var userRecords = await userRecordRepository.GetAllAsync(
+        var userRecords = await analyticsRepository.GetUserRecordsAsync(
             filter: r => r.UrlClicked.StartsWith("blogPost/"));
 
         var newBlogPostRecords = GetBlogPostRecords(blogPosts, userRecords);
@@ -88,15 +85,14 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
         }
 
         var earliestDate = newBlogPostRecords.MinBy(r => r.DateClicked)?.DateClicked ?? DateOnly.MinValue;
-        var oldBlogPostRecords = await blogPostRecordRepository.GetAllAsync(f => f.DateClicked >= earliestDate);
+        var oldBlogPostRecords = await analyticsRepository.GetBlogPostRecordsAsync(f => f.DateClicked >= earliestDate);
 
         var mergedRecords = MergeRecords(oldBlogPostRecords, newBlogPostRecords);
 
-        await blogPostRecordRepository.DeleteBulkAsync(oldBlogPostRecords.Select(o => o.Id).ToArray());
-        await blogPostRecordRepository.StoreBulkAsync(mergedRecords.ToArray());
+        await analyticsRepository.ReplaceBlogPostRecordsAsync(oldBlogPostRecords.Select(o => o.Id).ToArray(), mergedRecords.ToArray());
 
         LogDeletingUserRecords(userRecords.Count);
-        await userRecordRepository.DeleteBulkAsync(userRecords.Select(u => u.Id).ToArray());
+        await analyticsRepository.DeleteUserRecordsAsync(userRecords.Select(u => u.Id).ToArray());
         LogDeletedUserRecords();
     }
 

@@ -1,13 +1,13 @@
-@page "/"
+﻿@page "/"
 @page "/{page:int}"
 @using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
-@using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Repositories
 @using LinkDotNet.Blog.Web.Features.Home.Components
 @using ZiggyCreatures.Caching.Fusion
 @inject IFusionCache FusionCache
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostRepository BlogPostRepository
 @inject IOptions<Introduction> Introduction
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager NavigationManager

@@ -1,5 +1,5 @@
-using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+﻿using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using ZiggyCreatures.Caching.Fusion;
 namespace LinkDotNet.Blog.Web.Features.Services.Tags;
 
 public sealed class TagQueryService(
-    IRepository<BlogPost> blogPostRepository,
+    IBlogPostRepository blogPostRepository,
     IFusionCache fusionCache,
     IOptions<ApplicationConfiguration> appConfiguration) : ITagQueryService
 {

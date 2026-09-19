@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Admin.DraftBlogPost;
  using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -20,6 +21,7 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(Repository));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
         var cut = ctx.Render<DraftBlogPostPage>();
         cut.WaitForElement(".blog-card");

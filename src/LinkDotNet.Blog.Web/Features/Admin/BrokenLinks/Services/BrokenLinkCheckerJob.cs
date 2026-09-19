@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
-using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
+using LinkDotNet.Blog.Infrastructure;
 using NCronJob;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services;
@@ -13,14 +14,14 @@ public sealed class BrokenLinkCheckerJob : IJob
 {
     private const int MaxParallelRequests = 5;
 
-    private readonly IRepository<BlogPost> blogPostRepository;
-    private readonly IRepository<BrokenLink> brokenLinkRepository;
+    private readonly IBlogPostRepository blogPostRepository;
+    private readonly IBrokenLinkRepository brokenLinkRepository;
     private readonly ILinkChecker linkChecker;
     private readonly TimeProvider timeProvider;
 
     public BrokenLinkCheckerJob(
-        IRepository<BlogPost> blogPostRepository,
-        IRepository<BrokenLink> brokenLinkRepository,
+        IBlogPostRepository blogPostRepository,
+        IBrokenLinkRepository brokenLinkRepository,
         ILinkChecker linkChecker,
         TimeProvider timeProvider)
     {
@@ -58,9 +59,8 @@ public sealed class BrokenLinkCheckerJob : IJob
             }
         });
 
-        var previousIds = await brokenLinkRepository.GetAllByProjectionAsync(b => b.Id);
-        await brokenLinkRepository.DeleteBulkAsync(previousIds);
-        await brokenLinkRepository.StoreBulkAsync(brokenLinks.ToArray());
+        var previousIds = await brokenLinkRepository.GetAllAsync();
+        await brokenLinkRepository.ReplaceAllAsync(previousIds.Select(link => link.Id).ToArray(), brokenLinks.ToArray());
     }
 
     private sealed record BlogPostLinks(string Id, string Title, string Content);

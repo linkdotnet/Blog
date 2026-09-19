@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Repositories;
 using LinkDotNet.Blog.Web.Features.Services;
 using NCronJob;
 using Microsoft.Extensions.Logging;
@@ -13,12 +14,12 @@ namespace LinkDotNet.Blog.Web.Features;
 public sealed partial class BlogPostPublisher : IJob
 {
     private readonly ILogger<BlogPostPublisher> logger;
-    private readonly IRepository<BlogPost> repository;
+    private readonly IBlogPostRepository repository;
     private readonly ICacheInvalidator cacheInvalidator;
     private readonly TimeProvider timeProvider;
 
     public BlogPostPublisher(
-        IRepository<BlogPost> repository,
+        IBlogPostRepository repository,
         ICacheInvalidator cacheInvalidator,
         TimeProvider timeProvider,
         ILogger<BlogPostPublisher> logger)
