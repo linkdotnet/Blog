@@ -9,6 +9,7 @@ using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
 
+[Trait(TestTraits.Requires, TestTraits.Docker)]
 public sealed class BlogPostRepositoryTests : IAsyncLifetime
 {
     private IDocumentStore store = default!;

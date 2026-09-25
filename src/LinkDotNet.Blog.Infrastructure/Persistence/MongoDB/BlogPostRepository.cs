@@ -31,6 +31,7 @@ public sealed class BlogPostRepository : IBlogPostRepository
 
         var blogPost = await GetAsync(blogPostId)
                        ?? throw new InvalidOperationException($"Blog post {blogPostId} does not exist.");
+        var loadedState = WithoutLikes(blogPost.ToBsonDocument());
         var latestVersionNumber = await Versions.AsQueryable()
             .Where(v => v.BlogPostId == blogPostId)
             .OrderByDescending(v => v.VersionNumber)
@@ -40,7 +41,7 @@ public sealed class BlogPostRepository : IBlogPostRepository
         var snapshot = revise(blogPost, latestVersionNumber);
 
         // Standalone servers have no multi-document transactions: inserting the snapshot first means a crash
-        // in between leaves only an extra snapshot of the unchanged post. Likes are excluded so a concurrent $inc survives.
+        // in between leaves only an extra snapshot of the unchanged post.
         try
         {
             await Versions.InsertOneAsync(snapshot);
@@ -50,10 +51,16 @@ public sealed class BlogPostRepository : IBlogPostRepository
             throw new BlogPostRevisionConflictException($"Version {snapshot.VersionNumber} of blog post {blogPostId} already exists.", exception);
         }
 
-        var fields = blogPost.ToBsonDocument();
-        fields.Remove("_id");
-        fields.Remove(nameof(BlogPost.Likes));
-        await BlogPosts.UpdateOneAsync(b => b.Id == blogPostId, new BsonDocument("$set", fields));
+        // Filtering on the loaded state (except likes, which may be incremented concurrently) makes the update fail
+        // when the post changed after it was loaded, because the snapshot would then not match what gets overwritten.
+        var changes = WithoutLikes(blogPost.ToBsonDocument());
+        changes.Remove("_id");
+        var result = await BlogPosts.UpdateOneAsync(loadedState, new BsonDocument("$set", changes));
+        if (result.MatchedCount == 0)
+        {
+            await Versions.DeleteOneAsync(v => v.Id == snapshot.Id);
+            throw new BlogPostRevisionConflictException($"Blog post {blogPostId} was changed concurrently.");
+        }
     }
 
     public async ValueTask<IReadOnlyList<BlogPostVersion>> GetVersionHistoryAsync(string blogPostId) =>
@@ -66,6 +73,12 @@ public sealed class BlogPostRepository : IBlogPostRepository
 
     public async ValueTask UnlikeAsync(string blogPostId) =>
         await BlogPosts.UpdateOneAsync(b => b.Id == blogPostId && b.Likes > 0, Builders<BlogPost>.Update.Inc(b => b.Likes, -1));
+
+    private static BsonDocument WithoutLikes(BsonDocument document)
+    {
+        document.Remove(nameof(BlogPost.Likes));
+        return document;
+    }
 
     public async ValueTask DeleteAsync(string blogPostId)
     {

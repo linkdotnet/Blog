@@ -13,8 +13,6 @@ public interface IBlogPostPersistenceHarness : IAsyncDisposable
 
     IBlogPostListQuery ListQuery { get; }
 
-    bool CanStoreSimilarBlogPostUnderBlogPostId { get; }
-
     Task StoreAsync<TEntity>(TEntity entity)
         where TEntity : Entity;
 
@@ -25,4 +23,6 @@ public interface IBlogPostPersistenceHarness : IAsyncDisposable
     void InsertVersion(BlogPostVersion version);
 
     void Like(string blogPostId);
+
+    void ChangeTitle(string blogPostId, string title);
 }

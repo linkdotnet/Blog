@@ -8,8 +8,12 @@ using Raven.Client.Documents.Operations;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
 
+[Trait(TestTraits.Requires, TestTraits.Docker)]
 public sealed class RavenDbBlogPostPersistenceContractTests : BlogPostPersistenceContract
 {
+    [Fact]
+    public Task ShouldNotLoseRevisionWhenPostChangesAfterItWasLoaded() => AssertRevisionIsNotLostWhenPostChangesAfterItWasLoadedAsync();
+
     protected override async Task<IBlogPostPersistenceHarness> CreateHarnessAsync() =>
         new Harness(await RavenDbTestContainer.CreateDocumentStoreAsync());
 
@@ -31,9 +35,7 @@ public sealed class RavenDbBlogPostPersistenceContractTests : BlogPostPersistenc
 
         public IBlogPostListQuery ListQuery { get; }
 
-        public bool CanStoreSimilarBlogPostUnderBlogPostId => false;
-
-        public async Task StoreAsync<TEntity>(TEntity entity)
+            public async Task StoreAsync<TEntity>(TEntity entity)
             where TEntity : Entity
         {
             using var session = store.OpenAsyncSession();
@@ -64,6 +66,9 @@ public sealed class RavenDbBlogPostPersistenceContractTests : BlogPostPersistenc
 
         public void Like(string blogPostId) =>
             store.Operations.Send(new PatchOperation(blogPostId, null, new PatchRequest { Script = "this.Likes++;" }));
+
+        public void ChangeTitle(string blogPostId, string title) =>
+            store.Operations.Send(new PatchOperation(blogPostId, null, new PatchRequest { Script = "this.Title = args.title;", Values = { ["title"] = title } }));
 
         public ValueTask DisposeAsync()
         {

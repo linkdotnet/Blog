@@ -10,6 +10,7 @@ using Raven.Client.Documents;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
 
+[Trait(TestTraits.Requires, TestTraits.Docker)]
 public sealed class RavenDbSimilarBlogPostTests : IAsyncLifetime
 {
     private IDocumentStore store = default!;

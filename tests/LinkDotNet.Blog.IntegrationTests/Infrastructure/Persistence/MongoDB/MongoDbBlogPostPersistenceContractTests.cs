@@ -7,8 +7,15 @@ using MongoDB.Driver;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.MongoDB;
 
+[Trait(TestTraits.Requires, TestTraits.Docker)]
 public sealed class MongoDbBlogPostPersistenceContractTests : BlogPostPersistenceContract
 {
+    [Fact]
+    public Task ShouldNotLoseRevisionWhenPostChangesAfterItWasLoaded() => AssertRevisionIsNotLostWhenPostChangesAfterItWasLoadedAsync();
+
+    [Fact]
+    public Task ShouldReadSimilarBlogPostsStoredUnderBlogPostId() => AssertReadsSimilarBlogPostsStoredUnderBlogPostIdAsync();
+
     protected override async Task<IBlogPostPersistenceHarness> CreateHarnessAsync() =>
         new Harness(await MongoDbTestContainer.CreateDatabaseAsync());
 
@@ -30,9 +37,7 @@ public sealed class MongoDbBlogPostPersistenceContractTests : BlogPostPersistenc
 
         public IBlogPostListQuery ListQuery { get; }
 
-        public bool CanStoreSimilarBlogPostUnderBlogPostId => true;
-
-        private IMongoCollection<BlogPost> BlogPosts => database.GetCollection<BlogPost>(nameof(BlogPost));
+            private IMongoCollection<BlogPost> BlogPosts => database.GetCollection<BlogPost>(nameof(BlogPost));
 
         private IMongoCollection<BlogPostVersion> Versions => database.GetCollection<BlogPostVersion>(nameof(BlogPostVersion));
 
@@ -50,6 +55,9 @@ public sealed class MongoDbBlogPostPersistenceContractTests : BlogPostPersistenc
 
         public void Like(string blogPostId) =>
             BlogPosts.UpdateOne(b => b.Id == blogPostId, Builders<BlogPost>.Update.Inc(b => b.Likes, 1));
+
+        public void ChangeTitle(string blogPostId, string title) =>
+            BlogPosts.UpdateOne(b => b.Id == blogPostId, Builders<BlogPost>.Update.Set(b => b.Title, title));
 
         public ValueTask DisposeAsync() => new(database.Client.DropDatabaseAsync(database.DatabaseNamespace.DatabaseName));
     }

@@ -30,8 +30,6 @@ internal sealed class EfCoreBlogPostPersistenceHarness : IBlogPostPersistenceHar
 
     public IBlogPostListQuery ListQuery { get; }
 
-    public bool CanStoreSimilarBlogPostUnderBlogPostId => true;
-
     public async Task StoreAsync<TEntity>(TEntity entity)
         where TEntity : Entity
     {
@@ -63,6 +61,12 @@ internal sealed class EfCoreBlogPostPersistenceHarness : IBlogPostPersistenceHar
     {
         using var dbContext = new BlogDbContext(options);
         dbContext.BlogPosts.Where(b => b.Id == blogPostId).ExecuteUpdate(s => s.SetProperty(b => b.Likes, b => b.Likes + 1));
+    }
+
+    public void ChangeTitle(string blogPostId, string title)
+    {
+        using var dbContext = new BlogDbContext(options);
+        dbContext.BlogPosts.Where(b => b.Id == blogPostId).ExecuteUpdate(s => s.SetProperty(b => b.Title, title));
     }
 
     public ValueTask DisposeAsync() => dispose();

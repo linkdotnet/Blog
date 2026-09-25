@@ -27,11 +27,13 @@ public sealed class BlogPostRepository : IBlogPostRepository
         ArgumentNullException.ThrowIfNull(revise);
 
         await using var blogDbContext = await dbContextFactory.CreateDbContextAsync();
-        var blogPost = await blogDbContext.BlogPosts.SingleOrDefaultAsync(b => b.Id == blogPostId)
-                       ?? throw new InvalidOperationException($"Blog post {blogPostId} does not exist.");
+        // The version number is read before the post: a revision committing in between (snapshot and post update in
+        // one transaction) then takes the same number, so this save fails on the unique index instead of losing it.
         var latestVersionNumber = await blogDbContext.BlogPostVersions
             .Where(v => v.BlogPostId == blogPostId)
             .MaxAsync(v => (int?)v.VersionNumber) ?? 0;
+        var blogPost = await blogDbContext.BlogPosts.SingleOrDefaultAsync(b => b.Id == blogPostId)
+                       ?? throw new InvalidOperationException($"Blog post {blogPostId} does not exist.");
 
         var snapshot = revise(blogPost, latestVersionNumber);
         await blogDbContext.BlogPostVersions.AddAsync(snapshot);

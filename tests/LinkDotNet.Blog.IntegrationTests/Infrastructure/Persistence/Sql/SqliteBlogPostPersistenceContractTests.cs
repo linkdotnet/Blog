@@ -6,6 +6,9 @@ namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql;
 
 public sealed class SqliteBlogPostPersistenceContractTests : BlogPostPersistenceContract
 {
+    [Fact]
+    public Task ShouldReadSimilarBlogPostsStoredUnderBlogPostId() => AssertReadsSimilarBlogPostsStoredUnderBlogPostIdAsync();
+
     protected override Task<IBlogPostPersistenceHarness> CreateHarnessAsync()
     {
         var connection = new SqliteConnection(string.Empty);

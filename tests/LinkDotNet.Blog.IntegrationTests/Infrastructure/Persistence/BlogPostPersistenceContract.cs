@@ -225,14 +225,37 @@ public abstract class BlogPostPersistenceContract : IAsyncLifetime
         summary.ReadingTimeInMinutes.ShouldBe(mostSimilar.ReadingTimeInMinutes);
     }
 
-    [Fact]
-    public async Task ShouldReadSimilarBlogPostsStoredUnderBlogPostId()
+    // Not a [Fact]: a revision on EF commits its snapshot and the post update in one transaction, so another
+    // revision can never observe the snapshot without the post change. MongoDB writes them one after another.
+    protected async Task AssertRevisionIsNotLostWhenPostChangesAfterItWasLoadedAsync()
     {
-        if (!harness.CanStoreSimilarBlogPostUnderBlogPostId)
+        var blogPost = await StoreAsync(new BlogPostBuilder().WithTitle("Original").Build());
+        harness.InsertVersion(BlogPostVersion.CreateSnapshot(blogPost, 1));
+        var changes = new BlogPostBuilder().WithTitle("Second").Build();
+        var competingRevisionLanded = false;
+
+        BlogPostVersion Revise(BlogPost post, int latest)
         {
-            Assert.Skip("Document ids are global across collections for this provider.");
+            if (!competingRevisionLanded)
+            {
+                competingRevisionLanded = true;
+                harness.ChangeTitle(post.Id, "First");
+            }
+
+            return post.Revise(changes, latest);
         }
 
+        await Should.ThrowAsync<BlogPostRevisionConflictException>(async () => await Sut.ReviseAsync(blogPost.Id, Revise));
+        await Sut.ReviseAsync(blogPost.Id, Revise);
+
+        var history = await Sut.GetVersionHistoryAsync(blogPost.Id);
+        history.Select(v => v.Title).ShouldBe(["First", "Original"]);
+        (await harness.LoadBlogPostAsync(blogPost.Id))!.Title.ShouldBe("Second");
+    }
+
+    // Not a [Fact]: RavenDB ids are global across collections, so it can't store such rows in the first place.
+    protected async Task AssertReadsSimilarBlogPostsStoredUnderBlogPostIdAsync()
+    {
         var blogPost = await StoreAsync(new BlogPostBuilder().Build());
         var similar = await StoreAsync(new BlogPostBuilder().WithTitle("Similar").IsPublished().Build());
         await harness.StoreAsync(new SimilarBlogPost { Id = blogPost.Id, SimilarBlogPostIds = [similar.Id] });
