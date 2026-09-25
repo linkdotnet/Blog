@@ -16,7 +16,7 @@ public class BlogPostAdminActionsTests : BunitContext
 
     public BlogPostAdminActionsTests()
     {
-        Services.AddSingleton(Substitute.For<IRepository<BlogPost>>());
+        Services.AddSingleton(Substitute.For<IBlogPostRepository>());
         Services.AddSingleton(Substitute.For<IToastService>());
         Services.AddSingleton(Substitute.For<IInstantJobRegistry>());
         tagQueryService.ClearTagCacheAsync().Returns(Task.CompletedTask);
@@ -28,7 +28,7 @@ public class BlogPostAdminActionsTests : BunitContext
     public async Task ShouldDeleteBlogPostWhenOkClicked()
     {
         const string blogPostId = "2";
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IBlogPostRepository>();
         Services.AddSingleton(repositoryMock);
         
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));
@@ -65,7 +65,7 @@ public class BlogPostAdminActionsTests : BunitContext
     public async Task ShouldNotDeleteBlogPostWhenCancelClicked()
     {
         const string blogPostId = "2";
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var repositoryMock = Substitute.For<IBlogPostRepository>();
         
         Services.AddSingleton(repositoryMock);
         var cut = Render<BlogPostAdminActions>(s => s.Add(p => p.BlogPostId, blogPostId));

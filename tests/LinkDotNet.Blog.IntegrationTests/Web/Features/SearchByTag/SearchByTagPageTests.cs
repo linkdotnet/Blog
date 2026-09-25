@@ -1,3 +1,5 @@
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 ﻿using System;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -47,7 +49,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     public void ShouldSetTitleToTag()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.ComponentFactories.Add<PageTitle, PageTitleStub>();
 
         var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
@@ -66,7 +68,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
 
     private void RegisterServices(BunitContext ctx)
     {
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
     }
     

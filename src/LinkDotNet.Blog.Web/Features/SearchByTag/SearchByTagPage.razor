@@ -3,7 +3,7 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Components
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostListQuery BlogPostListQuery
 
 <PageTitle>Search for tag: @Tag</PageTitle>
 @* Tag pages are thin listing pages that search engines crawl and then decline to
@@ -24,13 +24,11 @@
     [Parameter, EditorRequired]
     public required string Tag { get; set; }
 
-    IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
+    IReadOnlyList<BlogPostSummary> blogPosts = [];
 
     protected override async Task OnParametersSetAsync()
     {
         Tag = Uri.UnescapeDataString(Tag);
-        blogPosts = await BlogPostRepository.GetAllAsync(
-            b => b.IsPublished && b.Tags.Any(t => t == Tag),
-            b => b.UpdatedDate);
+        blogPosts = await BlogPostListQuery.GetPublishedByTagAsync(Tag);
     }
 }

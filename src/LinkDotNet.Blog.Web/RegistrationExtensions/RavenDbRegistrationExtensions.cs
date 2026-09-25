@@ -19,5 +19,6 @@ public static class RavenDbRegistrationExtensions
             return RavenDbConnectionProvider.Create(connectionString, databaseName);
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddBlogPostPersistence<BlogPostRepository, BlogPostPageQuery, BlogPostListQuery>();
     }
 }

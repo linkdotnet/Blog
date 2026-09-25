@@ -3,7 +3,7 @@
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @attribute [Authorize]
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostListQuery BlogPostListQuery
 
 <PageTitle>Drafts</PageTitle>
 
@@ -26,11 +26,11 @@
 </div>
 
 @code {
-    private IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
+    private IReadOnlyList<BlogPostSummary> blogPosts = [];
 
     protected override async Task OnInitializedAsync()
     {
-        blogPosts = await BlogPostRepository.GetAllAsync(p => !p.IsPublished, b => b.UpdatedDate);
+        blogPosts = await BlogPostListQuery.GetDraftsAsync();
     }
 
 }

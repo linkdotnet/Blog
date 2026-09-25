@@ -39,7 +39,7 @@
 				@foreach (var brokenLink in brokenLinks)
 				{
 					<tr>
-						<td><a href="blogPost/@brokenLink.BlogPostId">@brokenLink.BlogPostTitle</a></td>
+						<td><a href="@BlogPostRoute.For(brokenLink.BlogPostId)">@brokenLink.BlogPostTitle</a></td>
 						<td class="text-break"><a href="@brokenLink.Url" target="_blank" rel="noreferrer noopener">@brokenLink.Url</a></td>
 						<td><span class="badge text-bg-danger text-wrap">@brokenLink.Reason</span></td>
 					</tr>

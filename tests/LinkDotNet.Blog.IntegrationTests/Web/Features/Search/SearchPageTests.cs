@@ -1,3 +1,5 @@
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 ﻿using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
@@ -58,7 +60,7 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
 
     private void RegisterServices(BunitContext ctx)
     {
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
     }
 }

@@ -5,22 +5,18 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.RavenDb;
 using LinkDotNet.Blog.TestUtilities;
 using Raven.Client.Documents;
-using Raven.Embedded;
-using Raven.TestDriver;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.RavenDb;
 
-public sealed class BlogPostRepositoryTests : RavenTestDriver
+public sealed class BlogPostRepositoryTests : IAsyncLifetime
 {
-    private static bool serverRunning;
-    private readonly IDocumentStore store;
-    private readonly IRepository<BlogPost> sut;
+    private IDocumentStore store = default!;
+    private IRepository<BlogPost> sut = default!;
 
-    public BlogPostRepositoryTests()
+    public async ValueTask InitializeAsync()
     {
-        StartServerIfNotRunning();
-        store = GetDocumentStore();
+        store = await RavenDbTestContainer.CreateDocumentStoreAsync();
         sut = new Repository<BlogPost>(store);
     }
 
@@ -166,28 +162,10 @@ public sealed class BlogPostRepositoryTests : RavenTestDriver
         (await session.Query<BlogPost>().AnyAsync(b => b.Id == blogPost.Id, TestContext.Current.CancellationToken)).ShouldBeFalse();
     }
 
-    public override void Dispose()
+    public ValueTask DisposeAsync()
     {
-        base.Dispose();
         store.Dispose();
-    }
-
-    private static void StartServerIfNotRunning()
-    {
-        if (!serverRunning)
-        {
-            serverRunning = true;
-            ConfigureServer(new TestServerOptions
-            {
-                DataDirectory = "./RavenDbTest/",
-                FrameworkVersion = null,
-                Licensing = new ServerOptions.LicensingOptions
-                {
-                    EulaAccepted = true,
-                    DisableAutoUpdate = true,
-                },
-            });
-        }
+        return ValueTask.CompletedTask;
     }
 
     private async Task SaveBlogPostAsync(params BlogPost[] blogPosts)

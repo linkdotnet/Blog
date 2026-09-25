@@ -5,18 +5,22 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.Admin.ShortCodes;
 using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.ShortCodes;
 
 public sealed class ShortCodesPageTests : SqlDatabaseTestBase<ShortCode>
 {
+    private readonly ICacheInvalidator cacheInvalidator = Substitute.For<ICacheInvalidator>();
+
     [Fact]
     public async Task ShouldShowShortCodes()
     {
         await using var ctx = new BunitContext();
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
+        ctx.Services.AddScoped(_ => cacheInvalidator);
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         var cut = ctx.Render<ShortCodesPage>();
         cut.Find("#short-code-content").Input("# Text");
@@ -28,6 +32,7 @@ public sealed class ShortCodesPageTests : SqlDatabaseTestBase<ShortCode>
         shortCodes.ShouldHaveSingleItem();
         shortCodes.First().MarkdownContent.ShouldBe("# Text");
         shortCodes.First().Name.ShouldBe("ShortName");
+        await cacheInvalidator.Received(1).ClearBlogPostPagesAsync();
     }
     
     [Fact]
@@ -38,6 +43,7 @@ public sealed class ShortCodesPageTests : SqlDatabaseTestBase<ShortCode>
         await Repository.StoreAsync(shortCode);
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
+        ctx.Services.AddScoped(_ => cacheInvalidator);
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         var cut = ctx.Render<ShortCodesPage>();
         await cut.Find("#edit-shortcode").ClickAsync();

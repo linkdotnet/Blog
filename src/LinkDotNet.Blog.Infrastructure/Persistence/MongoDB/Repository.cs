@@ -15,7 +15,7 @@ public sealed class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly IMongoDatabase database;
-    private IMongoCollection<TEntity> Collection => database.GetCollection<TEntity>(typeof(TEntity).Name);
+    private IMongoCollection<TEntity> Collection => database.CollectionFor<TEntity>();
 
     public Repository(IMongoDatabase database)
     {

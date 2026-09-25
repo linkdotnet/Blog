@@ -70,7 +70,7 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
 
     private static string GetBlogPostId(UserRecord userRecord)
     {
-        var id = userRecord.UrlClicked.Replace("blogPost/", string.Empty, StringComparison.OrdinalIgnoreCase);
+        var id = userRecord.UrlClicked.Replace(BlogPostRoute.Prefix, string.Empty, StringComparison.OrdinalIgnoreCase);
         var suffix = id.IndexOf('/', StringComparison.InvariantCultureIgnoreCase);
         return suffix != -1 ? id[..suffix] : id;
     }
@@ -79,7 +79,7 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
     {
         var blogPosts = await blogPostRepository.GetAllAsync();
         var userRecords = await userRecordRepository.GetAllAsync(
-            filter: r => r.UrlClicked.StartsWith("blogPost/"));
+            filter: r => r.UrlClicked.StartsWith(BlogPostRoute.Prefix));
 
         var newBlogPostRecords = GetBlogPostRecords(blogPosts, userRecords);
         if (newBlogPostRecords.Length == 0)
@@ -111,7 +111,4 @@ public sealed partial class TransformBlogPostRecordsJob : IJob
 
     [LoggerMessage(Level = LogLevel.Information, Message = "Deleted records from UserRecord-Table")]
     private partial void LogDeletedUserRecords();
-
-    [LoggerMessage(Level = LogLevel.Information, Message = "There is already a running job. Skipping this run.")]
-    private partial void LogSkippingRun();
 }

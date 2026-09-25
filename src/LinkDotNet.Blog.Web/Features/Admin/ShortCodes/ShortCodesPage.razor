@@ -2,9 +2,11 @@
 @using System.ComponentModel.DataAnnotations
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Services
 
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IToastService ToastService
+@inject ICacheInvalidator CacheInvalidator
 
 <PageTitle>Shortcodes</PageTitle>
 
@@ -33,7 +35,7 @@
 				<div class="accordion-body">
 					@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
 					<hr/>
-					<p>Usage: [[@shortCode.Name]]</p>
+					<p>Usage: @shortCode.Token</p>
 					<div class="d-flex justify-content-start gap-2">
 						<a id="edit-shortcode" type="button" class="btn btn-primary d-flex align-items-center gap-2" @onclick="() => EditShortCode(shortCode)" aria-label="edit">
 							<i class="pencil"></i>
@@ -95,6 +97,7 @@
             shortCodes.Add(newShortCode);
         }
 
+        await CacheInvalidator.ClearBlogPostPagesAsync();
         ToastService.ShowSuccess("Shortcode saved");
         model = new Model();
     }
@@ -105,6 +108,7 @@
         if (shortCode is not null)
         {
             await ShortCodeRepository.DeleteAsync(shortCode.Id);
+            await CacheInvalidator.ClearBlogPostPagesAsync();
             shortCodes.Remove(shortCode);
             ToastService.ShowSuccess("Shortcode deleted");
         }

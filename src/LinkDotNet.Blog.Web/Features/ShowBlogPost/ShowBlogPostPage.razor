@@ -1,6 +1,4 @@
 ﻿@page "/blogPost/{blogPostId}/{slug?}"
-@using System.Text
-@using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Bookmarks
@@ -8,8 +6,8 @@
 @using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components
 @using LinkDotNet.Blog.Web.Features.SupportMe.Components
 @using LinkDotNet.Blog.Web.Features.Bookmarks.Components
-@inject IRepository<BlogPost> BlogPostRepository
-@inject IRepository<ShortCode> ShortCodeRepository
+@inject IBlogPostPageQuery BlogPostPageQuery
+@inject IBlogPostRepository BlogPostRepository
 @inject IJSRuntime JsRuntime
 @inject NavigationManager NavigationManager
 @inject IUserRecordService UserRecordService
@@ -31,7 +29,7 @@ else if (BlogPost is not null)
 	<PageTitle>@BlogPost.Title</PageTitle>
 	<OgData Title="@BlogPost.Title"
 	        AbsolutePreviewImageUrl="@OgDataImage"
-	        Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
+	        Description="@(MarkdownConverter.ToPlainString(BlogPost.ShortDescription))"
 	        Keywords="@BlogPost.TagsAsString"
 	        CanonicalRelativeUrl="@BlogPostCanoncialUrl" />
 
@@ -103,7 +101,7 @@ else if (BlogPost is not null)
             }
             @if (AppConfiguration.Value.ShowSimilarPosts)
 			{
-				<SimilarBlogPostSection BlogPost="@BlogPost" />
+				<SimilarBlogPostSection SimilarBlogPosts="@SimilarBlogPosts" />
 			}
 			<CommentSection></CommentSection>
 		</div>
@@ -125,25 +123,20 @@ else if (BlogPost is not null)
     private bool isLoading;
 
 	private string OgDataImage => BlogPost!.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
-	private string BlogPostCanoncialUrl => string.IsNullOrEmpty(BlogPost?.Slug)
-		? $"blogPost/{BlogPost?.Id}"
-		: $"blogPost/{BlogPost.Id}/{BlogPost.Slug}";
-	private IReadOnlyCollection<ShortCode> shortCodes = [];
+	private string BlogPostCanoncialUrl => BlogPostRoute.For(BlogPost!.Id, BlogPost.Slug);
 	private bool isBookmarked;
 	private MarkupString renderedContent;
+	private BlogPostPage? page;
 
-	private BlogPost? BlogPost { get; set; }
+	private BlogPost? BlogPost => page?.BlogPost;
 
-	protected override async Task OnInitializedAsync()
-	{
-		shortCodes = await ShortCodeRepository.GetAllAsync();
-	}
+	private IReadOnlyList<BlogPostSummary> SimilarBlogPosts => page?.SimilarBlogPosts ?? [];
 
 	protected override async Task OnParametersSetAsync()
     {
 	    isLoading = true;
-	    BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
-	    renderedContent = BlogPost is null ? default : EnrichWithShortCodes(BlogPost.Content);
+	    page = await BlogPostPageQuery.GetAsync(BlogPostId);
+	    renderedContent = page is null ? default : EnrichWithShortCodes(page.BlogPost.Content, page.ShortCodes);
 	    isLoading = false;
     }
 
@@ -165,28 +158,23 @@ else if (BlogPost is not null)
         }
     }
 
-    private MarkupString EnrichWithShortCodes(string content)
+    private MarkupString EnrichWithShortCodes(string content, IReadOnlyList<ShortCode> shortCodes)
 	{
-		if (shortCodes.Count == 0)
-		{
-			return MarkdownConverter.ToMarkupStringWithHeadingAnchors(content, NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
-		}
-
-		var sb = new StringBuilder(content);
-		foreach (var shortCode in shortCodes)
-		{
-			sb.Replace($"[[{shortCode.Name}]]", shortCode.MarkdownContent);
-		}
-
-		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(sb.ToString(), NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
+		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(ShortCode.Expand(content, shortCodes), NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
 	}
 
     private async Task UpdateLikes(bool hasLiked)
     {
-        BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId)
-                   ?? throw new InvalidOperationException("Blog post not found");
-        BlogPost.Likes = hasLiked ? BlogPost.Likes + 1 : BlogPost.Likes - 1;
-        await BlogPostRepository.StoreAsync(BlogPost);
+        if (hasLiked)
+        {
+            await BlogPostRepository.LikeAsync(BlogPostId);
+        }
+        else
+        {
+            await BlogPostRepository.UnlikeAsync(BlogPostId);
+        }
+
+        page = await BlogPostPageQuery.GetAsync(BlogPostId);
     }
 
     private async Task BlogPostBookmarked()

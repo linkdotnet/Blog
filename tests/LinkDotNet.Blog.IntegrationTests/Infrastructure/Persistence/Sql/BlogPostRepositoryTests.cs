@@ -4,8 +4,6 @@ using LinkDotNet.Blog.TestUtilities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using ZiggyCreatures.Caching.Fusion;
-using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Infrastructure.Persistence.Sql;
@@ -170,22 +168,5 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         await Repository.DeleteAsync(blogPost.Id);
 
         (await DbContext.BlogPosts.AsNoTracking().AnyAsync(b => b.Id == blogPost.Id, TestContext.Current.CancellationToken)).ShouldBeFalse();
-    }
-    
-    [Fact]
-    public async Task GivenBlogPostWithTags_WhenLoadingAndDeleting_ThenShouldBeUpdated()
-    {
-        var bp = new BlogPostBuilder().WithTags("tag 1").Build();
-        var sut = new CachedRepository<BlogPost>(Repository, new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
-        await sut.StoreAsync(bp);
-        var updateBp = new BlogPostBuilder().WithTags("tag 2").Build();
-        var bpFromCache = await sut.GetByIdAsync(bp.Id);
-        bpFromCache!.Update(updateBp);
-        await sut.StoreAsync(bpFromCache);
-
-        var bpFromDb = await sut.GetByIdAsync(bp.Id);
-
-        bpFromDb.ShouldNotBeNull();
-        bpFromDb.Tags.Single().ShouldBe("tag 2");
     }
 }

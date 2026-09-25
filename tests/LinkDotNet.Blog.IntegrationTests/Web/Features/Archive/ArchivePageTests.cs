@@ -1,3 +1,4 @@
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldDisplayAllBlogPosts()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 1, 1), "Blog Post 1"));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 2, 1), "Blog Post 2"));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2022, 1, 1), "Blog Post 3"));
@@ -43,7 +44,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldOnlyShowPublishedBlogPosts()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         var publishedBlogPost = new BlogPostBuilder().WithUpdatedDate(new DateTime(2022, 1, 1)).IsPublished().Build();
         var unPublishedBlogPost = new BlogPostBuilder().WithUpdatedDate(new DateTime(2022, 1, 1)).IsPublished(false).Build();
         await Repository.StoreAsync(publishedBlogPost);
@@ -59,7 +60,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldShowTotalAmountOfBlogPosts()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 1, 1), "Blog Post 1"));
         await Repository.StoreAsync(CreateBlogPost(new DateTime(2021, 2, 1), "Blog Post 2"));
 
@@ -73,7 +74,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     public void ShouldShowLoading()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped<IRepository<BlogPost>>(_ => new SlowRepository());
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new SlowListQuery());
 
         var cut = ctx.Render<ArchivePage>();
 
@@ -84,7 +85,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
     public void ShouldSetOgData()
     {
         using var ctx = new BunitContext();
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
 
         var cut = ctx.Render<ArchivePage>();
 
@@ -100,42 +101,20 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
             .Build();
     }
 
-    private sealed class SlowRepository : IRepository<BlogPost>
+    private sealed class SlowListQuery : IBlogPostListQuery
     {
-        public ValueTask<HealthCheckResult> PerformHealthCheckAsync() => throw new NotImplementedException();
-
-        public ValueTask<BlogPost?> GetByIdAsync(string id) => throw new NotImplementedException();
-
-        public ValueTask<IPagedList<BlogPost>> GetAllAsync(
-            Expression<Func<BlogPost, bool>>? filter = null,
-            Expression<Func<BlogPost, object>>? orderBy = null,
-            bool descending = true,
-            int page = 1,
-            int pageSize = int.MaxValue) => throw new NotImplementedException();
-
-        public async ValueTask<IPagedList<TProjection>> GetAllByProjectionAsync<TProjection>(
-            Expression<Func<BlogPost, TProjection>>? selector,
-            Expression<Func<BlogPost, bool>>? filter = null,
-            Expression<Func<BlogPost, object>>? orderBy = null,
-            bool descending = true,
-            int page = 1,
-            int pageSize = int.MaxValue)
+        public async ValueTask<IPagedList<BlogPostSummary>> GetPublishedAsync(int page = 1, int pageSize = int.MaxValue)
         {
             await Task.Delay(250);
-            return PagedList<TProjection>.Empty;
+            return PagedList<BlogPostSummary>.Empty;
         }
 
-        public ValueTask<IReadOnlyList<TResult>> GetGroupedByAsync<TKey, TResult>(
-            Expression<Func<BlogPost, TKey>> keySelector,
-            Expression<Func<IGrouping<TKey, BlogPost>, TResult>> resultSelector,
-            Expression<Func<BlogPost, bool>>? filter = null) => throw new NotImplementedException();
+        public ValueTask<IReadOnlyList<BlogPostSummary>> GetPublishedByTagAsync(string tag) => throw new NotImplementedException();
 
-        public ValueTask StoreAsync(BlogPost entity) => throw new NotImplementedException();
+        public ValueTask<IReadOnlyList<BlogPostSummary>> SearchPublishedAsync(string term) => throw new NotImplementedException();
 
-        public ValueTask DeleteAsync(string id) => throw new NotImplementedException();
+        public ValueTask<IReadOnlyList<BlogPostSummary>> GetDraftsAsync() => throw new NotImplementedException();
 
-        public ValueTask DeleteBulkAsync(IReadOnlyCollection<string> ids) => throw new NotImplementedException();
-
-        public ValueTask StoreBulkAsync(IReadOnlyCollection<BlogPost> records) => throw new NotImplementedException();
+        public ValueTask<IReadOnlyList<BlogPostSummary>> GetByIdsAsync(IReadOnlyCollection<string> ids) => throw new NotImplementedException();
     }
 }

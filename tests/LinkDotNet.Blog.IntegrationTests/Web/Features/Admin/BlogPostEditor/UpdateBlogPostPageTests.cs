@@ -5,6 +5,7 @@ using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
@@ -17,6 +18,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
@@ -41,7 +43,8 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
-        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(DbContextFactory));
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(new BlogPostRepository(DbContextFactory)));
         ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
@@ -97,7 +100,8 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
         ctx.Services.AddScoped(_ => instantRegistry);
-        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(DbContextFactory));
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(new BlogPostRepository(DbContextFactory)));
         ctx.Services.AddScoped(_ => EmptyTagQueryService());
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
@@ -143,7 +147,8 @@ public class UpdateBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
-        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(DbContextFactory, Repository));
+        ctx.Services.AddScoped<IBlogPostRepository>(_ => new BlogPostRepository(DbContextFactory));
+        ctx.Services.AddScoped<IBlogPostVersionService>(_ => new BlogPostVersionService(new BlogPostRepository(DbContextFactory)));
 
         var currentUserService = Substitute.For<ICurrentUserService>();
         currentUserService.GetDisplayNameAsync().Returns("Test Author");

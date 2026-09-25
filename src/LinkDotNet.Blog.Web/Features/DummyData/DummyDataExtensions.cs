@@ -1,5 +1,5 @@
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -9,6 +9,8 @@ namespace LinkDotNet.Blog.Web.Features.DummyData;
 
 public static class DummyDataExtensions
 {
+    private static readonly Type[] PersistenceServiceTypes = [typeof(IRepository<>), typeof(IBlogPostRepository), typeof(IBlogPostPageQuery), typeof(IBlogPostListQuery)];
+
     /// <summary>
     /// This will seed some blog post data and replace the connection to the real database with an in-memory database with dummy data.
     /// Use this for testing or development purposes only.
@@ -17,7 +19,7 @@ public static class DummyDataExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
 
-        var descriptors = services.Where(d => d.ServiceType == typeof(IRepository<>)).ToList();
+        var descriptors = services.Where(d => PersistenceServiceTypes.Contains(d.ServiceType)).ToList();
         foreach (var descriptor in descriptors)
         {
             services.Remove(descriptor);
@@ -25,16 +27,7 @@ public static class DummyDataExtensions
 
         var dummyDataOptions = options ?? new DummyDataOptions();
 
-        services.AddPooledDbContextFactory<BlogDbContext>(builder =>
-        {
-            builder.UseSqlite("DataSource=file::memory:?cache=shared")
-#if DEBUG
-                .EnableDetailedErrors()
-#endif
-                ;
-        });
-
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddEfCoreRepository((_, builder) => builder.UseSqlite("DataSource=file::memory:?cache=shared"));
 
         services.AddSingleton(dummyDataOptions);
         services.AddHostedService<DummyDataSeeder>();

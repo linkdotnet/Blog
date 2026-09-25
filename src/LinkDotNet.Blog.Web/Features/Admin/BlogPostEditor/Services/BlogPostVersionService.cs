@@ -1,90 +1,60 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
-using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
-using Microsoft.EntityFrameworkCore;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 
 public sealed class BlogPostVersionService : IBlogPostVersionService
 {
-    private readonly IDbContextFactory<BlogDbContext> dbContextFactory;
-    private readonly IRepository<BlogPost> blogPostRepository;
+    private const int MaxAttempts = 3;
 
-    public BlogPostVersionService(
-        IDbContextFactory<BlogDbContext> dbContextFactory,
-        IRepository<BlogPost> blogPostRepository)
+    private readonly IBlogPostRepository blogPostRepository;
+
+    public BlogPostVersionService(IBlogPostRepository blogPostRepository)
     {
-        this.dbContextFactory = dbContextFactory;
         this.blogPostRepository = blogPostRepository;
     }
 
-    public async ValueTask SaveNewVersionAsync(BlogPost currentBlogPost, BlogPost updatedBlogPost)
+    public ValueTask SaveNewVersionAsync(BlogPost currentBlogPost, BlogPost updatedBlogPost)
     {
         ArgumentNullException.ThrowIfNull(currentBlogPost);
         ArgumentNullException.ThrowIfNull(updatedBlogPost);
 
-        await StoreSnapshotAsync(currentBlogPost);
-
-        currentBlogPost.Update(updatedBlogPost);
-        await blogPostRepository.StoreAsync(currentBlogPost);
+        return ReviseAsync(currentBlogPost.Id, (persisted, latestVersionNumber) => persisted.Revise(updatedBlogPost, latestVersionNumber));
     }
 
-    public async ValueTask<IReadOnlyList<BlogPostVersion>> GetVersionHistoryAsync(string blogPostId)
+    public ValueTask<IReadOnlyList<BlogPostVersion>> GetVersionHistoryAsync(string blogPostId)
     {
         ArgumentException.ThrowIfNullOrEmpty(blogPostId);
 
-        await using var db = await dbContextFactory.CreateDbContextAsync();
-        return await db.BlogPostVersions
-            .Where(v => v.BlogPostId == blogPostId)
-            .OrderByDescending(v => v.VersionNumber)
-            .AsNoTracking()
-            .ToListAsync();
+        return blogPostRepository.GetVersionHistoryAsync(blogPostId);
     }
 
-    public async ValueTask RestoreVersionAsync(BlogPost currentBlogPost, BlogPostVersion targetVersion)
+    public ValueTask RestoreVersionAsync(BlogPost currentBlogPost, BlogPostVersion targetVersion)
     {
         ArgumentNullException.ThrowIfNull(currentBlogPost);
         ArgumentNullException.ThrowIfNull(targetVersion);
 
-        // Snapshot the current state before overwriting it
-        await StoreSnapshotAsync(currentBlogPost);
-
-        // Reconstruct a transient BlogPost from the target version fields.
-        // ScheduledPublishDate is not versioned, so we preserve whatever schedule the
-        // current live post has — unless the version being restored is published (a
-        // published post cannot carry a scheduled date per the domain invariant).
-        var scheduledPublishDate = targetVersion.IsPublished ? null : currentBlogPost.ScheduledPublishDate;
-        var restored = BlogPost.Create(
-            targetVersion.Title,
-            targetVersion.ShortDescription,
-            targetVersion.Content,
-            targetVersion.PreviewImageUrl,
-            targetVersion.IsPublished,
-            targetVersion.UpdatedDate,
-            scheduledPublishDate,
-            targetVersion.Tags,
-            targetVersion.PreviewImageUrlFallback,
-            targetVersion.AuthorName);
-
-        currentBlogPost.Update(restored);
-        await blogPostRepository.StoreAsync(currentBlogPost);
+        return ReviseAsync(currentBlogPost.Id, (persisted, latestVersionNumber) => persisted.RestoreFrom(targetVersion, latestVersionNumber));
     }
 
-    private async ValueTask StoreSnapshotAsync(BlogPost blogPost)
+    private async ValueTask ReviseAsync(string blogPostId, Func<BlogPost, int, BlogPostVersion> revise)
     {
-        await using var db = await dbContextFactory.CreateDbContextAsync();
+        for (var attempt = 1; attempt < MaxAttempts; attempt++)
+        {
+            try
+            {
+                await blogPostRepository.ReviseAsync(blogPostId, revise);
+                return;
+            }
+            catch (BlogPostRevisionConflictException)
+            {
+                // Retrying is safe: the revision is re-applied to the freshly loaded post, so the competing change is snapshotted as well.
+            }
+        }
 
-        var maxVersion = await db.BlogPostVersions
-            .Where(v => v.BlogPostId == blogPost.Id)
-            .Select(v => (int?)v.VersionNumber)
-            .MaxAsync() ?? 0;
-
-        var snapshot = BlogPostVersion.CreateSnapshot(blogPost, maxVersion + 1);
-        await db.BlogPostVersions.AddAsync(snapshot);
-        await db.SaveChangesAsync();
+        await blogPostRepository.ReviseAsync(blogPostId, revise);
     }
 }

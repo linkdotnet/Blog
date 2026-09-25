@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
@@ -26,9 +27,7 @@ public class ShowBlogPostPageTests : BunitContext
     {
         ComponentFactories.Add<SimilarBlogPostSection, SimilarBlogPostSectionStub>();
         JSInterop.Mode = JSRuntimeMode.Loose;
-        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
-        shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
-        Services.AddScoped(_ => shortCodeRepository);
+        Services.AddScoped(_ => Substitute.For<IBlogPostRepository>());
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
@@ -45,13 +44,13 @@ public class ShowBlogPostPageTests : BunitContext
     public void ShouldShowLoadingAnimation()
     {
         const string blogPostId = "2";
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        Services.AddScoped(_ => repositoryMock);
-        repositoryMock.GetByIdAsync(blogPostId)!
-            .Returns(new ValueTask<BlogPost>(Task.Run(async () => 
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
+        Services.AddScoped(_ => pageQueryMock);
+        pageQueryMock.GetAsync(blogPostId)
+            .Returns(new ValueTask<BlogPostPage?>(Task.Run(async () =>
             {
                 await Task.Delay(250, cancellationToken: TestContext.Current.CancellationToken);
-                return new BlogPostBuilder().Build();
+                return (BlogPostPage?)PageOf(new BlogPostBuilder().Build());
             })));
 
 
@@ -66,9 +65,9 @@ public class ShowBlogPostPageTests : BunitContext
     {
         var userRecordService = Substitute.For<IUserRecordService>();
         Services.AddScoped(_ => userRecordService);
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        repositoryMock.GetByIdAsync("1").Returns(new BlogPostBuilder().Build());
-        Services.AddScoped(_ => repositoryMock);
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
+        pageQueryMock.GetAsync("1").Returns(PageOf(new BlogPostBuilder().Build()));
+        Services.AddScoped(_ => pageQueryMock);
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -79,10 +78,10 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShouldSetTitleToTag()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder().WithTitle("Title").Build();
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -97,13 +96,13 @@ public class ShowBlogPostPageTests : BunitContext
     [InlineData("url1", "url2", "url2")]
     public void ShouldUseFallbackAsOgDataIfAvailable(string preview, string? fallback, string expected)
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .WithPreviewImageUrl(preview)
             .WithPreviewImageUrlFallback(fallback)
             .Build();
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -114,12 +113,12 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShowTagWithLinksWhenAvailable()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .WithTags("tag1")
             .Build();
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -132,11 +131,11 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShowNotShowTagsWhenNotSet()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .Build();
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -152,11 +151,11 @@ public class ShowBlogPostPageTests : BunitContext
         var appConfiguration = new ApplicationConfigurationBuilder()
             .WithShowReadingIndicator(isEnabled)
             .Build();
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .Build();
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
         Services.AddScoped(_ => Options.Create(appConfiguration));
 
         var cut = Render<ShowBlogPostPage>(
@@ -168,13 +167,13 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShouldSetCanoncialUrlOfOgDataWithoutSlug()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .WithTitle("sample")
             .Build();
         blogPost.Id = "1";
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
         
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -187,13 +186,13 @@ public class ShowBlogPostPageTests : BunitContext
     {
         // Regression: the JSON-LD block used to be nested inside OgData's HeadContent.
         // HeadOutlet does not emit script tags, so it never reached the rendered page.
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .WithTitle("sample")
             .Build();
         blogPost.Id = "1";
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
 
         var cut = Render<ShowBlogPostPage>(
             p => p.Add(s => s.BlogPostId, "1"));
@@ -205,13 +204,13 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShouldShowAuthorNameWhenUseMultiAuthorModeIsTrue()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .WithAuthorName("Test Author")
             .Build();
         blogPost.Id = "1";
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(true).Build()));
 
         var cut = Render<ShowBlogPostPage>(
@@ -224,13 +223,13 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShouldNotShowAuthorNameWhenUseMultiAuthorModeIsFalse()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder()
             .WithAuthorName("Test Author")
             .Build();
         blogPost.Id = "1";
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(false).Build()));
 
         var cut = Render<ShowBlogPostPage>(
@@ -243,11 +242,11 @@ public class ShowBlogPostPageTests : BunitContext
     [Fact]
     public void ShouldNotShowAuthorNameWhenAuthorNameIsNull()
     {
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        var pageQueryMock = Substitute.For<IBlogPostPageQuery>();
         var blogPost = new BlogPostBuilder().Build(); // Author name is null here.
         blogPost.Id = "1";
-        repositoryMock.GetByIdAsync("1").Returns(blogPost);
-        Services.AddScoped(_ => repositoryMock);
+        pageQueryMock.GetAsync("1").Returns(PageOf(blogPost));
+        Services.AddScoped(_ => pageQueryMock);
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(true).Build()));
 
         var cut = Render<ShowBlogPostPage>(
@@ -256,6 +255,8 @@ public class ShowBlogPostPageTests : BunitContext
         cut.FindAll("span:contains('Test Author')").ShouldBeEmpty();
         cut.FindAll("i.user-tie").ShouldBeEmpty();
     }
+
+    private static BlogPostPage PageOf(BlogPost blogPost) => new(blogPost, [], []);
 
     private class PageTitleStub : ComponentBase
     {
@@ -275,6 +276,6 @@ public class ShowBlogPostPageTests : BunitContext
     private class SimilarBlogPostSectionStub : ComponentBase
     {
         [Parameter]
-        public BlogPost BlogPost { get; set; } = default!;
+        public IReadOnlyList<BlogPostSummary> SimilarBlogPosts { get; set; } = default!;
     }
 }

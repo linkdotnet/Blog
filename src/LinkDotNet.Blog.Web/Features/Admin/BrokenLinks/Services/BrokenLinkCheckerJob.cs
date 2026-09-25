@@ -33,7 +33,7 @@ public sealed class BrokenLinkCheckerJob : IJob
     public async Task RunAsync(IJobExecutionContext context, CancellationToken token)
     {
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            bp => new BlogPostLinks(bp.Id, bp.Title, bp.Content),
+            bp => new BlogPostLinks { Id = bp.Id, Title = bp.Title, Content = bp.Content },
             bp => bp.IsPublished);
 
         var blogPostsByUrl = blogPosts
@@ -63,5 +63,13 @@ public sealed class BrokenLinkCheckerJob : IJob
         await brokenLinkRepository.StoreBulkAsync(brokenLinks.ToArray());
     }
 
-    private sealed record BlogPostLinks(string Id, string Title, string Content);
+    // Member-init on purpose: RavenDB can't project into constructors with parameters.
+    private sealed record BlogPostLinks
+    {
+        public required string Id { get; init; }
+
+        public required string Title { get; init; }
+
+        public required string Content { get; init; }
+    }
 }

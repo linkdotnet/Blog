@@ -22,6 +22,57 @@ public class LikeTests : BunitContext
     }
 
     [Fact]
+    public void ShouldRollOdometerUpWhenLikesIncrease()
+    {
+        Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
+        var blogPost = new BlogPostBuilder().WithLikes(3).Build();
+        var cut = Render<Like>(
+            p => p.Add(l => l.BlogPost, blogPost));
+        blogPost.Likes = 7;
+
+        cut.Render(p => p.Add(l => l.BlogPost, blogPost));
+
+        var odometer = cut.Find(".odometer-inner");
+        odometer.ClassList.ShouldContain("roll-up");
+        var digits = odometer.QuerySelectorAll("span");
+        digits[0].TextContent.ShouldBe("3");
+        digits[1].TextContent.ShouldBe("7");
+    }
+
+    [Fact]
+    public void ShouldRollOdometerDownWhenLikesDecrease()
+    {
+        Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
+        var blogPost = new BlogPostBuilder().WithLikes(7).Build();
+        var cut = Render<Like>(
+            p => p.Add(l => l.BlogPost, blogPost));
+        blogPost.Likes = 3;
+
+        cut.Render(p => p.Add(l => l.BlogPost, blogPost));
+
+        var odometer = cut.Find(".odometer-inner");
+        odometer.ClassList.ShouldContain("roll-down");
+        var digits = odometer.QuerySelectorAll("span");
+        digits[0].TextContent.ShouldBe("3");
+        digits[1].TextContent.ShouldBe("7");
+    }
+
+    [Fact]
+    public void ShouldNotAnimateWhenBlogPostChanges()
+    {
+        Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
+        var cut = Render<Like>(
+            p => p.Add(l => l.BlogPost, new BlogPostBuilder().WithLikes(3).Build()));
+        var otherBlogPost = new BlogPostBuilder().WithLikes(7).Build();
+        otherBlogPost.Id = "other";
+
+        cut.Render(p => p.Add(l => l.BlogPost, otherBlogPost));
+
+        cut.FindAll(".odometer-inner").ShouldBeEmpty();
+        cut.Find("#like-counter").TextContent.ShouldBe("7");
+    }
+
+    [Fact]
     public void ShouldInvokeEventWhenButtonClicked()
     {
         Services.AddScoped(_ => Substitute.For<ILocalStorageService>());

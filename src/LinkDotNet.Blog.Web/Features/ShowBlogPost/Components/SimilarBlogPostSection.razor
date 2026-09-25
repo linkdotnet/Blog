@@ -1,10 +1,7 @@
-@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features
-@inject IRepository<BlogPost> BlogPostRepository
-@inject IRepository<SimilarBlogPost> SimilarBlogPostJobRepository
 
-@if (similarBlogPosts.Count > 0)
+@if (SimilarBlogPosts.Count > 0)
 {
     <div class="accordion my-4" id="similarBlogPosts">
         <div class="accordion-item border-start-0 border-end-0">
@@ -16,9 +13,9 @@
             <div id="similiar-post-body" class="accordion-collapse collapse" aria-labelledby="similar-post-header">
                 <div class="accordion-body p-3">
                     <div class="list-group list-group-flush">
-                        @foreach (var post in similarBlogPosts)
+                        @foreach (var post in SimilarBlogPosts)
                         {
-                            <a href="blogPost/@post.Id/@post.Slug" class="list-group-item list-group-item-action px-0 py-3 border-top">
+                            <a href="@BlogPostRoute.For(post.Id, post.Slug)" class="list-group-item list-group-item-action px-0 py-3 border-top">
                                 <div class="row gx-3">
                                     <div class="col-2 col-sm-1">
                                         @if (!string.IsNullOrEmpty(post.PreviewImageUrl))
@@ -73,17 +70,5 @@
 
 @code {
     [Parameter, EditorRequired]
-    public required BlogPost BlogPost { get; set; }
-
-    private IReadOnlyCollection<BlogPost> similarBlogPosts = [];
-
-    protected override async Task OnParametersSetAsync()
-    {
-        var similarBlogPostIds = await SimilarBlogPostJobRepository.GetByIdAsync(BlogPost.Id);
-        if (similarBlogPostIds is not null)
-        {
-            similarBlogPosts = await BlogPostRepository.GetAllAsync(
-                b => similarBlogPostIds.SimilarBlogPostIds.Contains(b.Id));
-        }
-    }
+    public required IReadOnlyList<BlogPostSummary> SimilarBlogPosts { get; set; }
 }

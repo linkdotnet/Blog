@@ -2,7 +2,7 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostListQuery BlogPostListQuery
 
 <div class="container">
     <h3 class="pb-3 fw-bold">Results for: @SearchTerm</h3>
@@ -22,13 +22,11 @@
     [Parameter, EditorRequired]
     public required string SearchTerm { get; set; }
 
-    private IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
+    private IReadOnlyList<BlogPostSummary> blogPosts = [];
 
     protected override async Task OnParametersSetAsync()
     {
         var term = Uri.UnescapeDataString(SearchTerm);
-        blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
-                                                                                || t.Tags.Any(tag => tag == term)),
-            b => b.UpdatedDate);
+        blogPosts = await BlogPostListQuery.SearchPublishedAsync(term);
     }
 }

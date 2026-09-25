@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 
 namespace LinkDotNet.Blog.Domain;
@@ -35,12 +36,17 @@ public sealed class BlogPostVersion : Entity
 
     public string TagsAsString => string.Join(",", Tags);
 
+    public static string CreateId(string blogPostId, int versionNumber) =>
+        string.Create(CultureInfo.InvariantCulture, $"{blogPostId}-v{versionNumber}");
+
     public static BlogPostVersion CreateSnapshot(BlogPost post, int versionNumber)
     {
         ArgumentNullException.ThrowIfNull(post);
+        ArgumentException.ThrowIfNullOrEmpty(post.Id);
 
         return new BlogPostVersion
         {
+            Id = CreateId(post.Id, versionNumber),
             BlogPostId = post.Id,
             VersionNumber = versionNumber,
             CreatedAt = DateTime.UtcNow,

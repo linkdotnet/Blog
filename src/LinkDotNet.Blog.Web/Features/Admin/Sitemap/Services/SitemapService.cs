@@ -4,18 +4,17 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 
 namespace LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 
 public sealed class SitemapService : ISitemapService
 {
-    private readonly IRepository<BlogPost> repository;
+    private readonly IBlogPostListQuery blogPostListQuery;
 
-    public SitemapService(IRepository<BlogPost> repository)
+    public SitemapService(IBlogPostListQuery blogPostListQuery)
     {
-        this.repository = repository;
+        this.blogPostListQuery = blogPostListQuery;
     }
 
     public async Task<SitemapUrlSet> CreateSitemapAsync(string baseUri)
@@ -29,7 +28,7 @@ public sealed class SitemapService : ISitemapService
             baseUri += "/";
         }
 
-        var blogPosts = await repository.GetAllAsync(f => f.IsPublished, b => b.UpdatedDate);
+        var blogPosts = await blogPostListQuery.GetPublishedAsync();
 
         urlSet.Urls.Add(new SitemapUrl { Location = baseUri });
         urlSet.Urls.Add(new SitemapUrl { Location = $"{baseUri}archive" });
@@ -38,13 +37,11 @@ public sealed class SitemapService : ISitemapService
         return urlSet;
     }
 
-    private static ImmutableArray<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPost> blogPosts, string baseUri)
+    private static ImmutableArray<SitemapUrl> CreateUrlsForBlogPosts(IEnumerable<BlogPostSummary> blogPosts, string baseUri)
     {
         return blogPosts.Select(b => new SitemapUrl
         {
-            Location = string.IsNullOrEmpty(b.Slug)
-                ? $"{baseUri}blogPost/{b.Id}"
-                : $"{baseUri}blogPost/{b.Id}/{b.Slug}",
+            Location = baseUri + BlogPostRoute.For(b.Id, b.Slug),
             LastModified = b.UpdatedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
         }).ToImmutableArray();
     }

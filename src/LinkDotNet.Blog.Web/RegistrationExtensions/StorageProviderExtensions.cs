@@ -30,28 +30,22 @@ public static class StorageProviderExtensions
             onRavenDb: services.UseRavenDbAsStorageProvider
         );
 
-        if (persistenceProvider.IsSql())
-        {
-            services.RegisterCachedRepository<Infrastructure.Persistence.Sql.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider.IsRavenDb())
-        {
-            services.RegisterCachedRepository<Infrastructure.Persistence.RavenDb.Repository<BlogPost>>();
-        }
-        else if (persistenceProvider.IsMongoDB())
-        {
-            services.RegisterCachedRepository<Infrastructure.Persistence.MongoDB.Repository<BlogPost>>();
-        }
-
         return services;
     }
 
-    private static void RegisterCachedRepository<TRepo>(this IServiceCollection services)
-        where TRepo : class, IRepository<BlogPost>
+    internal static void AddBlogPostPersistence<TRepository, TPageQuery, TListQuery>(this IServiceCollection services)
+        where TRepository : class, IBlogPostRepository
+        where TPageQuery : class, IBlogPostPageQuery
+        where TListQuery : class, IBlogPostListQuery
     {
-        services.AddScoped<TRepo>();
-        services.AddScoped<IRepository<BlogPost>>(provider => new CachedRepository<BlogPost>(
-                provider.GetRequiredService<TRepo>(),
-                provider.GetRequiredService<IFusionCache>()));
+        services.AddScoped<TRepository>();
+        services.AddScoped<IBlogPostRepository>(provider => new CacheInvalidatingBlogPostRepository(
+            provider.GetRequiredService<TRepository>(),
+            provider.GetRequiredService<IFusionCache>()));
+        services.AddScoped<TPageQuery>();
+        services.AddScoped<IBlogPostPageQuery>(provider => new CachedBlogPostPageQuery(
+            provider.GetRequiredService<TPageQuery>(),
+            provider.GetRequiredService<IFusionCache>()));
+        services.AddScoped<IBlogPostListQuery, TListQuery>();
     }
 }
