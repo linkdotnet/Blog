@@ -4,7 +4,7 @@
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components
 @using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostRepository BlogPostRepository
 @inject IBlogPostVersionService BlogPostVersionService
 @inject IToastService ToastService
 
@@ -28,31 +28,51 @@ else
     [Parameter, EditorRequired]
     public required string BlogPostId { get; set; }
 
+    private const string ConflictMessage = "The blog post was changed at the same time. Please try again.";
+
     private BlogPost? blogPostFromDb;
 
     protected override async Task OnParametersSetAsync()
     {
         ArgumentException.ThrowIfNullOrEmpty(BlogPostId);
 
-        blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
+        blogPostFromDb = await BlogPostRepository.GetAsync(BlogPostId);
     }
 
     private async Task StoreBlogPostAsync(BlogPost blogPost)
     {
         ArgumentNullException.ThrowIfNull(blogPostFromDb);
 
-        await BlogPostVersionService.SaveNewVersionAsync(blogPostFromDb, blogPost);
+        try
+        {
+            await BlogPostVersionService.SaveNewVersionAsync(blogPostFromDb, blogPost);
+        }
+        catch (BlogPostRevisionConflictException)
+        {
+            ToastService.ShowError(ConflictMessage);
+            return;
+        }
+
         ToastService.ShowSuccess($"Saved new version of \"{blogPost.Title}\"");
-        blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
+        blogPostFromDb = await BlogPostRepository.GetAsync(BlogPostId);
     }
 
     private async Task HandleVersionRestoredAsync(BlogPostVersion version)
     {
         ArgumentNullException.ThrowIfNull(blogPostFromDb);
 
-        await BlogPostVersionService.RestoreVersionAsync(blogPostFromDb, version);
+        try
+        {
+            await BlogPostVersionService.RestoreVersionAsync(blogPostFromDb, version);
+        }
+        catch (BlogPostRevisionConflictException)
+        {
+            ToastService.ShowError(ConflictMessage);
+            return;
+        }
+
         ToastService.ShowSuccess($"Restored version {version.VersionNumber}");
-        blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
+        blogPostFromDb = await BlogPostRepository.GetAsync(BlogPostId);
         StateHasChanged();
     }
 }

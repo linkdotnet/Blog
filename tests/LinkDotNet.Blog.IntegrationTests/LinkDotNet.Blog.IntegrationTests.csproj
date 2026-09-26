@@ -8,7 +8,9 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
-    <PackageReference Include="RavenDB.TestDriver" />
+    <PackageReference Include="Testcontainers.MongoDb" />
+    <PackageReference Include="Testcontainers.MsSql" />
+    <PackageReference Include="Testcontainers.RavenDb" />
 	</ItemGroup>
 
 	<ItemGroup>

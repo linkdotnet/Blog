@@ -3,6 +3,7 @@ using System.Linq;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ public class StorageProviderExtensionsTests
     [InlineData("RavenDb")]
     [InlineData("MongoDB")]
     [InlineData("MySql")]
+    [InlineData("PostgreSql")]
     public void ShouldRegisterPersistenceProvider(string persistenceKey)
     {
         var collection = new ServiceCollection();
@@ -28,6 +30,31 @@ public class StorageProviderExtensionsTests
 
         var enumerable = collection.Select(c => c.ServiceType).ToList();
         enumerable.ShouldContain(typeof(IRepository<>));
+        enumerable.ShouldContain(typeof(IBlogPostRepository));
+        enumerable.ShouldContain(typeof(IBlogPostPageQuery));
+        enumerable.ShouldContain(typeof(IBlogPostListQuery));
+    }
+
+    [Theory]
+    [InlineData("SqlServer")]
+    [InlineData("Sqlite")]
+    [InlineData("RavenDb")]
+    [InlineData("MongoDB")]
+    [InlineData("MySql")]
+    [InlineData("PostgreSql")]
+    public void ShouldResolveBlogPostVersionServiceForEveryProvider(string persistenceKey)
+    {
+        var collection = new ServiceCollection();
+        var config = Substitute.For<IConfiguration>();
+        config["PersistenceProvider"].Returns(persistenceKey);
+        collection.AddSingleton(Options.Create(new ApplicationConfigurationBuilder().Build()));
+        collection.AddLogging();
+        collection.AddScoped<IBlogPostVersionService, BlogPostVersionService>();
+        collection.AddStorageProvider(config);
+
+        Action act = () => collection.BuildServiceProvider(new ServiceProviderOptions { ValidateOnBuild = true, ValidateScopes = true });
+
+        act.ShouldNotThrow();
     }
 
     [Fact]
@@ -43,7 +70,7 @@ public class StorageProviderExtensionsTests
     }
 
     [Fact]
-    public void ShouldHaveCacheRepositoryOnlyForBlogPosts()
+    public void ShouldDecorateBlogPostPersistenceWithCaching()
     {
         var collection = new ServiceCollection();
         var config = Substitute.For<IConfiguration>();
@@ -57,7 +84,8 @@ public class StorageProviderExtensionsTests
         collection.AddStorageProvider(config);
 
         var serviceProvider = collection.BuildServiceProvider();
-        serviceProvider.GetService<IRepository<BlogPost>>().ShouldBeOfType<CachedRepository<BlogPost>>();
-        serviceProvider.GetService<IRepository<Skill>>().ShouldNotBeOfType<CachedRepository<BlogPost>>();
+        using var scope = serviceProvider.CreateScope();
+        scope.ServiceProvider.GetService<IBlogPostPageQuery>().ShouldBeOfType<CachedBlogPostPageQuery>();
+        scope.ServiceProvider.GetService<IBlogPostRepository>().ShouldBeOfType<CacheInvalidatingBlogPostRepository>();
     }
 }

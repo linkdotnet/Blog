@@ -44,16 +44,21 @@ public sealed partial class BlogPostPublisher : IJob
         LogCheckingForScheduledBlogPosts();
 
         var blogPostsToPublish = await GetScheduledBlogPostsAsync();
-        foreach (var blogPost in blogPostsToPublish)
+        try
         {
-            blogPost.Publish();
-            await repository.StoreAsync(blogPost);
-            LogPublishedBlogPost(blogPost.Id);
+            foreach (var blogPost in blogPostsToPublish)
+            {
+                blogPost.Publish();
+                await repository.StoreAsync(blogPost);
+                LogPublishedBlogPost(blogPost.Id);
+            }
         }
-
-        if (blogPostsToPublish.Count > 0)
+        finally
         {
-            await cacheInvalidator.ClearCacheAsync();
+            if (blogPostsToPublish.Count > 0)
+            {
+                await cacheInvalidator.ClearCacheAsync();
+            }
         }
 
         return blogPostsToPublish.Count;

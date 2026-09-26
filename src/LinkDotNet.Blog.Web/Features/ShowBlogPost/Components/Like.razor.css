@@ -1,0 +1,95 @@
+.like-button .thumb-wrapper {
+    position: relative;
+    width: 18px;
+    height: 18px;
+}
+
+.thumb-wrapper svg {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.thumb-wrapper .icon-outline {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.thumb-wrapper .icon-fill {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.like-button.liked .icon-outline {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+.like-button.liked .icon-fill {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.like-button.glow {
+    animation: like-glow 0.5s ease;
+}
+
+@keyframes like-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.45);
+    }
+    100% {
+        box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+    }
+}
+
+.odometer {
+    display: inline-block;
+    height: 1.5em;
+    overflow: hidden;
+}
+
+.odometer-inner {
+    display: flex;
+    flex-direction: column;
+}
+
+.odometer-inner span {
+    height: 1.5em;
+    line-height: 1.5em;
+}
+
+/* End state lives on the class so the new value stays visible after the animation
+   (and when animations are disabled); keyframes only define the start. */
+.odometer-inner.roll-up {
+    transform: translateY(-50%);
+    animation: odometer-roll-up 0.35s cubic-bezier(0.25, 0.8, 0.3, 1.15);
+}
+
+.odometer-inner.roll-down {
+    animation: odometer-roll-down 0.35s cubic-bezier(0.25, 0.8, 0.3, 1.15);
+}
+
+@keyframes odometer-roll-up {
+    from {
+        transform: translateY(0);
+    }
+}
+
+@keyframes odometer-roll-down {
+    from {
+        transform: translateY(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .thumb-wrapper svg {
+        transition: none;
+    }
+
+    .odometer-inner.roll-up,
+    .odometer-inner.roll-down,
+    .like-button.glow {
+        animation: none;
+    }
+}

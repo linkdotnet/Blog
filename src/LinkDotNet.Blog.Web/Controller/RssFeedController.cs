@@ -85,7 +85,7 @@ public sealed class RssFeedController : ControllerBase
 
     private static SyndicationItem CreateSyndicationItemFromBlogPost(string url, BlogPostRssInfo blogPost)
     {
-        var blogPostUrl = url + $"/blogPost/{blogPost.Id}";
+        var blogPostUrl = $"{url}/{BlogPostRoute.For(blogPost.Id)}";
 
         var content = MarkdownConverter.ToMarkupString(blogPost.ShortDescription ?? blogPost.Content ??
             throw new InvalidOperationException("Blog post must have either short description or content."));
@@ -117,7 +117,7 @@ public sealed class RssFeedController : ControllerBase
     private async Task<IEnumerable<SyndicationItem>> GetBlogPostItems(string url)
     {
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            s => new BlogPostRssInfo(s.Id, s.Title, s.ShortDescription, null, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            s => new BlogPostRssInfo { Id = s.Id, Title = s.Title, ShortDescription = s.ShortDescription, UpdatedDate = s.UpdatedDate, PreviewImageUrl = s.PreviewImageUrl, Tags = s.Tags },
             f => f.IsPublished,
             orderBy: post => post.UpdatedDate);
         return blogPosts.Select(bp => CreateSyndicationItemFromBlogPost(url, bp));
@@ -128,7 +128,7 @@ public sealed class RssFeedController : ControllerBase
         numberOfBlogPosts ??= blogPostsPerPage;
 
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            s => new BlogPostRssInfo(s.Id, s.Title, null, s.Content, s.UpdatedDate, s.PreviewImageUrl, s.Tags),
+            s => new BlogPostRssInfo { Id = s.Id, Title = s.Title, Content = s.Content, UpdatedDate = s.UpdatedDate, PreviewImageUrl = s.PreviewImageUrl, Tags = s.Tags },
             f => f.IsPublished,
             orderBy: post => post.UpdatedDate,
             pageSize: numberOfBlogPosts.Value);
@@ -145,12 +145,21 @@ public sealed class RssFeedController : ControllerBase
     }
 
 
-    private sealed record BlogPostRssInfo(
-        string Id,
-        string Title,
-        string? ShortDescription,
-        string? Content,
-        DateTime UpdatedDate,
-        string PreviewImageUrl,
-        IEnumerable<string> Tags);
+    // Member-init on purpose: RavenDB can't project into constructors with parameters.
+    private sealed record BlogPostRssInfo
+    {
+        public required string Id { get; init; }
+
+        public required string Title { get; init; }
+
+        public string? ShortDescription { get; init; }
+
+        public string? Content { get; init; }
+
+        public DateTime UpdatedDate { get; init; }
+
+        public required string PreviewImageUrl { get; init; }
+
+        public required IEnumerable<string> Tags { get; init; }
+    }
 }

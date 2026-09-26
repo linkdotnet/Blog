@@ -19,5 +19,6 @@ public static class MongoDBRegistrationExtensions
             return MongoDBConnectionProvider.Create(connectionString, databaseName);
         });
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddBlogPostPersistence<BlogPostRepository, BlogPostPageQuery, BlogPostListQuery>();
     }
 }

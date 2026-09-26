@@ -3,7 +3,7 @@
 @using LinkDotNet.Blog.Domain
 @using System.Collections.Immutable
 @using System.Globalization
-@inject IRepository<BlogPost> Repository
+@inject IBlogPostListQuery BlogPostListQuery
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 
 <PageTitle>Archive @AppConfiguration.Value.BlogName</PageTitle>
@@ -33,7 +33,7 @@
 								@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
 								{
 									<li class="list-group-item">
-										<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
+										<a href="/@BlogPostRoute.For(blogPost.Id, blogPost.Slug)" class="text-decoration-none">@blogPost.Title</a>
 										<span class="text-muted small ps-2">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy", CultureInfo.CurrentCulture))</span>
 									</li>
 								}
@@ -47,14 +47,12 @@
 </div>
 
 @code {
-	private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>>? blogPostsPerYear;
+	private IReadOnlyCollection<IGrouping<int, BlogPostSummary>>? blogPostsPerYear;
 	private int blogPostCount;
 
 	protected override async Task OnInitializedAsync()
 	{
-		var blogPosts = await Repository.GetAllByProjectionAsync(
-			p => new BlogPostPerYear(p.Id, p.Slug, p.Title, p.UpdatedDate),
-			p => p.IsPublished);
+		var blogPosts = await BlogPostListQuery.GetPublishedAsync();
 
 		blogPostCount = blogPosts.Count;
 		blogPostsPerYear = blogPosts
@@ -66,6 +64,4 @@
 	private static string HeadingKey(int year) => $"heading{year}";
 	private static string CollapseKey(int year) => $"collapse{year}";
 	private static string CollapseKeyIdentifier(int year) => $"#{CollapseKey(year)}";
-
-	private sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
 }

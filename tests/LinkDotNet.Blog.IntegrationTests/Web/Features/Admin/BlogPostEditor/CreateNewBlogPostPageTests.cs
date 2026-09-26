@@ -35,7 +35,6 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
-        ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
@@ -89,7 +88,6 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
-        ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => instantRegistry);
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());
@@ -138,7 +136,6 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.AddAuthorization().SetAuthorized("some username");
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => toastService);
-        ctx.Services.AddScoped(_ => Substitute.For<IFileProcessor>());
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         ctx.Services.AddScoped(_ => Substitute.For<ICacheInvalidator>());
         ctx.Services.AddScoped(_ => Substitute.For<IBlogPostVersionService>());

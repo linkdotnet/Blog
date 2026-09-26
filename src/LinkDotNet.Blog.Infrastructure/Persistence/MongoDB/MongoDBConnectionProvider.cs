@@ -13,7 +13,7 @@ public static class MongoDBConnectionProvider
         var client = new MongoClient(connectionString);
 #pragma warning restore CA2000
 #pragma warning restore IDISP001
-        BsonClassMap.RegisterClassMap<Entity>(cm =>
+        BsonClassMap.TryRegisterClassMap<Entity>(cm =>
         {
             cm.AutoMap();
             cm.MapIdProperty(e => e.Id);

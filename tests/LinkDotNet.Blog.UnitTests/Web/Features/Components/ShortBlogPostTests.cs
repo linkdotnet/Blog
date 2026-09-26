@@ -29,7 +29,7 @@ public class ShortBlogPostTests : BunitContext
         var blogPost = new BlogPostBuilder().Build();
         blogPost.Id = "SomeId";
         var cut = Render<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
+            p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         var readMore = cut.Find(".read-more a");
 
@@ -53,7 +53,7 @@ public class ShortBlogPostTests : BunitContext
         Services.AddScoped(_ => options);
         var blogPost = new BlogPostBuilder().WithTags("Tag 1").Build();
         var cut = Render<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
+            p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         var searchByTagLink = cut.Find(".goto-tag");
 
@@ -78,7 +78,7 @@ public class ShortBlogPostTests : BunitContext
         var blogPost = new BlogPostBuilder().Build();
 
         var cut = Render<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
+            p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.FindAll(".goto-tag").ShouldBeEmpty();
     }
@@ -102,7 +102,7 @@ public class ShortBlogPostTests : BunitContext
             .Build();
 
         var cut = Render<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
+            p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.Find(".schedule").ShouldNotBeNull();
     }
@@ -125,7 +125,7 @@ public class ShortBlogPostTests : BunitContext
         var blogPost = new BlogPostBuilder().IsPublished(false).Build();
 
         var cut = Render<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
+            p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.Find(".draft").ShouldNotBeNull();
     }
@@ -148,7 +148,7 @@ public class ShortBlogPostTests : BunitContext
         var blogPost = new BlogPostBuilder().IsPublished(true).Build();
 
         var cut = Render<ShortBlogPost>(
-            p => p.Add(c => c.BlogPost, blogPost));
+            p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.FindAll(".draft").ShouldBeEmpty();
         cut.FindAll(".scheduled").ShouldBeEmpty();
@@ -175,7 +175,7 @@ public class ShortBlogPostTests : BunitContext
             .IsPublished(true)
             .Build();
 
-        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
+        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.FindAll("li:contains('Test Author')").ShouldHaveSingleItem();
         cut.FindAll("i.user-tie").ShouldHaveSingleItem();
@@ -202,7 +202,7 @@ public class ShortBlogPostTests : BunitContext
             .IsPublished(true)
             .Build();
 
-        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
+        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
         cut.FindAll("i.user-tie").ShouldBeEmpty();
@@ -228,7 +228,7 @@ public class ShortBlogPostTests : BunitContext
             .IsPublished(true)
             .Build(); // Author name is null here.
 
-        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost));
+        var cut = Render<ShortBlogPost>(p => p.Add(c => c.BlogPost, blogPost.ToSummary()));
 
         cut.FindAll("li:contains('Test Author')").ShouldBeEmpty();
         cut.FindAll("i.user-tie").ShouldBeEmpty();

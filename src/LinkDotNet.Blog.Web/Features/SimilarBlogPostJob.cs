@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NCronJob;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Similiarity;
 
 namespace LinkDotNet.Blog.Web.Features;
@@ -14,13 +15,16 @@ public class SimilarBlogPostJob : IJob
 {
     private readonly IRepository<BlogPost> blogPostRepository;
     private readonly IRepository<SimilarBlogPost> similarBlogPostRepository;
+    private readonly ICacheInvalidator cacheInvalidator;
 
     public SimilarBlogPostJob(
         IRepository<BlogPost> blogPostRepository,
-        IRepository<SimilarBlogPost> similarBlogPostRepository)
+        IRepository<SimilarBlogPost> similarBlogPostRepository,
+        ICacheInvalidator cacheInvalidator)
     {
         this.blogPostRepository = blogPostRepository;
         this.similarBlogPostRepository = similarBlogPostRepository;
+        this.cacheInvalidator = cacheInvalidator;
     }
 
     public async Task RunAsync(IJobExecutionContext context, CancellationToken token)
@@ -35,15 +39,21 @@ public class SimilarBlogPostJob : IJob
         }
 
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
-            bp => new BlogPostSimilarity(bp.Id, bp.Title, bp.Tags, bp.ShortDescription),
+            bp => new BlogPostSimilarity { Id = bp.Id, Title = bp.Title, Tags = bp.Tags, ShortDescription = bp.ShortDescription },
             f => f.IsPublished);
         var documents = blogPosts.Select(bp => TextProcessor.TokenizeAndNormalize([bp.Title, bp.ShortDescription, ..bp.Tags])).ToList();
 
         var similarities = blogPosts.Select(bp => GetSimilarityForBlogPost(bp, documents, blogPosts)).ToArray();
         var ids = await similarBlogPostRepository.GetAllByProjectionAsync(s => s.Id);
-        await similarBlogPostRepository.DeleteBulkAsync(ids);
-        await similarBlogPostRepository.StoreBulkAsync(similarities);
-
+        try
+        {
+            await similarBlogPostRepository.DeleteBulkAsync(ids);
+            await similarBlogPostRepository.StoreBulkAsync(similarities);
+        }
+        finally
+        {
+            await cacheInvalidator.ClearBlogPostPagesAsync();
+        }
     }
 
     private static SimilarBlogPost GetSimilarityForBlogPost(
@@ -68,8 +78,18 @@ public class SimilarBlogPostJob : IJob
             .Select(s => s.BlogPost.Id)
             .ToArray();
 
-        return new SimilarBlogPost { Id = blogPost.Id, SimilarBlogPostIds = similarBlogPosts };
+        return new SimilarBlogPost { Id = SimilarBlogPost.IdFor(blogPost.Id), SimilarBlogPostIds = similarBlogPosts };
     }
 
-    private sealed record BlogPostSimilarity(string Id, string Title, IList<string> Tags, string ShortDescription);
+    // Member-init on purpose: RavenDB can't project into constructors with parameters.
+    private sealed record BlogPostSimilarity
+    {
+        public required string Id { get; init; }
+
+        public required string Title { get; init; }
+
+        public required IList<string> Tags { get; init; }
+
+        public required string ShortDescription { get; init; }
+    }
 }

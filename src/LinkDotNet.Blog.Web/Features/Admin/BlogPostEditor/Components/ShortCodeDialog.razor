@@ -50,7 +50,7 @@
 
 	private async Task AddShortCode(ShortCode shortCode)
 	{
-		await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", $"[[{shortCode.Name}]]");
+		await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", shortCode.Token);
 		ToastService.ShowSuccess($"Shortcode {shortCode.Name} copied to clipboard");
 		CloseDialog();
 	}

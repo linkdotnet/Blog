@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using ZiggyCreatures.Caching.Fusion;
 
 namespace LinkDotNet.Blog.Web.Features.Services;
@@ -13,4 +14,6 @@ public sealed class CacheService : ICacheInvalidator
     }
 
     public Task ClearCacheAsync() => fusionCache.ClearAsync().AsTask();
+
+    public Task ClearBlogPostPagesAsync() => fusionCache.RemoveByTagAsync(BlogPostCacheKeys.PagesTag).AsTask();
 }

@@ -1,3 +1,5 @@
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 ﻿using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
@@ -19,7 +21,7 @@ public class DraftBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(unpublishedPost);
         using var ctx = new BunitContext();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
         var cut = ctx.Render<DraftBlogPostPage>();
         cut.WaitForElement(".blog-card");

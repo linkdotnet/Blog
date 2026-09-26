@@ -27,6 +27,22 @@ For detailed documentation, see [docs/Migrations/UpgradeAssistant.md](docs/Migra
 
 ---
 
+## 16.0 to 17.0
+
+### Blog post versioning on MongoDB and RavenDB
+Versioning now works on every storage provider (before, the editor failed to open on MongoDB and RavenDB). No database changes are needed.
+
+- Saving a post stores the snapshot and the updated post as one unit of work. On a standalone MongoDB server (no replica set) these are two ordered writes instead of a transaction; the worst case after a crash is one extra snapshot of the unchanged post.
+- New versions get the id `{blogPostId}-v{versionNumber}`. Existing versions keep their ids.
+- Deleting a blog post now also deletes its versions.
+- Likes are updated atomically and no longer overwrite concurrent edits.
+
+### Blog post lists on RavenDB and MongoDB
+The search, archive, bookmarks, RSS feed, broken link checker and visit counter now also work on RavenDB (and the archive on MongoDB). Lists no longer load the content of every blog post. The search now ignores casing of the title on every storage provider (before it depended on the database).
+
+### Similar blog posts
+Similar blog posts are now stored under the id `{blogPostId}-similar`, so they no longer collide with blog post ids on RavenDB (similar posts never showed up there before). Existing entries keep working and are replaced the next time the similar blog post job runs (after creating, publishing or deleting a blog post).
+
 ## 15.0 to 16.0
 
 ### Blog post record index
@@ -84,6 +100,115 @@ The `EnableBrokenLinkChecker` setting was added on the root level of the `appset
   ...
   "EnableBrokenLinkChecker": true
 }
+```
+
+## 13.0 to 14.0
+
+### Blog post versioning
+A new `BlogPostVersions` table stores the version history of blog posts. `Database.EnsureCreated()` never adds tables to an existing database, so for SQL providers run the `AddBlogPostVersioning` Entity Framework migration or execute the following script (SQL Server):
+
+```sql
+CREATE TABLE [BlogPostVersions] (
+    [Id] varchar(900) NOT NULL,
+    [BlogPostId] varchar(256) NOT NULL,
+    [VersionNumber] int NOT NULL,
+    [CreatedAt] datetime2 NOT NULL,
+    [Title] nvarchar(256) NOT NULL,
+    [ShortDescription] nvarchar(max) NOT NULL,
+    [Content] nvarchar(max) NOT NULL,
+    [PreviewImageUrl] nvarchar(1024) NOT NULL,
+    [PreviewImageUrlFallback] nvarchar(1024) NULL,
+    [UpdatedDate] datetime2 NOT NULL,
+    [Tags] nvarchar(2048) NOT NULL,
+    [IsPublished] bit NOT NULL,
+    [ReadingTimeInMinutes] int NOT NULL,
+    [AuthorName] nvarchar(256) NULL,
+    CONSTRAINT [PK_BlogPostVersions] PRIMARY KEY ([Id])
+)
+GO
+CREATE UNIQUE INDEX [IX_BlogPostVersions_BlogPostId_VersionNumber] ON [BlogPostVersions] ([BlogPostId], [VersionNumber])
+GO
+```
+
+<details>
+<summary>SQLite</summary>
+
+```sql
+CREATE TABLE "BlogPostVersions" (
+    "Id" TEXT NOT NULL CONSTRAINT "PK_BlogPostVersions" PRIMARY KEY,
+    "BlogPostId" TEXT NOT NULL,
+    "VersionNumber" INTEGER NOT NULL,
+    "CreatedAt" TEXT NOT NULL,
+    "Title" TEXT NOT NULL,
+    "ShortDescription" TEXT NOT NULL,
+    "Content" TEXT NOT NULL,
+    "PreviewImageUrl" TEXT NOT NULL,
+    "PreviewImageUrlFallback" TEXT NULL,
+    "UpdatedDate" TEXT NOT NULL,
+    "Tags" TEXT NOT NULL,
+    "IsPublished" INTEGER NOT NULL,
+    "ReadingTimeInMinutes" INTEGER NOT NULL,
+    "AuthorName" TEXT NULL
+);
+CREATE UNIQUE INDEX "IX_BlogPostVersions_BlogPostId_VersionNumber" ON "BlogPostVersions" ("BlogPostId", "VersionNumber");
+```
+</details>
+
+<details>
+<summary>MySQL</summary>
+
+```sql
+CREATE TABLE `BlogPostVersions` (
+    `Id` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
+    `BlogPostId` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
+    `VersionNumber` int NOT NULL,
+    `CreatedAt` datetime(6) NOT NULL,
+    `Title` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
+    `ShortDescription` longtext CHARACTER SET utf8mb4 NOT NULL,
+    `Content` longtext CHARACTER SET utf8mb4 NOT NULL,
+    `PreviewImageUrl` varchar(1024) CHARACTER SET utf8mb4 NOT NULL,
+    `PreviewImageUrlFallback` varchar(1024) CHARACTER SET utf8mb4 NULL,
+    `UpdatedDate` datetime(6) NOT NULL,
+    `Tags` varchar(2048) CHARACTER SET utf8mb4 NOT NULL,
+    `IsPublished` tinyint(1) NOT NULL,
+    `ReadingTimeInMinutes` int NOT NULL,
+    `AuthorName` varchar(256) CHARACTER SET utf8mb4 NULL,
+    CONSTRAINT `PK_BlogPostVersions` PRIMARY KEY (`Id`)
+) CHARACTER SET=utf8mb4;
+CREATE UNIQUE INDEX `IX_BlogPostVersions_BlogPostId_VersionNumber` ON `BlogPostVersions` (`BlogPostId`, `VersionNumber`);
+```
+</details>
+
+<details>
+<summary>PostgreSQL</summary>
+
+```sql
+CREATE TABLE "BlogPostVersions" (
+    "Id" text NOT NULL,
+    "BlogPostId" character varying(256) NOT NULL,
+    "VersionNumber" integer NOT NULL,
+    "CreatedAt" timestamp with time zone NOT NULL,
+    "Title" character varying(256) NOT NULL,
+    "ShortDescription" text NOT NULL,
+    "Content" text NOT NULL,
+    "PreviewImageUrl" character varying(1024) NOT NULL,
+    "PreviewImageUrlFallback" character varying(1024),
+    "UpdatedDate" timestamp with time zone NOT NULL,
+    "Tags" text[] NOT NULL,
+    "IsPublished" boolean NOT NULL,
+    "ReadingTimeInMinutes" integer NOT NULL,
+    "AuthorName" character varying(256),
+    CONSTRAINT "PK_BlogPostVersions" PRIMARY KEY ("Id")
+);
+CREATE UNIQUE INDEX "IX_BlogPostVersions_BlogPostId_VersionNumber" ON "BlogPostVersions" ("BlogPostId", "VersionNumber");
+```
+</details>
+
+If you created the table by hand and want to use Entity Framework migrations later, mark the migration as applied:
+
+```sql
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20260424073229_AddBlogPostVersioning', N'9.0.14');
 ```
 
 ## 12.0 to 13.0

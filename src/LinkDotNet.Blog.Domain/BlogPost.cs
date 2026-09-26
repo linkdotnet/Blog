@@ -36,18 +36,18 @@ public sealed partial class BlogPost : Entity
 
     public int ReadingTimeInMinutes { get; private set; }
 
-    public string Slug => GenerateSlug();
+    public string Slug => CreateSlug(Title);
 
     public string? AuthorName { get; private set; }
 
-    private string GenerateSlug()
+    public static string CreateSlug(string title)
     {
-        if (string.IsNullOrWhiteSpace(Title))
+        if (string.IsNullOrWhiteSpace(title))
         {
-            return Title;
+            return title;
         }
 
-        var normalizedTitle = Title.Normalize(NormalizationForm.FormD);
+        var normalizedTitle = title.Normalize(NormalizationForm.FormD);
         var stringBuilder = new StringBuilder();
 
         foreach (var c in normalizedTitle.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark))
@@ -126,6 +126,45 @@ public sealed partial class BlogPost : Entity
     {
         ScheduledPublishDate = null;
         IsPublished = true;
+    }
+
+    public void Like() => Likes++;
+
+    public void Unlike() => Likes = Math.Max(0, Likes - 1);
+
+    public BlogPostVersion Revise(BlogPost changes, int latestVersionNumber)
+    {
+        ArgumentNullException.ThrowIfNull(changes);
+
+        var snapshot = BlogPostVersion.CreateSnapshot(this, latestVersionNumber + 1);
+        Update(changes);
+        return snapshot;
+    }
+
+    public BlogPostVersion RestoreFrom(BlogPostVersion version, int latestVersionNumber)
+    {
+        ArgumentNullException.ThrowIfNull(version);
+
+        if (version.BlogPostId != Id)
+        {
+            throw new InvalidOperationException("Can't restore a version of another blog post.");
+        }
+
+        // A published post cannot carry a scheduled date, and the schedule itself is not versioned.
+        var scheduledPublishDate = version.IsPublished ? null : ScheduledPublishDate;
+        var restored = Create(
+            version.Title,
+            version.ShortDescription,
+            version.Content,
+            version.PreviewImageUrl,
+            version.IsPublished,
+            version.UpdatedDate,
+            scheduledPublishDate,
+            version.Tags,
+            version.PreviewImageUrlFallback,
+            version.AuthorName);
+
+        return Revise(restored, latestVersionNumber);
     }
 
     public void Update(BlogPost from)

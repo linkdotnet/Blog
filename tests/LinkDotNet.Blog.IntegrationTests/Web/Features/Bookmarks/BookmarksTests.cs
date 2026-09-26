@@ -1,3 +1,5 @@
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
@@ -22,7 +24,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(bookmarkedBlogPost);
         await Repository.StoreAsync(nonBookmarkedBlogPost);
         bookmarkService.GetBookmarkedPostIds().Returns(new List<string> { bookmarkedBlogPost.Id });
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.Services.AddScoped(_ => bookmarkService);
 
         // Act
@@ -46,7 +48,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(bookmarkedBlogPost);
         bookmarkService.GetBookmarkedPostIds().Returns(new List<string> { bookmarkedBlogPost.Id });
         bookmarkService.IsBookmarked(bookmarkedBlogPost.Id).Returns(true);
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.Services.AddScoped(_ => bookmarkService);
         
         // Act
@@ -68,7 +70,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         using var ctx = new BunitContext();
         var bookmarkService = Substitute.For<IBookmarkService>();
         bookmarkService.GetBookmarkedPostIds().Returns(new List<string>());
-        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped<IBlogPostListQuery>(_ => new BlogPostListQuery(DbContextFactory));
         ctx.Services.AddScoped(_ => bookmarkService);
         
         // Act

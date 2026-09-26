@@ -1,4 +1,4 @@
-@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Bookmarks
 @using LinkDotNet.Blog.Web.Features.Bookmarks.Components
 @inject IBookmarkService BookmarkService
@@ -47,7 +47,7 @@
 			</div>
 			<p class="card-content">@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
 			<p class="read-more">
-				<a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" aria-label="@BlogPost.Title">Read the whole article</a>
+				<a href="/@BlogPostRoute.For(BlogPost.Id, BlogPost.Slug)" aria-label="@BlogPost.Title">Read the whole article</a>
 			</p>
 		</div>
 	</div>
@@ -55,7 +55,7 @@
 
 @code {
 	[Parameter, EditorRequired]
-	public required BlogPost BlogPost { get; set; }
+	public required BlogPostSummary BlogPost { get; set; }
 
 	private bool isBookmarked = false;
 
@@ -81,7 +81,7 @@
 			switch (parameter.Name)
 			{
 				case nameof(BlogPost):
-					BlogPost = (BlogPost)parameter.Value;
+					BlogPost = (BlogPostSummary)parameter.Value;
 					break;
 				case nameof(UseAlternativeStyle):
 					UseAlternativeStyle = (bool)parameter.Value;

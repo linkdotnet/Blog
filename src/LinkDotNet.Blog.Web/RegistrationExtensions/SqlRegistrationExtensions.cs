@@ -1,3 +1,4 @@
+using System;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using Microsoft.EntityFrameworkCore;
@@ -8,80 +9,42 @@ namespace LinkDotNet.Blog.Web.RegistrationExtensions;
 
 public static class SqlRegistrationExtensions
 {
-    public static void UseSqlAsStorageProvider(this IServiceCollection services)
-    {
-        services.AssertNotAlreadyRegistered(typeof(IRepository<>));
+    public static void UseSqlAsStorageProvider(this IServiceCollection services) =>
+        services.UseEfCoreProvider((builder, connectionString) => builder.UseSqlServer(connectionString));
 
-        services.AddPooledDbContextFactory<BlogDbContext>(
-        (s, builder) =>
-        {
-            var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
-            var connectionString = configuration.Value.ConnectionString;
-            builder.UseSqlServer(connectionString)
-#if DEBUG
-                .EnableDetailedErrors()
-#endif
-                ;
-        });
+    public static void UseSqliteAsStorageProvider(this IServiceCollection services) =>
+        services.UseEfCoreProvider((builder, connectionString) => builder.UseSqlite(connectionString));
 
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-    }
-
-    public static void UseSqliteAsStorageProvider(this IServiceCollection services)
-    {
-        services.AssertNotAlreadyRegistered(typeof(IRepository<>));
-
-        services.AddPooledDbContextFactory<BlogDbContext>(
-        (s, builder) =>
-        {
-            var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
-            var connectionString = configuration.Value.ConnectionString;
-            builder.UseSqlite(connectionString)
-#if DEBUG
-                .EnableDetailedErrors()
-#endif
-                ;
-        });
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-    }
-
-    public static void UseMySqlAsStorageProvider(this IServiceCollection services)
-    {
-        services.AssertNotAlreadyRegistered(typeof(IRepository<>));
-
-        services.AddPooledDbContextFactory<BlogDbContext>(
-        (s, builder) =>
-        {
-            var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
-            var connectionString = configuration.Value.ConnectionString;
+    public static void UseMySqlAsStorageProvider(this IServiceCollection services) =>
+        services.UseEfCoreProvider((builder, connectionString) =>
             builder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), mySqlOptions =>
             {
                 mySqlOptions.EnablePrimitiveCollectionsSupport();
                 mySqlOptions.UseParameterizedCollectionMode(ParameterTranslationMode.Constant);
-            })
+            }));
+
+    public static void UsePostgreSqlAsStorageProvider(this IServiceCollection services) =>
+        services.UseEfCoreProvider((builder, connectionString) => builder.UseNpgsql(connectionString));
+
+    internal static void AddEfCoreRepository(this IServiceCollection services, Action<IServiceProvider, DbContextOptionsBuilder> configure)
+    {
+        services.AddPooledDbContextFactory<BlogDbContext>((s, builder) =>
+        {
+            configure(s, builder);
 #if DEBUG
-                .EnableDetailedErrors()
+            builder.EnableDetailedErrors();
 #endif
-                ;
         });
+
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddBlogPostPersistence<BlogPostRepository, BlogPostPageQuery, BlogPostListQuery>();
     }
 
-    public static void UsePostgreSqlAsStorageProvider(this IServiceCollection services)
+    private static void UseEfCoreProvider(this IServiceCollection services, Action<DbContextOptionsBuilder, string> configure)
     {
         services.AssertNotAlreadyRegistered(typeof(IRepository<>));
 
-        services.AddPooledDbContextFactory<BlogDbContext>(
-            (s, builder) =>
-            {
-                var configuration = s.GetRequiredService<IOptions<ApplicationConfiguration>>();
-                var connectionString = configuration.Value.ConnectionString;
-                builder.UseNpgsql(connectionString)
-#if DEBUG
-                    .EnableDetailedErrors()
-#endif
-                    ;
-            });
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddEfCoreRepository((s, builder) =>
+            configure(builder, s.GetRequiredService<IOptions<ApplicationConfiguration>>().Value.ConnectionString));
     }
 }

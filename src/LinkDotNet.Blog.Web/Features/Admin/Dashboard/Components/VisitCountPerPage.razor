@@ -34,7 +34,7 @@
                     @foreach (var date in visitData)
                     {
                         <tr>
-                            <td><a class="link" href="blogPost/@date.Id">@date.Title</a></td>
+                            <td><a class="link" href="@BlogPostRoute.For(date.Id)">@date.Title</a></td>
                             <td>@date.ClickCount</td>
                             <td>@date.Likes</td>
                         </tr>
@@ -64,11 +64,11 @@
 		Filter filter)
 	{
 		Expression<Func<BlogPost, bool>>? blogPostFilter = filter.EndDate.HasValue
-			? bp => bp.UpdatedDate.Date <= filter.EndDate.Value.ToDateTime(default)
+			? bp => bp.UpdatedDate < filter.EndDate.Value.AddDays(1).ToDateTime(default)
 			: null;
 
 		return await blogPostRepository.GetAllByProjectionAsync(
-			s => new BlogPostVisitData(s.Id, s.Title, s.Likes),
+			s => new BlogPostVisitData { Id = s.Id, Title = s.Title, Likes = s.Likes },
 			filter: blogPostFilter,
 			orderBy: o => o.UpdatedDate);
 	}
@@ -117,5 +117,13 @@
         visitData = await LoadBlogPostInformationAsync();
     }
 
-	private record struct BlogPostVisitData(string Id, string Title, int Likes);
+	// Member-init on purpose: RavenDB can't project into constructors with parameters.
+	private record struct BlogPostVisitData
+	{
+		public string Id { get; init; }
+
+		public string Title { get; init; }
+
+		public int Likes { get; init; }
+	}
 }

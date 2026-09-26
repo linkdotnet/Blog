@@ -24,7 +24,6 @@ public static class ServiceExtensions
         services.AddScoped<IBookmarkService, BookmarkService>();
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlWriter, XmlWriter>();
-        services.AddScoped<IFileProcessor, FileProcessor>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<ITagQueryService, TagQueryService>();
         services.AddScoped<IBlogPostVersionService, BlogPostVersionService>();

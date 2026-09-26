@@ -1,22 +1,21 @@
 @page "/"
 @page "/{page:int}"
-@using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features.Home.Components
 @using ZiggyCreatures.Caching.Fusion
 @inject IFusionCache FusionCache
-@inject IRepository<BlogPost> BlogPostRepository
+@inject IBlogPostListQuery BlogPostListQuery
 @inject IOptions<Introduction> Introduction
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager NavigationManager
 
 <PageTitle>@AppConfiguration.Value.BlogName</PageTitle>
 
-<OgData Title="@(Markdown.ToPlainText(AppConfiguration.Value.BlogName))"
+<OgData Title="@(MarkdownConverter.ToPlainString(AppConfiguration.Value.BlogName) ?? string.Empty)"
         AbsolutePreviewImageUrl="@ImageUrl"
-        Description="@(Markdown.ToPlainText(Introduction.Value.Description))" />
+        Description="@(MarkdownConverter.ToPlainString(Introduction.Value.Description))" />
 <section>
     <IntroductionCard></IntroductionCard>
 </section>
@@ -40,7 +39,7 @@
     [Parameter]
     public int? Page { get; set; }
 
-    private IPagedList<BlogPost> currentPage = PagedList<BlogPost>.Empty;
+    private IPagedList<BlogPostSummary> currentPage = PagedList<BlogPostSummary>.Empty;
 
     private string ImageUrl => Introduction.Value.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
 
@@ -70,9 +69,6 @@
         currentPage = await GetAllForPageAsync(Page.Value);
     }
 
-	private ValueTask<IPagedList<BlogPost>> GetAllForPageAsync(int page)
-		=> BlogPostRepository.GetAllAsync(
-		p => p.IsPublished,
-		b => b.UpdatedDate,
-		page: page, pageSize: AppConfiguration.Value.BlogPostsPerPage);
+	private ValueTask<IPagedList<BlogPostSummary>> GetAllForPageAsync(int page)
+		=> BlogPostListQuery.GetPublishedAsync(page, AppConfiguration.Value.BlogPostsPerPage);
 }

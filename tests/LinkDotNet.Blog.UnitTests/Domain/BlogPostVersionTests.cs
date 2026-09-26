@@ -106,4 +106,23 @@ public class BlogPostVersionTests
 
         snapshot.PreviewImageUrlFallback.ShouldBeNull();
     }
+
+    [Fact]
+    public void CreateSnapshot_SetsDeterministicIdFromBlogPostAndVersionNumber()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+        blogPost.Id = "post-1";
+
+        var snapshot = BlogPostVersion.CreateSnapshot(blogPost, 12);
+
+        snapshot.Id.ShouldBe("post-1-v12");
+    }
+
+    [Fact]
+    public void CreateSnapshot_ThrowsWhenBlogPostHasNoId()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+
+        Should.Throw<ArgumentException>(() => BlogPostVersion.CreateSnapshot(blogPost, 1));
+    }
 }

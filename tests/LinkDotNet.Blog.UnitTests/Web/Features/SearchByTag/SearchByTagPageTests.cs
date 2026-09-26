@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -14,9 +16,9 @@ public class SearchByTagPageTests : BunitContext
     {
         // Tag pages are thin listing pages that search engines refuse to index anyway.
         // Declaring noindex turns a repeated crawl-time judgement into an explicit instruction.
-        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
-        repositoryMock.GetAllAsync().ReturnsForAnyArgs(PagedList<BlogPost>.Empty);
-        Services.AddScoped(_ => repositoryMock);
+        var listQuery = Substitute.For<IBlogPostListQuery>();
+        listQuery.GetPublishedByTagAsync(Arg.Any<string>()).Returns(new ValueTask<IReadOnlyList<BlogPostSummary>>([]));
+        Services.AddScoped(_ => listQuery);
 
         var cut = Render<SearchByTagPage>(p => p.Add(s => s.Tag, "C%23"));
 

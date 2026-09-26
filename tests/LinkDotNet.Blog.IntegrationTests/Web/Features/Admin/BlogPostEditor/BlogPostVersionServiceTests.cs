@@ -2,9 +2,11 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.BlogPostEditor;
@@ -15,7 +17,7 @@ public class BlogPostVersionServiceTests : SqlDatabaseTestBase<BlogPost>
 
     public BlogPostVersionServiceTests()
     {
-        sut = new BlogPostVersionService(DbContextFactory, Repository);
+        sut = new BlogPostVersionService(new BlogPostRepository(DbContextFactory));
     }
 
     [Fact]

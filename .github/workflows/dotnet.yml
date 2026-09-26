@@ -23,7 +23,15 @@ jobs:
 
     strategy:
       matrix:
-        os: [ ubuntu-latest, ubuntu-24.04-arm, macos-latest ]
+        include:
+          - os: ubuntu-latest
+            test-filter: ''
+          # SQL Server images are only published for x64
+          - os: ubuntu-24.04-arm
+            test-filter: '--filter-not-trait "Requires=x64"'
+          # macOS runners have no Docker for the Testcontainers-based tests
+          - os: macos-latest
+            test-filter: '--filter-not-trait "Requires=Docker"'
 
     steps:
     - uses: actions/checkout@v7
@@ -37,4 +45,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -c Release
     - name: Test
-      run: dotnet test -c Release --no-build
+      run: dotnet test -c Release --no-build ${{ matrix.test-filter }}

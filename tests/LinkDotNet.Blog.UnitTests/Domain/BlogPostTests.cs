@@ -177,4 +177,109 @@ public class BlogPostTests
 
         tags.ShouldBeEmpty();
     }
+
+    [Fact]
+    public void ShouldIncreaseLikesWhenLiked()
+    {
+        var blogPost = new BlogPostBuilder().WithLikes(1).Build();
+
+        blogPost.Like();
+
+        blogPost.Likes.ShouldBe(2);
+    }
+
+    [Fact]
+    public void ShouldNotDropLikesBelowZeroWhenUnliked()
+    {
+        var blogPost = new BlogPostBuilder().WithLikes(0).Build();
+
+        blogPost.Unlike();
+
+        blogPost.Likes.ShouldBe(0);
+    }
+
+    [Fact]
+    public void ShouldSnapshotCurrentStateWhenRevised()
+    {
+        var blogPost = new BlogPostBuilder().WithTitle("Old").WithContent("Old content").WithLikes(3).Build();
+        blogPost.Id = "post-1";
+        var changes = new BlogPostBuilder().WithTitle("New").WithContent("New content").Build();
+
+        var snapshot = blogPost.Revise(changes, 4);
+
+        snapshot.BlogPostId.ShouldBe("post-1");
+        snapshot.VersionNumber.ShouldBe(5);
+        snapshot.Title.ShouldBe("Old");
+        snapshot.Content.ShouldBe("Old content");
+        blogPost.Title.ShouldBe("New");
+        blogPost.Content.ShouldBe("New content");
+        blogPost.Id.ShouldBe("post-1");
+        blogPost.Likes.ShouldBe(3);
+    }
+
+    [Fact]
+    public void ShouldRestoreVersionAndSnapshotCurrentState()
+    {
+        var versionDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var blogPost = new BlogPostBuilder().WithTitle("Old").WithContent("Old").WithUpdatedDate(versionDate).Build();
+        blogPost.Id = "post-1";
+        var version = BlogPostVersion.CreateSnapshot(blogPost, 1);
+        blogPost.Update(new BlogPostBuilder().WithTitle("Current").WithContent(string.Join(' ', Enumerable.Repeat("word", 1000))).Build());
+
+        var snapshot = blogPost.RestoreFrom(version, 1);
+
+        snapshot.VersionNumber.ShouldBe(2);
+        snapshot.Title.ShouldBe("Current");
+        blogPost.Title.ShouldBe("Old");
+        blogPost.UpdatedDate.ShouldBe(versionDate);
+        blogPost.ReadingTimeInMinutes.ShouldBe(version.ReadingTimeInMinutes);
+    }
+
+    [Fact]
+    public void ShouldClearScheduleWhenRestoringPublishedVersion()
+    {
+        var blogPost = new BlogPostBuilder().IsPublished(true).Build();
+        blogPost.Id = "post-1";
+        var version = BlogPostVersion.CreateSnapshot(blogPost, 1);
+        blogPost.Update(new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(DateTime.UtcNow.AddDays(1)).Build());
+
+        blogPost.RestoreFrom(version, 1);
+
+        blogPost.IsPublished.ShouldBeTrue();
+        blogPost.ScheduledPublishDate.ShouldBeNull();
+    }
+
+    [Fact]
+    public void ShouldKeepScheduleWhenRestoringUnpublishedVersion()
+    {
+        var scheduledDate = DateTime.UtcNow.AddDays(1);
+        var blogPost = new BlogPostBuilder().IsPublished(false).Build();
+        blogPost.Id = "post-1";
+        var version = BlogPostVersion.CreateSnapshot(blogPost, 1);
+        blogPost.Update(new BlogPostBuilder().IsPublished(false).WithScheduledPublishDate(scheduledDate).Build());
+
+        blogPost.RestoreFrom(version, 1);
+
+        blogPost.ScheduledPublishDate.ShouldBe(scheduledDate);
+    }
+
+    [Fact]
+    public void ShouldNotRestoreVersionOfAnotherBlogPost()
+    {
+        var other = new BlogPostBuilder().Build();
+        other.Id = "other";
+        var version = BlogPostVersion.CreateSnapshot(other, 1);
+        var blogPost = new BlogPostBuilder().Build();
+        blogPost.Id = "post-1";
+
+        Should.Throw<InvalidOperationException>(() => blogPost.RestoreFrom(version, 1));
+    }
+
+    [Fact]
+    public void ShouldCreateSameSlugAsBlogPost()
+    {
+        var blogPost = new BlogPostBuilder().WithTitle("Hello World: C# ĂŚ Tips").Build();
+
+        BlogPost.CreateSlug(blogPost.Title).ShouldBe(blogPost.Slug);
+    }
 }

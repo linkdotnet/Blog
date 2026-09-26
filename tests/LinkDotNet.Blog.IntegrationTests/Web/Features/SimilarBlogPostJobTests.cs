@@ -4,6 +4,7 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.Extensions.Logging;
 using NCronJob;
 
@@ -12,6 +13,7 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Features;
 public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
 {
     private readonly Repository<SimilarBlogPost> similarBlogPostRepository;
+    private readonly ICacheInvalidator cacheInvalidator = Substitute.For<ICacheInvalidator>();
     
     public SimilarBlogPostJobTests()
     {
@@ -29,13 +31,15 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
         
-        var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository);
+        var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, cacheInvalidator);
         var context = Substitute.For<IJobExecutionContext>();
         context.Parameter.Returns(true);
         await job.RunAsync(context, CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
         similarBlogPosts.Count.ShouldBe(3);
+        similarBlogPosts.ShouldContain(s => s.Id == SimilarBlogPost.IdFor(blogPost1.Id));
+        await cacheInvalidator.Received(1).ClearBlogPostPagesAsync();
     }
     
     [Fact]
@@ -48,7 +52,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost2);
         await Repository.StoreAsync(blogPost3);
         
-        var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository);
+        var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository, cacheInvalidator);
         await job.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();

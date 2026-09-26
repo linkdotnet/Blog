@@ -1,8 +1,7 @@
 @page "/bookmarks"
-@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IBookmarkService BookmarkService
-@inject IRepository<BlogPost> BlogPostRepository;
+@inject IBlogPostListQuery BlogPostListQuery
 
 <div class="container">
 	<h3 class="pb-3 fw-bold">Bookmarks</h3>
@@ -27,7 +26,7 @@
 </div>
 
 @code {
-	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
+	private IReadOnlyList<BlogPostSummary> bookmarkedPosts = [];
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
@@ -37,7 +36,7 @@
 
 			if (ids.Any())
 			{
-				bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
+				bookmarkedPosts = await BlogPostListQuery.GetByIdsAsync(ids.ToList());
 				StateHasChanged();
 			}
 		}
