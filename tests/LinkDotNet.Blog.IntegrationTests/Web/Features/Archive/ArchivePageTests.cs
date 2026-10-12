@@ -27,8 +27,8 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<ArchivePage>();
 
-        cut.WaitForElements("h2");
-        var yearHeader = cut.FindAll("h2");
+        cut.WaitForElements("summary");
+        var yearHeader = cut.FindAll("summary");
         yearHeader.Count.ShouldBe(2);
         yearHeader[0].TextContent.ShouldContain("2022");
         yearHeader[1].TextContent.ShouldContain("2021");
@@ -51,8 +51,8 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<ArchivePage>();
 
-        cut.WaitForElements("h2");
-        cut.FindAll("h2").ShouldHaveSingleItem();
+        cut.WaitForElements("summary");
+        cut.FindAll("summary").ShouldHaveSingleItem();
     }
 
     [Fact]
@@ -65,7 +65,7 @@ public class ArchivePageTests : SqlDatabaseTestBase<BlogPost>
 
         var cut = ctx.Render<ArchivePage>();
 
-        cut.WaitForElements("h2");
+        cut.WaitForElements("summary");
         cut.Find("h3").TextContent.ShouldBe("Archive (2 posts)");
     }
 

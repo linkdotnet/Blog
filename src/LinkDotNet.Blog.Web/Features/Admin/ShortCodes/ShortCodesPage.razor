@@ -10,7 +10,7 @@
 
 <div class="container">
 	<h3 class="fw-bold">Shortcodes</h3>
-	<div class="alert alert-info" role="alert">
+	<div class="alert theme-info flex-column" role="alert">
 		<h4 class="alert-heading">What are Shortcodes?</h4>
 		<p>Shortcodes are markdown content that can be shown inside blog posts (like templates that can be referenced).
 			The idea is to reuse certain shortcodes across various blog posts.
@@ -20,64 +20,54 @@
 		<p>Currently, shortcodes are only shown in preview mode of the markdown editor.</p>
 		<p>Also, shortcodes are not part of the Table of Contents and reading time.</p>
 	</div>
-	<div class="accordion mt-3" id="shortCodesAccordion">
+	<div class="accordion mt-5" id="shortCodesAccordion">
 		@foreach (var shortCode in shortCodes)
 		{
-		<div class="accordion-item">
-			<h2 class="accordion-header" id="heading-@shortCode.Id">
-				<button class="accordion-button @(expandedShortCodeId == shortCode.Id ? string.Empty : "collapsed")" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@shortCode.Id" aria-expanded="@(expandedShortCodeId == shortCode.Id)" aria-controls="collapse-@shortCode.Id" @onclick="() => ToggleAccordion(shortCode.Id)">
-					@shortCode.Name
-				</button>
-			</h2>
-			<div id="collapse-@shortCode.Id" class="accordion-collapse collapse @(expandedShortCodeId == shortCode.Id ? "show" : "")" aria-labelledby="heading-@shortCode.Id">
-				<div class="accordion-body">
-					@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
-					<hr/>
-					<p>Usage: [[@shortCode.Name]]</p>
-					<div class="d-flex justify-content-start gap-2">
-						<a id="edit-shortcode" type="button" class="btn btn-primary d-flex align-items-center gap-2" @onclick="() => EditShortCode(shortCode)" aria-label="edit">
-							<i class="pencil"></i>
-							<div class="vr"></div><span>Edit</span>
-						</a>
-						<button id="delete-shortcode" type="button" class="btn btn-danger d-flex align-items-center gap-2" @onclick="() => DeleteShortCode(shortCode.Id)" aria-label="delete">
-							<i class="bin2"></i>
-							<div class="vr"></div><span>Delete</span>
-						</button>
-					</div>
+		<details class="accordion-item" name="shortCodes">
+			<summary class="accordion-header" id="heading-@shortCode.Id">
+				@shortCode.Name
+				<AccordionIcon />
+			</summary>
+			<div class="accordion-body">
+				@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
+				<hr/>
+				<p>Usage: [[@shortCode.Name]]</p>
+				<div class="d-flex justify-content-start gap-3">
+					<a id="edit-shortcode" type="button" class="btn btn-solid theme-primary d-flex align-items-center gap-3" @onclick="() => EditShortCode(shortCode)" aria-label="edit">
+						<i class="pencil"></i>
+						<div class="vr"></div><span>Edit</span>
+					</a>
+					<button id="delete-shortcode" type="button" class="btn btn-solid theme-danger d-flex align-items-center gap-3" @onclick="() => DeleteShortCode(shortCode.Id)" aria-label="delete">
+						<i class="bin2"></i>
+						<div class="vr"></div><span>Delete</span>
+					</button>
 				</div>
 			</div>
-		</div>
+		</details>
 		}
 	</div>
     <br>
     <EditForm Model="@model" OnValidSubmit="SaveShortCode">
-        <div class="mb-3">
+        <div class="mb-5">
             <div class="form-floating">
-                <InputText Id="short-code-name" class="form-control" spellcheck="true" @bind-Value="@model.Name" />
                 <label for="short-code-name">Name</label>
+                <InputText Id="short-code-name" class="form-control" spellcheck="true" @bind-Value="@model.Name" />
             </div>
         </div>
-        <div class="mb-3">
+        <div class="mb-5">
             <label for="short-code-content" class="form-label">Shortcode Content</label>
             <MarkdownTextArea Class="form-control" Rows="8" Id="short-code-content" @bind-Value="@model.MarkdownContent"></MarkdownTextArea>
         </div>
-        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-solid theme-primary">Save</button>
     </EditForm>
 </div>
 
 @code {
     private Model model = new();
     private List<ShortCode> shortCodes = [];
-    private string? expandedShortCodeId;
-
     protected override async Task OnInitializedAsync()
     {
         shortCodes = (await ShortCodeRepository.GetAllAsync()).ToList();
-    }
-
-    private void ToggleAccordion(string shortCodeId)
-    {
-        expandedShortCodeId = expandedShortCodeId == shortCodeId ? null : shortCodeId;
     }
 
     private async Task SaveShortCode()

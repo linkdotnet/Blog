@@ -1,14 +1,14 @@
 @using Microsoft.AspNetCore.Components.Web
 
 <div class="tag-input">
-    <div class="border rounded p-2 bg-body">
-        <div class="d-flex flex-wrap gap-2 align-items-center">
+    <div class="border rounded p-3 bg-body">
+        <div class="d-flex flex-wrap gap-3 align-items-center">
             @foreach (var tag in selectedTags)
             {
-                <span class="badge rounded-pill bg-secondary d-inline-flex align-items-center gap-1 py-2">
+                <span class="badge rounded-pill theme-secondary d-inline-flex align-items-center gap-1 py-3">
                     @tag
                     <button type="button"
-                            class="btn-close btn-close-white tag-input-remove"
+                            class="btn-close tag-input-remove"
                             aria-label="Remove @tag"
                             @onclick="() => RemoveTagAsync(tag)">
                     </button>

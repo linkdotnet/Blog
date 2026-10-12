@@ -10,7 +10,7 @@
 <OgData Title="Archive" Description="Explore all blog posts." />
 
 <div class="container">
-	<h3 class="pb-3 fw-bold">Archive (@blogPostCount posts)</h3>
+	<h3 class="pb-5 fw-bold">Archive (@blogPostCount posts)</h3>
 
 	@if (blogPostsPerYear is null)
 	{
@@ -21,26 +21,23 @@
 		<div class="accordion" id="archiveAccordion">
 			@foreach (var yearGroup in blogPostsPerYear)
 			{
-				<div class="accordion-item">
-					<h2 class="accordion-header" id="@HeadingKey(yearGroup.Key)">
-						<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@CollapseKeyIdentifier(yearGroup.Key)" aria-expanded="true" aria-controls="@CollapseKey(yearGroup.Key)">
-							@yearGroup.Key <span class="badge bg-primary ms-2">@yearGroup.Count()</span>
-						</button>
-					</h2>
-					<div id="@CollapseKey(yearGroup.Key)" class="accordion-collapse collapse show" aria-labelledby="@HeadingKey(yearGroup.Key)">
-						<div class="accordion-body">
-							<ul class="list-group">
-								@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
-								{
-									<li class="list-group-item">
-										<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
-										<span class="text-muted small ps-2">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy", CultureInfo.CurrentCulture))</span>
-									</li>
-								}
-							</ul>
-						</div>
+				<details class="accordion-item" open>
+					<summary class="accordion-header" id="@HeadingKey(yearGroup.Key)">
+						<span>@yearGroup.Key <span class="badge theme-primary ms-3">@yearGroup.Count()</span></span>
+						<AccordionIcon />
+					</summary>
+					<div class="accordion-body">
+						<ul class="list-group">
+							@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
+							{
+								<li class="list-group-item">
+									<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
+									<span class="fg-3 small ps-3">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy", CultureInfo.CurrentCulture))</span>
+								</li>
+							}
+						</ul>
 					</div>
-				</div>
+				</details>
 			}
 		</div>
 	}
@@ -64,8 +61,6 @@
 	}
 
 	private static string HeadingKey(int year) => $"heading{year}";
-	private static string CollapseKey(int year) => $"collapse{year}";
-	private static string CollapseKeyIdentifier(int year) => $"#{CollapseKey(year)}";
 
 	private sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
 }

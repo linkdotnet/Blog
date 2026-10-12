@@ -1,10 +1,16 @@
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.TestUtilities;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
 public class UploadFileModalDialogTests : BunitContext
 {
+    public UploadFileModalDialogTests()
+    {
+        JSInterop.SetupNativeDialog();
+    }
+
     [Fact]
     public async Task ShouldReturnFilenameAndSettingWhenSubmitting()
     {

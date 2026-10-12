@@ -1,54 +1,40 @@
-<div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Configuration</h5>
-                <button type="button" class="btn-close" @onclick="Abort"></button>
-            </div>
-            <div class="modal-body">
-                <EditForm Model="@model" OnValidSubmit="Ok">
-                    <DataAnnotationsValidator />
-                    <div class="form-floating mb-3">
+<NativeDialog Class="dialog-lg" IsOpen="isOpen" OnClose="Abort">
+    <div class="dialog-header">
+        <h5 class="dialog-title">Configuration</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Abort"></button>
+    </div>
+    <div class="dialog-body overflow-auto">
+        <EditForm Model="@model" OnValidSubmit="Ok">
+            <DataAnnotationsValidator />
+            <div class="form-floating mb-5">
+	                    <label for="name">The filename of the media file. On services like Azure, this can include the directory path.</label>
 	                    <InputText type="text" class="form-control" id="name" placeholder="Filename"
 	                               @bind-Value="model.Name"/>
-	                    <label for="name">The filename of the media file. On services like Azure, this can include the directory path.</label>
 	                    <ValidationMessage For="() => model.Name"></ValidationMessage>
-                    </div>
-                    <div class="form-check form-switch mb-3">
-                        <InputCheckbox class="form-check-input" id="cache" @bind-Value="model.CacheMedia" />
-                        <label class="form-check-label" for="cache">Enable Media Caching</label><br />
-                        <small class="form-text text-body-secondary">
-	                        If enabled, the "Cache-Control" header will be set automatically.<br/>
-	                        The value is set to one week. If disabled, no header will be set.
-                        </small>
-                    </div>
-                </EditForm>
             </div>
-            <div class="modal-footer">
-                <button id="abort" type="button" class="btn btn-secondary" @onclick="Abort">Abort</button>
-                <button type="button" class="btn btn-primary" @onclick="Ok">OK</button>
+            <div class="form-field mb-5">
+                <div class="switch">
+                    <InputCheckbox id="cache" role="switch" @bind-Value="model.CacheMedia" />
+                </div>
+                <label for="cache">Enable Media Caching</label>
+                <small class="form-text fg-3">If enabled, the "Cache-Control" header will be set automatically.<br/>The value is set to one week. If disabled, no header will be set.</small>
             </div>
-        </div>
+        </EditForm>
     </div>
-</div>
-
-@if (showBackdrop)
-{
-    <div class="modal-backdrop fade show"></div>
-}
+    <div class="dialog-footer">
+        <button id="abort" type="button" class="btn btn-solid theme-secondary" @onclick="Abort">Abort</button>
+        <button type="button" class="btn btn-solid theme-primary" @onclick="Ok">OK</button>
+            </div>
+</NativeDialog>
 
 @code {
     private TaskCompletionSource<UploadFileModalDialogObject?> result = null!;
-    private string modalDisplay = "none;";
-    private string modalClass = "";
-    private bool showBackdrop;
+    private bool isOpen;
     private readonly UploadFileModalDialogObject model = new();
 
     public async Task<UploadFileModalDialogObject?> ShowAsync(string fileName)
     {
-        modalDisplay = "block;";
-        modalClass = "show";
-        showBackdrop = true;
+        isOpen = true;
         model.Name = fileName;
         result = new TaskCompletionSource<UploadFileModalDialogObject?>();
         StateHasChanged();
@@ -57,18 +43,14 @@
 
     private void Abort()
     {
-        modalDisplay = "none";
-        modalClass = string.Empty;
-        showBackdrop = false;
+        isOpen = false;
         result.SetResult(null);
         StateHasChanged();
     }
 
     private void Ok()
     {
-        modalDisplay = "none";
-        modalClass = string.Empty;
-        showBackdrop = false;
+        isOpen = false;
         result.SetResult(model);
         StateHasChanged();
     }

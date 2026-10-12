@@ -17,18 +17,18 @@
 
 <PageTitle>@Title</PageTitle>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-7">
     <div class="row">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fw-bold text-primary mb-0">@Title</h2>
-                <div class="d-flex gap-2">
-                    <span class="badge text-body-secondary px-3 py-2 fw-medium">
+            <div class="d-flex justify-content-between align-items-center mb-7">
+                <h2 class="fw-bold fg-primary mb-0">@Title</h2>
+                <div class="d-flex gap-3">
+                    <span class="badge fg-3 px-5 py-3 fw-medium">
                         @GetStatusText()
                     </span>
                     @if (model.IsDirty)
                     {
-                        <span class="badge bg-warning text-dark px-3 py-2 fw-medium">
+                        <span class="badge theme-warning px-5 py-3 fw-medium">
                             Unsaved Changes
                         </span>
                     }
@@ -40,95 +40,85 @@
     <EditForm Model="@model" OnValidSubmit="OnValidBlogPostCreatedAsync">
         <DataAnnotationsValidator />
 
-        <div class="row g-4">
-            <div class="col-lg-8">
-                <div class="card shadow-sm border-0 hover-shadow-lg transition">
-                    <div class="card-header border-bottom-0 py-3">
-                        <h5 class="card-title mb-0 text-primary">Content</h5>
+        <div class="row g-7">
+            <div class="lg:col-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header border-bottom-0 py-5">
+                        <h5 class="card-title mb-0 fg-primary">Content</h5>
                     </div>
                     <div class="card-body p-0">
-                                <div class="p-4 border-bottom">
+                                <div class="p-7 border-bottom">
                                     <div class="form-floating">
-                                        <input type="text" class="form-control form-control-lg shadow-none fs-3 fw-semibold" id="title" spellcheck="true" @oninput="args => model.Title = args.Value!.ToString()!"
-                                               value="@model.Title"/>
                                         <label for="title" class="fw-bold">Post Title</label>
+                                        <input type="text" class="form-control form-control-lg shadow-none fs-xl fw-semibold" id="title" spellcheck="true" @oninput="args => model.Title = args.Value!.ToString()!"
+                                               value="@model.Title"/>
                                     </div>
-                                    <ValidationMessage For="() => model.Title" class="text-danger small mt-1"></ValidationMessage>
+                                    <ValidationMessage For="() => model.Title" class="fg-danger small mt-1"></ValidationMessage>
                                 </div>
 
-                                <div class="p-4 border-bottom">
-                                    <label class="form-label fw-bold mb-3">Short Description</label>
+                                <div class="p-7 border-bottom">
+                                    <label class="form-label fw-bold mb-5">Short Description</label>
                                     <MarkdownTextArea Id="short" Class="form-control border-0 shadow-none"
                                                       Rows="4" Placeholder="Write a compelling summary..."
                                                       @bind-Value="@model.ShortDescription"
                                                       PreviewFunction="ReplaceShortCodes"></MarkdownTextArea>
-                                    <ValidationMessage For="() => model.ShortDescription" class="text-danger small mt-1"></ValidationMessage>
+                                    <ValidationMessage For="() => model.ShortDescription" class="fg-danger small mt-1"></ValidationMessage>
                                 </div>
 
-                                <div class="p-4 position-relative">
-                                    <label class="form-label fw-bold mb-3">
-                                        Content                        <span class="badge bg-secondary ms-2 fw-medium">@ReadingTimeCalculator.GetWordCount(model.Content) words</span>
-                        <span class="badge bg-info ms-1 fw-medium">~@GetEstimatedReadTime() min read</span>
+                                <div class="p-7 position-relative">
+                                    <label class="form-label fw-bold mb-5">
+                                        Content                        <span class="badge theme-secondary ms-3 fw-medium">@ReadingTimeCalculator.GetWordCount(model.Content) words</span>
+                        <span class="badge theme-info ms-1 fw-medium">~@GetEstimatedReadTime() min read</span>
                                     </label>
                                     <MarkdownTextArea Id="content" Class="form-control border-0 shadow-none"
                                                       Rows="25" Placeholder="Start writing your amazing content..."
                                                       PreviewFunction="ReplaceShortCodes"
                                                       @bind-Value="@model.Content"></MarkdownTextArea>
-                                    <ValidationMessage For="() => model.Content" class="text-danger small mt-1"></ValidationMessage>
+                                    <ValidationMessage For="() => model.Content" class="fg-danger small mt-1"></ValidationMessage>
 
-                                    <div class="position-absolute top-0 end-0 m-3">
-                                        <div class="btn-group me-2">
-                                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="position-absolute top-0 end-0 m-5">
+                                        <div class="btn-group me-3">
+                                            <button class="btn btn-outline theme-secondary btn-sm" type="button"
+                                                    data-bs-toggle="menu" data-bs-placement="bottom-end" aria-expanded="false">
                                                 Templates
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <button type="button" class="dropdown-item" @onclick="OpenTemplateDialog">
-                                                        Manage Templates
-                                                    </button>
-                                                </li>
+                                            <div class="menu">
+                                                <button type="button" class="menu-item" @onclick="OpenTemplateDialog">
+                                                    Manage Templates
+                                                </button>
                                                 @if (blogPostTemplates.Any())
                                                 {
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <h6 class="dropdown-header">Load Template</h6>
+                                                    <hr class="menu-divider">
+                                                    <h6 class="menu-header">Load Template</h6>
                                                     @foreach (var template in blogPostTemplates)
                                                     {
-                                                        <li>
-                                                            <button type="button" class="dropdown-item" @onclick="() => LoadTemplate(template)">
-                                                                @template.Name
-                                                            </button>
-                                                        </li>
+                                                        <button type="button" class="menu-item" @onclick="() => LoadTemplate(template)">
+                                                            @template.Name
+                                                        </button>
                                                     }
                                                 }
-                                            </ul>
+                                            </div>
                                         </div>
                                         <div class="btn-group">
-                                            <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-outline theme-primary btn-sm" type="button"
+                                                    data-bs-toggle="menu" data-bs-placement="bottom-end" aria-expanded="false">
                                                 Tools
                                             </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
+                                            <div class="menu">
                                                 @if (shortCodes.Count > 0)
                                                 {
-                                                    <li>
-                                                        <button type="button" @onclick="OpenShortCodeDialog" class="dropdown-item">
-                                                            Insert Shortcode
-                                                        </button>
-                                                    </li>
-                                                    <li><hr class="dropdown-divider"></li>
+                                                    <button type="button" @onclick="OpenShortCodeDialog" class="menu-item">
+                                                        Insert Shortcode
+                                                    </button>
+                                                    <hr class="menu-divider">
                                                 }
-                                                <li>
-                                                    <button type="button" class="dropdown-item" @onclick="FeatureDialog.Open">
-                                                        Experimental Features
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button id="convert" type="button" class="dropdown-item" @onclick="ConvertContent">
-                                                        @ConvertLabel <i class="lab"></i>
-                                                    </button>
-                                                </li>
-                                            </ul>
+                                                <button type="button" class="menu-item" @onclick="FeatureDialog.Open">
+                                                    Experimental Features
+                                                </button>
+                                                <button id="convert" type="button" class="menu-item" @onclick="ConvertContent">
+                                                    @ConvertLabel <i class="lab"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -136,23 +126,23 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
-                        <div class="card shadow-sm border-0 mb-4 hover-shadow-lg transition">
-                            <div class="card-header border-bottom-0 py-3">
-                                <h6 class="card-title mb-0 text-primary">Quick Actions</h6>
+                    <div class="lg:col-4">
+                        <div class="card shadow-sm border-0 mb-7">
+                            <div class="card-header border-bottom-0 py-5">
+                                <h6 class="card-title mb-0 fg-primary">Quick Actions</h6>
                             </div>
                             <div class="card-body">
                                 <div class="d-grid">
-                                    <button class="btn btn-primary fw-medium transition" type="submit" disabled="@(!canSubmit)">
+                                    <button class="btn btn-solid theme-primary fw-medium transition" type="submit" disabled="@(!canSubmit)">
                                         @(BlogPost != null ? "Update Post" : "Create Post")
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="card shadow-sm border-0 mb-4 hover-shadow-lg transition">
-                            <div class="card-header border-bottom-0 py-3">
-                                <h6 class="card-title mb-0 text-primary">Tags</h6>
+                        <div class="card shadow-sm border-0 mb-7">
+                            <div class="card-header border-bottom-0 py-5">
+                                <h6 class="card-title mb-0 fg-primary">Tags</h6>
                             </div>
                             <div class="card-body">
                                 <div class="position-relative">
@@ -163,120 +153,118 @@
                                               @bind-Value="model.Tags">
                                     </TagInput>
                                 </div>
-                                <small class="form-text text-muted mt-2">
+                                <small class="form-text fg-3 mt-3">
                                     Add relevant tags to improve content discoverability and SEO. Use specific, searchable terms that describe your content.
                                 </small>
                             </div>
                         </div>
 
-                        <div class="card shadow-sm border-0 mb-4 hover-shadow-lg transition">
-                            <div class="card-header border-bottom-0 py-3">
-                                <h6 class="card-title mb-0 text-primary">Publishing & Visibility</h6>
+                        <div class="card shadow-sm border-0 mb-7">
+                            <div class="card-header border-bottom-0 py-5">
+                                <h6 class="card-title mb-0 fg-primary">Publishing & Visibility</h6>
                             </div>
                             <div class="card-body">
-                                <div class="form-check form-switch mb-4">
-                                    <InputCheckbox class="form-check-input" id="published" @bind-Value="model.IsPublished" />
-                                    <label class="form-check-label fw-bold" for="published">
-                                        @(model.IsPublished ? "Published" : "Draft")
-                                    </label>
-                                    <small class="form-text text-muted d-block">
-                                        @(model.IsPublished ? "Visible to everyone" : "Only visible to you")
-                                    </small>
+                                <div class="form-field mb-7">
+                                    <div class="switch">
+                                        <InputCheckbox id="published" role="switch" @bind-Value="model.IsPublished" />
+                                    </div>
+                                    <label class="fw-bold" for="published">@(model.IsPublished ? "Published" : "Draft")</label>
+                                    <small class="form-text fg-3">@(model.IsPublished ? "Visible to everyone" : "Only visible to you")</small>
                                 </div>
-                                <ValidationMessage For="() => model.IsPublished" class="text-danger small mb-3"></ValidationMessage>
+                                <ValidationMessage For="() => model.IsPublished" class="fg-danger small mb-5"></ValidationMessage>
 
-                                <div class="mb-4">
+                                <div class="mb-7">
                                     <label class="form-label fw-bold">Schedule Publication</label>
                                     <div class="form-floating">
+                                        <label for="scheduled">Select date and time</label>
                                         <InputDate Type="InputDateType.DateTimeLocal" class="form-control" id="scheduled"
                                                    placeholder="Scheduled Publish Date" @bind-Value="model.ScheduledPublishDate"
                                                    @bind-Value:after="@(() => model.IsPublished &= !IsScheduled)" />
-                                        <label for="scheduled">Select date and time</label>
                                     </div>
                                     @if (IsScheduled)
                                     {
-                                        <div class="alert alert-info mt-2 mb-0">
+                                        <div class="alert theme-info mt-3 mb-0">
                                             <small>Will be published on <strong>@model.ScheduledPublishDate?.ToString("MMMM dd, yyyy 'at' HH:mm")</strong></small>
                                         </div>
                                     }
-                                    <ValidationMessage For="() => model.ScheduledPublishDate" class="text-danger small mt-1"></ValidationMessage>
+                                    <ValidationMessage For="() => model.ScheduledPublishDate" class="fg-danger small mt-1"></ValidationMessage>
                                 </div>
 
                                 @if (BlogPost is not null && !IsScheduled)
                                 {
-                                    <div class="form-check form-switch">
-                                        <InputCheckbox class="form-check-input" id="updatedate" @bind-Value="model.ShouldUpdateDate" />
-                                        <label class="form-check-label fw-bold" for="updatedate">Update Publication Date</label>
-                                        <small class="form-text text-muted d-block">
-                                            Update the post's publication date to now
-                                        </small>
+                                    <div class="form-field">
+                                        <div class="switch">
+                                            <InputCheckbox id="updatedate" role="switch" @bind-Value="model.ShouldUpdateDate" />
+                                        </div>
+                                        <label class="fw-bold" for="updatedate">Update Publication Date</label>
+                                        <small class="form-text fg-3">Update the post's publication date to now</small>
                                     </div>
                                 }
                             </div>
                         </div>
 
-                        <div class="card shadow-sm border-0 mb-4 hover-shadow-lg transition">
-                            <div class="card-header border-bottom-0 py-3">
-                                <h6 class="card-title mb-0 text-primary">Featured Image</h6>
+                        <div class="card shadow-sm border-0 mb-7">
+                            <div class="card-header border-bottom-0 py-5">
+                                <h6 class="card-title mb-0 fg-primary">Featured Image</h6>
                             </div>
                             <div class="card-body">
-                                <div class="mb-3">
+                                <div class="mb-5">
                                     <div class="form-floating">
-                                        <InputText type="url" class="form-control" id="preview" @bind-Value="model.PreviewImageUrl" />
                                         <label for="preview">Primary Image URL</label>
+                                        <InputText type="url" class="form-control" id="preview" @bind-Value="model.PreviewImageUrl" />
                                     </div>
-                                    <ValidationMessage For="() => model.PreviewImageUrl" class="text-danger small mt-1"></ValidationMessage>
+                                    <ValidationMessage For="() => model.PreviewImageUrl" class="fg-danger small mt-1"></ValidationMessage>
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-5">
                                     <div class="form-floating">
-                                        <InputText type="url" class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback" />
                                         <label for="fallback-preview">Fallback Image URL</label>
+                                        <InputText type="url" class="form-control" id="fallback-preview" @bind-Value="model.PreviewImageUrlFallback" />
                                     </div>
-                                    <ValidationMessage For="() => model.PreviewImageUrlFallback" class="text-danger small mt-1"></ValidationMessage>
+                                    <ValidationMessage For="() => model.PreviewImageUrlFallback" class="fg-danger small mt-1"></ValidationMessage>
                                 </div>
-                                <small class="form-text text-muted">
+                                <small class="form-text fg-3">
                                     The fallback image ensures compatibility across all platforms. Use JPG or PNG format for maximum support when your primary image is WebP or AVIF.
                                 </small>
                             </div>
                         </div>
 
-                        <div class="card shadow-sm border-0 hover-shadow-lg transition">
-                            <div class="card-header border-bottom-0 py-3">
-                                <h6 class="card-title mb-0 text-primary">Cache Management</h6>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header border-bottom-0 py-5">
+                                <h6 class="card-title mb-0 fg-primary">Cache Management</h6>
                             </div>
                             <div class="card-body">
-                                <div class="form-check form-switch mb-3">
-                                    <InputCheckbox class="form-check-input" id="invalidate-cache" @bind-Value="model.ShouldInvalidateCache" />
-                                    <label class="form-check-label fw-bold" for="invalidate-cache">Clear Cache</label>
-                                    <small class="form-text text-muted d-block">
-                                        Make this post visible immediately on the homepage
-                                    </small>
+                                <div class="form-field mb-5">
+                                    <div class="switch">
+                                        <InputCheckbox id="invalidate-cache" role="switch" @bind-Value="model.ShouldInvalidateCache" />
+                                    </div>
+                                    <label class="fw-bold" for="invalidate-cache">Clear Cache</label>
+                                    <small class="form-text fg-3">Make this post visible immediately on the homepage</small>
                                 </div>
-                                <div class="alert alert-info mb-0">
+                                <div class="alert theme-info mb-0">
                                     <small>Enable this to make your post immediately visible on the homepage after publishing.</small>
                                 </div>
                             </div>
                         </div>
                         @if (!string.IsNullOrEmpty(BlogPostId) && versionHistory.Count > 0)
                         {
-                            <div class="card shadow-sm border-0 hover-shadow-lg transition mt-4">
-                                <div class="card-header border-bottom-0 py-3 d-flex justify-content-between align-items-center">
-                                    <h6 class="card-title mb-0 text-primary">Version History</h6>
-                                    <span class="badge bg-secondary">@versionHistory.Count</span>
+                            <div class="card shadow-sm border-0 mt-7">
+                                <div class="card-header border-bottom-0 py-5 d-flex justify-content-between align-items-center">
+                                    <h6 class="card-title mb-0 fg-primary">Version History</h6>
+                                    <span class="badge theme-secondary">@versionHistory.Count</span>
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="list-group list-group-flush" style="max-height: 320px; overflow-y: auto;">
                                         @foreach (var v in versionHistory)
                                         {
-                                            <div class="list-group-item d-flex justify-content-between align-items-center py-2 px-3">
-                                                <div class="me-2" style="min-width: 0;">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center py-3 px-5">
+                                                <div class="me-3" style="min-width: 0;">
                                                     <div class="fw-semibold small">v@(v.VersionNumber)</div>
-                                                    <div class="text-muted" style="font-size: 0.72rem;">@v.CreatedAt.ToString("MMM dd, yyyy HH:mm")</div>
-                                                    <div class="text-truncate text-muted" style="max-width: 130px; font-size: 0.72rem;" title="@v.Title">@v.Title</div>
+                                                    <div class="fg-3" style="font-size: 0.72rem;">@v.CreatedAt.ToString("MMM dd, yyyy HH:mm")</div>
+                                                    <div class="text-truncate fg-3" style="max-width: 130px; font-size: 0.72rem;" title="@v.Title">@v.Title</div>
                                                 </div>
                                                 <div class="d-flex flex-column gap-1 flex-shrink-0">
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm" @onclick="() => OpenDiff(v)">Diff</button>
-                                                    <button type="button" class="btn btn-outline-warning btn-sm" @onclick="() => RestoreVersionAsync(v)">Restore</button>
+                                                    <button type="button" class="btn btn-outline theme-secondary btn-sm" @onclick="() => OpenDiff(v)">Diff</button>
+                                                    <button type="button" class="btn btn-outline theme-warning btn-sm" @onclick="() => RestoreVersionAsync(v)">Restore</button>
                                                 </div>
                                             </div>
                                         }

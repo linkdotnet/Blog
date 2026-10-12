@@ -1,22 +1,13 @@
-﻿<div class="modal @modalClass overflow-auto" tabindex="-1" role="dialog" style="display:@modalDisplay;">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">@Title</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close" @onclick="Close">
-                </button>
-            </div>
-            <div class="modal-body">
-                @ChildContent
-            </div>
-        </div>
+﻿<NativeDialog Class="dialog-lg" IsOpen="isOpen" OnClose="Close">
+    <div class="dialog-header">
+        <h5 class="dialog-title">@Title</h5>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="Close">
+        </button>
     </div>
-</div>
-
-@if (showBackdrop)
-{
-    <div class="modal-backdrop fade show"></div>
-}
+    <div class="dialog-body overflow-auto">
+        @ChildContent
+    </div>
+</NativeDialog>
 
 @code {
     [Parameter, EditorRequired]
@@ -25,21 +16,9 @@
     [Parameter, EditorRequired]
     public required RenderFragment ChildContent { get; set; }
 
-    private string modalDisplay = "none;";
-    private string modalClass = "";
-    private bool showBackdrop = false;
+    private bool isOpen;
 
-    public void Open()
-    {
-        modalDisplay = "block";
-        modalClass = "show";
-        showBackdrop = true;
-    }
+    public void Open() => isOpen = true;
 
-    public void Close()
-    {
-        modalDisplay = "none";
-        modalClass = "";
-        showBackdrop = false;
-    }
+    public void Close() => isOpen = false;
 }

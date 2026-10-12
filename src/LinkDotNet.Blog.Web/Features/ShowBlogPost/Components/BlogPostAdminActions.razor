@@ -9,12 +9,12 @@
 @inject ITagQueryService TagQueryService
 
 <AuthorizeView>
-	<div class="d-flex justify-content-start gap-2">
-		<a id="edit-blogpost" type="button" class="btn btn-primary d-flex align-items-center gap-2" href="update/@BlogPostId" aria-label="edit">
+	<div class="d-flex justify-content-start gap-3">
+		<a id="edit-blogpost" type="button" class="btn btn-solid theme-primary d-flex align-items-center gap-3" href="update/@BlogPostId" aria-label="edit">
 			<i class="pencil"></i>
 			<div class="vr"></div><span>Edit</span>
 		</a>
-		<button id="delete-blogpost" type="button" class="btn btn-danger d-flex align-items-center gap-2" @onclick="ShowConfirmDialog" aria-label="delete">
+		<button id="delete-blogpost" type="button" class="btn btn-solid theme-danger d-flex align-items-center gap-3" @onclick="ShowConfirmDialog" aria-label="delete">
 			<i class="bin2"></i>
 			<div class="vr"></div><span>Delete</span>
 		</button>
