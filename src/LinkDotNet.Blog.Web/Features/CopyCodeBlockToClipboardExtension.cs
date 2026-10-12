@@ -72,7 +72,7 @@ internal sealed class CustomCodeBlockRenderer(bool showLanguage) : CodeBlockRend
             renderer.Write("""<span class="code-block-lang">""").WriteEscape(fenced.Info).Write("</span>");
         }
         renderer.Write("""
-                       <button class="btn btn-sm py-0 ms-auto border border-primary text-primary copy-btn"
+                       <button class="btn btn-sm py-0 ms-auto border border-primary fg-primary copy-btn"
                                type="button"
                                onclick="navigator.clipboard.writeText(this.closest('.code-block').querySelector('pre code').textContent)">
                                <i class="copy"></i>

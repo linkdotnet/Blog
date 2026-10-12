@@ -168,7 +168,7 @@ public class CreateNewBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         using var cut = ctx.Render<CreateNewBlogPost>(p => p.Add(s => s.Title, string.Empty));
 
         // Act
-        var templateButton = cut.FindAll("button.dropdown-item").First(b => b.TextContent.Contains("My Template"));
+        var templateButton = cut.FindAll("button.menu-item").First(b => b.TextContent.Contains("My Template"));
         templateButton.Click();
 
         // Assert

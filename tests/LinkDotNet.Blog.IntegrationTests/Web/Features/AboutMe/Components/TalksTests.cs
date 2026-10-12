@@ -19,6 +19,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
+        ctx.JSInterop.SetupNativeDialog();
     }
 
     [Fact]

@@ -4,12 +4,12 @@
 <div>
         @if (ShowAdminActions)
         {
-            <button type="button" class="btn btn-primary" @onclick="() => AddSkillDialog.Open()">
+            <button type="button" class="btn btn-solid theme-primary" @onclick="() => AddSkillDialog.Open()">
                 <i class="plus"></i> Add skill</button>
             <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
         }
     </div>
-<div class="table-container">
+<div class="table-responsive">
     <table class="skill-table" id="skill-table">
         <tbody>
         <tr>

@@ -34,6 +34,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     public async Task ShouldAddSkill()
     {
         using var ctx = new BunitContext();
+        ctx.JSInterop.SetupNativeDialog();
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         var cut = ctx.Render<SkillTable>(p =>

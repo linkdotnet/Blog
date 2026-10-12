@@ -1,5 +1,5 @@
 @using LinkDotNet.Blog.Domain
-<div class="d-flex flex-row justify-content-center h3 gap-4 py-2">
+<div class="d-flex flex-row justify-content-center h3 gap-7 py-3">
     @foreach (var account in AllSocialAccounts.Where(a => a.HasAccount))
     {
 	    <a id="@account.Id" class="nav-link" target="_blank" href="@account.Url" aria-label="@account.Name" rel="noreferrer">

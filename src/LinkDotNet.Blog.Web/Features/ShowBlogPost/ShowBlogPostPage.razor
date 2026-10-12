@@ -47,12 +47,12 @@ else if (BlogPost is not null)
 	                PublishedDate="@BlogPost.UpdatedDate"
 	                Author="@ProfileInformation.Value.Name"/>
 
-	<div class="d-flex justify-content-center pt-2 blog-outer-box">
+	<div class="d-flex justify-content-center pt-3 blog-outer-box">
 		<div class="blog-container">
 			<div class="blog-inner-content">
 				<header class="text-center">
 					<h1 class="fw-bold">@BlogPost.Title</h1></header>
-				<div class="text-body-secondary d-flex flex-wrap align-items-center gap-3 meta-info">
+				<div class="fg-3 d-flex flex-wrap align-items-center gap-5 meta-info">
 					<div class="d-inline-flex align-items-center">
 						<span class="date me-1"></span>
 						<span>@BlogPost.UpdatedDate.ToShortDateString()</span>
@@ -74,30 +74,30 @@ else if (BlogPost is not null)
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
 						<div class="d-inline-flex align-items-center flex-wrap">
-							<span class="blogpost-tag me-2"></span>
-							<div class="d-flex flex-wrap gap-2">
+							<span class="blogpost-tag me-3"></span>
+							<div class="d-flex flex-wrap gap-3">
 								@foreach (var tag in BlogPost.Tags)
 								{
-									<a class="goto-tag badge bg-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+									<a class="goto-tag badge theme-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
 								}
 							</div>
 						</div>
 					}
 				</div>
 
-				<div class="pt-2">
+				<div class="pt-3">
 					<BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
 				</div>
 
-				<div class="pt-2">
+				<div class="pt-3">
 					<TableOfContents Content="@BlogPost.Content" CurrentUri="@NavigationManager.Uri"></TableOfContents>
 				</div>
 
-				<div class="blogpost-content">
+				<div class="blogpost-content prose pb-5">
 					@renderedContent
 				</div>
 			</div>
-			<div class="d-flex justify-content-between py-2 border-top border-bottom align-items-center">
+			<div class="d-flex justify-content-between py-3 border-top border-bottom align-items-center">
 				<Like BlogPost="@BlogPost" OnBlogPostLiked="@UpdateLikes"></Like>
 				<ShareBlogPost></ShareBlogPost>
 			</div>

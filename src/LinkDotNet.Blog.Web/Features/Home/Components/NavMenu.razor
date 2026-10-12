@@ -5,11 +5,11 @@
 @inject NavigationManager NavigationManager
 @implements IDisposable
 
-<nav class="navbar navbar-expand-lg navbar-light w-100">
+<nav class="navbar lg:navbar-expand w-100">
     <div class="container-fluid">
         @if (!string.IsNullOrEmpty(Configuration.Value.BlogBrandUrl))
         {
-            <a class="nav-brand ms-5" href="/">
+            <a class="nav-brand ms-12" href="/">
                 <img style="max-height: 70px; width: 70px; height: 70px;"
                      src="@Configuration.Value.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
                      alt="brand" />
@@ -17,13 +17,17 @@
         }
         else
         {
-            <a class="nav-brand barcode ms-5" href="/">@Configuration.Value.BlogName</a>
+            <a class="nav-brand barcode ms-12" href="/">@Configuration.Value.BlogName</a>
         }
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+        <button class="btn-icon navbar-toggler" type="button" data-bs-toggle="drawer" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon" aria-hidden="true"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 column-gap-4">
+        <dialog class="drawer drawer-end" tabindex="-1" id="navbarSupportedContent" aria-label="Navigation">
+            <div class="drawer-header">
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="drawer" aria-label="Close"></button>
+            </div>
+            <div class="drawer-body">
+            <ul class="navbar-nav lg:ms-auto mb-3 lg:mb-0 lg:me-12 column-gap-7">
 	            <li><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
 	            <li><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
 	            <li><a class="nav-link" href="/bookmarks"><i class="bookmark"></i> Bookmarks</a>
@@ -46,14 +50,14 @@
                     </li>
                 }
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="rssDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="RSS Selector">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="rssDropdown" role="button" data-bs-toggle="menu" aria-expanded="false" aria-label="RSS Selector">
                         <i class="rss2"></i> RSS
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="rssDropdown">
-	                    <li><a class="dropdown-item" href="/feed.rss" target="_blank" aria-label="RSS with All Posts">All Posts (Summary)</a></li>
-	                    <li><a class="dropdown-item" href="/feed.rss?withContent=true" target="_blank" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a></li>
-                    </ul>
+                    <div class="menu" aria-labelledby="rssDropdown">
+                        <a class="menu-item" href="/feed.rss" target="_blank" aria-label="RSS with All Posts">All Posts (Summary)</a>
+                        <a class="menu-item" href="/feed.rss?withContent=true" target="_blank" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a>
+                    </div>
                 </li>
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
@@ -61,7 +65,7 @@
 
                 @if (Configuration.Value.EnableTagDiscoveryPanel)
                 {
-                    <li class="nav-item d-flex align-items-center me-lg-2 mb-2 mb-lg-0">
+                    <li class="nav-item d-flex align-items-center lg:me-3 mb-3 lg:mb-0">
                         <a class="nav-link d-flex align-items-center justify-content-center" @onclick="ToggleTagDiscoveryPanel"
                            style="font-family: 'icons'; font-weight: 900; cursor: pointer;"
                            title="Discover new topics"> &#xE936; </a>
@@ -72,7 +76,8 @@
                     <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
             </ul>
-        </div>
+            </div>
+        </dialog>
     </div>
 </nav>
 <TagDiscoveryPanel IsOpen="@_isOpen" OnClose="CloseTagDiscoveryPanel" />

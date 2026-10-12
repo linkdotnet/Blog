@@ -6,152 +6,143 @@
 @using System.Net
 @using System.Text
 
-<div class="modal @modalClass overflow-auto" tabindex="-1" role="dialog" style="display:@modalDisplay;">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content">
-            <div class="modal-header py-2">
-                <div>
-                    <h5 class="modal-title mb-0">Version Diff</h5>
-                    @if (version is not null)
-                    {
-                        <small class="text-muted">
-                            v@(version.VersionNumber)
-                            <span class="opacity-50">(@version.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm"))</span>
-                            &rarr; Current
-                        </small>
-                    }
-                </div>
-                <button type="button" class="btn-close ms-3" @onclick="Close" aria-label="Close"></button>
-            </div>
-
-            @if (version is not null && current is not null)
+<NativeDialog Class="dialog-xl dialog-scrollable" IsOpen="isOpen" OnClose="Close">
+    <div class="dialog-header py-3">
+        <div>
+            <h5 class="dialog-title mb-0">Version Diff</h5>
+            @if (version is not null)
             {
-                <div class="modal-body p-0 d-flex flex-column" style="min-height: 0;">
-                    <ul class="nav nav-tabs bg-light border-bottom px-3 pt-2 flex-shrink-0">
-                        <li class="nav-item">
-                            <button type="button" class="nav-link @(activeTab == DiffTab.Fields ? "active" : "")"
-                                    @onclick='() => activeTab = DiffTab.Fields'>
-                                Fields
-                                @if (changedFieldCount > 0)
-                                {
-                                    <span class="badge rounded-pill bg-warning text-dark ms-1" style="font-size: 0.7rem;">
-                                        @changedFieldCount changed
-                                    </span>
-                                }
-                            </button>
-                        </li>
-                        <li class="nav-item">
-                            <button type="button" class="nav-link @(activeTab == DiffTab.Content ? "active" : "")"
-                                    @onclick='() => activeTab = DiffTab.Content'>
-                                Content
-                                @if (insertedLines > 0 || deletedLines > 0)
-                                {
-                                    <span class="badge rounded-pill bg-success ms-1" style="font-size: 0.7rem;">+@insertedLines</span>
-                                    <span class="badge rounded-pill bg-danger ms-1" style="font-size: 0.7rem;">-@deletedLines</span>
-                                }
-                            </button>
-                        </li>
-                    </ul>
+                <small class="fg-3">
+                    v@(version.VersionNumber)
+                    <span class="opacity-50">(@version.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm"))</span>
+                    &rarr; Current
+                </small>
+            }
+        </div>
+        <button type="button" class="btn-close ms-5" @onclick="Close" aria-label="Close"></button>
+    </div>
 
-                    @if (activeTab == DiffTab.Fields)
-                    {
-                        <div class="overflow-auto p-3 flex-grow-1" style="min-height: 0;">
-                            <table class="table table-sm table-bordered align-middle mb-0">
-                                <thead class="table-light sticky-top">
-                                    <tr>
-                                        <th style="width: 14%">Field</th>
-                                        <th style="width: 43%">
-                                            v@(version.VersionNumber)
-                                            <small class="text-muted fw-normal ms-1">
-                                                @version.CreatedAt.ToLocalTime().ToString("MMM dd HH:mm")
-                                            </small>
-                                        </th>
-                                        <th style="width: 43%">Current</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @FieldRow("Title", version.Title, current.Title)
-                                    @FieldRow("Author", version.AuthorName ?? "", current.AuthorName ?? "")
-                                    @FieldRow("Short Description", version.ShortDescription, current.ShortDescription)
-                                    @FieldRow("Image URL", version.PreviewImageUrl, current.PreviewImageUrl)
-                                    @FieldRow("Fallback Image URL", version.PreviewImageUrlFallback ?? "", current.PreviewImageUrlFallback ?? "")
-                                    @FieldRow("Tags", version.TagsAsString, current.TagsAsString)
-                                    @FieldRow("Published", version.IsPublished ? "Yes" : "No", current.IsPublished ? "Yes" : "No")
-                                    @FieldRow("Updated Date",
-                                        version.UpdatedDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                                        current.UpdatedDate.ToString("yyyy-MM-dd HH:mm:ss"))
-                                </tbody>
-                            </table>
-                        </div>
-                    }
+    @if (version is not null && current is not null)
+    {
+        <div class="dialog-body p-0 d-flex flex-column" style="min-height: 0;">
+            <ul class="nav nav-tabs bg-1 border-bottom px-5 pt-3 flex-shrink-0">
+                <li class="nav-item">
+                    <button type="button" class="nav-link @(activeTab == DiffTab.Fields ? "active" : "")"
+                            @onclick='() => activeTab = DiffTab.Fields'>
+                        Fields
+                        @if (changedFieldCount > 0)
+                        {
+                            <span class="badge rounded-pill theme-warning ms-1" style="font-size: 0.7rem;">
+                                @changedFieldCount changed
+                            </span>
+                        }
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button type="button" class="nav-link @(activeTab == DiffTab.Content ? "active" : "")"
+                            @onclick='() => activeTab = DiffTab.Content'>
+                        Content
+                        @if (insertedLines > 0 || deletedLines > 0)
+                        {
+                            <span class="badge rounded-pill theme-success ms-1" style="font-size: 0.7rem;">+@insertedLines</span>
+                            <span class="badge rounded-pill theme-danger ms-1" style="font-size: 0.7rem;">-@deletedLines</span>
+                        }
+                    </button>
+                </li>
+            </ul>
 
-                    @if (activeTab == DiffTab.Content)
-                    {
-                        <div class="overflow-auto p-3 flex-grow-1" style="min-height: 0;">
-                            @if (contentLines.Count > 0)
-                            {
-                                <div class="mb-2 d-flex gap-2 align-items-center flex-wrap">
-                                    <span class="badge bg-success">+@insertedLines added</span>
-                                    <span class="badge bg-danger">-@deletedLines removed</span>
-                                    <span class="text-muted small">@unchangedLines unchanged lines</span>
-                                </div>
-                                <div class="border rounded" style="font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.8rem; overflow-x: auto;">
-                                    @foreach (var line in contentLines)
-                                    {
-                                        @if (line.IsCollapse)
-                                        {
-                                            <div class="d-flex align-items-center py-1 px-2 text-muted"
-                                                 style="background: #f6f8fa; border-top: 1px solid #e1e4e8; user-select: none;">
-                                                <span style="min-width: 3.5em;" class="me-1 opacity-50 text-end">···</span>
-                                                <span style="min-width: 3.5em;" class="me-2 opacity-50 text-end">···</span>
-                                                <span class="ms-1 small fst-italic">@line.CollapseCount unchanged lines</span>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="d-flex @line.CssClass"
-                                                 style="line-height: 1.6; border-top: 1px solid rgba(0,0,0,0.04);">
-                                                <span class="text-end px-2 flex-shrink-0 border-end"
-                                                      style="min-width: 3.5em; color: #767676; background: rgba(0,0,0,0.03); user-select: none;">
-                                                    @line.OldNum
-                                                </span>
-                                                <span class="text-end px-2 flex-shrink-0 border-end"
-                                                      style="min-width: 3.5em; color: #767676; background: rgba(0,0,0,0.03); user-select: none;">
-                                                    @line.NewNum
-                                                </span>
-                                                <span class="px-2 flex-shrink-0 fw-bold"
-                                                      style="min-width: 1.5em; user-select: none; opacity: 0.7;">
-                                                    @line.Prefix
-                                                </span>
-                                                <span class="px-1 flex-grow-1"
-                                                      style="white-space: pre-wrap; word-break: break-all; padding-top: 1px;">
-                                                    @line.Text
-                                                </span>
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="alert alert-success mb-0">Content is identical.</div>
-                            }
-                        </div>
-                    }
+            @if (activeTab == DiffTab.Fields)
+            {
+                <div class="overflow-auto p-5 flex-grow-1" style="min-height: 0;">
+                    <table class="table table-sm table-bordered align-middle mb-0">
+                        <thead class=" sticky-top">
+                            <tr>
+                                <th style="width: 14%">Field</th>
+                                <th style="width: 43%">
+                                    v@(version.VersionNumber)
+                                    <small class="fg-3 fw-normal ms-1">
+                                        @version.CreatedAt.ToLocalTime().ToString("MMM dd HH:mm")
+                                    </small>
+                                </th>
+                                <th style="width: 43%">Current</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @FieldRow("Title", version.Title, current.Title)
+                            @FieldRow("Author", version.AuthorName ?? "", current.AuthorName ?? "")
+                            @FieldRow("Short Description", version.ShortDescription, current.ShortDescription)
+                            @FieldRow("Image URL", version.PreviewImageUrl, current.PreviewImageUrl)
+                            @FieldRow("Fallback Image URL", version.PreviewImageUrlFallback ?? "", current.PreviewImageUrlFallback ?? "")
+                            @FieldRow("Tags", version.TagsAsString, current.TagsAsString)
+                            @FieldRow("Published", version.IsPublished ? "Yes" : "No", current.IsPublished ? "Yes" : "No")
+                            @FieldRow("Updated Date",
+                                version.UpdatedDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                                current.UpdatedDate.ToString("yyyy-MM-dd HH:mm:ss"))
+                        </tbody>
+                    </table>
                 </div>
             }
 
-            <div class="modal-footer py-2">
-                <button type="button" class="btn btn-secondary btn-sm" @onclick="Close">Close</button>
-            </div>
+            @if (activeTab == DiffTab.Content)
+            {
+                <div class="overflow-auto p-5 flex-grow-1" style="min-height: 0;">
+                    @if (contentLines.Count > 0)
+                    {
+                        <div class="mb-3 d-flex gap-3 align-items-center flex-wrap">
+                            <span class="badge theme-success">+@insertedLines added</span>
+                            <span class="badge theme-danger">-@deletedLines removed</span>
+                            <span class="fg-3 small">@unchangedLines unchanged lines</span>
+                        </div>
+                        <div class="border rounded" style="font-family: 'SFMono-Regular', Consolas, monospace; font-size: 0.8rem; overflow-x: auto;">
+                            @foreach (var line in contentLines)
+                            {
+                                @if (line.IsCollapse)
+                                {
+                                    <div class="d-flex align-items-center py-1 px-3 fg-3"
+                                         style="background: #f6f8fa; border-top: 1px solid #e1e4e8; user-select: none;">
+                                        <span style="min-width: 3.5em;" class="me-1 opacity-50 text-end">···</span>
+                                        <span style="min-width: 3.5em;" class="me-3 opacity-50 text-end">···</span>
+                                        <span class="ms-1 small fst-italic">@line.CollapseCount unchanged lines</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex @line.CssClass"
+                                         style="line-height: 1.6; border-top: 1px solid rgba(0,0,0,0.04);">
+                                        <span class="text-end px-3 flex-shrink-0 border-end"
+                                              style="min-width: 3.5em; color: #767676; background: rgba(0,0,0,0.03); user-select: none;">
+                                            @line.OldNum
+                                        </span>
+                                        <span class="text-end px-3 flex-shrink-0 border-end"
+                                              style="min-width: 3.5em; color: #767676; background: rgba(0,0,0,0.03); user-select: none;">
+                                            @line.NewNum
+                                        </span>
+                                        <span class="px-3 flex-shrink-0 fw-bold"
+                                              style="min-width: 1.5em; user-select: none; opacity: 0.7;">
+                                            @line.Prefix
+                                        </span>
+                                        <span class="px-1 flex-grow-1"
+                                              style="white-space: pre-wrap; word-break: break-all; padding-top: 1px;">
+                                            @line.Text
+                                        </span>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert theme-success mb-0">Content is identical.</div>
+                    }
+                </div>
+            }
         </div>
-    </div>
-</div>
+    }
 
-@if (showBackdrop)
-{
-    <div class="modal-backdrop fade show"></div>
-}
+    <div class="dialog-footer py-3">
+        <button type="button" class="btn btn-solid theme-secondary btn-sm" @onclick="Close">Close</button>
+    </div>
+</NativeDialog>
 
 @code {
     private sealed record DiffDisplayLine(
@@ -167,9 +158,7 @@
 
     private const int ContextLines = 3;
 
-    private string modalDisplay = "none;";
-    private string modalClass = string.Empty;
-    private bool showBackdrop;
+    private bool isOpen;
     private DiffTab activeTab = DiffTab.Fields;
 
     private BlogPostVersion? version;
@@ -187,17 +176,13 @@
         current = currentPost;
         activeTab = DiffTab.Fields;
         Compute();
-        modalDisplay = "block;";
-        modalClass = "show";
-        showBackdrop = true;
+        isOpen = true;
         StateHasChanged();
     }
 
     public void Close()
     {
-        modalDisplay = "none;";
-        modalClass = string.Empty;
-        showBackdrop = false;
+        isOpen = false;
         StateHasChanged();
     }
 
@@ -280,14 +265,14 @@
                     oldNum = oldLine.ToString();
                     newNum = "";
                     prefix = "-";
-                    cssClass = "bg-danger-subtle";
+                    cssClass = "bg-subtle-danger";
                     break;
                 case ChangeType.Inserted:
                     newLine++;
                     oldNum = "";
                     newNum = newLine.ToString();
                     prefix = "+";
-                    cssClass = "bg-success-subtle";
+                    cssClass = "bg-subtle-success";
                     break;
                 case ChangeType.Modified:
                     oldLine++;
@@ -295,7 +280,7 @@
                     oldNum = oldLine.ToString();
                     newNum = newLine.ToString();
                     prefix = "~";
-                    cssClass = "bg-warning-subtle";
+                    cssClass = "bg-subtle-warning";
                     break;
                 default:
                     if (piece.Type == ChangeType.Unchanged)
@@ -334,12 +319,12 @@
         builder.CloseElement();
 
         builder.OpenElement(4, "td");
-        builder.AddAttribute(5, "class", changed ? "align-top bg-danger-subtle" : "align-top");
+        builder.AddAttribute(5, "class", changed ? "align-top bg-subtle-danger" : "align-top");
         builder.AddMarkupContent(6, BuildWordDiff(old, @new, isOldSide: true).Value);
         builder.CloseElement();
 
         builder.OpenElement(7, "td");
-        builder.AddAttribute(8, "class", changed ? "align-top bg-success-subtle" : "align-top");
+        builder.AddAttribute(8, "class", changed ? "align-top bg-subtle-success" : "align-top");
         builder.AddMarkupContent(9, BuildWordDiff(old, @new, isOldSide: false).Value);
         builder.CloseElement();
 

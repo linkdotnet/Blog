@@ -14,6 +14,11 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
 public class ProfileTests : BunitContext
 {
+    public ProfileTests()
+    {
+        JSInterop.SetupNativeDialog();
+    }
+
     [Fact]
     public void ShouldRenderAllItemsSortedByOrder()
     {

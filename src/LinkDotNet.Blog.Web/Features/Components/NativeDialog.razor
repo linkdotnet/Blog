@@ -1,0 +1,75 @@
+@implements IAsyncDisposable
+@inject IJSRuntime JSRuntime
+
+<dialog @ref="element" class="dialog @Class" tabindex="-1">
+    @ChildContent
+</dialog>
+
+@code {
+    [Parameter, EditorRequired]
+    public required RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    // Escape closes the native dialog without Blazor noticing, so the owner has to reset its state
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private ElementReference element;
+    private IJSObjectReference? module;
+    private DotNetObjectReference<NativeDialog>? dotNetHelper;
+    private bool isShown;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (IsOpen == isShown)
+        {
+            return;
+        }
+
+        isShown = IsOpen;
+        module ??= await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/Components/NativeDialog.razor.js");
+        dotNetHelper ??= DotNetObjectReference.Create(this);
+
+        if (IsOpen)
+        {
+            await module.InvokeVoidAsync("show", element, dotNetHelper);
+        }
+        else
+        {
+            await module.InvokeVoidAsync("close", element);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnClosedAsync()
+    {
+        if (!isShown)
+        {
+            return;
+        }
+
+        isShown = false;
+        await OnClose.InvokeAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        dotNetHelper?.Dispose();
+        if (module is not null)
+        {
+            try
+            {
+                await module.DisposeAsync();
+            }
+            catch (JSDisconnectedException)
+            {
+                // The circuit is already gone, so there is nothing left to dispose on the client
+            }
+        }
+    }
+}

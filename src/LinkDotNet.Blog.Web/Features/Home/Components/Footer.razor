@@ -4,7 +4,7 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
-<footer class="position-absolute bottom-0 w-100 text-center text-body-secondary text-muted" style="height: 2.5rem;">
+<footer class="position-absolute bottom-0 w-100 text-center fg-3 fg-3" style="height: 2.5rem;">
 	<small>
 	<span>© @DateTime.Now.Year @CopyrightName</span>
 	@if (AppConfiguration.Value.ShowBuildInformation)
@@ -16,7 +16,7 @@
 	}
 	@if (SupportConfiguration.Value.ShowInFooter)
 	{
-		<div class="pb-2 d-flex justify-content-center">
+		<div class="pb-3 d-flex justify-content-center">
 			<DonationSection/>
 		</div>
 	}

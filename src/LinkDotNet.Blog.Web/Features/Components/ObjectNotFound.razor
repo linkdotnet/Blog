@@ -1,6 +1,6 @@
 @using System.Security.Cryptography
 <div class="m-auto text-center">
-    <h1 class="fs-1">404 - o((⊙﹏⊙))o</h1>
+    <h1 class="fs-3xl">404 - o((⊙﹏⊙))o</h1>
     <br />
     <p>I really looked hard but I couldn't find the page you are looking for.</p>
     <p>Go back to <a href="/">safety</a></p>
@@ -11,29 +11,29 @@
     @if (!isGameStarted)
     {
         <p>Select a difficulty level to start:</p>
-        <div class="btn-group mb-3" role="group">
-            <button class="btn btn-success" @onclick="() => StartGame(DifficultyLevel.Easy)">Easy</button>
-            <button class="btn btn-warning" @onclick="() => StartGame(DifficultyLevel.Medium)">Medium</button>
-            <button class="btn btn-danger" @onclick="() => StartGame(DifficultyLevel.Hard)">Hard</button>
+        <div class="btn-group mb-5" role="group">
+            <button class="btn btn-solid theme-success" @onclick="() => StartGame(DifficultyLevel.Easy)">Easy</button>
+            <button class="btn btn-solid theme-warning" @onclick="() => StartGame(DifficultyLevel.Medium)">Medium</button>
+            <button class="btn btn-solid theme-danger" @onclick="() => StartGame(DifficultyLevel.Hard)">Hard</button>
         </div>
     }
     else
     {
         <p>I'm thinking of a number between 1 and @maxNumber. Can you guess it?</p>
         <p>You have <strong>@remainingGuesses</strong> guesses left.</p>
-        <div class="input-group mb-3 w-25 mx-auto">
+        <div class="input-group mb-5 w-25 mx-auto">
             <input type="number" class="form-control" @bind="userGuess" min="1" max="@maxNumber" @onkeyup="HandleKeyPress" />
-            <button class="btn btn-primary" @onclick="CheckGuess">Guess</button>
+            <button class="btn btn-solid theme-primary" @onclick="CheckGuess">Guess</button>
         </div>
         <p>Total guesses: <strong>@guessCount</strong></p>
         @if (!string.IsNullOrEmpty(message))
         {
-            <div class="alert @alertClass mt-3" role="alert">
+            <div class="alert @alertClass mt-5" role="alert">
                 @message
             </div>
             @if (gameDone)
             {
-                <button class="btn btn-success mt-3" @onclick="ResetGame">Play Again</button>
+                <button class="btn btn-solid theme-success mt-5" @onclick="ResetGame">Play Again</button>
             }
         }
     }
@@ -96,7 +96,7 @@
         if (userGuess < 1 || userGuess > maxNumber)
         {
             message = $"Please enter a number between 1 and {maxNumber}.";
-            alertClass = "alert-warning";
+            alertClass = "theme-warning";
             return;
         }
 
@@ -110,13 +110,13 @@
         {
             gameDone = true;
             message = "🎉 Congratulations! You guessed the number!";
-            alertClass = "alert-success";
+            alertClass = "theme-success";
         }
         else if (remainingGuesses == 0)
         {
             gameDone = true;
             message = $"😞 Game over! You've run out of guesses. The number was {targetNumber}.";
-            alertClass = "alert-danger";
+            alertClass = "theme-danger";
         }
         else
         {
@@ -124,23 +124,23 @@
 	        {
 		        case < 0.05:
 			        message = "🔥 Scalding Hot!";
-			        alertClass = "alert-danger";
+			        alertClass = "theme-danger";
 			        break;
 		        case < 0.1:
 			        message = "🌡️ Very Hot!";
-			        alertClass = "alert-warning";
+			        alertClass = "theme-warning";
 			        break;
 		        case < 0.2:
 			        message = "🌞 Warm.";
-			        alertClass = "alert-info";
+			        alertClass = "theme-info";
 			        break;
 		        case < 0.3:
 			        message = "🌤️ Cool.";
-			        alertClass = "alert-secondary";
+			        alertClass = "theme-secondary";
 			        break;
 		        default:
 			        message = "❄️ Cold!";
-			        alertClass = "alert-secondary";
+			        alertClass = "theme-secondary";
 			        break;
 	        }
         }
