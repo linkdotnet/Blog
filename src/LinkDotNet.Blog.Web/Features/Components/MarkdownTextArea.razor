@@ -92,7 +92,7 @@
                         <span>Rows</span>
                         <input type="number" min="1" max="20" @bind="tableRows" />
                     </label>
-                    <button type="button" class="btn btn-sm btn-primary" @onclick="() => InsertTable(tableCols, tableRows)">Insert</button>
+                    <button type="button" class="btn btn-sm btn-solid theme-primary" @onclick="() => InsertTable(tableCols, tableRows)">Insert</button>
                 </div>
             }
         </div>
@@ -106,7 +106,7 @@
         @if (viewMode == ViewMode.Preview)
         {
             <div class="markdown-preview preview-only">
-                @((MarkupString)previewHtml)
+                <div class="prose">@((MarkupString)previewHtml)</div>
             </div>
         }
         else

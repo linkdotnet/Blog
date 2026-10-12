@@ -18,4 +18,11 @@ public static class BunitExtensions
         component.WaitForState(component.HasComponent<TComponent>);
         return component.FindComponents<TComponent>();
     }
+
+    public static BunitJSModuleInterop SetupNativeDialog(this BunitJSInterop jsInterop)
+    {
+        var module = jsInterop.SetupModule("./Features/Components/NativeDialog.razor.js");
+        module.Mode = JSRuntimeMode.Loose;
+        return module;
+    }
 }

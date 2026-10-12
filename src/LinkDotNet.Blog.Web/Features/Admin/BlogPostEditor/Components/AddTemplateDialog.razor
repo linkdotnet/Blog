@@ -6,8 +6,8 @@
 @inject IJSRuntime JSRuntime
 
 <ModalDialog @ref="ModalDialog" Title="Save as Template">
-    <div class="modal-body">
-        <div class="mb-3 position-relative">
+    <div class="dialog-body">
+        <div class="mb-5 position-relative">
             <label for="templateName" class="form-label">Template Name</label>
             <div class="input-group">
                 <input type="text"
@@ -32,7 +32,7 @@
                              @onmouseenter="() => selectedIndex = index"
                              style="cursor: pointer;">
                             <span>@template.Name</span>
-                            <button type="button" class="btn btn-link text-danger p-0 border-0" @onmousedown="() => DeleteTemplate(template)" @onmousedown:stopPropagation="true">
+                            <button type="button" class="btn btn-link fg-danger p-0 border-0" @onmousedown="() => DeleteTemplate(template)" @onmousedown:stopPropagation="true">
                                 <i class="bin2" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -42,15 +42,15 @@
 
             @if (IsOverwriting)
             {
-                <div class="alert alert-warning mt-2 mb-0">
+                <div class="alert theme-warning mt-3 mb-0">
                     <small>Warning: A template with this name already exists. Saving will overwrite it.</small>
                 </div>
             }
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @onclick="Close">Cancel</button>
-        <button type="button" class="btn btn-primary" @onclick="Save">Save</button>
+    <div class="dialog-footer">
+        <button type="button" class="btn btn-solid theme-secondary" @onclick="Close">Cancel</button>
+        <button type="button" class="btn btn-solid theme-primary" @onclick="Save">Save</button>
     </div>
 </ModalDialog>
 

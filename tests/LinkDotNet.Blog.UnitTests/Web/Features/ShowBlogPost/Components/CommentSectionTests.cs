@@ -44,6 +44,6 @@ public class CommentSectionTests : BunitContext
 
         var cut = Render<CommentSection>();
 
-        cut.FindAll(".alert-danger").ShouldNotBeEmpty();
+        cut.FindAll(".alert.theme-danger").ShouldNotBeEmpty();
     }
 }

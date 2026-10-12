@@ -48,7 +48,7 @@ public static class MarkdownConverter
             var anchor = new LinkInline($"{pageUri}#{id}", string.Empty);
             anchor.AppendChild(new LiteralInline("#"));
             var attributes = anchor.GetAttributes();
-            attributes.AddClass("heading-anchor ms-2 link-secondary link-opacity-25 link-opacity-100-hover link-underline-opacity-0");
+            attributes.AddClass("heading-anchor ms-3 fg-secondary text-decoration-none");
             attributes.AddProperty("title", "Copy link to this section");
             attributes.AddProperty("onclick", "navigator.clipboard?.writeText(this.href)");
             attributes.AddProperty("aria-label", "Link to this section");

@@ -33,7 +33,7 @@ internal sealed class ResponsiveHtmlTableRenderer : HtmlTableRenderer
 {
     protected override void Write(HtmlRenderer renderer, Table table)
     {
-        renderer.Write("""<div class="table-container">""");
+        renderer.Write("""<div class="table-responsive">""");
         base.Write(renderer, table);
         renderer.EnsureLine();
         renderer.Write("</div>");

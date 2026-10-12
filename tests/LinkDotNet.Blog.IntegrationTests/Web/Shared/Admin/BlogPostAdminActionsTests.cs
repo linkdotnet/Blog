@@ -7,11 +7,13 @@ using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NCronJob;
+using LinkDotNet.Blog.TestUtilities;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared.Admin;
 
 public class BlogPostAdminActionsTests : BunitContext
 {
+    private readonly BunitJSModuleInterop nativeDialog;
     private readonly ITagQueryService tagQueryService = Substitute.For<ITagQueryService>();
 
     public BlogPostAdminActionsTests()
@@ -22,6 +24,7 @@ public class BlogPostAdminActionsTests : BunitContext
         tagQueryService.ClearTagCacheAsync().Returns(Task.CompletedTask);
         Services.AddSingleton(tagQueryService);
         AddAuthorization().SetAuthorized("s");
+        nativeDialog = JSInterop.SetupNativeDialog();
     }
     
     [Fact]
@@ -46,7 +49,7 @@ public class BlogPostAdminActionsTests : BunitContext
 
         await cut.Find("#delete-blogpost").ClickAsync();
 
-        cut.Find(".modal").ClassList.ShouldContain("show");
+        nativeDialog.VerifyInvoke("show");
     }
 
     [Fact]

@@ -2,9 +2,9 @@
 @inject IToastService ToastService
 @inject IJSRuntime JSRuntime
 <ModalDialog @ref="ModalDialog" Title="Select shortcode">
-	<div class="modal-body">
-		<div class="alert alert-info">
-			<p class="p-2">
+	<div class="dialog-body">
+		<div class="alert theme-info">
+			<p class="p-3">
 				Clicking on a shortcode, will put the shortcode into the clipboard.
 				So you can paste it into the markdown editor. Currently it isn't possible to insert it directly into the editor at the cursor position.
 			</p>
@@ -33,8 +33,8 @@
 			</table>
 		</div>
 	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-secondary" @onclick="CloseDialog">Close</button>
+	<div class="dialog-footer">
+		<button type="button" class="btn btn-solid theme-secondary" @onclick="CloseDialog">Close</button>
 	</div>
 </ModalDialog>
 

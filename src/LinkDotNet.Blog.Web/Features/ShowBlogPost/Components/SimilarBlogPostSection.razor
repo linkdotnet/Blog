@@ -6,68 +6,65 @@
 
 @if (similarBlogPosts.Count > 0)
 {
-    <div class="accordion my-4" id="similarBlogPosts">
-        <div class="accordion-item border-start-0 border-end-0">
-            <h2 class="accordion-header" id="similar-post-header">
-                <button class="accordion-button collapsed py-3" type="button" data-bs-toggle="collapse" data-bs-target="#similiar-post-body" aria-expanded="false" aria-controls="similiar-post-body">
-                    <i class="bi bi-book me-2"></i> Related articles you might enjoy
-                </button>
-            </h2>
-            <div id="similiar-post-body" class="accordion-collapse collapse" aria-labelledby="similar-post-header">
-                <div class="accordion-body p-3">
-                    <div class="list-group list-group-flush">
-                        @foreach (var post in similarBlogPosts)
-                        {
-                            <a href="blogPost/@post.Id/@post.Slug" class="list-group-item list-group-item-action px-0 py-3 border-top">
-                                <div class="row gx-3">
-                                    <div class="col-2 col-sm-1">
-                                        @if (!string.IsNullOrEmpty(post.PreviewImageUrl))
-                                        {
-                                            <img src="@post.PreviewImageUrl"
-                                                 alt="@post.Title"
-                                                 class="img-fluid rounded w-100 aspect-ratio-1x1"
-                                                 loading="lazy"
-                                                 onerror="this.onerror=null; this.src='@(post.PreviewImageUrlFallback ?? "assets/image-placeholder.webp")';">
-                                        }
-                                        else
-                                        {
-                                            <div class="bg-light rounded d-flex align-items-center justify-content-center aspect-ratio-1x1">
-                                                <i class="bi bi-image text-secondary"></i>
-                                            </div>
-                                        }
-                                    </div>
-                                    <div class="col-10 col-sm-11">
-                                        <div class="d-flex flex-column h-100">
-                                            <h6 class="mb-1 fw-bold">@post.Title</h6>
-                                            <p class="mb-1 small text-body-secondary">
-                                                @MarkdownConverter.ToPlainString(post.ShortDescription)
-                                            </p>
-                                            <div class="text-body-secondary d-flex flex-wrap gap-2 mt-1">
-                                                <div class="me-2">
-                                                    <span class="date"></span>
-                                                    <span class="ms-1">@post.UpdatedDate.ToShortDateString()</span>
-                                                </div>
-                                                <span class="read-time"></span>
-                                                <span class="me-2">@post.ReadingTimeInMinutes minute read</span>
-                                            </div>
-                                            @if (post.Tags.Any())
-                                            {
-                                                <div class="d-flex flex-wrap gap-2 mt-2">
-                                                    @foreach (var tag in post.Tags)
-                                                    {
-                                                        <a class="goto-tag badge bg-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
-                                                    }
-                                                </div>
-                                            }
+    <div class="accordion my-7" id="similarBlogPosts">
+        <details class="accordion-item border-start-0 border-end-0">
+            <summary class="accordion-header py-5" id="similar-post-header">
+                <span><i class="bi bi-book me-3"></i> Related articles you might enjoy</span>
+                <AccordionIcon />
+            </summary>
+            <div class="accordion-body p-5">
+                <div class="list-group list-group-flush">
+                    @foreach (var post in similarBlogPosts)
+                    {
+                        <a href="blogPost/@post.Id/@post.Slug" class="list-group-item list-group-item-action px-0 py-5 border-top">
+                            <div class="row gx-5">
+                                <div class="col-2 sm:col-1">
+                                    @if (!string.IsNullOrEmpty(post.PreviewImageUrl))
+                                    {
+                                        <img src="@post.PreviewImageUrl"
+                                             alt="@post.Title"
+                                             class="img-fluid rounded w-100 aspect-ratio-1x1"
+                                             loading="lazy"
+                                             onerror="this.onerror=null; this.src='@(post.PreviewImageUrlFallback ?? "assets/image-placeholder.webp")';">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-1 rounded d-flex align-items-center justify-content-center aspect-ratio-1x1">
+                                            <i class="bi bi-image fg-secondary"></i>
                                         </div>
+                                    }
+                                </div>
+                                <div class="col-10 sm:col-11">
+                                    <div class="d-flex flex-column h-100">
+                                        <h6 class="mb-1 fw-bold">@post.Title</h6>
+                                        <p class="mb-1 small fg-3">
+                                            @MarkdownConverter.ToPlainString(post.ShortDescription)
+                                        </p>
+                                        <div class="fg-3 d-flex flex-wrap gap-3 mt-1">
+                                            <div class="me-3">
+                                                <span class="date"></span>
+                                                <span class="ms-1">@post.UpdatedDate.ToShortDateString()</span>
+                                            </div>
+                                            <span class="read-time"></span>
+                                            <span class="me-3">@post.ReadingTimeInMinutes minute read</span>
+                                        </div>
+                                        @if (post.Tags.Any())
+                                        {
+                                            <div class="d-flex flex-wrap gap-3 mt-3">
+                                                @foreach (var tag in post.Tags)
+                                                {
+                                                    <a class="goto-tag badge theme-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+                                                }
+                                            </div>
+                                        }
                                     </div>
                                 </div>
-                            </a>
-                        }
-                    </div>
+                            </div>
+                        </a>
+                    }
                 </div>
             </div>
-        </div>
+        </details>
     </div>
 }
 

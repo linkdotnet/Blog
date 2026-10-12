@@ -1,22 +1,19 @@
 @if (toc?.Count > 0)
 {
 	<div class="accordion" id="tocAccordion">
-		<div class="accordion-item">
-			<h2 class="accordion-header" id="toc-header">
-				<button class="accordion-button collapsed d-flex align-items-center gap-2" type="button" data-bs-toggle="collapse" data-bs-target="#toc-accordion-body" aria-expanded="false" aria-controls="toc-accordion-body">
-					<i class="list"></i>
-					<div class="vr"></div><span>Table of Contents</span>
-				</button>
-			</h2>
-			<div id="toc-accordion-body" class="accordion-collapse collapse" aria-labelledby="toc-header">
-				<nav class="nav flex-column p-2">
-					@foreach (var item in toc)
-					{
-						@TocLink(item)
-					}
-				</nav>
-			</div>
-		</div>
+		<details class="accordion-item">
+			<summary class="accordion-header d-flex align-items-center gap-3" id="toc-header">
+				<i class="list"></i>
+				<div class="vr"></div><span>Table of Contents</span>
+				<AccordionIcon />
+			</summary>
+			<nav class="nav flex-column p-3" style="--bs-nav-link-justify: flex-start; --bs-nav-link-color: var(--bs-link-color); --bs-nav-link-hover-color: var(--bs-link-hover-color);">
+				@foreach (var item in toc)
+				{
+					@TocLink(item)
+				}
+			</nav>
+		</details>
 	</div>
 }
 
@@ -44,10 +41,12 @@
 
 	private RenderFragment TocLink(TocItem item) => builder =>
 	{
-		var topDistance = item.Level <= 2 ? item.Level : 0;
+		// Bootstrap 6 spacing keys 1, 3, 5, 7 match the Bootstrap 5 keys 1, 2, 3, 4
+		var spacing = item.Level * 2 - 1;
+		var topDistance = item.Level <= 2 ? spacing : 0;
 		builder.OpenElement(0, "a");
 		builder.AddAttribute(1, "href", GetAnchorUrl(item.Id));
-		builder.AddAttribute(2, "class", $"anchor nav-link ps-{item.Level} pt-{topDistance}");
+		builder.AddAttribute(2, "class", $"anchor nav-link ps-{spacing} pt-{topDistance}");
 		builder.AddContent(3, item.Text);
 		builder.CloseElement();
 	};

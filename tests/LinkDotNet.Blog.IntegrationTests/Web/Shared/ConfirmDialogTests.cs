@@ -1,4 +1,5 @@
 ﻿using LinkDotNet.Blog.Web.Features.Components;
+using LinkDotNet.Blog.TestUtilities;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
 
@@ -9,6 +10,7 @@ public class ConfirmDialogTests
     {
         var okWasClicked = false;
         using var ctx = new BunitContext();
+        ctx.JSInterop.SetupNativeDialog();
         var cut = ctx.Render<ConfirmDialog>(
             b => b
                 .Add(p => p.OnYesPressed, _ => okWasClicked = true));

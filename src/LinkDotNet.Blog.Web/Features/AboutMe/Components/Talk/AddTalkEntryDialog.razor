@@ -4,28 +4,28 @@
         <DataAnnotationsValidator />
         <ValidationSummary />
 
-        <div class="mb-3">
+        <div class="mb-5">
 	        <label for="talk-title" class="form-label">Presentation title</label>
 	        <InputText class="form-control" id="talk-title" @bind-Value="model.PresentationTitle" />
         </div>
-        <div class="mb-3">
+        <div class="mb-5">
 	        <label for="talk-place" class="form-label">Presentation place</label>
 	        <InputText class="form-control" id="talk-place" @bind-Value="model.Place" />
-	        <small class="form-text text-secondary">
+	        <small class="form-text fg-secondary">
 		        The place / event where you held the presentation / talk.
 	        </small>
         </div>
-        <div class="mb-3">
+        <div class="mb-5">
 	        <label for="talk-date" class="form-label">Date</label>
 	        <InputDate class="form-control" id="talk-date" @bind-Value="model.PublishedDate" />
         </div>
-        <div class="mb-3">
+        <div class="mb-5">
 	        <label for="talk-content" class="form-label">Description</label>
 	        <MarkdownTextArea id="talk-content" class="form-control" rows="10"
 	                          @bind-Value="@model.Description"></MarkdownTextArea>
         </div>
 
-        <button id="talk-submit" class="btn btn-primary" type="submit">Submit</button>
+        <button id="talk-submit" class="btn btn-solid theme-primary" type="submit">Submit</button>
     </EditForm>
 </ModalDialog>
 

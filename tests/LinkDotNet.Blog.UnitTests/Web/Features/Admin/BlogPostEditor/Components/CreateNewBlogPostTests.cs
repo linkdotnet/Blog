@@ -29,6 +29,7 @@ public class CreateNewBlogPostTests : BunitContext
 
     public CreateNewBlogPostTests()
     {
+        JSInterop.SetupNativeDialog();
         var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         Services.AddScoped(_ => shortCodeRepository);
@@ -487,12 +488,12 @@ public class CreateNewBlogPostTests : BunitContext
         templateRepository.GetAllAsync().ReturnsForAnyArgs(new PagedList<BlogPostTemplate>([template], 1, 1, 1));
         var cut = Render<CreateNewBlogPost>();
 
-        var manageButton = cut.FindAll("button.dropdown-item").First(b => b.TextContent.Contains("Manage Templates"));
+        var manageButton = cut.FindAll("button.menu-item").First(b => b.TextContent.Contains("Manage Templates"));
         manageButton.Click();
 
         var dialog = cut.FindComponent<AddTemplateDialog>();
         dialog.Find("input").Input("My Template");
-        dialog.Find("button.btn-primary").Click();
+        dialog.Find("button.theme-primary").Click();
 
         templateRepository.Received(1).StoreAsync(Arg.Is<BlogPostTemplate>(t => t != null && t.Id == template.Id));
     }
@@ -507,15 +508,15 @@ public class CreateNewBlogPostTests : BunitContext
             .SetResult(true);
         var cut = Render<CreateNewBlogPost>();
 
-        var manageButton = cut.FindAll("button.dropdown-item").First(b => b.TextContent.Contains("Manage Templates"));
+        var manageButton = cut.FindAll("button.menu-item").First(b => b.TextContent.Contains("Manage Templates"));
         manageButton.Click();
 
         var dialog = cut.FindComponent<AddTemplateDialog>();
         // Type the name to filter and show the delete button
         dialog.Find("input").Input("My Template");
         
-        dialog.WaitForState(() => dialog.FindAll("button.text-danger").Count > 0);
-        var deleteButton = dialog.FindAll("button.text-danger").First();
+        dialog.WaitForState(() => dialog.FindAll("button.fg-danger").Count > 0);
+        var deleteButton = dialog.FindAll("button.fg-danger").First();
         deleteButton.MouseDown();
 
         templateRepository.Received(1).DeleteAsync(template.Id);

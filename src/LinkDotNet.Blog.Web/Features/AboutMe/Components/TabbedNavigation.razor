@@ -1,30 +1,30 @@
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components.Skill
 @using LinkDotNet.Blog.Web.Features.AboutMe.Components.Talk
 
-<div class="col-lg-9 col-md-8">
-	<ul class="nav nav-pills nav-underline border-bottom justify-content-around" id="aboutMe" role="tablist">
+<div class="lg:col-9 md:col-8">
+	<ul class="nav nav-underline d-flex border-bottom justify-content-around" id="aboutMe" role="tablist">
 		<li class="nav-item" role="presentation">
 			<button class="nav-link active" id="pills-skills-tab"
-			        data-bs-toggle="pill" data-bs-target="#pills-home"
+			        data-bs-toggle="tab" data-bs-target="#pills-home"
 			        type="button" role="tab" aria-controls="pills-home" aria-selected="true">
 				Skills
 			</button>
 		</li>
 		<li class="nav-item" role="presentation">
 			<button class="nav-link" id="pills-talks-tab"
-			        data-bs-toggle="pill" data-bs-target="#pills-profile"
+			        data-bs-toggle="tab" data-bs-target="#pills-profile"
 			        type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
 				Talks
 			</button>
 		</li>
 	</ul>
 
-	<div class="tab-content pt-3" id="myTabContent">
-		<div class="tab-pane fade show active" id="pills-home"
+	<div class="tab-content pt-5" id="myTabContent">
+		<div class="tab-pane active" id="pills-home"
 		     role="tabpanel" aria-labelledby="pills-skills-tab" tabindex="0">
 			<SkillTable ShowAdminActions="@IsAuthenticated"></SkillTable>
 		</div>
-		<div class="tab-pane fade" id="pills-profile"
+		<div class="tab-pane" id="pills-profile"
 		     role="tabpanel" aria-labelledby="pills-talks-tab" tabindex="0">
 			<Talks ShowAdminActions="@IsAuthenticated"></Talks>
 		</div>

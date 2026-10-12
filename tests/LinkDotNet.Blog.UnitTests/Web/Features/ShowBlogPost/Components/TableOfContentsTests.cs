@@ -26,7 +26,7 @@ public class TableOfContentsTests : BunitContext
         var secondLink = links[1];
         secondLink.TextContent.ShouldBe("Subheader 1.1");
         secondLink.GetAttribute("href").ShouldBe("https://localhost#subheader-1.1");
-        secondLink.ClassList.ShouldContain("ps-2");
+        secondLink.ClassList.ShouldContain("ps-3");
         var thirdLink = links[2];
         thirdLink.TextContent.ShouldBe("Header 2");
         thirdLink.GetAttribute("href").ShouldBe("https://localhost#header-2");
