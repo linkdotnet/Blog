@@ -6,6 +6,8 @@ using Markdig;
 using Markdig.Extensions.Alerts;
 using Markdig.Helpers;
 using Markdig.Renderers;
+using Markdig.Renderers.Html;
+using Markdig.Syntax;
 
 namespace LinkDotNet.Blog.Web.Features;
 
@@ -23,6 +25,8 @@ internal sealed class CalloutExtension : IMarkdownExtension
 
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
+        ArgumentNullException.ThrowIfNull(pipeline);
+        pipeline.DocumentProcessed += UseThemeClasses;
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
@@ -37,6 +41,29 @@ internal sealed class CalloutExtension : IMarkdownExtension
         alertBlockRenderer?.RenderKind = RenderTitle;
     }
 
+    // UseBootstrap emits Bootstrap 5 "alert-{color}" classes; Bootstrap 6 colors alerts via "theme-{color}" and lays them out as a row
+    private static void UseThemeClasses(MarkdownDocument document)
+    {
+        foreach (var alert in document.Descendants<AlertBlock>())
+        {
+            var classes = alert.TryGetAttributes()?.Classes;
+            if (classes is null)
+            {
+                continue;
+            }
+
+            for (var i = 0; i < classes.Count; i++)
+            {
+                if (classes[i].StartsWith("alert-", StringComparison.Ordinal))
+                {
+                    classes[i] = "theme-" + classes[i]["alert-".Length..];
+                }
+            }
+
+            classes.Add("flex-column");
+        }
+    }
+
     private static void RenderTitle(HtmlRenderer renderer, StringSlice kind)
     {
         if (!Callouts.TryGetValue(kind.ToString(), out var callout))
@@ -44,6 +71,6 @@ internal sealed class CalloutExtension : IMarkdownExtension
             return;
         }
 
-        renderer.WriteLine($"""<p class="markdown-alert-title d-flex align-items-center gap-2 fw-semibold mb-2"><i class="bi {callout.Icon}" aria-hidden="true"></i>{callout.Title}</p>""");
+        renderer.WriteLine($"""<p class="markdown-alert-title d-flex align-items-center gap-3 fw-semibold mb-3"><i class="bi {callout.Icon}" aria-hidden="true"></i>{callout.Title}</p>""");
     }
 }

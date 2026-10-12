@@ -5,11 +5,11 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features;
 public class MarkdownConverterTests
 {
     [Theory]
-    [InlineData("NOTE", "Note", "alert-primary", "bi-info-circle")]
-    [InlineData("tip", "Tip", "alert-success", "bi-lightbulb")]
-    [InlineData("IMPORTANT", "Important", "alert-info", "bi-exclamation-square")]
-    [InlineData("WARNING", "Warning", "alert-warning", "bi-exclamation-triangle")]
-    [InlineData("CAUTION", "Caution", "alert-danger", "bi-exclamation-octagon")]
+    [InlineData("NOTE", "Note", "theme-primary", "bi-info-circle")]
+    [InlineData("tip", "Tip", "theme-success", "bi-lightbulb")]
+    [InlineData("IMPORTANT", "Important", "theme-info", "bi-exclamation-square")]
+    [InlineData("WARNING", "Warning", "theme-warning", "bi-exclamation-triangle")]
+    [InlineData("CAUTION", "Caution", "theme-danger", "bi-exclamation-octagon")]
     public void ShouldRenderCalloutWithTitle(string kind, string title, string cssClass, string icon)
     {
         var markdown = $"> [!{kind}]\n> Some **content**";
@@ -213,7 +213,7 @@ public class MarkdownConverterTests
     {
         var html = MarkdownConverter.ToMarkupString("| A | B |\n|---|---|\n| 1 | 2 |").Value;
 
-        html.ShouldContain("""<div class="table-container">""");
+        html.ShouldContain("""<div class="table-responsive">""");
         html.ShouldContain("""<table class="table">""");
         html.ShouldContain("</table>\n</div>");
     }

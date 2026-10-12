@@ -5,7 +5,7 @@
 @inject IRepository<BlogPost> BlogPostRepository
 
 <div class="container">
-    <h3 class="pb-3 fw-bold">Results for: @SearchTerm</h3>
+    <h3 class="pb-5 fw-bold">Results for: @SearchTerm</h3>
     @if (blogPosts.Count > 0)
     {
 	    for (var i = 0; i < blogPosts.Count; i++)

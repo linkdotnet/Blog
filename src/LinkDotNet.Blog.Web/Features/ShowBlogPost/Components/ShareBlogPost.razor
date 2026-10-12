@@ -1,30 +1,22 @@
 ﻿@inject NavigationManager NavigationManager
 
-<div class="dropdown">
-	<button class="btn btn-outline-secondary" data-bs-toggle="dropdown" aria-expanded="false"><i class="share2"></i></button>
-	<ul class="dropdown-menu">
-		<li>
-			<a id="share-clipboard" class="dropdown-item" href="javascript:void(0)" onclick="navigator.clipboard.writeText('@NavigationManager.Uri')">
-				<i class="copy me-3"></i>Copy To Clipboard
-			</a>
-		</li>
-		<li><hr class="dropdown-divider"></li>
-		<li>
-			<a id="share-linkedin" class="dropdown-item" href="@LinkedInShare" target="_blank" rel="noreferrer">
-				<i class="linkedin me-3"></i>Share on LinkedIn
-			</a>
-		</li>
-		<li>
-			<a id="share-x" class="dropdown-item" href="@XShare" target="_blank" rel="noreferrer">
-				<i class="twitter me-3"></i>Share on X
-			</a>
-		</li>
-		<li>
-			<a id="share-bluesky" class="dropdown-item" href="@BlueskyShare" target="_blank" rel="noreferrer">
-				<i class="bluesky me-3"></i>Share on Bluesky
-			</a>
-		</li>
-	</ul>
+<div>
+	<button class="btn btn-outline theme-secondary" data-bs-toggle="menu" data-bs-placement="bottom-end" aria-expanded="false"><i class="share2"></i></button>
+	<div class="menu">
+		<a id="share-clipboard" class="menu-item" href="javascript:void(0)" onclick="navigator.clipboard.writeText('@NavigationManager.Uri')">
+			<i class="copy me-5"></i>Copy To Clipboard
+		</a>
+		<hr class="menu-divider">
+		<a id="share-linkedin" class="menu-item" href="@LinkedInShare" target="_blank" rel="noreferrer">
+			<i class="linkedin me-5"></i>Share on LinkedIn
+		</a>
+		<a id="share-x" class="menu-item" href="@XShare" target="_blank" rel="noreferrer">
+			<i class="twitter me-5"></i>Share on X
+		</a>
+		<a id="share-bluesky" class="menu-item" href="@BlueskyShare" target="_blank" rel="noreferrer">
+			<i class="bluesky me-5"></i>Share on Bluesky
+		</a>
+	</div>
 </div>
 @code {
     private string LinkedInShare => $"https://www.linkedin.com/shareArticle?mini=true&url={NavigationManager.Uri}";

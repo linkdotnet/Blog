@@ -6,7 +6,7 @@
 {
     @if (ShowAdminActions)
     {
-        <button id="add-talk" type="button" class="btn btn-primary" @onclick="() => AddTalkEntryDialog.Open()">
+        <button id="add-talk" type="button" class="btn btn-solid theme-primary" @onclick="() => AddTalkEntryDialog.Open()">
             <i class="plus"></i> Add talk</button>
         <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
     }

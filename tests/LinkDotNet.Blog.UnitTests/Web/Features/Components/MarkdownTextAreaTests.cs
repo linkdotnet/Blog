@@ -9,6 +9,7 @@ using LinkDotNet.Blog.Web.Features.Services.FileUpload;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.JSInterop;
+using LinkDotNet.Blog.TestUtilities;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Components;
 
@@ -23,6 +24,7 @@ public class MarkdownTextAreaTests : BunitContext
         JSInterop.SetupVoid("markdownEditor.setupKeyboardShortcuts", invocation => invocation.Arguments.Count == 2).SetVoidResult();
         JSInterop.SetupVoid("markdownEditor.setupPasteHandler", _ => true).SetVoidResult();
         JSInterop.SetupVoid("markdownEditor.highlightCodeBlocks");
+        JSInterop.SetupNativeDialog();
     }
 
     [Fact]
@@ -432,7 +434,7 @@ public class MarkdownTextAreaTests : BunitContext
 
         await cut.Find("button[title='Table']").ClickAsync();
 
-        var insertButton = cut.Find(".table-popover .btn-primary");
+        var insertButton = cut.Find(".table-popover .theme-primary");
         await insertButton.ClickAsync();
 
         capturedValue.ShouldContain("|  |  |");

@@ -97,7 +97,7 @@ i {
 .bullet:before {
   content: "\e901";
 }
-.menu:before {
+i.menu:before {
   content: "\e901";
 }
 .options:before {

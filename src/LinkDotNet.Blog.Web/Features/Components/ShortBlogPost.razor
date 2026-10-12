@@ -15,16 +15,16 @@
 			<ul class="details">
 				@if (BlogPost.IsScheduled)
 				{
-					<li class="schedule">Scheduled</li>
+					<li class="schedule badge theme-success">Scheduled</li>
 				}
 				else if (!BlogPost.IsPublished)
 				{
-					<li class="draft">Draft</li>
+					<li class="draft badge theme-warning">Draft</li>
 				}
-				<li class="date me-4"><span>@BlogPost.UpdatedDate.ToShortDateString()</span></li>
+				<li class="date me-7"><span>@BlogPost.UpdatedDate.ToShortDateString()</span></li>
 				@if (BlogPost.Tags.Any())
 				{
-					<li class="tags me-4">
+					<li class="tags me-7">
 						<ul>
 							@foreach (var tag in BlogPost.Tags)
 							{
@@ -33,10 +33,10 @@
 						</ul>
 					</li>
 				}
-				<li class="read-time me-4">@BlogPost.ReadingTimeInMinutes minute read</li>
+				<li class="read-time me-7">@BlogPost.ReadingTimeInMinutes minute read</li>
                 @if (AppConfiguration.Value.UseMultiAuthorMode && BlogPost.AuthorName is not null)
                 {
-                    <li class="me-4"><i class="user-tie"></i> @BlogPost.AuthorName</li>
+                    <li class="me-7"><i class="user-tie"></i> @BlogPost.AuthorName</li>
                 }
             </ul>
 		</div>

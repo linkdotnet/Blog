@@ -4,39 +4,39 @@
 
 <AuthorizeView>
     <Authorized>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown"
+        <li class="nav-item">
+            <a class="nav-link" href="#" id="adminDropdown" role="button" data-bs-toggle="menu"
                aria-expanded="false">
                 <i class="user-tie"></i> Admin
             </a>
-            <ul class="dropdown-menu ps-0" aria-labelledby="adminDropdown">
-                <li><h6 class="dropdown-header">Blog posts</h6></li>
-                <li><a class="dropdown-item" href="create">Create new</a></li>
-                <li><a class="dropdown-item" href="draft">Show drafts</a></li>
-                <li><a class="dropdown-item" href="settings">Show settings</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">Analytics</h6></li>
-                <li><a class="dropdown-item" href="dashboard">Dashboard</a></li>
+            <div class="menu" aria-labelledby="adminDropdown">
+                <h6 class="menu-header">Blog posts</h6>
+                <a class="menu-item" href="create">Create new</a>
+                <a class="menu-item" href="draft">Show drafts</a>
+                <a class="menu-item" href="settings">Show settings</a>
+                <hr class="menu-divider">
+                <h6 class="menu-header">Analytics</h6>
+                <a class="menu-item" href="dashboard">Dashboard</a>
                 @if (AppConfiguration.Value.EnableBrokenLinkChecker)
                 {
-                    <li><a class="dropdown-item" href="broken-links">Broken links</a></li>
+                    <a class="menu-item" href="broken-links">Broken links</a>
                 }
-                <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">Others</h6></li>
-                <li><a class="dropdown-item" href="short-codes">Shortcodes</a></li>
-                <li><hr class="dropdown-divider"></li>
-	            <li><a class="dropdown-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a></li>
-            </ul>
+                <hr class="menu-divider">
+                <h6 class="menu-header">Others</h6>
+                <a class="menu-item" href="short-codes">Shortcodes</a>
+                <hr class="menu-divider">
+	            <a class="menu-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a>
+            </div>
         </li>
         @if (authorName is not null)
         {
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="authorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="authorDropdown" role="button" data-bs-toggle="menu" aria-expanded="false">
                     <i class="user-tie"></i> @authorName
                 </a>
-                <ul class="dropdown-menu ps-0" aria-labelledby="authorDropdown">
-                    <li><a class="nav-link" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
-                </ul>
+                <div class="menu" aria-labelledby="authorDropdown">
+                    <a class="menu-item" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a>
+                </div>
             </li>
         }
         else

@@ -1,37 +1,13 @@
-:root, html[data-bs-theme='light'] {
+:root {
     /* Fonts */
     --default-font: 'Calibri';
     --code-font: 'Lucida Console', 'Courier New';
 
-	/* Color definitions */
-	--wild-sand: #f4f4f4;
-	--silver: #dadada;
-	--waterloo: rgba(140, 140, 162, 0.25);
+	--background: light-dark(#f4f4f4, rgb(17, 16, 19));
+	--tag-background: light-dark(rgba(140, 140, 162, 0.25), rgba(78, 78, 93, 0.5));
 
-	/* Usages */
-	--background: var(--wild-sand);
-	--tag-background: var(--waterloo);
-
-	--background-gradient-start: var(--wild-sand);
-	--background-gradient-end: var(--silver);
-
-    /* Override some Bootstrap defaults */
-    --bs-body-font-weight: 300;
-    --bs-nav-link-font-weight: 300;
-}
-
-html[data-bs-theme='dark'] {
-	/* Color definitions */
-	--jaguar: rgb(17, 16, 19);
-	--shark: rgb(40, 40, 47);
-	--trout: rgba(78, 78, 93, 0.5);
-
-	/* Usages */
-	--background: var(--jaguar);
-	--tag-background: var(--trout);
-
-	--background-gradient-start: var(--jaguar);
-	--background-gradient-end: var(--shark);
+	--background-gradient-start: var(--background);
+	--background-gradient-end: light-dark(#dadada, rgb(40, 40, 47));
 
     /* Override some Bootstrap defaults */
     --bs-body-font-weight: 300;
@@ -105,12 +81,6 @@ code {
     content: "\e953";
 }
 
-.theme-toggle:before {
-	font-family: 'icons';
-	font-weight: 900;
-	content: "\e9d5";
-}
-
 .read-time:before {
 	font-family: 'icons';
 	font-weight: 900;
@@ -146,24 +116,15 @@ code {
 
 /* Template defined css */
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    outline: 1px solid var(--bs-success-base);
 }
 
 .invalid {
-    outline: 1px solid red;
+    outline: 1px solid var(--bs-danger-base);
 }
 
 .validation-message {
-    color: red;
-}
-
-/* Fixes white background/white icon for markdown editors */
-.editor-toolbar {
-	background: rgb(36, 90, 170) !important;
-}
-
-.editor-toolbar button.active, .editor-toolbar button:hover {
-    background: rgb(36, 90, 170) !important;
+    color: var(--bs-danger-fg);
 }
 
 #blazor-error-ui {
@@ -186,10 +147,6 @@ code {
 }
 
 /*region Skilltable.razor */
-.table-container {
-	overflow-x: auto;
-}
-
 .skill-table {
 	margin-top: 20px;
 	width: 100%;
@@ -201,7 +158,7 @@ code {
 
 .skill-table td {
 	width: 30%;
-	border-top: 1px var(--bs-light) solid;
+	border-top: 1px var(--bs-bg-1) solid;
 	vertical-align: top;
 	min-width: 100px;
 }
@@ -283,16 +240,15 @@ code {
 	font-size: 2.5rem;
 }
 
-::deep .navbar-nav li {
-	padding-left: 1rem;
-	white-space: nowrap;
+.navbar-nav {
+	--bs-nav-link-justify: flex-start;
 }
 /*endregion */
 
 /*region Profile.razor */
 .profile-card {
 	display: inline-block;
-	box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--bs-box-shadow-sm);
 	width: 100%;
 	border-radius: 8px;
 }
@@ -334,21 +290,8 @@ code {
 	display: flex;
 }
 
-/* As the MarkupComponent is a base class we have to use deep */
-::deep .profile-keypoints li p {
-	display: inline;
-}
-
 .item-draggable {
 	cursor: grab;
-}
-/*#endregion */
-
-/*region TabbedNavigation.razor */
-.nav>.nav-item>button {
-	border: 0;
-	background: transparent !important;
-	color: var(--bs-body-color) !important;
 }
 /*#endregion */
 
@@ -356,7 +299,7 @@ code {
 .blog-card {
 	display: flex;
 	flex-direction: column;
-	box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--bs-box-shadow-sm);
 	margin: 1rem auto 1.6%;
 	line-height: 1.4;
 	border-radius: 5px;
@@ -371,7 +314,7 @@ code {
 .blog-card:hover {
 	transform: scale(1.05);
 	transition: 1s ease;
-	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+	box-shadow: var(--bs-box-shadow-lg);
 }
 
 .blog-card a {
@@ -493,14 +436,6 @@ code {
 	left: 0;
 }
 
-.goto-tag {
-	color: white !important;
-}
-
-.goto-tag:hover {
-	color: #D7D7D7 !important;
-}
-
 @media (min-width: 640px) {
 	.blog-card {
 		flex-direction: row;
@@ -535,14 +470,6 @@ code {
 	.blog-card.alt .details {
 		padding-left: 25px;
 	}
-}
-
-.schedule {
-	background-color: #28a745;
-}
-
-.draft {
-	background-color: #ff8700;
 }
 /*#endregion */
 
@@ -632,13 +559,13 @@ code {
 
 .progress-bg {
 	fill: none;
-	stroke: #f3f3f3;
+	stroke: light-dark(#444444, #f3f3f3);
 	stroke-width: 4;
 }
 
 .progress-bar {
 	fill: none;
-	stroke: #4caf50;
+	stroke: var(--bs-success-base);
 	stroke-width: 4;
 	stroke-linecap: round;
 	transform-origin: center;
@@ -646,17 +573,13 @@ code {
 	stroke-dasharray: 100, 100;
 	stroke-dashoffset: 100;
 }
-
-[data-bs-theme='light'] .progress-bg {
-	stroke: #444444;
-}
 /*#endregion */
 
 /*region ShowBlogPostPage.razor */
 .blog-container {
 	background: var(--background);
 	width: clamp(60%, 2vw, 90%);
-	box-shadow: 0 3px 7px -1px rgba(0, 0, 0, 0.1);
+	box-shadow: var(--bs-box-shadow-sm);
 	border-radius: 5px;
 	padding: 20px;
 }
@@ -684,12 +607,12 @@ code {
 }
 
 .blogpost-content .task-list-item input[type="checkbox"] {
-	accent-color: var(--bs-primary);
+	accent-color: var(--bs-primary-base);
 	margin-right: 0.4rem;
 }
 
 .blogpost-content .task-list-item:has(input:checked) {
-	color: var(--bs-secondary-color);
+	color: var(--bs-fg-3);
 	text-decoration: line-through;
 }
 
@@ -712,3 +635,11 @@ code {
 	max-height: 100%;
 }
 /*#endregion */
+
+.heading-anchor {
+    opacity: 0.25;
+}
+
+.heading-anchor:hover {
+    opacity: 1;
+}
