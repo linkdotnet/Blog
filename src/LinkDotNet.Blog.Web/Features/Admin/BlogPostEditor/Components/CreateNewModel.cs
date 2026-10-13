@@ -10,6 +10,8 @@ public sealed class CreateNewModel
     private string id = default!;
     private DateTime? scheduledPublishDate;
     private string? authorName;
+    private string? seriesId;
+    private int order;
 
     [Required]
     [MaxLength(256)]
@@ -89,6 +91,18 @@ public sealed class CreateNewModel
         set => SetProperty(out authorName, value);
     }
 
+    public string? SeriesId
+    {
+        get => seriesId;
+        set => SetProperty(out seriesId, value);
+    }
+
+    public int Order
+    {
+        get => order;
+        set => SetProperty(out order, value);
+    }
+
     public bool IsDirty { get; private set; }
 
     public static CreateNewModel FromBlogPost(BlogPost blogPost)
@@ -108,6 +122,8 @@ public sealed class CreateNewModel
             PreviewImageUrlFallback = blogPost.PreviewImageUrlFallback ?? string.Empty,
             scheduledPublishDate = blogPost.ScheduledPublishDate?.ToUniversalTime(),
             authorName = blogPost.AuthorName,
+            seriesId = blogPost.SeriesId,
+            order = blogPost.Order,
             IsDirty = false,
         };
     }
@@ -131,7 +147,9 @@ public sealed class CreateNewModel
             scheduledPublishDate,
             tagList,
             PreviewImageUrlFallback,
-            AuthorName);
+            AuthorName,
+            SeriesId,
+            Order);
         blogPost.Id = id;
         return blogPost;
     }
