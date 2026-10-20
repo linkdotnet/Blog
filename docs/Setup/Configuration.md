@@ -73,7 +73,8 @@ Browser spellchecking uses the `<html lang="en">` value in
 	"UseMultiAuthorMode": false,
 	"EnableTagDiscoveryPanel": true,
 	"EnableBrokenLinkChecker": true,
-	"ShowCodeBlockLanguage": true
+	"ShowCodeBlockLanguage": true,
+	"EnableMarkdownForLlms": false
 }
 ```
 
@@ -122,3 +123,34 @@ Browser spellchecking uses the `<html lang="en">` value in
 | EnableTagDiscoveryPanel                       | boolean        | The default value is `true`. Enables the Tag Discovery Panel, which helps users discover topics by browsing popular tags.                                                        |
 | EnableBrokenLinkChecker                       | boolean        | The default value is `true`. Checks all external links of published blog posts once a day and lists broken ones on the "Broken links" admin page.                               |
 | ShowCodeBlockLanguage                         | boolean        | The default value is `true`. Shows the language of a fenced code block (e.g. `csharp`) in the header of the code block.                                                        |
+| EnableMarkdownForLlms                         | boolean        | The default value is `false`. Serves published blog posts as markdown to clients (like LLMs) that ask for `text/markdown`. See [Markdown for LLMs](#markdown-for-llms).        |
+
+### Markdown for LLMs
+
+If `EnableMarkdownForLlms` is set to `true`, a blog post page (`/blogPost/{id}` or `/blogPost/{id}/{slug}`) can be requested as markdown instead of HTML. LLMs and agents then don't have to parse the HTML page. Only blog post pages support this; every other page always returns HTML.
+
+```bash
+curl -H "Accept: text/markdown" https://example.com/blogPost/38a0d0f4-e9ff-4947-a05c-527af68b6cd1
+```
+
+The response (`Content-Type: text/markdown; charset=utf-8`) contains YAML front matter, the title and the raw markdown content with all short codes expanded:
+
+```markdown
+---
+title: "My blog post"
+description: "The short description"
+updated: 2026-09-01
+tags: ["dotnet", "csharp"]
+canonical: "https://example.com/blogPost/38a0d0f4-e9ff-4947-a05c-527af68b6cd1/my-blog-post"
+---
+
+# My blog post
+
+The content...
+```
+
+- `author` is added when `UseMultiAuthorMode` is enabled and the blog post has an author; `tags` is omitted when the blog post has none.
+- Markdown is only served if `text/markdown` is weighted at least as high as HTML in the `Accept` header (`text/html`, `text/*` or `*/*`), so `text/markdown, text/html;q=0.9` returns markdown, while `text/html, text/markdown;q=0.9` and a regular browser request return HTML.
+- Only published blog posts are served. Unpublished, scheduled and unknown blog posts return `404` with a markdown body.
+- Blog post responses carry `Vary: Accept` so caches and CDNs keep the HTML and markdown variants apart.
+- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned.

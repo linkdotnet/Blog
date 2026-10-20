@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
+using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Authentication.OpenIdConnect;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +49,8 @@ public class ApplicationConfigurationTests
             { "Authentication:ClientSecret","qwe"},
             { "Authentication:Domain","example.com"},
             { "UseMultiAuthorMode","true"},
-            { "ShowCodeBlockLanguage","false"}
+            { "ShowCodeBlockLanguage","false"},
+            { "EnableMarkdownForLlms","true"}
 
         };
         var configuration = new ConfigurationBuilder()
@@ -70,6 +72,7 @@ public class ApplicationConfigurationTests
         appConfiguration.ShowBuildInformation.ShouldBeTrue();
         appConfiguration.UseMultiAuthorMode.ShouldBeTrue();
         appConfiguration.ShowCodeBlockLanguage.ShouldBeFalse();
+        appConfiguration.EnableMarkdownForLlms.ShouldBeTrue();
 
         var giscusConfiguration = new GiscusConfigurationBuilder().Build();
         configuration.GetSection(GiscusConfiguration.GiscusConfigurationSection).Bind(giscusConfiguration);
@@ -208,6 +211,19 @@ public class ApplicationConfigurationTests
         configuration.Bind(appConfiguration);
 
         appConfiguration.BlogPostsPerPage.ShouldBe(10);
+    }
+
+    [Fact]
+    public void ShouldDisableMarkdownForLlmsIfNotSet()
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>())
+            .Build();
+
+        var appConfiguration = new ApplicationConfiguration { BlogName = "Blog", ConnectionString = "cs", DatabaseName = "db" };
+        configuration.Bind(appConfiguration);
+
+        appConfiguration.EnableMarkdownForLlms.ShouldBeFalse();
     }
 
     [Fact]

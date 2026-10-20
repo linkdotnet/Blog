@@ -103,6 +103,7 @@ public class Program
         app.UseAntiforgery();
 
         app.UseRateLimiter();
+        app.UseBlogPostMarkdown();
         app.MapControllers();
         app.MapRazorPages();
         app.MapRazorComponents<App>()

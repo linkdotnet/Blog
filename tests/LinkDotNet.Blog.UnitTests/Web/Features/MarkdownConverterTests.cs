@@ -1,3 +1,4 @@
+using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Web.Features;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features;
@@ -216,5 +217,21 @@ public class MarkdownConverterTests
         html.ShouldContain("""<div class="table-container">""");
         html.ShouldContain("""<table class="table">""");
         html.ShouldContain("</table>\n</div>");
+    }
+
+    [Fact]
+    public void ShouldLeaveContentUntouchedWhenNoShortCodes()
+    {
+        MarkdownConverter.ExpandShortCodes("Some [[code]]", []).ShouldBe("Some [[code]]");
+    }
+
+    [Fact]
+    public void ShouldExpandAllShortCodesAndAllOccurrences()
+    {
+        var shortCodes = new[] { ShortCode.Create("ONE", "**1**"), ShortCode.Create("TWO", "*2*") };
+
+        var expanded = MarkdownConverter.ExpandShortCodes("[[ONE]] and [[TWO]] and [[ONE]] but not [[THREE]]", shortCodes);
+
+        expanded.ShouldBe("**1** and *2* and **1** but not [[THREE]]");
     }
 }

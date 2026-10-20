@@ -27,7 +27,8 @@ public sealed class MigrationManagerTests : IDisposable
             new Migration11To12(),
             new Migration12To13(),
             new Migration13To15(),
-            new Migration15To16()]);
+            new Migration15To16(),
+            new Migration16To17()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -36,10 +37,11 @@ public sealed class MigrationManagerTests : IDisposable
         // Assert
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
-        content.ShouldContain("\"ConfigVersion\": \"16.0\"");
+        content.ShouldContain("\"ConfigVersion\": \"17.0\"");
         content.ShouldContain("\"EnableTagDiscoveryPanel\": true");
         content.ShouldContain("\"EnableBrokenLinkChecker\": true");
         content.ShouldContain("\"ShowCodeBlockLanguage\": true");
+        content.ShouldContain("\"EnableMarkdownForLlms\": false");
         
         // Verify backup was created
         var backupFiles = Directory.GetFiles(backupDir);
@@ -62,7 +64,8 @@ public sealed class MigrationManagerTests : IDisposable
         var manager = new MigrationManager([
             new Migration11To12(),
             new Migration13To15(),
-            new Migration15To16()]);
+            new Migration15To16(),
+            new Migration16To17()]);
         var backupDir = Path.Combine(testDirectory, "backups");
 
         // Act
@@ -71,9 +74,43 @@ public sealed class MigrationManagerTests : IDisposable
         // Assert
         result.ShouldBeTrue();
         var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
-        content.ShouldContain("\"ConfigVersion\": \"16.0\"");
+        content.ShouldContain("\"ConfigVersion\": \"17.0\"");
         content.ShouldContain("\"ShowCodeBlockLanguage\": true");
+        content.ShouldContain("\"EnableMarkdownForLlms\": false");
         content.ShouldNotContain("ShowBuildInformation");
+    }
+
+    [Fact]
+    public async Task Should_Only_Apply_Latest_Migration_From_Version_16()
+    {
+        // Arrange
+        var testFile = Path.Combine(testDirectory, "appsettings.Staging.json");
+        var json = """
+            {
+              "ConfigVersion": "16.0",
+              "BlogName": "Test Blog",
+              "ShowCodeBlockLanguage": false
+            }
+            """;
+        await File.WriteAllTextAsync(testFile, json, TestContext.Current.CancellationToken);
+        var manager = new MigrationManager([
+            new Migration11To12(),
+            new Migration12To13(),
+            new Migration13To15(),
+            new Migration15To16(),
+            new Migration16To17()]);
+        var backupDir = Path.Combine(testDirectory, "backups");
+
+        // Act
+        var result = await manager.MigrateFileAsync(testFile, false, backupDir);
+
+        // Assert
+        result.ShouldBeTrue();
+        var content = await File.ReadAllTextAsync(testFile, TestContext.Current.CancellationToken);
+        content.ShouldContain("\"ConfigVersion\": \"17.0\"");
+        content.ShouldContain("\"ShowCodeBlockLanguage\": false");
+        content.ShouldContain("\"EnableMarkdownForLlms\": false");
+        content.ShouldNotContain("EnableTagDiscoveryPanel");
     }
 
     [Fact]
