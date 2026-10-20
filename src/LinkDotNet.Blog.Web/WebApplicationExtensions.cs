@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Linq;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
@@ -23,6 +24,8 @@ public static class WebApplicationExtensions
 
     public static void UseBlogPostMarkdown(this WebApplication app)
     {
+        ArgumentNullException.ThrowIfNull(app);
+
         if (app.Services.GetRequiredService<IOptions<ApplicationConfiguration>>().Value.EnableMarkdownForLlms)
         {
             app.UseMiddleware<BlogPostMarkdownMiddleware>();
