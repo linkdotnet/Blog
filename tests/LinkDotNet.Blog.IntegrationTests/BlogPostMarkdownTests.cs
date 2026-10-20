@@ -105,6 +105,20 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
     }
 
     [Theory]
+    [InlineData("Why ] matters", @"Why \] matters", "why-matters")]
+    [InlineData("Generic <T> & [more]", @"Generic \<T\> \& \[more\]", "generic-t-more")]
+    [InlineData("Under_score *star* `tick` \\ slash", @"Under\_score \*star\* \`tick\` \\ slash", "underscore-star-tick-slash")]
+    public async Task ShouldEscapeMarkdownInLlmsTxt(string title, string escapedTitle, string slug)
+    {
+        var blogPost = await SeedAsync(factory, new BlogPostBuilder().WithTitle(title).WithShortDescription("`List<T>`").Build());
+
+        using var response = await GetAsync(client, "/llms.txt", null);
+
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        body.ShouldContain($"- [{escapedTitle}](http://localhost/blogPost/{blogPost.Id}/{slug}.md): List\\<T\\>\n");
+    }
+
+    [Theory]
     [InlineData("text/markdown")]
     [InlineData("TEXT/MARKDOWN")]
     [InlineData("text/markdown; charset=utf-8")]
