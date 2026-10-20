@@ -66,15 +66,16 @@ public sealed class BlogPostMarkdownMiddleware
     {
         ArgumentNullException.ThrowIfNull(accept);
 
-        var markdownQuality = GetBestQuality(accept, [MarkdownMediaType]);
-        return markdownQuality > 0 && markdownQuality >= GetBestQuality(accept, HtmlMediaTypes);
+        var markdownQuality = GetQuality(accept, MarkdownMediaType) ?? 0;
+        // RFC 9110 12.5.1: the most specific matching range wins, so "text/html;q=0, */*" still rejects HTML
+        var htmlQuality = HtmlMediaTypes.Select(m => GetQuality(accept, m)).FirstOrDefault(q => q.HasValue) ?? 0;
+        return markdownQuality > 0 && markdownQuality >= htmlQuality;
     }
 
-    private static double GetBestQuality(IList<MediaTypeHeaderValue> accept, string[] mediaTypes)
+    private static double? GetQuality(IList<MediaTypeHeaderValue> accept, string mediaType)
         => accept
-            .Where(a => mediaTypes.Any(m => a.MediaType.Equals(m, StringComparison.OrdinalIgnoreCase)))
-            .Select(a => a.Quality ?? 1)
-            .DefaultIfEmpty(0)
+            .Where(a => a.MediaType.Equals(mediaType, StringComparison.OrdinalIgnoreCase))
+            .Select(a => (double?)(a.Quality ?? 1))
             .Max();
 
     private static bool IsBlogPostPage(HttpContext context)
