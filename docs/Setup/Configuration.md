@@ -156,4 +156,4 @@ The content...
 - Appending `.md` to a blog post url (`/blogPost/{id}.md` or `/blogPost/{id}/{slug}.md`) returns markdown regardless of the `Accept` header, for agents that can't set headers.
 - HTML blog post pages advertise the markdown version via a `Link: </blogPost/{id}/{slug}.md>; rel="alternate"; type="text/markdown"` header and a `<link rel="alternate" type="text/markdown">` tag.
 - `/llms.txt` (see [llmstxt.org](https://llmstxt.org)) lists the blog name, introduction and all published blog posts with links to their markdown version.
-- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned, `.md` urls render the HTML page, no `Link` header or `<link>` tag is emitted and `/llms.txt` returns `404`.
+- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned, `/blogPost/{id}/{slug}.md` renders the HTML page (the slug is ignored) while `/blogPost/{id}.md` shows the not found page, no `Link` header or `<link>` tag is emitted and `/llms.txt` returns `404`.
