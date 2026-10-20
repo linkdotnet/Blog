@@ -47,6 +47,64 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
     }
 
     [Theory]
+    [InlineData("/blogPost/{0}.md")]
+    [InlineData("/blogPost/{0}/my-blog-post.md")]
+    [InlineData("/blogPost/{0}/a-wrong-slug.MD")]
+    [InlineData("/blogPost/{0}/.md")]
+    public async Task ShouldServeMarkdownForMdSuffixRegardlessOfAccept(string urlTemplate)
+    {
+        var blogPost = await SeedAsync(factory, new BlogPostBuilder().WithTitle("My Blog Post").WithContent("Hello").Build());
+
+        using var response = await GetAsync(client, string.Format(urlTemplate, blogPost.Id), "text/html");
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.Content.Headers.ContentType!.ToString().ShouldBe(MarkdownContentType);
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        body.ShouldEndWith("# My Blog Post\n\nHello");
+    }
+
+    [Fact]
+    public async Task ShouldReturnNotFoundForMdSuffixOfUnpublishedBlogPost()
+    {
+        var blogPost = await SeedAsync(factory, new BlogPostBuilder().IsPublished(false).Build());
+
+        using var response = await GetAsync(client, $"/blogPost/{blogPost.Id}.md", null);
+
+        await ShouldBeMarkdownNotFoundAsync(response);
+    }
+
+    [Theory]
+    [InlineData("/blogPost/{0}", "/blogPost/{0}.md")]
+    [InlineData("/blogPost/{0}/some-slug/", "/blogPost/{0}/some-slug.md")]
+    public async Task ShouldAdvertiseMarkdownVersionOnHtmlResponse(string urlTemplate, string linkTemplate)
+    {
+        var blogPost = await SeedAsync(factory, new BlogPostBuilder().WithTitle("Linked Post").Build());
+
+        using var response = await GetAsync(client, string.Format(urlTemplate, blogPost.Id), null);
+
+        await ShouldBeHtmlBlogPostAsync(response, "Linked Post");
+        response.Headers.GetValues("Link").ShouldContain($"<{string.Format(linkTemplate, blogPost.Id)}>; rel=\"alternate\"; type=\"text/markdown\"");
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        body.ShouldContain($"<link rel=\"alternate\" type=\"text/markdown\" href=\"http://localhost/blogPost/{blogPost.Id}/linked-post.md\" />");
+    }
+
+    [Fact]
+    public async Task ShouldListPublishedBlogPostsInLlmsTxt()
+    {
+        var published = await SeedAsync(factory, new BlogPostBuilder().WithTitle("Listed Post").WithShortDescription("**Short**\nsummary").Build());
+        await SeedAsync(factory, new BlogPostBuilder().WithTitle("Hidden Draft").IsPublished(false).Build());
+
+        using var response = await GetAsync(client, "/llms.txt", null);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.Content.Headers.ContentType!.ToString().ShouldBe("text/plain; charset=utf-8");
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        body.ShouldStartWith("# ");
+        body.ShouldContain($"- [Listed Post](http://localhost/blogPost/{published.Id}/listed-post.md): Short summary\n");
+        body.ShouldNotContain("Hidden Draft");
+    }
+
+    [Theory]
     [InlineData("text/markdown")]
     [InlineData("TEXT/MARKDOWN")]
     [InlineData("text/markdown; charset=utf-8")]
@@ -208,6 +266,15 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
 
         await ShouldBeHtmlBlogPostAsync(response, "Disabled Post");
         response.Headers.Vary.ShouldNotContain("Accept");
+        response.Headers.Contains("Link").ShouldBeFalse();
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        body.ShouldNotContain("text/markdown");
+
+        using var mdSuffixResponse = await GetAsync(disabledClient, $"/blogPost/{blogPost.Id}/disabled-post.md", null);
+        await ShouldBeHtmlBlogPostAsync(mdSuffixResponse, "Disabled Post");
+
+        using var llmsTxtResponse = await GetAsync(disabledClient, "/llms.txt", null);
+        llmsTxtResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
     }
 
     public void Dispose() => client.Dispose();

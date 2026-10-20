@@ -123,7 +123,7 @@ Browser spellchecking uses the `<html lang="en">` value in
 | EnableTagDiscoveryPanel                       | boolean        | The default value is `true`. Enables the Tag Discovery Panel, which helps users discover topics by browsing popular tags.                                                        |
 | EnableBrokenLinkChecker                       | boolean        | The default value is `true`. Checks all external links of published blog posts once a day and lists broken ones on the "Broken links" admin page.                               |
 | ShowCodeBlockLanguage                         | boolean        | The default value is `true`. Shows the language of a fenced code block (e.g. `csharp`) in the header of the code block.                                                        |
-| EnableMarkdownForLlms                         | boolean        | The default value is `false`. Serves published blog posts as markdown to clients (like LLMs) that ask for `text/markdown`. See [Markdown for LLMs](#markdown-for-llms).        |
+| EnableMarkdownForLlms                         | boolean        | The default value is `false`. Serves published blog posts as markdown to clients (like LLMs) that ask for `text/markdown` or append `.md` to the url, and serves `/llms.txt`. See [Markdown for LLMs](#markdown-for-llms).        |
 
 ### Markdown for LLMs
 
@@ -153,4 +153,7 @@ The content...
 - Markdown is only served if `text/markdown` is weighted at least as high as HTML in the `Accept` header (`text/html`, `text/*` or `*/*`), so `text/markdown, text/html;q=0.9` returns markdown, while `text/html, text/markdown;q=0.9` and a regular browser request return HTML.
 - Only published blog posts are served. Unpublished, scheduled and unknown blog posts return `404` with a markdown body.
 - Blog post responses carry `Vary: Accept` so caches and CDNs keep the HTML and markdown variants apart.
-- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned.
+- Appending `.md` to a blog post url (`/blogPost/{id}.md` or `/blogPost/{id}/{slug}.md`) returns markdown regardless of the `Accept` header, for agents that can't set headers.
+- HTML blog post pages advertise the markdown version via a `Link: </blogPost/{id}/{slug}.md>; rel="alternate"; type="text/markdown"` header and a `<link rel="alternate" type="text/markdown">` tag.
+- `/llms.txt` (see [llmstxt.org](https://llmstxt.org)) lists the blog name, introduction and all published blog posts with links to their markdown version.
+- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned, `.md` urls render the HTML page, no `Link` header or `<link>` tag is emitted and `/llms.txt` returns `404`.
