@@ -19,6 +19,7 @@
     {
         <meta name="description" property="og:description" content="@Description" />
     }
+    @ChildContent
 </HeadContent>
 @code {
 
@@ -36,6 +37,10 @@
 
     [Parameter]
     public string? CanonicalRelativeUrl { get; set; }
+
+    // HeadContent is last-one-wins, so pages add extra head tags through here instead of their own HeadContent
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
     public string Robots { get; set; } = "max-image-preview:large";

@@ -14,6 +14,7 @@ namespace LinkDotNet.Blog.Web.Features.ShowBlogPost;
 public sealed class BlogPostMarkdownMiddleware
 {
     private const string MarkdownMediaType = "text/markdown";
+    private const string MarkdownSuffix = ".md";
     private static readonly string[] HtmlMediaTypes = ["text/html", "text/*", "*/*"];
 
     private readonly RequestDelegate next;
@@ -41,15 +42,17 @@ public sealed class BlogPostMarkdownMiddleware
         }
 
         context.Response.Headers.Append(HeaderNames.Vary, HeaderNames.Accept);
-        if (!PrefersMarkdown(context.Request.GetTypedHeaders().Accept))
+        if (!IsMarkdownUrl(context.Request) && !PrefersMarkdown(context.Request.GetTypedHeaders().Accept))
         {
+            var markdownUrl = context.Request.PathBase.Add(context.Request.Path).ToUriComponent().TrimEnd('/') + MarkdownSuffix;
+            context.Response.Headers.Append(HeaderNames.Link, $"<{markdownUrl}>; rel=\"alternate\"; type=\"{MarkdownMediaType}\"");
             await next(context);
             return;
         }
 
         // A content type keeps UseStatusCodePagesWithReExecute from swapping the 404 for the HTML NotFound page
         context.Response.ContentType = $"{MarkdownMediaType}; charset=utf-8";
-        var blogPost = await blogPostRepository.GetByIdAsync(context.Request.RouteValues["blogPostId"]?.ToString() ?? string.Empty);
+        var blogPost = await blogPostRepository.GetByIdAsync(GetBlogPostId(context.Request));
         if (blogPost is not { IsPublished: true })
         {
             context.Response.StatusCode = StatusCodes.Status404NotFound;
@@ -77,6 +80,17 @@ public sealed class BlogPostMarkdownMiddleware
             .Where(a => a.MediaType.Equals(mediaType, StringComparison.OrdinalIgnoreCase))
             .Select(a => (double?)(a.Quality ?? 1))
             .Max();
+
+    private static bool IsMarkdownUrl(HttpRequest request)
+        => request.Path.Value?.EndsWith(MarkdownSuffix, StringComparison.OrdinalIgnoreCase) == true;
+
+    private static string GetBlogPostId(HttpRequest request)
+    {
+        var blogPostId = request.RouteValues["blogPostId"]?.ToString() ?? string.Empty;
+        return request.RouteValues["slug"] is null && IsMarkdownUrl(request)
+            ? blogPostId[..^MarkdownSuffix.Length]
+            : blogPostId;
+    }
 
     private static bool IsBlogPostPage(HttpContext context)
         => context.GetEndpoint()?.Metadata.GetMetadata<ComponentTypeMetadata>()?.Type == typeof(ShowBlogPostPage);

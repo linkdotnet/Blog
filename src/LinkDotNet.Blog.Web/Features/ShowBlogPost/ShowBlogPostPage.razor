@@ -32,7 +32,12 @@ else if (BlogPost is not null)
 	        AbsolutePreviewImageUrl="@OgDataImage"
 	        Description="@(Markdown.ToPlainText(BlogPost.ShortDescription))"
 	        Keywords="@BlogPost.TagsAsString"
-	        CanonicalRelativeUrl="@BlogPostCanoncialUrl" />
+	        CanonicalRelativeUrl="@BlogPostCanoncialUrl">
+		@if (AppConfiguration.Value.EnableMarkdownForLlms)
+		{
+			<link rel="alternate" type="text/markdown" href="@($"{NavigationManager.BaseUri}{BlogPostCanoncialUrl}.md")" />
+		}
+	</OgData>
 
 	@* Rendered in the body on purpose: HeadOutlet does not emit script tags,
 	   so a JSON-LD block placed in HeadContent never reaches the page. *@
