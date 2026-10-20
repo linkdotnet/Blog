@@ -1,5 +1,4 @@
 ﻿@page "/blogPost/{blogPostId}/{slug?}"
-@using System.Text
 @using Markdig
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
@@ -167,18 +166,8 @@ else if (BlogPost is not null)
 
     private MarkupString EnrichWithShortCodes(string content)
 	{
-		if (shortCodes.Count == 0)
-		{
-			return MarkdownConverter.ToMarkupStringWithHeadingAnchors(content, NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
-		}
-
-		var sb = new StringBuilder(content);
-		foreach (var shortCode in shortCodes)
-		{
-			sb.Replace($"[[{shortCode.Name}]]", shortCode.MarkdownContent);
-		}
-
-		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(sb.ToString(), NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
+		var expandedContent = MarkdownConverter.ExpandShortCodes(content, shortCodes);
+		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(expandedContent, NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
 	}
 
     private async Task UpdateLikes(bool hasLiked)

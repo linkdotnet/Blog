@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using LinkDotNet.Blog.Domain;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Markdig.Renderers.Html;
@@ -56,6 +57,19 @@ public static class MarkdownConverter
         }
 
         return (MarkupString)document.ToHtml(pipeline);
+    }
+
+    public static string ExpandShortCodes(string content, IEnumerable<ShortCode> shortCodes)
+    {
+        ArgumentNullException.ThrowIfNull(shortCodes);
+
+        var sb = new StringBuilder(content);
+        foreach (var shortCode in shortCodes)
+        {
+            sb.Replace($"[[{shortCode.Name}]]", shortCode.MarkdownContent);
+        }
+
+        return sb.ToString();
     }
 
     public static string? ToPlainString(string markdown)

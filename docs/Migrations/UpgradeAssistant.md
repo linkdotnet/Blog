@@ -131,7 +131,7 @@ The tool looks for a `ConfigVersion` field in your `appsettings.json`:
 
 ```json
 {
-  "ConfigVersion": "16.0",
+  "ConfigVersion": "17.0",
   ...
 }
 ```
@@ -142,7 +142,7 @@ If this field doesn't exist, the tool assumes you're running version 11.0 or ear
 
 The tool applies migrations sequentially:
 1. Detects current version (e.g., 12.0)
-2. Finds all migrations from current to latest (12.0→13.0→15.0→16.0)
+2. Finds all migrations from current to latest (12.0→13.0→15.0→16.0→17.0)
 3. Applies each migration in order
 4. Updates the `ConfigVersion` field to the latest version
 
@@ -238,6 +238,21 @@ Version 14.0 had no configuration changes, so this migration goes directly from 
 
 **Manual Steps Required:**
 - None (setting is optional)
+
+### Version 16.0 → 17.0
+
+**Changes:**
+- Adds `EnableMarkdownForLlms` setting (default: `false`)
+
+**After:**
+```json
+{
+  "EnableMarkdownForLlms": false
+}
+```
+
+**Manual Steps Required:**
+- None (setting is optional). Set it to `true` to serve blog posts as markdown to LLMs, see [Markdown for LLMs](../Setup/Configuration.md#markdown-for-llms)
 
 ## Command-Line Reference
 

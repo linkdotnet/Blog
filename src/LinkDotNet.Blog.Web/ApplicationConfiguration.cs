@@ -33,4 +33,6 @@ public sealed record ApplicationConfiguration
     public bool EnableBrokenLinkChecker { get; init; } = true;
 
     public bool ShowCodeBlockLanguage { get; init; } = true;
+
+    public bool EnableMarkdownForLlms { get; init; }
 }

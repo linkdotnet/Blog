@@ -1,6 +1,9 @@
 using System.Globalization;
 using System.Linq;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LinkDotNet.Blog.Web;
 
@@ -16,5 +19,13 @@ public static class WebApplicationExtensions
         app.UseRequestLocalization(new RequestLocalizationOptions()
             .AddSupportedCultures(SupportedCultures)
             .AddSupportedUICultures(SupportedCultures));
+    }
+
+    public static void UseBlogPostMarkdown(this WebApplication app)
+    {
+        if (app.Services.GetRequiredService<IOptions<ApplicationConfiguration>>().Value.EnableMarkdownForLlms)
+        {
+            app.UseMiddleware<BlogPostMarkdownMiddleware>();
+        }
     }
 }

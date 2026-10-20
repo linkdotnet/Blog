@@ -27,6 +27,18 @@ For detailed documentation, see [docs/Migrations/UpgradeAssistant.md](docs/Migra
 
 ---
 
+## 16.0 to 17.0
+
+### Markdown for LLMs
+Blog posts can be served as markdown to LLMs and agents that request them with `Accept: text/markdown`. The `EnableMarkdownForLlms` setting was added on the root level of the `appsettings.json` file (handled by the Upgrade Assistant). The default is `false`, set it to `true` to enable it. See [Markdown for LLMs](docs/Setup/Configuration.md#markdown-for-llms) for details.
+
+```json
+{
+  ...
+  "EnableMarkdownForLlms": false
+}
+```
+
 ## 15.0 to 16.0
 
 ### Blog post record index

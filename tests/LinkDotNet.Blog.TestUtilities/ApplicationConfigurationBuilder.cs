@@ -19,6 +19,7 @@ public class ApplicationConfigurationBuilder
     private bool useMultiAuthorMode;
     private bool enableBrokenLinkChecker = true;
     private bool showCodeBlockLanguage = true;
+    private bool enableMarkdownForLlms;
 
     public ApplicationConfigurationBuilder WithBlogName(string blogName)
     {
@@ -110,6 +111,12 @@ public class ApplicationConfigurationBuilder
         return this;
     }
 
+    public ApplicationConfigurationBuilder WithEnableMarkdownForLlms(bool enableMarkdownForLlms)
+    {
+        this.enableMarkdownForLlms = enableMarkdownForLlms;
+        return this;
+    }
+
     public ApplicationConfiguration Build()
     {
         return new ApplicationConfiguration
@@ -129,6 +136,7 @@ public class ApplicationConfigurationBuilder
             UseMultiAuthorMode = useMultiAuthorMode,
             EnableBrokenLinkChecker = enableBrokenLinkChecker,
             ShowCodeBlockLanguage = showCodeBlockLanguage,
+            EnableMarkdownForLlms = enableMarkdownForLlms,
         };
     }
 }
