@@ -4,16 +4,16 @@
 
 @inject IRepository<ProfileInformationEntry> Repository
 @inject ISortOrderCalculator SortOrderCalculator
-<div class="profile-card">
-	<div class="profile-name">
+<div class="card rounded-9 overflow-hidden">
+	<div class="p-6 fs-lg fw-semibold">
 		<span>@ProfileInformation.Name</span>
 		<br/>
 		<span>@ProfileInformation.Heading</span>
 	</div>
-	<div class="profile-image">
-		<img src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
+	<div class="px-8 pb-8">
+		<img class="w-12 rounded-circle d-block mx-auto" src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
 	</div>
-	<ul class="profile-keypoints"
+	<ul class="profile-keypoints list-unstyled border-top pt-5 px-8 mb-0"
 	    ondragover="event.preventDefault();">
 		@foreach (var entry in profileInformationEntries)
 		{
@@ -25,7 +25,7 @@
 					@ondrag="@(() => currentDragItem = entry)"
 					@ondrop="@(() => HandleDrop(entry))">
 
-					<button type="button" class="btn btn-default" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
+					<button type="button" class="btn btn-icon" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
 						<i class="bin2" aria-hidden="true"></i>
 					</button>
 					@MarkdownConverter.ToMarkupString(entry.Content)

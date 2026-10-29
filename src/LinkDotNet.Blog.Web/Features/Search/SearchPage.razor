@@ -5,12 +5,12 @@
 @inject IRepository<BlogPost> BlogPostRepository
 
 <div class="container">
-    <h3 class="pb-5 fw-bold">Results for: @SearchTerm</h3>
+    <h3 class="fs-3xl fw-bold pb-6 mb-0">Results for: @SearchTerm</h3>
     @if (blogPosts.Count > 0)
     {
 	    for (var i = 0; i < blogPosts.Count; i++)
 	    {
-		    <ShortBlogPost BlogPost="blogPosts[i]" UseAlternativeStyle="@(i % 2 != 0)"></ShortBlogPost>
+		    <ShortBlogPost BlogPost="blogPosts[i]"></ShortBlogPost>
 	    }
     }
     else

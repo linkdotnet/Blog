@@ -1,8 +1,10 @@
-window.setTheme = (theme) => {
-	if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-		document.documentElement.setAttribute('data-bs-theme', 'dark')
+window.setTheme = (theme, remember) => {
+	const resolved = theme === 'auto' ? window.getCurrentSystemPreference() : theme
+	document.documentElement.setAttribute('data-bs-theme', resolved)
+	if (remember) {
+		localStorage.setItem('theme', resolved)
 	} else {
-		document.documentElement.setAttribute('data-bs-theme', theme)
+		localStorage.removeItem('theme')
 	}
 }
 

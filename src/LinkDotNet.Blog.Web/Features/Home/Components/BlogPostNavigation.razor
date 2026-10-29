@@ -1,12 +1,12 @@
 ﻿@typeparam T
 @using LinkDotNet.Blog.Infrastructure
     <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center gap-4 mt-5">
             <li class="page-item @(!PageList.IsFirstPage && PageList.Count > 0 ? string.Empty : "disabled")">
-                <Anchor CssClass="page-link" Href="@PreviousPageLink">Previous</Anchor>
+                <Anchor CssClass="page-link rounded-pill px-6" Href="@PreviousPageLink">← Newer posts</Anchor>
             </li>
             <li class="page-item @(!PageList.IsLastPage && PageList.Count > 0 ? string.Empty : "disabled")">
-                <Anchor CssClass="page-link" Href="@NextPageLink">Next</Anchor>
+                <Anchor CssClass="page-link rounded-pill px-6" Href="@NextPageLink">Older posts →</Anchor>
             </li>
         </ul>
     </nav>

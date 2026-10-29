@@ -23,13 +23,13 @@
                                     {
                                         <img src="@post.PreviewImageUrl"
                                              alt="@post.Title"
-                                             class="img-fluid rounded w-100 aspect-ratio-1x1"
+                                             class="img-fluid rounded w-100 ratio-1x1"
                                              loading="lazy"
                                              onerror="this.onerror=null; this.src='@(post.PreviewImageUrlFallback ?? "assets/image-placeholder.webp")';">
                                     }
                                     else
                                     {
-                                        <div class="bg-1 rounded d-flex align-items-center justify-content-center aspect-ratio-1x1">
+                                        <div class="bg-1 rounded d-flex align-items-center justify-content-center ratio-1x1">
                                             <i class="bi bi-image fg-secondary"></i>
                                         </div>
                                     }
@@ -53,7 +53,7 @@
                                             <div class="d-flex flex-wrap gap-3 mt-3">
                                                 @foreach (var tag in post.Tags)
                                                 {
-                                                    <a class="goto-tag badge theme-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+                                                    <a class="goto-tag badge badge-subtle theme-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
                                                 }
                                             </div>
                                         }

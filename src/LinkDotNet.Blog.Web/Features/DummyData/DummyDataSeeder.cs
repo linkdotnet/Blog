@@ -40,6 +40,23 @@ internal sealed class DummyDataSeeder : IHostedService
 
             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
+            > [!NOTE]
+            > Callouts render as Bootstrap alerts. This one checks spacing and contrast in both themes.
+
+            ## Getting Set Up
+
+            Before diving in, make sure you have the following installed:
+
+            - The latest .NET SDK
+            - An editor with C# support
+            - A terminal you are comfortable with
+
+            ### Project Structure
+
+            Run `dotnet new console` and you get a minimal project. The interesting parts live in `Program.cs`.
+
+            ![Landscape photo](https://picsum.photos/seed/content/1200/600)
+
             ## Code Example
 
             ```csharp
@@ -52,15 +69,39 @@ internal sealed class DummyDataSeeder : IHostedService
             }
             ```
 
+            ### A Longer Snippet
+
+            ```csharp
+            app.MapGet("/weatherforecast", async (IWeatherService service, CancellationToken token) =>
+            {
+                var forecasts = await service.GetForecastsAsync(days: 5, cancellationToken: token);
+                return forecasts.Count == 0 ? Results.NoContent() : Results.Ok(forecasts);
+            });
+            ```
+
+            ## Comparing Options
+
+            | Approach | Startup | Memory | Notes |
+            |---|---|---|---|
+            | JIT | Slower | Higher | Most flexible |
+            | ReadyToRun | Faster | Medium | Larger binaries |
+            | Native AOT | Fastest | Lowest | No runtime reflection |
+
+            > Simplicity is prerequisite for reliability.
+
             ## More Content
 
             Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+
+            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
             """;
 
         var titles = new[]
         {
             "Getting Started with C# 12",
+            "Array, List, Collection, Set, ReadOnlyList - what? A comprehensive and exhaustive list of collection-like types",
             "Understanding Blazor Components",
+            "How to write your own cron Job scheduler in ASP.NET Core (like Quartz, Hangfire, ...)",
             "ASP.NET Core Best Practices",
             "Mastering Entity Framework Core",
             "Introduction to LINQ",
@@ -93,6 +134,14 @@ internal sealed class DummyDataSeeder : IHostedService
             "Docker",
             "Azure",
             "Architecture",
+            "Performance",
+            "Security",
+            "OpenTelemetry",
+            "Minimal APIs",
+            ".NET Aspire",
+            "Source Generators",
+            "Kubernetes",
+            "GitHub Actions",
         };
 
         var blogPosts = new List<BlogPost>();
@@ -100,20 +149,25 @@ internal sealed class DummyDataSeeder : IHostedService
         for (var i = 0; i < count; i++)
         {
             var title = i < titles.Length ? titles[i] : $"Blog Post {i + 1}";
-            var shortDescription = $"This is a dummy blog post about {title}. It contains valuable information for developers.";
+            var shortDescription = (i % 3) switch
+            {
+                0 => $"A short look at {title}.",
+                1 => $"This is a dummy blog post about {title}. It contains valuable information for developers.",
+                _ => $"This is a dummy blog post about {title}. It walks through the motivation, shows a minimal example, compares the trade-offs against the alternatives and ends with a few practical tips you can apply in your own code base today.",
+            };
 
             var selectedTags = tags
                 .OrderBy(_ => Random.Shared.Next())
-                .Take(Random.Shared.Next(1, 4))
+                .Take(Random.Shared.Next(1, 9))
                 .ToArray();
 
             var blogPost = BlogPost.Create(
                 title,
                 shortDescription,
                 loremIpsum,
-                "https://via.placeholder.com/800x400",
+                $"https://picsum.photos/seed/blog-{i}/1200/630",
                 true,
-                DateTime.UtcNow.AddDays(-i),
+                DateTime.UtcNow.AddDays(-i * 23),
                 null,
                 selectedTags,
                 null,

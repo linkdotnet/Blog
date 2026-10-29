@@ -1,3 +1,4 @@
+using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,11 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
 public class FooterTests : BunitContext
 {
+    public FooterTests()
+    {
+        AddAuthorization();
+    }
+
     [Fact]
     public void ShouldSetCopyrightInformation()
     {
@@ -59,5 +65,28 @@ public class FooterTests : BunitContext
         var cut = Render<Footer>();
 
         cut.Markup.ShouldNotContain("Built At:");
+    }
+
+    [Fact]
+    public void ShouldShowLoginWithCurrentUriAsRedirectUriWhenNotLoggedIn()
+    {
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
+        var navigationManager = Services.GetRequiredService<BunitNavigationManager>();
+        navigationManager.NavigateTo("test");
+
+        var cut = Render<Footer>();
+
+        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.ShouldContain("http://localhost/test");
+    }
+
+    [Fact]
+    public void ShouldHideLoginWhenLoggedIn()
+    {
+        Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<Footer>();
+
+        cut.FindAll("a:contains('Log in')").ShouldBeEmpty();
     }
 }

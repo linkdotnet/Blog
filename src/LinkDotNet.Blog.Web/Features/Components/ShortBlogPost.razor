@@ -4,15 +4,21 @@
 @inject IBookmarkService BookmarkService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 
-<article>
-	<div class="blog-card @AltCssClass">
+<article class="contains-inline">
+	<div class="blog-card card rounded-9 overflow-hidden mb-5 hover-lift">
 		<div class="meta">
 			<div class="photo">
 				<PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl"
 				              PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
 				              LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
 			</div>
-			<ul class="details">
+		</div>
+		<div class="description d-flex flex-column px-7 py-6">
+			<div class="header d-flex justify-content-between gap-5">
+				<h4 class="card-title fw-semibold mb-0">@BlogPost.Title</h4>
+				<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="ToggleBookmark"></BookmarkButton>
+			</div>
+			<ul class="details list-unstyled d-flex flex-wrap align-items-center column-gap-6 row-gap-1 mt-1 mb-0 fs-sm fg-3">
 				@if (BlogPost.IsScheduled)
 				{
 					<li class="schedule badge theme-success">Scheduled</li>
@@ -21,33 +27,27 @@
 				{
 					<li class="draft badge theme-warning">Draft</li>
 				}
-				<li class="date me-7"><span>@BlogPost.UpdatedDate.ToShortDateString()</span></li>
+				<li class="date"><span>@BlogPost.UpdatedDate.ToShortDateString()</span></li>
+				<li class="read-time">@BlogPost.ReadingTimeInMinutes minute read</li>
+                @if (AppConfiguration.Value.UseMultiAuthorMode && BlogPost.AuthorName is not null)
+                {
+                    <li><i class="user-tie"></i> @BlogPost.AuthorName</li>
+                }
 				@if (BlogPost.Tags.Any())
 				{
-					<li class="tags me-7">
-						<ul>
+					<li class="tags w-100 mt-1">
+						<ul class="list-unstyled d-flex flex-wrap gap-2 mb-0">
 							@foreach (var tag in BlogPost.Tags)
 							{
-								<li><a class="goto-tag" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
+								<li><a class="goto-tag badge badge-subtle theme-primary rounded-pill" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a></li>
 							}
 						</ul>
 					</li>
 				}
-				<li class="read-time me-7">@BlogPost.ReadingTimeInMinutes minute read</li>
-                @if (AppConfiguration.Value.UseMultiAuthorMode && BlogPost.AuthorName is not null)
-                {
-                    <li class="me-7"><i class="user-tie"></i> @BlogPost.AuthorName</li>
-                }
             </ul>
-		</div>
-		<div class="description">
-			<div class="header">
-				<h4 class="card-title">@BlogPost.Title</h4>
-				<BookmarkButton IsBookmarked="isBookmarked" Bookmarked="ToggleBookmark"></BookmarkButton>
-			</div>
-			<p class="card-content">@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
-			<p class="read-more">
-				<a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" aria-label="@BlogPost.Title">Read the whole article</a>
+			<p class="card-content mt-4 mb-0">@MarkdownConverter.ToMarkupString(BlogPost.ShortDescription)</p>
+			<p class="read-more mt-auto pt-4 mb-0 text-end">
+				<a href="/blogPost/@BlogPost.Id/@BlogPost.Slug" class="text-decoration-none" aria-label="@BlogPost.Title">Read article</a>
 			</p>
 		</div>
 	</div>
@@ -60,12 +60,7 @@
 	private bool isBookmarked = false;
 
 	[Parameter]
-	public bool UseAlternativeStyle { get; set; }
-
-	[Parameter]
 	public bool LazyLoadPreviewImage { get; set; }
-
-	private string AltCssClass => UseAlternativeStyle ? "alt" : string.Empty;
 
 	private async Task ToggleBookmark()
 	{
@@ -82,9 +77,6 @@
 			{
 				case nameof(BlogPost):
 					BlogPost = (BlogPost)parameter.Value;
-					break;
-				case nameof(UseAlternativeStyle):
-					UseAlternativeStyle = (bool)parameter.Value;
 					break;
 				case nameof(LazyLoadPreviewImage):
 					LazyLoadPreviewImage = (bool)parameter.Value;
