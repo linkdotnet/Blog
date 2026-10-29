@@ -7,7 +7,7 @@
         <li class="nav-item">
             <a class="nav-link" href="#" id="adminDropdown" role="button" data-bs-toggle="menu"
                aria-expanded="false">
-                <i class="user-tie"></i> Admin
+                Admin
             </a>
             <div class="menu" aria-labelledby="adminDropdown">
                 <h6 class="menu-header">Blog posts</h6>
@@ -26,27 +26,25 @@
                 <a class="menu-item" href="short-codes">Shortcodes</a>
                 <hr class="menu-divider">
 	            <a class="menu-item" target="_blank" href="https://github.com/linkdotnet/Blog/releases" rel="noreferrer">Releases</a>
+                @if (authorName is null)
+                {
+                    <hr class="menu-divider">
+                    <a class="menu-item" href="/logout?redirectUri=@CurrentUri">Log out</a>
+                }
             </div>
         </li>
         @if (authorName is not null)
         {
             <li class="nav-item">
                 <a class="nav-link" href="#" id="authorDropdown" role="button" data-bs-toggle="menu" aria-expanded="false">
-                    <i class="user-tie"></i> @authorName
+                    @authorName
                 </a>
                 <div class="menu" aria-labelledby="authorDropdown">
-                    <a class="menu-item" href="logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a>
+                    <a class="menu-item" href="logout?redirectUri=@CurrentUri">Log out</a>
                 </div>
             </li>
         }
-        else
-        {
-            <li class="nav-item"><a class="nav-link" href="/logout?redirectUri=@CurrentUri"><i class="lock"></i> Log out</a></li>
-        }
     </Authorized>
-    <NotAuthorized>
-        <li class="nav-item"><a class="nav-link" href="/login?redirectUri=@CurrentUri" rel="nofollow"><i class="unlocked"></i> Log in</a></li>
-    </NotAuthorized>
 </AuthorizeView>
 
 @code {

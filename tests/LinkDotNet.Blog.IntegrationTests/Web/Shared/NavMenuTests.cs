@@ -87,7 +87,7 @@ public class NavMenuTests : BunitContext
 
         var cut = Render<NavMenu>();
 
-        var brandImage = cut.Find(".nav-brand img");
+        var brandImage = cut.Find(".navbar-brand img");
         var image = brandImage as IHtmlImageElement;
         image.ShouldNotBeNull();
         image.Source.ShouldBe("http://localhost/img.png");
@@ -112,7 +112,7 @@ public class NavMenuTests : BunitContext
 
         var cut = Render<NavMenu>();
 
-        var brandImage = cut.Find(".nav-brand");
+        var brandImage = cut.Find(".navbar-brand");
         var image = brandImage as IHtmlAnchorElement;
         image.ShouldNotBeNull();
         image.TextContent.ShouldBe("Steven");

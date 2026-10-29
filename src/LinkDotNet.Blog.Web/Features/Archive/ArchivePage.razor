@@ -10,7 +10,7 @@
 <OgData Title="Archive" Description="Explore all blog posts." />
 
 <div class="container">
-	<h3 class="pb-5 fw-bold">Archive (@blogPostCount posts)</h3>
+	<h3 class="fs-3xl fw-bold pb-6 mb-0">Archive (@blogPostCount posts)</h3>
 
 	@if (blogPostsPerYear is null)
 	{
@@ -18,27 +18,26 @@
 	}
 	else
 	{
-		<div class="accordion" id="archiveAccordion">
-			@foreach (var yearGroup in blogPostsPerYear)
-			{
-				<details class="accordion-item" open>
-					<summary class="accordion-header" id="@HeadingKey(yearGroup.Key)">
-						<span>@yearGroup.Key <span class="badge theme-primary ms-3">@yearGroup.Count()</span></span>
-						<AccordionIcon />
-					</summary>
-					<div class="accordion-body">
-						<ul class="list-group">
-							@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
-							{
-								<li class="list-group-item">
-									<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="text-decoration-none">@blogPost.Title</a>
-									<span class="fg-3 small ps-3">(@blogPost.UpdatedDate.ToString("MMM dd, yyyy", CultureInfo.CurrentCulture))</span>
-								</li>
-							}
-						</ul>
-					</div>
-				</details>
-			}
+		<div class="accordion accordion-gap">
+		@foreach (var yearGroup in blogPostsPerYear)
+		{
+			<details class="accordion-item" open>
+				<summary class="accordion-header gap-4" id="@HeadingKey(yearGroup.Key)">
+					<span class="fs-xl fw-bold">@yearGroup.Key</span>
+					<span class="fg-3 fs-sm">@yearGroup.Count() posts</span>
+					<AccordionIcon />
+				</summary>
+				<ul class="list-group list-group-flush">
+					@foreach (var blogPost in yearGroup.OrderByDescending(b => b.UpdatedDate))
+					{
+						<li class="list-group-item list-group-item-action position-relative d-flex flex-wrap justify-content-between align-items-baseline column-gap-5">
+							<a href="/blogPost/@blogPost.Id/@blogPost.Slug" class="fg-reset text-decoration-none stretched-link">@blogPost.Title</a>
+							<time class="fg-3 fs-sm" datetime="@blogPost.UpdatedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)">@blogPost.UpdatedDate.ToString("MMM dd", CultureInfo.CurrentCulture)</time>
+						</li>
+					}
+				</ul>
+			</details>
+		}
 		</div>
 	}
 </div>

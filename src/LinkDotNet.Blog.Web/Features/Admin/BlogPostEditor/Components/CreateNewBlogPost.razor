@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-7">
-                <h2 class="fw-bold fg-primary mb-0">@Title</h2>
+                <h2 class="fw-bold mb-0">@Title</h2>
                 <div class="d-flex gap-3">
                     <span class="badge fg-3 px-5 py-3 fw-medium">
                         @GetStatusText()
@@ -44,7 +44,7 @@
             <div class="lg:col-8">
                 <div class="card shadow-sm border-0">
                     <div class="card-header border-bottom-0 py-5">
-                        <h5 class="card-title mb-0 fg-primary">Content</h5>
+                        <h5 class="card-title mb-0 fw-semibold">Content</h5>
                     </div>
                     <div class="card-body p-0">
                                 <div class="p-7 border-bottom">
@@ -129,11 +129,11 @@
                     <div class="lg:col-4">
                         <div class="card shadow-sm border-0 mb-7">
                             <div class="card-header border-bottom-0 py-5">
-                                <h6 class="card-title mb-0 fg-primary">Quick Actions</h6>
+                                <h6 class="card-title mb-0 fw-semibold">Quick Actions</h6>
                             </div>
                             <div class="card-body">
                                 <div class="d-grid">
-                                    <button class="btn btn-solid theme-primary fw-medium transition" type="submit" disabled="@(!canSubmit)">
+                                    <button class="btn btn-solid theme-primary fw-medium" type="submit" disabled="@(!canSubmit)">
                                         @(BlogPost != null ? "Update Post" : "Create Post")
                                     </button>
                                 </div>
@@ -142,7 +142,7 @@
 
                         <div class="card shadow-sm border-0 mb-7">
                             <div class="card-header border-bottom-0 py-5">
-                                <h6 class="card-title mb-0 fg-primary">Tags</h6>
+                                <h6 class="card-title mb-0 fw-semibold">Tags</h6>
                             </div>
                             <div class="card-body">
                                 <div class="position-relative">
@@ -161,7 +161,7 @@
 
                         <div class="card shadow-sm border-0 mb-7">
                             <div class="card-header border-bottom-0 py-5">
-                                <h6 class="card-title mb-0 fg-primary">Publishing & Visibility</h6>
+                                <h6 class="card-title mb-0 fw-semibold">Publishing & Visibility</h6>
                             </div>
                             <div class="card-body">
                                 <div class="form-field mb-7">
@@ -205,7 +205,7 @@
 
                         <div class="card shadow-sm border-0 mb-7">
                             <div class="card-header border-bottom-0 py-5">
-                                <h6 class="card-title mb-0 fg-primary">Featured Image</h6>
+                                <h6 class="card-title mb-0 fw-semibold">Featured Image</h6>
                             </div>
                             <div class="card-body">
                                 <div class="mb-5">
@@ -230,7 +230,7 @@
 
                         <div class="card shadow-sm border-0">
                             <div class="card-header border-bottom-0 py-5">
-                                <h6 class="card-title mb-0 fg-primary">Cache Management</h6>
+                                <h6 class="card-title mb-0 fw-semibold">Cache Management</h6>
                             </div>
                             <div class="card-body">
                                 <div class="form-field mb-5">
@@ -249,7 +249,7 @@
                         {
                             <div class="card shadow-sm border-0 mt-7">
                                 <div class="card-header border-bottom-0 py-5 d-flex justify-content-between align-items-center">
-                                    <h6 class="card-title mb-0 fg-primary">Version History</h6>
+                                    <h6 class="card-title mb-0 fw-semibold">Version History</h6>
                                     <span class="badge theme-secondary">@versionHistory.Count</span>
                                 </div>
                                 <div class="card-body p-0">

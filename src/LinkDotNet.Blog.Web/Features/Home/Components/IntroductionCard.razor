@@ -5,10 +5,10 @@
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 
 <div style="@IntroductionStyle" class="@IntroductionClass">
-	<div class="introduction-container">
-		<div class="profile-picture" style="background-image: url('@Introduction.Value.ProfilePictureUrl');">
+	<div class="introduction-container d-flex flex-column align-items-center gap-7 mx-auto px-5 py-12">
+		<div class="profile-picture w-9 ratio-1x1 rounded-circle flex-shrink-0" style="background-image: url('@Introduction.Value.ProfilePictureUrl');">
 		</div>
-		<div class="profile-text d-flex flex-column">
+		<div class="profile-text d-flex flex-column fs-lg text-center">
 			<div>@MarkdownConverter.ToMarkupString(Introduction.Value.Description)</div>
 			<SocialAccounts Social="@Social.Value"></SocialAccounts>
 			@if (SupportConfiguration.Value.ShowUnderIntroduction)

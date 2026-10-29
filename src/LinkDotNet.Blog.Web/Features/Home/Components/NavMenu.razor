@@ -5,11 +5,11 @@
 @inject NavigationManager NavigationManager
 @implements IDisposable
 
-<nav class="navbar lg:navbar-expand w-100">
+<nav class="navbar xl:navbar-expand w-100 sticky-top site-nav">
     <div class="container-fluid">
         @if (!string.IsNullOrEmpty(Configuration.Value.BlogBrandUrl))
         {
-            <a class="nav-brand ms-12" href="/">
+            <a class="navbar-brand ms-3 xl:ms-7" href="/">
                 <img style="max-height: 70px; width: 70px; height: 70px;"
                      src="@Configuration.Value.BlogBrandUrl.ToAbsoluteUrl(NavigationManager.BaseUri)"
                      alt="brand" />
@@ -17,7 +17,7 @@
         }
         else
         {
-            <a class="nav-brand barcode ms-12" href="/">@Configuration.Value.BlogName</a>
+            <a class="navbar-brand barcode ms-3 xl:ms-7" href="/">@Configuration.Value.BlogName</a>
         }
         <button class="btn-icon navbar-toggler" type="button" data-bs-toggle="drawer" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon" aria-hidden="true"></span>
@@ -27,16 +27,16 @@
                 <button type="button" class="btn-close ms-auto" data-bs-dismiss="drawer" aria-label="Close"></button>
             </div>
             <div class="drawer-body">
-            <ul class="navbar-nav lg:ms-auto mb-3 lg:mb-0 lg:me-12 column-gap-7">
-	            <li><a class="nav-link" href="/"><i class="home"></i> Home</a></li>
-	            <li><a class="nav-link" href="/archive"><i class="books"></i> Archive</a></li>
-	            <li><a class="nav-link" href="/bookmarks"><i class="bookmark"></i> Bookmarks</a>
+            <ul class="navbar-nav xl:ms-auto mb-3 xl:mb-0 xl:me-7 column-gap-3">
+	            <li><a class="nav-link" href="/">Home</a></li>
+	            <li><a class="nav-link" href="/archive">Archive</a></li>
+	            <li><a class="nav-link" href="/bookmarks">Bookmarks</a>
 		        </li>
 	            @if (Configuration.Value.IsAboutMeEnabled)
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="AboutMe">
-                            <i class="profile"></i> About me
+                            About me
                         </a>
                     </li>
                 }
@@ -45,30 +45,19 @@
                 {
                     <li class="nav-item">
                         <a class="nav-link" href="SupportMe">
-                            <i class="coin-dollar"></i> Support me
+                            Support me
                         </a>
                     </li>
                 }
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#" id="rssDropdown" role="button" data-bs-toggle="menu" aria-expanded="false" aria-label="RSS Selector">
-                        <i class="rss2"></i> RSS
-                    </a>
-                    <div class="menu" aria-labelledby="rssDropdown">
-                        <a class="menu-item" href="/feed.rss" target="_blank" aria-label="RSS with All Posts">All Posts (Summary)</a>
-                        <a class="menu-item" href="/feed.rss?withContent=true" target="_blank" aria-label="RSS with Full Content">Most Recent Posts (Full Content)</a>
-                    </div>
-                </li>
 
                 <AccessControl CurrentUri="@currentUri"></AccessControl>
                 <li class="nav-item d-flex align-items-center"><ThemeToggler Class="nav-link"></ThemeToggler></li>
 
                 @if (Configuration.Value.EnableTagDiscoveryPanel)
                 {
-                    <li class="nav-item d-flex align-items-center lg:me-3 mb-3 lg:mb-0">
-                        <a class="nav-link d-flex align-items-center justify-content-center" @onclick="ToggleTagDiscoveryPanel"
-                           style="font-family: 'icons'; font-weight: 900; cursor: pointer;"
-                           title="Discover new topics"> &#xE936; </a>
+                    <li class="nav-item d-flex align-items-center xl:me-3 mb-3 xl:mb-0">
+                        <a class="nav-link" role="button" @onclick="ToggleTagDiscoveryPanel"
+                           title="Discover new topics"><i class="price-tags"></i><span class="xl:d-none">Discover topics</span></a>
                     </li>
                 }
 

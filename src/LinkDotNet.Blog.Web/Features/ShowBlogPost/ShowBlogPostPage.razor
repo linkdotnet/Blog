@@ -50,7 +50,7 @@ else if (BlogPost is not null)
 	<div class="d-flex justify-content-center pt-3 blog-outer-box">
 		<div class="blog-container">
 			<div class="blog-inner-content">
-				<header class="text-center">
+				<header>
 					<h1 class="fw-bold">@BlogPost.Title</h1></header>
 				<div class="fg-3 d-flex flex-wrap align-items-center gap-5 meta-info">
 					<div class="d-inline-flex align-items-center">
@@ -73,12 +73,11 @@ else if (BlogPost is not null)
 					</div>
 					@if (BlogPost.Tags is not null && BlogPost.Tags.Any())
 					{
-						<div class="d-inline-flex align-items-center flex-wrap">
-							<span class="blogpost-tag me-3"></span>
-							<div class="d-flex flex-wrap gap-3">
+						<div class="w-100">
+							<div class="d-flex flex-wrap gap-2">
 								@foreach (var tag in BlogPost.Tags)
 								{
-									<a class="goto-tag badge theme-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
+									<a class="goto-tag badge badge-subtle theme-primary rounded-pill text-decoration-none" href="/searchByTag/@(Uri.EscapeDataString(tag))">@tag</a>
 								}
 							</div>
 						</div>
@@ -89,7 +88,7 @@ else if (BlogPost is not null)
 					<BlogPostAdminActions BlogPostId="@BlogPostId"></BlogPostAdminActions>
 				</div>
 
-				<div class="pt-3">
+				<div class="pt-3 toc-slot">
 					<TableOfContents Content="@BlogPost.Content" CurrentUri="@NavigationManager.Uri"></TableOfContents>
 				</div>
 
@@ -103,7 +102,9 @@ else if (BlogPost is not null)
 			</div>
             @if (SupportConfiguration.Value.ShowUnderBlogPost)
             {
-                <DonationSection />
+                <div class="pt-6">
+                    <DonationSection />
+                </div>
             }
             @if (AppConfiguration.Value.ShowSimilarPosts)
 			{
@@ -134,6 +135,7 @@ else if (BlogPost is not null)
 		: $"blogPost/{BlogPost.Id}/{BlogPost.Slug}";
 	private IReadOnlyCollection<ShortCode> shortCodes = [];
 	private bool isBookmarked;
+	private string? spiedBlogPostId;
 	private MarkupString renderedContent;
 
 	private BlogPost? BlogPost { get; set; }
@@ -154,6 +156,13 @@ else if (BlogPost is not null)
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JsRuntime.InvokeVoidAsync("highlightCodeBlocks");
+
+        if (BlogPost is not null && BlogPost.Id != spiedBlogPostId)
+        {
+	        spiedBlogPostId = BlogPost.Id;
+	        await using var _ = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/ShowBlogPost/ShowBlogPostPage.razor.js");
+	        await JsRuntime.InvokeVoidAsync("spyToc");
+        }
 
         if (!firstRender)
         {

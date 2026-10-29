@@ -2,7 +2,7 @@
 @inject IJSRuntime JSRuntime
 @inject ILocalStorageService LocalStorageService
 
-<div class="position-relative d-inline-block @Class cursor-pointer" role="button" @onclick="ToggleMode" title="Toggle theme">
+<div class="position-relative d-inline-flex align-items-center @Class" role="button" @onclick="ToggleMode" title="Toggle theme">
 
 	@if (currentTheme == "light")
 	{
@@ -36,6 +36,7 @@
 			<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
 		</svg>
 	}
+	<span class="xl:d-none">Toggle theme</span>
 </div>
 
 @code {
@@ -51,11 +52,12 @@
 		{
 			await using var _ = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./Features/Home/Components/ThemeToggler.razor.js");
 
-			currentTheme = await LocalStorageService.ContainsKeyAsync(StorageKey)
+			var hasStoredTheme = await LocalStorageService.ContainsKeyAsync(StorageKey);
+			currentTheme = hasStoredTheme
 				? await LocalStorageService.GetItemAsync<string>(StorageKey)
 				: await JSRuntime.InvokeAsync<string>("getCurrentSystemPreference");
 
-			await JSRuntime.InvokeVoidAsync("setTheme", currentTheme);
+			await JSRuntime.InvokeVoidAsync("setTheme", currentTheme, hasStoredTheme);
 			StateHasChanged();
 		}
 	}
@@ -63,7 +65,7 @@
 	private async Task ToggleMode()
 	{
 		currentTheme = currentTheme == "light" ? "dark" : "light";
-		await JSRuntime.InvokeVoidAsync("setTheme", currentTheme);
+		await JSRuntime.InvokeVoidAsync("setTheme", currentTheme, true);
 		await LocalStorageService.SetItemAsync(StorageKey, currentTheme);
 	}
 }

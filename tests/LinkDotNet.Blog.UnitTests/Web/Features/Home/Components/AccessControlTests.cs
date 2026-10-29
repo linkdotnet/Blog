@@ -32,14 +32,13 @@ public class AccessControlTests : BunitContext
     }
 
     [Fact]
-    public void ShouldShowLoginAndHideAdminWhenNotLoggedIn()
+    public void ShouldRenderNothingWhenNotLoggedIn()
     {
         AddAuthorization();
 
         var cut = Render<AccessControl>();
 
-        cut.FindAll("a:contains('Admin')").ShouldBeEmpty();
-        cut.FindAll("a:contains('Log in')").ShouldHaveSingleItem();
+        cut.FindAll("a").ShouldBeEmpty();
     }
 
     [Fact]
@@ -70,18 +69,6 @@ public class AccessControlTests : BunitContext
         var cut = Render<AccessControl>();
 
         cut.FindAll("a[href='broken-links']").Count.ShouldBe(expectedLinks);
-    }
-
-    [Fact]
-    public void LoginShouldHaveCurrentUriAsRedirectUri()
-    {
-        const string currentUri = "http://localhost/test";
-        AddAuthorization();
-
-        var cut = Render<AccessControl>(
-            p => p.Add(s => s.CurrentUri, currentUri));
-
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.ShouldContain(currentUri);
     }
 
     [Fact]

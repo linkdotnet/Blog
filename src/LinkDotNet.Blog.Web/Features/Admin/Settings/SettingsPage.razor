@@ -12,7 +12,9 @@
 
 <div class="container">
 	<h3 class="fw-bold">Settings</h3>
-	<table class="table table-responsive table-hover">
+	<div class="table-card">
+	<div class="table-responsive">
+	<table class="table table-hover align-middle">
 		<thead>
 		<tr>
 			<th scope="col">Configuration Name</th>
@@ -27,24 +29,26 @@
 			<td>Clears all cached data including the first page, sitemap, and other cached content.<br/>
 				Use this to immediately reflect changes across the blog.</td>
 			<td>-</td>
-			<td><button class="btn btn-solid theme-warning" id="invalidate-cache" @onclick="InvalidateCacheAsync">Clear Cache</button></td>
+			<td><button class="btn btn-subtle theme-primary" id="invalidate-cache" @onclick="InvalidateCacheAsync">Clear Cache</button></td>
 		</tr>
 		<tr>
 			<td>Run Visit Counter Data Collection</td>
 			<td>The visit counter data collection is a background job that collects the visit data of the blog posts.<br/>
 				The job runs every 10 minutes. The job can be run on demand.</td>
 			<td>10 Minutes</td>
-			<td><button class="btn btn-solid theme-warning" id="run-visit-transformer" @onclick="RunVisitTransformer">Run Transformer</button></td>
+			<td><button class="btn btn-subtle theme-primary" id="run-visit-transformer" @onclick="RunVisitTransformer">Run Transformer</button></td>
 		</tr>
 		<tr>
 			<td>Broken Link Checker</td>
 			<td>Checks all external links of published blog posts and lists the broken ones under <a href="broken-links">Broken links</a>.<br/>
 				The job runs every day at 03:00. It can be turned off via <code>EnableBrokenLinkChecker</code> in the appsettings.json.</td>
 			<td>@(ApplicationConfiguration.Value.EnableBrokenLinkChecker ? "Enabled" : "Disabled")</td>
-			<td><button class="btn btn-solid theme-warning" id="run-broken-link-checker" @onclick="RunBrokenLinkChecker" disabled="@(!ApplicationConfiguration.Value.EnableBrokenLinkChecker)">Run Checker</button></td>
+			<td><button class="btn btn-subtle theme-primary" id="run-broken-link-checker" @onclick="RunBrokenLinkChecker" disabled="@(!ApplicationConfiguration.Value.EnableBrokenLinkChecker)">Run Checker</button></td>
 		</tr>
 		</tbody>
 	</table>
+	</div>
+	</div>
 </div>
 
 @code {

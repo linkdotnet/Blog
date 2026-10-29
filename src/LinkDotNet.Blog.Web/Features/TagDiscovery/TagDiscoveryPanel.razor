@@ -15,7 +15,7 @@
          style="z-index:1050; pointer-events:none;">
 
         <div @ref="_panelRef"
-             class="bg-body border rounded shadow p-5"
+             class="bg-body border rounded-9 shadow-lg p-5"
              style="max-width: 400px; max-height: 70vh; overflow-y:auto; pointer-events:auto;"
              tabindex="0"
              @onkeydown="HandleKeyDown">
@@ -28,15 +28,15 @@
             }
             else
             {
-                <div class="d-flex flex-wrap gap-3">
+                <h2 class="h5 fw-semibold mb-4">Discover topics</h2>
+                <div class="d-flex flex-wrap gap-2">
                     @foreach (var tag in _tags)
                     {
-                        <span class="badge theme-secondary d-flex align-items-center gap-1"
-                              style="cursor: pointer;"
-                              @onclick="() => Navigate(tag.Name)">
+                        <button type="button" class="badge badge-subtle theme-primary rounded-pill border-0"
+                                @onclick="() => Navigate(tag.Name)">
                             @tag.Name
-                            <span class="badge bg-1 fg-black">@tag.Count</span>
-                        </span>
+                            <span class="opacity-75">@tag.Count</span>
+                        </button>
                     }
                 </div>
             }
