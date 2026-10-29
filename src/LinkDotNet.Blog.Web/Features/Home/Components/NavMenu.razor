@@ -3,6 +3,7 @@
 @inject IOptions<ApplicationConfiguration> Configuration
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 @implements IDisposable
 
 <nav class="navbar xl:navbar-expand w-100 sticky-top site-nav">
@@ -96,11 +97,17 @@
     private void UpdateUri(object? sender, LocationChangedEventArgs e)
     {
         currentUri = e.Location;
-        StateHasChanged();
+        _ = InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            await JSRuntime.InvokeVoidAsync("closeDrawer");
+        });
     }
 
-    private void ToggleTagDiscoveryPanel()
+    private async Task ToggleTagDiscoveryPanel()
     {
+        // The drawer is a modal dialog, so the panel would open behind it and stay inert
+        await JSRuntime.InvokeVoidAsync("closeDrawer");
         _isOpen = !_isOpen;
     }
 

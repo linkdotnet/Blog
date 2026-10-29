@@ -59,12 +59,11 @@
     <script type="module">
         import { Drawer } from 'https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js';
         // Blazor navigates without a page load, so the mobile navigation drawer would stay open
-        document.addEventListener('click', e => {
-            const drawer = e.target.closest('.drawer');
-            if (drawer && e.target.closest('a[href]:not([href="#"])')) {
+        window.closeDrawer = () => {
+            for (const drawer of document.querySelectorAll('dialog.drawer[open]')) {
                 Drawer.getInstance(drawer)?.hide();
             }
-        });
+        };
     </script>
     <script defer src="components/slideshow.js" ></script>
 </body>

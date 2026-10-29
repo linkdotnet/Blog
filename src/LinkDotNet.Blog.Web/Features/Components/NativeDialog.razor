@@ -64,6 +64,11 @@
         {
             try
             {
+                if (isShown)
+                {
+                    await module.InvokeVoidAsync("dispose", element);
+                }
+
                 await module.DisposeAsync();
             }
             catch (JSDisconnectedException)

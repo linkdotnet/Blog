@@ -15,6 +15,7 @@ public class NavMenuTests : BunitContext
     public NavMenuTests()
     {
         ComponentFactories.Add<ThemeToggler, ThemeTogglerStub>();
+        JSInterop.SetupVoid("closeDrawer");
 
         var tagQueryService = Substitute.For<ITagQueryService>();
         Services.AddSingleton(tagQueryService);
@@ -37,6 +38,19 @@ public class NavMenuTests : BunitContext
         cut.FindComponent<SearchInput>().Find("button").Click();
 
         navigationManager.Uri.ShouldEndWith("search/Text");
+    }
+
+    [Fact]
+    public void ShouldCloseDrawerWhenNavigating()
+    {
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
+        AddAuthorization();
+        var navigationManager = Services.GetRequiredService<NavigationManager>();
+        Render<NavMenu>();
+
+        navigationManager.NavigateTo("archive");
+
+        JSInterop.VerifyInvoke("closeDrawer");
     }
 
     [Fact]
