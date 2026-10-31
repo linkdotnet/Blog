@@ -6,18 +6,18 @@ This is contrasted by Minor changes. These are things where the user does not ne
 
 Breaking changes are recorded in the [MIGRATION.md](../../MIGRATION.md). Since version 9 of the blog, “Entity Framework Migrations” has been introduced for all SQL providers. You can read more in the [documentation](../Storage/Readme.md). In a nutshell, this means that database migration can be carried out easily via the “ef migration” CLI tool. More on this in the documentation linked above.
 
-Changes for the appsettings.json must currently still be made manually. The exact changes that need to be made here can be found in MIGRATION.md.
+Configuration migrations from version 11 onward can be applied with the Upgrade Assistant. It skips the version-controlled `appsettings.json`; run it against environment-specific files such as `appsettings.Production.json`. Earlier configuration changes and any database changes may still require manual steps. Check `MIGRATION.md` for the steps for each release.
 
 ## Automated Configuration Migration (Version 12+)
 
-Starting with **version 12**, the blog includes an **Automated Upgrade Assistant** that handles appsettings.json migrations automatically. This tool eliminates the need for manual configuration changes in most cases.
+Starting with **version 12**, the repository includes an **Automated Upgrade Assistant** for supported `appsettings.json` migrations. It does not replace release-specific database migration steps or cover configuration changes made before its migration chain begins.
 
 ### What the Upgrade Assistant Does
 
 - **Automatic Detection** - Detects your current configuration version
 - **Sequential Migration** - Applies necessary migrations step-by-step
 - **Safe Backups** - Creates timestamped backups before making any changes
-- **Smart Filtering** - Skips version-controlled `appsettings.json`, only migrates environment-specific files
+- **File filtering** - Skips the version-controlled `appsettings.json`; run it on environment-specific configuration files
 - **Colorful Output** - Provides clear, color-coded feedback about changes and warnings
 
 ### How to Use
@@ -28,10 +28,10 @@ Run the Upgrade Assistant from your blog directory:
 # Preview changes without applying them
 dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --dry-run
 
-# Migrate all environment-specific appsettings files
+# Migrate environment-specific appsettings files in the current directory
 dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant
 
-# Migrate a specific file
+# Migrate a specific environment-specific file (the base appsettings.json is skipped)
 dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --path appsettings.Production.json
 ```
 

@@ -18,7 +18,7 @@ For more about application registration, please visit: https://learn.microsoft.c
 
 ### Configuration
 
-In `appsettings.json`, change the `AuthenticationProvider` to `AzureAD`
+In `appsettings.json`, set `Authentication:Provider` to `AzureAD`
 and add the following configurations
 
 ```json

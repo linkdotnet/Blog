@@ -14,7 +14,7 @@ through the possibilities.
 -   [Docker](Docker.md)
 
 ### Updates
-Going from one version to another can introduce major breaking changes. The [release page](https://github.com/linkdotnet/Blog/releases) or [`MIGRATION.md`](../../MIGRATION.md) will show the steps to migrate. In newer version automatic is possible (Entity Framework for SQL-based databases) and a custom migration tool for `appsettings.json` is provided.
+Going from one version to another can introduce breaking changes. Check the [release page](https://github.com/linkdotnet/Blog/releases) and [`MIGRATION.md`](../../MIGRATION.md) for the required steps. The Upgrade Assistant migrates supported `appsettings.json` settings; SQL database schema changes must be applied explicitly with EF Core migrations or the release-specific SQL instructions.
 
 ## Local Development
 To spin up some mock data for local development, use the following method when registering services:

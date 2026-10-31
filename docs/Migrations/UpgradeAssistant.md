@@ -1,6 +1,6 @@
 # Configuration Upgrade Assistant
 
-The Blog Upgrade Assistant is an automated tool that helps you migrate your `appsettings.json` configuration files to the latest version when upgrading the blog to a new major version. This was introduced in version 12 of the blog. The update software tries to upgrade from version 11 to 12 automatically but not from earlier versions.
+The Blog Upgrade Assistant migrates supported configuration settings when upgrading the blog. Its migration chain starts at version 11.0 and currently ends at 17.0; it does not apply configuration migrations from before 11.0. It was introduced in version 12.
 
 ## Why Use the Upgrade Assistant?
 
@@ -42,15 +42,17 @@ The simplest way to use the tool is to run it from your blog directory:
 # Navigate to your blog installation
 cd /path/to/your/blog
 
-# Run the upgrade assistant
+# Run the upgrade assistant; it skips the version-controlled appsettings.json
 dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant
 ```
 
 This will:
-1. Find all `appsettings*.json` files in the current directory
+1. Find environment-specific `appsettings*.json` files in the current directory (the base `appsettings.json` is skipped)
 2. Detect the current configuration version
-3. Apply all necessary migrations
+3. Apply the supported migrations from version 11 onward
 4. Save backups to `./backups` directory
+
+If you have configuration from before version 11, review and perform any older manual configuration changes before using the tool.
 
 ### Preview Changes (Dry Run)
 
@@ -79,6 +81,8 @@ To migrate all files in a specific directory:
 dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --path /path/to/config
 ```
 
+The tool skips a file named `appsettings.json`, including when it is provided directly. Use an environment-specific name such as `appsettings.Production.json`.
+
 ### Custom Backup Location
 
 By default, backups are saved to `./backups`. To use a custom location:
@@ -106,17 +110,17 @@ The tool uses color-coded output for clarity:
 ℹ Backup directory: ./backups
 ℹ Found 2 file(s) to process.
 
-═══ Processing: appsettings.json ═══
+═══ Processing: appsettings.Production.json ═══
 
-ℹ Current version: Not set (pre-12.0)
-  → Found 1 migration(s) to apply:
+ℹ Current version: Not set (assumed 11.0)
+  → Found 5 migration(s) to apply:
   →   • 11.0 → 12.0: Adds ShowBuildInformation setting to control build information display.
-✓ Backup created: ./backups/appsettings_20251221_120000.json
+✓ Backup created: ./backups/appsettings.Production_20261031_120000.json
   → Applying migration: 11.0 → 12.0
 ℹ Added 'ShowBuildInformation' setting. Controls display of build information in the footer.
 ✓ Migration 11.0 → 12.0 applied successfully.
 ...
-✓ File updated successfully: /path/to/blog/appsettings.json
+✓ File updated successfully: /path/to/blog/appsettings.Production.json
 
 ═══ Migration Complete ═══
 
@@ -136,13 +140,13 @@ The tool looks for a `ConfigVersion` field in your `appsettings.json`:
 }
 ```
 
-If this field doesn't exist, the tool assumes you're running version 11.0 or earlier and will apply all necessary migrations.
+If this field doesn't exist, the tool treats the file as version 11.0 and applies the supported migrations from 11.0 onward. It does not migrate settings from versions before 11.0.
 
 ### Migration Chain
 
 The tool applies migrations sequentially:
 1. Detects current version (e.g., 12.0)
-2. Finds all migrations from current to latest (12.0→13.0→15.0→16.0→17.0)
+2. Finds all migrations from current to latest (11.0→12.0→13.0→15.0→16.0→17.0)
 3. Applies each migration in order
 4. Updates the `ConfigVersion` field to the latest version
 
@@ -151,7 +155,7 @@ The tool applies migrations sequentially:
 Before making any changes, the tool:
 1. Creates a `backups` directory (or uses the specified backup location)
 2. Copies each file with a timestamp: `appsettings_20241221_120000.json`
-3. Preserves the original file structure and formatting
+3. Writes a backup copy of the original file
 
 ### Idempotency
 
@@ -162,20 +166,6 @@ The tool is **idempotent** - running it multiple times on the same file is safe:
 
 ## Migration Details
 
-
-**Changes:**
-- Adds `UseMultiAuthorMode` setting (default: `false`)
-
-**After:**
-```json
-{
-  "UseMultiAuthorMode": false
-}
-```
-
-**Manual Steps Required:**
-- Set to `true` if you want multi-author support
-- Configure author information per blog post
 
 ### Version 11.0 → 12.0
 

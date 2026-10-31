@@ -67,23 +67,15 @@ dotnet run --project tools/LinkDotNet.Blog.UpgradeAssistant -- --backup-dir ./my
 
 ## Supported Migrations
 
-The tool currently supports migrations from version 8.0 to 15.0:
+The tool's migration chain starts at version 11.0. An unversioned configuration is treated as pre-11.0, and the tool applies the migrations from 11.0 onward:
 
-### 8.0 → 9.0
-- Moves donation settings (`KofiToken`, `GithubSponsorName`, `PatreonName`) to `SupportMe` section
-- Adds `ShowSimilarPosts` setting
+- **11.0 → 12.0:** Adds `ShowBuildInformation`.
+- **12.0 → 13.0:** Adds `EnableTagDiscoveryPanel`.
+- **13.0 → 15.0:** Adds `EnableBrokenLinkChecker` (14.0 had no configuration changes).
+- **15.0 → 16.0:** Adds `ShowCodeBlockLanguage`.
+- **16.0 → 17.0:** Adds `EnableMarkdownForLlms`.
 
-### 9.0 → 11.0
-- Adds `UseMultiAuthorMode` setting
-
-### 11.0 → 12.0
-- Adds `ShowBuildInformation` setting
-
-### 12.0 → 13.0
-- Adds `EnableTagDiscoveryPanel` setting
-
-### 13.0 → 15.0
-- Adds `EnableBrokenLinkChecker` setting (14.0 had no configuration changes)
+The tool does not migrate configuration changes before version 11.0. Review [MIGRATION.md](../../MIGRATION.md) for all manual configuration and database steps.
 
 ## Configuration Version
 
@@ -91,7 +83,7 @@ After migration, your `appsettings.json` will include a `ConfigVersion` field:
 
 ```json
 {
-  "ConfigVersion": "15.0",
+  "ConfigVersion": "17.0",
   ...
 }
 ```
@@ -103,6 +95,7 @@ This field is used to track the configuration schema version and determine which
 - **Always backup** your configuration files before running migrations (the tool does this automatically)
 - **Review changes** after migration to ensure all settings are correct
 - **Database migrations** may be required separately - see `MIGRATION.md` for details
+- The version-controlled `appsettings.json` file is skipped; use environment-specific files such as `appsettings.Production.json`
 - The tool is idempotent - running it multiple times on the same file is safe
 
 ## Examples

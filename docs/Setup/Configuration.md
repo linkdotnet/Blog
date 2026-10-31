@@ -9,72 +9,52 @@ Browser spellchecking uses the `<html lang="en">` value in
 
 ```json
 {
-	"BlogName": "linkdotnet",
-	"BlogBrandUrl": "http//some.url/image.png",
-	"GithubAccountUrl": "",
-	"Social": {
-		"GithubAccountUrl": "",
-		"LinkedInAccountUrl": "",
-		"TwitterAccountUrl": "",
-		"YoutubeAccountUrl": "",
-	},
-	"Introduction": {
-		"Description": "Some nice text about yourself. Markup can be used [Github](https://github.com/someuser/somerepo)",
-		"BackgroundUrl": "assets/profile-background.webp",
-		"ProfilePictureUrl": "assets/profile-picture.webp"
-	},
-	"PersistenceProvider": "Sqlite",
-	"ConnectionString": "Data Source=blog.db",
-	"DatabaseName": "",
-	"Authentication": {
-		"Provider": "PROVIDER_NAME",
-		"Domain": "",
-		"ClientId": "",
-		"ClientSecret": "",
-		"LogoutUri": ""
-	},
-	"BlogPostsPerPage": 10,
-	"FirstPageCacheDurationInMinutes": 10,
-	"ProfileInformation": {
-		"Name": "Steven Giesel",
-		"Heading": "Software Engineer",
-		"ProfilePictureUrl": "assets/profile-picture.webp"
-	},
-	"Giscus": {
-		"Repository": "github/repo",
-		"RepositoryId": "id",
-		"Category": "general",
-		"CategoryId": "id"
-	},
-	"Disqus": {
-		"Shortname": "blog"
-	},
-	"ShowReadingIndicator": true,
-	"SimlarBlogPosts": "true",
-	"ShowBuildInformation": true,
-	"SupportMe": {
-		"KofiToken": "ABC123",
-		"GithubSponsorName": "your-tag-here",
-		"PatreonName": "your-tag-here",
-		"ShowUnderBlogPost": true,
-		"ShowUnderIntroduction": true,
-		"ShowInFooter": true,
-		"ShowSupportMePage": true,
-		"SupportMePageDescription": "Buy my book here: [My Blazor Book](https://google.com) or please contribute to my open-source project here: [My Awesome Repo](https://github.com) . This can be **markdown**."
-	},
-	"ImageStorageProvider": "Azure",
-	"ImageStorage" : {
-		"AuthenticationMode": "Default",
-		"ConnectionString": "",
-		"ServiceUrl": "",
-		"ContainerName": "",
-		"CdnEndpoint": ""
-	},
-	"UseMultiAuthorMode": false,
-	"EnableTagDiscoveryPanel": true,
-	"EnableBrokenLinkChecker": true,
-	"ShowCodeBlockLanguage": true,
-	"EnableMarkdownForLlms": false
+  "BlogName": "My Blog",
+  "BlogBrandUrl": null,
+  "Social": {
+    "GithubAccountUrl": "",
+    "LinkedInAccountUrl": "",
+    "TwitterAccountUrl": "",
+    "YoutubeAccountUrl": "",
+    "BlueSkyHandle": ""
+  },
+  "Introduction": {
+    "Description": "A short introduction to your blog.",
+    "BackgroundUrl": "assets/profile-background.webp",
+    "ProfilePictureUrl": "assets/profile-picture.webp"
+  },
+  "PersistenceProvider": "Sqlite",
+  "ConnectionString": "Data Source=blog.db",
+  "DatabaseName": "",
+  "Authentication": {
+    "Provider": "Auth0",
+    "Domain": "",
+    "ClientId": "",
+    "ClientSecret": ""
+  },
+  "BlogPostsPerPage": 10,
+  "FirstPageCacheDurationInMinutes": 10,
+  "ProfileInformation": {
+    "Name": "Your Name",
+    "Heading": "Your role",
+    "ProfilePictureUrl": "assets/profile-picture.webp"
+  },
+  "ShowReadingIndicator": true,
+  "ShowSimilarPosts": true,
+  "ShowBuildInformation": true,
+  "UseMultiAuthorMode": false,
+  "EnableTagDiscoveryPanel": true,
+  "EnableBrokenLinkChecker": true,
+  "ShowCodeBlockLanguage": true,
+  "EnableMarkdownForLlms": false,
+  "ImageStorageProvider": "<Provider>",
+  "ImageStorage": {
+    "AuthenticationMode": "Default",
+    "ConnectionString": "",
+    "ServiceUrl": "",
+    "ContainerName": "",
+    "CdnEndpoint": ""
+  }
 }
 ```
 
@@ -87,38 +67,38 @@ Browser spellchecking uses the `<html lang="en">` value in
 | LinkedInAccountUrl                            | string         | Url to your LinkedIn account. If not set it is not shown in the introduction card                                                                                                |
 | TwitterAccountUrl                             | string         | Url to your Twitter account. If not set it is not shown in the introduction card                                                                                                 |
 | YoutubeAccountUrl                             | string         | Url to your Youtube account. If not set it is not shown in the introduction card                                                                                                 |
+| BlueSkyHandle                                 | string         | Bluesky handle used to link to your profile. If not set, the Bluesky link is not shown.                                                                                            |
 | Introduction                                  |                | Is used for the introduction part of the blog                                                                                                                                    |
 | Description                                   | MarkdownString | Small introduction text for yourself. This is also used for `<meta name="description">` tag. For this the markup will be converted to plain text                                 |
 | BackgroundUrl                                 | string         | Url or path to the background image. (Optional). See [Styling.md](../Features/Styling.md#introduction-background-image) for a visual example                                    |
 | ProfilePictureUrl                             | string         | Url or path to your profile picture                                                                                                                                              |
 | [PersistenceProvider](./../Storage/Readme.md) | string         | Declares the type of the storage provider (one of the following: `SqlServer`, `Sqlite`, `RavenDb`, `MongoDB`, `MySql`, `PostgreSql`). More in-depth explanation [here](./../Storage/Readme.md) |
 | ConnectionString                              | string         | Is used for connection to a database.                                                                                                                                            |
-| DatabaseName                                  | string         | Name of the database. Only used with `RavenDbStorageProvider`                                                                                                                    |
-| [AuthProvider](./../Authorization/Readme.md)  | string         |                                                                                                                                                                                  |
-| [PROVIDER_NAME](./../Authorization/Readme.md) | string         |                                                                                                                                                                                  |
-| Domain                                        | string         |                                                                                                                                                                                  |
-| ClientId                                      | string         |                                                                                                                                                                                  |
-| ClientSecret                                  | string         |                                                                                                                                                                                  |
-| LogoutUri                                     | string         |                                                                                                                                                                                  |
+| DatabaseName                                  | string         | Database name used by the RavenDB and MongoDB providers.                                                                                                                        |
+| Authentication:Provider                      | string         | Authentication provider configured for the app. See [Authorization](../Authorization/Readme.md).                                                                                 |
+| Authentication:Domain                        | string         | Provider domain or tenant authority.                                                                                                                                             |
+| Authentication:ClientId                      | string         | Application client ID.                                                                                                                                                           |
+| Authentication:ClientSecret                  | string         | Application client secret. Keep secrets outside committed configuration files.                                                                                                  |
+| Authentication:LogoutUri                     | string         | Optional provider logout URL, when required by the provider.                                                                                                                     |
 | BlogPostsPerPage                              | int            | Gives the amount of blog posts loaded and display per page. For more the user has to use the navigation                                                                          |
 | FirstPageCacheDurationInMinutes               | int            | The duration in minutes the first page is cached.                                                                                                                                |
-| AboutMeProfileInformation                     | node           | Sets information for the About Me Page. If omitted the page is disabled completely                                                                                               |
+| ProfileInformation                            | node           | Sets information for the About Me page. If omitted, the page is disabled.                                                                                                        |
 | Name                                          | string         | Name, which is displayed on top of the profile card                                                                                                                              |
 | Heading                                       | string         | Displayed under the name. For example job title                                                                                                                                  |
 | ProfilePictureUrl                             | string         | Displayed profile picture                                                                                                                                                        |
 | [Giscus](./../Comments/Giscus.md)             | node           | Enables the comment section via giscus. If left empty the comment section will not be shown.                                                                                     |
 | [Disqus](./../Comments/Disqus.md)             | node           | Enables the comment section via disqus. If left empty the comment section will not be shown.                                                                                     |
 | ShowReadingIndicator                          | boolean        | If set to `true` (default) a circle indicates the progress when a user reads a blog post (without comments).                                                                     |
-| SimilarBlogPosts                              | boolean        | If set to `true` (default) similar blog posts are shown at the end of a blog post.                                                                                               |
+| ShowSimilarPosts                              | boolean        | If set to `true`, similar blog posts are shown at the end of a blog post.                                                                                                         |
 | ShowBuildInformation                          | boolean        | If set to `true` (default) the build information (target framework and build timestamp) is shown in the footer.                                                                  |
 | [SupportMe](./../Donations/Readme.md)         | node           | Donation sections configuration. If left empty no donation sections will not be shown.                                                                                           |
-| [ImageStorageProvider](./../Media/Readme.md)  | string         | Declares the type of the image storage provider (currently only `Azure`).                                                                                                        |
+| [ImageStorageProvider](./../Media/Readme.md)  | string         | Declares the image storage provider: `Azure` or `Local`. Any other value disables uploads.                                                                                       |
 | [ImageStorage](./../Media/Readme.md)          | node           | Configuration for the image storage provider.                                                                                                                                    |
-| AuthenticationMode                            | string         | The authentication mode for the image storage provider. Either `Default` or `ConnectionString`                                                                                   |
-| ConnectionString                              | string         | The connection string for the image storage provider. Only used if `AuthenticationMode` is set to `ConnectionString`                                                             |
-| ServiceUrl                                    | string         | The host url of the Azure blob storage. Only used if `AuthenticationMode` is set to `Default`                                                                                    |
-| ContainerName                                 | string         | The container name for the image storage provider                                                                                                                                |
-| CdnEndpoint                                   | string         | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets.                                  |
+| ImageStorage:AuthenticationMode              | string         | The image storage authentication mode: `Default` or `ConnectionString`.                                                                                                          |
+| ImageStorage:ConnectionString                 | string         | The Azure Storage connection string. Used only when `AuthenticationMode` is `ConnectionString`.                                                                                 |
+| ImageStorage:ServiceUrl                       | string         | The Azure Blob Storage service URL. Used with `Default` authentication.                                                                                                          |
+| ImageStorage:ContainerName                    | string         | The Azure Storage container name.                                                                                                                                               |
+| ImageStorage:CdnEndpoint                      | string         | Optional CDN endpoint returned for uploaded assets instead of the storage account URL.                                                                                           |
 | UseMultiAuthorMode                            | boolean        | The default value is `false`. If set to `true` then author name will be associated with blog posts at the time of creation. This author name will be fetched from the identity provider's `name` or `nickname` or `preferred_username` claim property. |
 | EnableTagDiscoveryPanel                       | boolean        | The default value is `true`. Enables the Tag Discovery Panel, which helps users discover topics by browsing popular tags.                                                        |
 | EnableBrokenLinkChecker                       | boolean        | The default value is `true`. Checks all external links of published blog posts once a day and lists broken ones on the "Broken links" admin page.                               |
