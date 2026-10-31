@@ -27,6 +27,10 @@ The following settings in `appsettings.json` control media upload functionality:
 | ContainerName      | string | Name of the Azure Storage container to store uploaded files. It can be nested containers as well ``path/to/upload``                                                       |
 | CdnEndpoint | string | Optional CDN endpoint to use for uploaded images. If set, the blog will return this URL instead of the storage account URL for uploaded assets. |
 
+### Local storage and serving uploaded files
+
+With `ImageStorageProvider` set to `Local`, files are written to `wwwroot/uploads`. The app currently maps build-time static assets; runtime-created uploads are not served automatically by that mapping. To make local uploads accessible, configure ASP.NET Core static-file middleware to serve the uploads directory and persist that directory across container replacements. Alternatively, use Azure Blob Storage.
+
 ## Authentication Methods
 
 ### Default Authentication 
@@ -54,4 +58,4 @@ Uses a storage account connection string for authentication:
 
 ## Performance Note
 
-Use a CDN endpoint for uploaded images to improve performance. This can be set in the `CdnEndpoint` setting. Azure CDN has integrated support for HTTP/2 and bring other performance benefits.
+Use a CDN endpoint for uploaded images to improve performance. This can be set in the `CdnEndpoint` setting. A CDN can provide HTTP/2 and other performance benefits.

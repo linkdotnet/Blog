@@ -20,7 +20,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 - **Scheduled Publishing** - Plan ahead and publish automatically
 - **Similar Blog Posts** - Recommend related content to readers
 - **Comments** - Enable discussions
-- **Media Upload** - Easily include images in your posts (Azure Blob Storage and CDN Support)
+- **Media Upload** - Easily include images in your posts (Azure Blob Storage, local disk, and CDN support)
 - **SEO Optimization** - Improve search engine visibility
 - **Tag and Category System** - Organize content effectively
 - **Search Functionality** - Help readers find specific content
@@ -30,7 +30,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 - **Visit Counter** - Get visitor counters for each blog post in the internal dashboard
 - **Broken Link Checker** - External links of all blog posts are checked daily and broken ones are listed in the admin area
 - **Automated Configuration Migration** - Upgrade Assistant tool automatically migrates appsettings.json files between versions
-- **Automated Database Migrations** - Seamless database schema updates using Entity Framework Migrations
+- **Database Migration Support** - Manage SQL database schema updates using Entity Framework Core migrations
 
 ## In Action
 
@@ -44,6 +44,7 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 -   [Media Upload](./docs/Media/Readme.md)
 -   [Search Engine Optimization (SEO)](./docs/SEO/Readme.md)
 -   [Advanced Features](./docs/Features/AdvancedFeatures.md)
+-   [Bookmarks, drafts, and scheduled publishing](./docs/Features/AdvancedFeatures.md#bookmarks-drafts-and-scheduled-publishing)
 -   [Styling](./docs/Features/Styling.md)
 
 ## Installation

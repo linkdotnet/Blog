@@ -17,6 +17,7 @@
 - [Callouts](#callouts)
 - [Heading Anchors](#heading-anchors)
 - [Broken Link Checker](#broken-link-checker)
+- [Bookmarks, Drafts, and Scheduled Publishing](#bookmarks-drafts-and-scheduled-publishing)
 
 This page lists some of the more advanced or less-used features of the blog software.
 
@@ -65,7 +66,11 @@ The generator is under `tools/LinkDotNet.Blog.CriticalCSS`. You can run it from 
 dotnet run -- --install-playwright -o file -p "critical.css"
 ```
 
-The output of the "critical.css" should be copied into the head of the [`_Layout.cshtml`](../../src/LinkDotNet.Blog.Web/Pages/_Layout.cshtml) file.
+To inject the generated CSS into the app's HTML head, use the `layout` output mode with `src/LinkDotNet.Blog.Web/App.razor`. The tool inserts a `<style>` tag before `</head>` if there is not already one; otherwise, it replaces the existing `<style>` tag. Review the change before deploying.
+
+```bash
+dotnet run -- --output layout --path src/LinkDotNet.Blog.Web/App.razor
+```
 
 ### Options
 
@@ -95,10 +100,10 @@ dotnet run -- --output file --path critical.css
 ```
 
 #### Layout Mode
-Injects or updates the critical CSS in your layout file:
+Injects or updates the critical CSS in the specified layout file. For this Blazor app, use `src/LinkDotNet.Blog.Web/App.razor`:
 
 ```sh
-dotnet run -- --output layout --path ./Pages/Shared/_Layout.cshtml
+dotnet run -- --output layout --path src/LinkDotNet.Blog.Web/App.razor
 ```
 
 ### Examples
@@ -115,7 +120,7 @@ dotnet run -- --output file --path styles.css
 
 3. Update layout file with critical CSS:
 ```sh
-dotnet run -- --output layout --path _Layout.cshtml
+dotnet run -- --output layout --path src/LinkDotNet.Blog.Web/App.razor
 ```
 
 4. Show help information:
@@ -149,3 +154,9 @@ The broken link checker runs every day at 03:00 and checks all external (`http` 
  * The job can be started on demand from the settings page.
  * Links answering with `401`, `403` or `429` are treated as reachable, as those are mostly caused by authentication or bot protection.
  * The checker can be turned off by setting `EnableBrokenLinkChecker` to `false` in the `appsettings.json`.
+
+## Bookmarks, Drafts, and Scheduled Publishing
+
+- **Bookmarks:** Select the bookmark icon on a post, then open **Bookmarks** from the navigation menu to see saved posts. Bookmarks are stored in that browser's local storage; they are not synchronized across browsers or devices.
+- **Drafts:** In the post editor, leave **Published** unchecked to save the post as a draft. Draft posts are available from the **Drafts** area in the Admin menu and are not visible to readers.
+- **Scheduled publishing:** Set a publication date and time in the post editor. The blog publishes the post automatically when that scheduled time is reached. The publishing job runs in the app, so the app must be running for scheduled posts to be published.

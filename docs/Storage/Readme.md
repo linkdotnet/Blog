@@ -1,6 +1,6 @@
 ## Storage Provider
 
-Currently, there are 5 Storage-Provider:
+The blog currently supports six storage providers:
 
 -   RavenDb - As the name suggests for RavenDb. RavenDb automatically creates all the documents, if a database name is provided.
 -   MongoDB - Based on the official MongoDB driver. The database and collection are automatically created.
@@ -9,9 +9,7 @@ Currently, there are 5 Storage-Provider:
 -   MySql - Based on EF Core - also supports MariaDB.
 -   PostgreSql - Based on EF Core.
 
-The default (when you clone the repository) is the `Sqlite` option with an in-memory database.
-That means every time you restart the service, all posts and related objects are gone. This is useful for testing. 
-If you want to persist the data with Sqlite, you can change the `appsettings.json` file to:
+The checked-in development configuration uses `Sqlite` with a shared in-memory database. Its data is lost when the process stops, which is useful for testing. For persistent SQLite storage, set the connection string to a file path in `appsettings.json`:
 
 ```json
 {
@@ -41,14 +39,13 @@ For PostgreSql use the following:
 
 ## Entity Framework Migrations
 
-For the SQL providers (`SqlServer`, `Sqlite`, `MySql`, `PostgreSql`), you can use Entity Framework Core Migrations to create and manage the database schema. The whole documentation can be found under [*"Entity Framework Core tools reference"*](https://learn.microsoft.com/en-us/ef/core/cli/dotnet). The short version is that you can use the following steps:
+For the SQL providers (`SqlServer`, `Sqlite`, `MySql`, `PostgreSql`), use Entity Framework Core Migrations to update an existing database schema. The full documentation can be found under [*"Entity Framework Core tools reference"*](https://learn.microsoft.com/en-us/ef/core/cli/dotnet). For example:
 
 ```bash
 dotnet ef database update --project src/LinkDotNet.Blog.Infrastructure --startup-project src/LinkDotNet.Blog.Web --connection "<ConnectionString>"
 ```
 
-The `--connection` parameter is optional - if you don't specify it, it will try to grab it from your `appsettings.json` file.
-The other options is to create a sql script you can execute against your database:
+The `--connection` parameter is optional; without it, EF Core reads the connection string from application configuration. You can also generate a SQL script to review and execute against your database:
 
 ```bash
 dotnet ef migrations script --project src/LinkDotNet.Blog.Infrastructure --startup-project src/LinkDotNet.Blog.Web  
@@ -56,7 +53,7 @@ dotnet ef migrations script --project src/LinkDotNet.Blog.Infrastructure --start
 
 Here is the full documentation: [*"Applying Migrations"*](https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying).
 
-Alternatively, the blog calls `Database.EnsureCreated()` on startup, which creates the database schema if it does not exist. So you are not forced to use migrations.
+On startup, the application calls `Database.EnsureCreated()`. This creates a schema only when the database has no tables; it does not upgrade an existing schema or apply EF Core migrations. Existing installations must apply the migrations (or an equivalent SQL script) when a release requires a database change. See [MIGRATION.md](../../MIGRATION.md) for release-specific steps.
 
 ## Considerations
 For most people a Sqlite database might be the best choice between convienence and ease of setup. As it runs "in-process" there are no additional dependencies or setup required (and therefore no additional cost). As the blog tries to cache many things, the load onto the database is not that big (performance considerations). The advantages of a "real" database like SqlServer or MySql are more in the realm of backups, replication, and other enterprise features (which are not needed often times for a simple blog).
