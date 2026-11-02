@@ -3,8 +3,6 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
-@inject NavigationManager NavigationManager
-@implements IDisposable
 
 <footer class="position-absolute bottom-0 w-100 text-center fg-3" style="height: 2.5rem;">
 	<small>
@@ -12,11 +10,6 @@
 	<span class="d-inline-flex gap-5 ms-5">
 		<a class="fg-reset underline-20 hover:underline-100" href="/feed.rss" target="_blank">RSS</a>
 		<a class="fg-reset underline-20 hover:underline-100" href="/feed.rss?withContent=true" target="_blank">Full-text RSS</a>
-		<AuthorizeView>
-			<NotAuthorized>
-				<a class="fg-reset underline-20 hover:underline-100" href="/login?redirectUri=@currentUri" rel="nofollow">Log in</a>
-			</NotAuthorized>
-		</AuthorizeView>
 	</span>
 	@if (AppConfiguration.Value.ShowBuildInformation)
 	{
@@ -32,26 +25,7 @@
 </footer>
 
 @code {
-    private string currentUri = string.Empty;
-
     private string CopyrightName => AppConfiguration.Value.IsAboutMeEnabled
         ? ProfileInformation.Value.Name
         : string.Empty;
-
-    protected override void OnInitialized()
-    {
-        currentUri = NavigationManager.Uri;
-        NavigationManager.LocationChanged += UpdateUri;
-    }
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= UpdateUri;
-    }
-
-    private void UpdateUri(object? sender, LocationChangedEventArgs e)
-    {
-        currentUri = e.Location;
-        StateHasChanged();
-    }
 }
