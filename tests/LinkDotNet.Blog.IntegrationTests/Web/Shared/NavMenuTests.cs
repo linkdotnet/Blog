@@ -86,6 +86,29 @@ public class NavMenuTests : BunitContext
     }
 
     [Fact]
+    public void ShouldShowDrawerLoginWithCurrentUriAsRedirectUriWhenNotLoggedIn()
+    {
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
+        AddAuthorization();
+        Services.GetRequiredService<NavigationManager>().NavigateTo("test");
+
+        var cut = Render<NavMenu>();
+
+        ((IHtmlAnchorElement)cut.Find(".drawer-login")).Href.ShouldContain("redirectUri=http://localhost/test");
+    }
+
+    [Fact]
+    public void ShouldHideDrawerLoginWhenLoggedIn()
+    {
+        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
+        AddAuthorization().SetAuthorized("steven");
+
+        var cut = Render<NavMenu>();
+
+        cut.FindAll(".drawer-login").ShouldBeEmpty();
+    }
+
+    [Fact]
     public void ShouldShowBrandImageIfAvailable()
     {
         var config = Options.Create(new ApplicationConfigurationBuilder()

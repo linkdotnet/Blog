@@ -66,6 +66,13 @@
                     <SearchInput SearchEntered="NavigateToSearchPage"></SearchInput>
                 </li>
             </ul>
+            <AuthorizeView>
+                <NotAuthorized>
+                    <div class="xl:d-none mt-auto pt-3 border-top">
+                        <a class="drawer-login" href="/login?redirectUri=@currentUri" rel="nofollow"><i class="lock"></i>Admin log in</a>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
             </div>
         </dialog>
     </div>
