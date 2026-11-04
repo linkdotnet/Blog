@@ -4,8 +4,10 @@ using LinkDotNet.Blog.Web.Features.Home.Components;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System;
 using System.Linq;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Shared;
@@ -85,16 +87,21 @@ public class NavMenuTests : BunitContext
         cut.FindComponent<AccessControl>().Instance.CurrentUri.ShouldContain("test");
     }
 
-    [Fact]
-    public void ShouldShowDrawerLoginWithCurrentUriAsRedirectUriWhenNotLoggedIn()
+    [Theory]
+    [InlineData("post?utm_source=feed&utm_medium=rss#heading")]
+    [InlineData("post/%2Fpath?return=%252F#section")]
+    public void ShouldShowDrawerLoginWithCurrentUriAsRedirectUriWhenNotLoggedIn(string uri)
     {
         Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
         AddAuthorization();
-        Services.GetRequiredService<NavigationManager>().NavigateTo("test");
+        var navigationManager = Services.GetRequiredService<NavigationManager>();
+        navigationManager.NavigateTo(uri);
+        var expectedUri = navigationManager.Uri;
 
         var cut = Render<NavMenu>();
 
-        ((IHtmlAnchorElement)cut.Find(".drawer-login")).Href.ShouldContain("redirectUri=http://localhost/test");
+        var loginUri = new Uri(((IHtmlAnchorElement)cut.Find(".drawer-login")).Href, UriKind.Absolute);
+        QueryHelpers.ParseQuery(loginUri.Query)["redirectUri"].ToString().ShouldBe(expectedUri);
     }
 
     [Fact]
