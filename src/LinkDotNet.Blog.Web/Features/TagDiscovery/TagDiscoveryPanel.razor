@@ -3,40 +3,74 @@
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager Navigation
 
-
 @if (AppConfiguration.Value.EnableTagDiscoveryPanel && IsOpen)
 {
-    <div class="position-fixed top-0 start-0 w-100 h-100 bg-black bg-20"
-         style="z-index:1040; backdrop-filter: blur(2px);"
-         @onclick="Close">
-    </div>
+    <div class="sheet-scrim" @onclick="Close"></div>
 
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
-         style="z-index:1050; pointer-events:none;">
-
+    <div class="sheet-container">
         <div @ref="_panelRef"
-             class="bg-body border rounded-9 shadow-lg p-5"
-             style="max-width: 400px; max-height: 70vh; overflow-y:auto; pointer-events:auto;"
-             tabindex="0"
+             class="sheet"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="tag-sheet-title"
+             tabindex="-1"
              @onkeydown="HandleKeyDown">
+
+            <header class="sheet-header">
+                <h2 id="tag-sheet-title" class="sheet-title">Discover topics</h2>
+                <button type="button" class="sheet-done" @onclick="Close">Done</button>
+            </header>
 
             @if (_tags.Count == 0)
             {
-                <div class="fg-3 text-center py-3">
-                    No tags available yet.
-                </div>
+                <p class="sheet-empty">No topics available yet.</p>
             }
             else
             {
-                <h2 class="h5 fw-semibold mb-4">Discover topics</h2>
-                <div class="d-flex flex-wrap gap-2">
-                    @foreach (var tag in _tags)
+                <div class="sheet-controls">
+                    <input type="search"
+                           class="form-control rounded-pill"
+                           placeholder="Search topics"
+                           aria-label="Search topics"
+                           autocomplete="off"
+                           @bind="SearchTerm"
+                           @bind:event="oninput" />
+
+                    <div class="segmented" role="group" aria-label="Sort topics">
+                        <button type="button" aria-pressed="@IsSorted(TagSortOrder.Popular)"
+                                @onclick="() => _sortOrder = TagSortOrder.Popular">Popular</button>
+                        <button type="button" aria-pressed="@IsSorted(TagSortOrder.Alphabetical)"
+                                @onclick="() => _sortOrder = TagSortOrder.Alphabetical">A–Z</button>
+                    </div>
+                </div>
+
+                <div class="sheet-scroll">
+                    @foreach (var group in GetGroups())
                     {
-                        <button type="button" class="badge badge-subtle theme-primary rounded-pill border-0"
-                                @onclick="() => Navigate(tag.Name)">
-                            @tag.Name
-                            <span class="opacity-75">@tag.Count</span>
-                        </button>
+                        <section>
+                            @if (group.Header is not null)
+                            {
+                                <h3 class="group-header">@group.Header</h3>
+                            }
+                            <ul class="group">
+                                @foreach (var tag in group.Tags)
+                                {
+                                    <li>
+                                        <button type="button" class="tag-row"
+                                                aria-label="@tag.Name, @tag.Count @(tag.Count == 1 ? "post" : "posts")"
+                                                @onclick="() => Navigate(tag.Name)">
+                                            <span class="tag-name">@tag.Name</span>
+                                            <span class="tag-count" aria-hidden="true">@tag.Count</span>
+                                        </button>
+                                    </li>
+                                }
+                            </ul>
+                        </section>
+                    }
+
+                    @if (!_hasMatches)
+                    {
+                        <p class="sheet-empty">No topics match “@_searchTerm”.</p>
                     }
                 </div>
             }
@@ -45,14 +79,44 @@
 }
 
 @code {
+    private enum TagSortOrder
+    {
+        Popular,
+        Alphabetical,
+    }
+
+    private const string NonLetterSection = "#";
+
+    private record TagGroup(string? Header, IReadOnlyList<TagCount> Tags);
+
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
 
     private IReadOnlyList<TagCount> _tags = [];
     private ElementReference _panelRef;
+    private TagSortOrder _sortOrder = TagSortOrder.Popular;
+    private string _searchTerm = string.Empty;
+    private bool _hasMatches = true;
+    private bool _wasOpen;
+    private bool _focusPanel;
+
+    private string SearchTerm
+    {
+        get => _searchTerm;
+        set => _searchTerm = value.Trim();
+    }
 
     protected override async Task OnParametersSetAsync()
     {
+        if (IsOpen && !_wasOpen)
+        {
+            _searchTerm = string.Empty;
+            _sortOrder = TagSortOrder.Popular;
+            _focusPanel = true;
+        }
+
+        _wasOpen = IsOpen;
+
         if (IsOpen)
         {
             _tags = await TagQueryService.GetAllOrderedByUsageAsync();
@@ -61,11 +125,37 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (IsOpen)
+        if (_focusPanel)
         {
+            _focusPanel = false;
             await _panelRef.FocusAsync();
         }
     }
+
+    private string IsSorted(TagSortOrder sortOrder) => (_sortOrder == sortOrder).ToString().ToLowerInvariant();
+
+    private IReadOnlyList<TagGroup> GetGroups()
+    {
+        var matches = _tags
+            .Where(t => t.Name.Contains(_searchTerm, StringComparison.CurrentCultureIgnoreCase))
+            .ToList();
+        _hasMatches = matches.Count > 0;
+
+        if (_sortOrder == TagSortOrder.Popular)
+        {
+            return _hasMatches ? [new TagGroup(null, matches)] : [];
+        }
+
+        return matches
+            .OrderBy(t => t.Name, StringComparer.CurrentCultureIgnoreCase)
+            .GroupBy(t => GetSectionHeader(t.Name))
+            .OrderBy(g => g.Key == NonLetterSection)
+            .Select(g => new TagGroup(g.Key, g.ToList()))
+            .ToList();
+    }
+
+    private static string GetSectionHeader(string tagName) =>
+        char.IsLetter(tagName[0]) ? char.ToUpperInvariant(tagName[0]).ToString() : NonLetterSection;
 
     private async Task Close()
     {
