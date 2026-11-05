@@ -58,7 +58,7 @@
 		var visiblePosts = GetVisiblePosts();
 		@if (visiblePosts.Count == 0)
 		{
-			<p class="no-results">No results for “@searchTerm”.</p>
+			<p class="no-results">No results for “@SearchTerm”.</p>
 		}
 		else
 		{
@@ -94,14 +94,9 @@
 	private BlogPost? recentlyRemoved;
 	private CancellationTokenSource? undoTimeout;
 	private SortOrder sortOrder = SortOrder.Newest;
-	private string searchTerm = string.Empty;
 	private bool isLoading = true;
 
-	private string SearchTerm
-	{
-		get => searchTerm;
-		set => searchTerm = value.Trim();
-	}
+	private string SearchTerm { get; set; } = string.Empty;
 
 	private List<BlogPost> GetVisiblePosts() => Sort(bookmarkedPosts.Where(MatchesSearch)).ToList();
 
@@ -134,30 +129,37 @@
 
 	private async Task UndoRemoval()
 	{
-		if (recentlyRemoved is null)
+		var post = recentlyRemoved;
+		if (post is null)
 		{
 			return;
 		}
 
-		await BookmarkService.SetBookmark(recentlyRemoved.Id, true);
-		bookmarkedPosts.Add(recentlyRemoved);
-		DismissUndo();
+		recentlyRemoved = null;
+		CancelUndoTimeout();
+		await BookmarkService.SetBookmark(post.Id, true);
+		bookmarkedPosts.Add(post);
 	}
 
 	private void ScheduleUndoExpiry()
 	{
-		undoTimeout?.Cancel();
-		undoTimeout?.Dispose();
+		CancelUndoTimeout();
 		undoTimeout = new CancellationTokenSource();
-		_ = ExpireUndoAfterDelay(undoTimeout.Token);
+		_ = ExpireUndoAfterDelay(undoTimeout);
 	}
 
-	private async Task ExpireUndoAfterDelay(CancellationToken cancellationToken)
+	private async Task ExpireUndoAfterDelay(CancellationTokenSource timeout)
 	{
 		try
 		{
-			await Task.Delay(UndoDuration, cancellationToken);
-			await InvokeAsync(DismissUndo);
+			await Task.Delay(UndoDuration, timeout.Token);
+			await InvokeAsync(() =>
+			{
+				if (ReferenceEquals(undoTimeout, timeout))
+				{
+					DismissUndo();
+				}
+			});
 		}
 		catch (OperationCanceledException)
 		{
@@ -167,15 +169,23 @@
 
 	private void DismissUndo()
 	{
+		CancelUndoTimeout();
 		recentlyRemoved = null;
 		StateHasChanged();
 	}
 
+	private void CancelUndoTimeout()
+	{
+		undoTimeout?.Cancel();
+		undoTimeout?.Dispose();
+		undoTimeout = null;
+	}
+
 	private bool MatchesSearch(BlogPost post) =>
-		searchTerm.Length == 0
-		|| post.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		|| post.ShortDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		|| post.Tags.Any(tag => tag.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+		SearchTerm.Length == 0
+		|| post.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
+		|| post.ShortDescription.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
+		|| post.Tags.Any(tag => tag.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
 
 	private IEnumerable<BlogPost> Sort(IEnumerable<BlogPost> posts) => sortOrder switch
 	{
@@ -193,7 +203,6 @@
 
 	public void Dispose()
 	{
-		undoTimeout?.Cancel();
-		undoTimeout?.Dispose();
+		CancelUndoTimeout();
 	}
 }

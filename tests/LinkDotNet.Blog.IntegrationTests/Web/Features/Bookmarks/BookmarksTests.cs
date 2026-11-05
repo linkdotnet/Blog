@@ -104,6 +104,43 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
     }
 
     [Fact]
+    public async Task ShouldRestoreRemovedPostWithoutDismissingNewerUndo()
+    {
+        // Arrange
+        using var ctx = new BunitContext();
+        var bookmarkService = Substitute.For<IBookmarkService>();
+        var firstPost = new BlogPostBuilder().WithTitle("First Post").Build();
+        var secondPost = new BlogPostBuilder().WithTitle("Second Post").Build();
+        await Repository.StoreAsync(firstPost);
+        await Repository.StoreAsync(secondPost);
+        bookmarkService.GetBookmarkedPostIds().Returns(new List<string> { firstPost.Id, secondPost.Id });
+        var undoStarted = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var undoCompletion = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        bookmarkService.SetBookmark(Arg.Any<string>(), false).Returns(Task.CompletedTask);
+        bookmarkService.SetBookmark(Arg.Any<string>(), true).Returns(_ =>
+        {
+            undoStarted.SetResult();
+            return undoCompletion.Task;
+        });
+        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped(_ => bookmarkService);
+        var cut = ctx.Render<Blog.Web.Features.Bookmarks.Bookmarks>();
+        cut.WaitForElement(".bookmark-row");
+
+        // Act
+        await cut.Find("button[aria-label='Remove bookmark: First Post']").ClickAsync();
+        var undoTask = cut.Find(".undo-button").ClickAsync();
+        await undoStarted.Task;
+        await cut.Find("button[aria-label='Remove bookmark: Second Post']").ClickAsync();
+        undoCompletion.SetResult();
+        await undoTask;
+
+        // Assert
+        cut.FindAll(".row-title").Select(e => e.TextContent).ShouldContain("First Post");
+        cut.Find(".undo-message").TextContent.ShouldContain("Second Post");
+    }
+
+    [Fact]
     public async Task ShouldFilterBookmarksBySearchTerm()
     {
         // Arrange
@@ -120,12 +157,15 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         cut.WaitForElement(".bookmark-row");
 
         // Act
-        await cut.Find("input[type=search]").InputAsync("css");
+        var searchInput = cut.Find("input[type=search]");
+        await searchInput.InputAsync("Blazor ");
+        searchInput.GetAttribute("value").ShouldBe("Blazor ");
+        await searchInput.InputAsync("Blazor Tips");
 
         // Assert
         var rows = cut.FindComponents<BookmarkRow>();
         rows.ShouldHaveSingleItem();
-        rows[0].Find(".row-title").TextContent.ShouldBe("CSS Tricks");
+        rows[0].Find(".row-title").TextContent.ShouldBe("Blazor Tips");
     }
 
     [Fact]
