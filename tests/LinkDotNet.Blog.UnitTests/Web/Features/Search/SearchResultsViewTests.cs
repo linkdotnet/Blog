@@ -97,6 +97,34 @@ public class SearchResultsViewTests : BunitContext
     }
 
     [Fact]
+    public void ShouldReorderResultsWhenSortingByOldest()
+    {
+        var cut = RenderView([
+            new BlogPostBuilder().WithTitle("newer").WithUpdatedDate(new DateTime(2024, 1, 1)).Build(),
+            new BlogPostBuilder().WithTitle("older").WithUpdatedDate(new DateTime(2020, 1, 1)).Build(),
+        ]);
+
+        cut.FindAll(".segmented button").Single(b => b.TextContent == "Oldest").Click();
+
+        cut.FindComponents<ShortBlogPost>().Select(c => c.Instance.BlogPost.Title).ShouldBe(["older", "newer"]);
+        cut.Find(".segmented button[aria-pressed='true']").TextContent.ShouldBe("Oldest");
+    }
+
+    [Fact]
+    public void ShouldExplainHowToRecoverWhenFiltersRemoveAllResults()
+    {
+        var cut = RenderView(
+            [new BlogPostBuilder().WithTitle("Blazor").Build()],
+            p => p.Add(s => s.FilterTextLocally, true));
+
+        cut.Find("input[type=search]").Input("nothing");
+
+        cut.Find(".empty-hint").TextContent.ShouldContain("removing a filter");
+        cut.Find(".primary-action").Click();
+        cut.FindComponents<ShortBlogPost>().ShouldHaveSingleItem();
+    }
+
+    [Fact]
     public void ShouldShowEmptyStateWithoutPosts()
     {
         var cut = RenderView([], p => p.Add(s => s.EmptyTitle, "Nothing here"));

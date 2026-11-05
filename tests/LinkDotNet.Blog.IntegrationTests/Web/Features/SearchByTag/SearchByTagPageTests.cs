@@ -45,6 +45,38 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     }
 
     [Fact]
+    public async Task ShouldOfferOtherTagsOfPostsButNotTheScopedTagAsFilter()
+    {
+        using var ctx = new BunitContext();
+        await DbContext.AddAsync(new BlogPostBuilder().WithTags("Scoped", "Related").Build());
+        await DbContext.SaveChangesAsync();
+        RegisterServices(ctx);
+        var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Scoped"));
+        cut.WaitForElement(".chip");
+
+        var chips = cut.FindAll(".chip");
+
+        chips.ShouldHaveSingleItem().TextContent.ShouldContain("Related");
+    }
+
+    [Fact]
+    public async Task ShouldFilterPostsWithinTagByTitle()
+    {
+        using var ctx = new BunitContext();
+        await DbContext.AddAsync(new BlogPostBuilder().WithTitle("Alpha").WithTags("Tag").Build());
+        await DbContext.AddAsync(new BlogPostBuilder().WithTitle("Beta").WithTags("Tag").Build());
+        await DbContext.SaveChangesAsync();
+        RegisterServices(ctx);
+        var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
+        cut.WaitForElement(".blog-card");
+
+        cut.Find(".query-field input").Input("alp");
+
+        cut.FindAll(".blog-card").ShouldHaveSingleItem();
+        cut.Find(".blog-card h4").TextContent.ShouldBe("Alpha");
+    }
+
+    [Fact]
     public void ShouldSetTitleToTag()
     {
         using var ctx = new BunitContext();

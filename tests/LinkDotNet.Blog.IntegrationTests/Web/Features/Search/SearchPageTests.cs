@@ -1,9 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.Search;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Search;
@@ -56,9 +60,78 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         blogPosts.Find(".description h4").TextContent.ShouldBe("Title 1");
     }
 
-    private void RegisterServices(BunitContext ctx)
+    [Fact]
+    public async Task ShouldNotFindUnpublishedBlogPosts()
+    {
+        await Repository.StoreAsync(new BlogPostBuilder().WithTitle("Draft").IsPublished(false).Build());
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "Draft"));
+
+        cut.WaitForElement(".empty-title").TextContent.ShouldBe("No results found");
+        cut.FindComponents<ShortBlogPost>().ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void ShouldInviteToSearchWhenNoTermIsGiven()
+    {
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+
+        var cut = ctx.Render<SearchPage>();
+
+        cut.WaitForElement(".empty-title").TextContent.ShouldBe("Search the blog");
+    }
+
+    [Fact]
+    public void ShouldSuggestPopularTopicsWhenNothingWasFound()
+    {
+        using var ctx = new BunitContext();
+        RegisterServices(ctx, new TagCount("Blazor", 3));
+
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "nothing"));
+
+        var suggestion = cut.WaitForElement(".topic-suggestions a");
+        suggestion.GetAttribute("href").ShouldBe("/searchByTag/Blazor");
+    }
+
+    [Fact]
+    public async Task ShouldNarrowResultsWithTopicChip()
+    {
+        await Repository.StoreAsync(new BlogPostBuilder().WithTitle("Post one").WithTags("Cat").Build());
+        await Repository.StoreAsync(new BlogPostBuilder().WithTitle("Post two").WithTags("Dog").Build());
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "Post"));
+        cut.WaitForElement(".chip");
+
+        cut.FindAll(".chip").Single(c => c.TextContent.Contains("Dog")).Click();
+
+        cut.FindComponents<ShortBlogPost>().ShouldHaveSingleItem().Instance.BlogPost.Title.ShouldBe("Post two");
+    }
+
+    [Fact]
+    public async Task ShouldNavigateToNewSearchTermWhenTypingInResultsField()
+    {
+        await Repository.StoreAsync(new BlogPostBuilder().WithTitle("Title 1").Build());
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "Title"));
+        cut.WaitForElement(".query-field input");
+
+        cut.Find(".query-field input").Input("C# basics");
+
+        var navigation = ctx.Services.GetRequiredService<NavigationManager>();
+        cut.WaitForAssertion(() => navigation.Uri.ShouldEndWith("search/C%23%20basics"));
+    }
+
+    private void RegisterServices(BunitContext ctx, params TagCount[] popularTags)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        var tagQueryService = Substitute.For<ITagQueryService>();
+        tagQueryService.GetAllOrderedByUsageAsync().Returns(Task.FromResult<IReadOnlyList<TagCount>>(popularTags));
+        ctx.Services.AddScoped(_ => tagQueryService);
     }
 }
