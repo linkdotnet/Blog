@@ -48,8 +48,8 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldOfferOtherTagsOfPostsButNotTheScopedTagAsFilter()
     {
         using var ctx = new BunitContext();
-        await DbContext.AddAsync(new BlogPostBuilder().WithTags("Scoped", "Related").Build());
-        await DbContext.SaveChangesAsync();
+        await DbContext.AddAsync(new BlogPostBuilder().WithTags("Scoped", "Related").Build(), Xunit.TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(Xunit.TestContext.Current.CancellationToken);
         RegisterServices(ctx);
         var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Scoped"));
         cut.WaitForElement(".chip");
@@ -63,9 +63,9 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     public async Task ShouldFilterPostsWithinTagByTitle()
     {
         using var ctx = new BunitContext();
-        await DbContext.AddAsync(new BlogPostBuilder().WithTitle("Alpha").WithTags("Tag").Build());
-        await DbContext.AddAsync(new BlogPostBuilder().WithTitle("Beta").WithTags("Tag").Build());
-        await DbContext.SaveChangesAsync();
+        await DbContext.AddAsync(new BlogPostBuilder().WithTitle("Alpha").WithTags("Tag").Build(), Xunit.TestContext.Current.CancellationToken);
+        await DbContext.AddAsync(new BlogPostBuilder().WithTitle("Beta").WithTags("Tag").Build(), Xunit.TestContext.Current.CancellationToken);
+        await DbContext.SaveChangesAsync(Xunit.TestContext.Current.CancellationToken);
         RegisterServices(ctx);
         var cut = ctx.Render<SearchByTagPage>(p => p.Add(s => s.Tag, "Tag"));
         cut.WaitForElement(".blog-card");
@@ -95,7 +95,7 @@ public class SearchByTagTests : SqlDatabaseTestBase<BlogPost>
     {
         var blogPost = new BlogPostBuilder().WithTags(tag).IsPublished(isPublished).Build();
         await DbContext.AddAsync(blogPost);
-        await DbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync(Xunit.TestContext.Current.CancellationToken);
     }
 
     private void RegisterServices(BunitContext ctx)

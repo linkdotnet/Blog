@@ -21,21 +21,29 @@
 
     private IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
     private string term = string.Empty;
+    private int searchVersion;
 
     private bool HasTerm => term.Length > 0;
 
     protected override async Task OnParametersSetAsync()
     {
-        term = Uri.UnescapeDataString(SearchTerm ?? string.Empty);
+        var requestedTerm = Uri.UnescapeDataString(SearchTerm ?? string.Empty);
+        var version = ++searchVersion;
+        term = requestedTerm;
         if (!HasTerm)
         {
             blogPosts = PagedList<BlogPost>.Empty;
             return;
         }
 
-        blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
-                                                                                || t.Tags.Any(tag => tag == term)),
+        var results = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(requestedTerm)
+                                                                                  || t.Tags.Any(tag => tag == requestedTerm)),
             b => b.UpdatedDate);
+
+        if (version == searchVersion)
+        {
+            blogPosts = results;
+        }
     }
 
     private void Search(string newTerm)

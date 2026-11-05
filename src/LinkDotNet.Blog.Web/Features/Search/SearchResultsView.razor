@@ -36,12 +36,10 @@
 		</div>
 	}
 
-	@if (Posts.Count > 0)
-	{
-		<div class="toolbar">
-			<p class="result-count" role="status">
-				@visiblePosts.Count @(visiblePosts.Count == 1 ? "article" : "articles")
-			</p>
+	<div class="toolbar">
+		<p class="result-count" role="status">@ResultSummary</p>
+		@if (Posts.Count > 0)
+		{
 			@if (HasActiveRefinement)
 			{
 				<button type="button" class="clear-filters" @onclick="ClearRefinement">Clear filters</button>
@@ -51,8 +49,8 @@
 				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.Oldest)" @onclick="() => SortBy(PostSortOrder.Oldest)">Oldest</button>
 				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.ShortestRead)" @onclick="() => SortBy(PostSortOrder.ShortestRead)">Quick reads</button>
 			</div>
-		</div>
-	}
+		}
+	</div>
 
 	@if (visiblePosts.Count > 0)
 	{
@@ -121,12 +119,28 @@
 
 	private bool HasActiveRefinement => selectedTags.Count > 0 || (FilterTextLocally && query.Trim().Length > 0);
 
+	private string ResultSummary
+	{
+		get
+		{
+			if (visiblePosts.Count > 0)
+			{
+				return $"{visiblePosts.Count} {(visiblePosts.Count == 1 ? "article" : "articles")}";
+			}
+
+			return query.Trim().Length > 0 || selectedTags.Count > 0 ? "No articles found" : string.Empty;
+		}
+	}
+
 	protected override void OnParametersSet()
 	{
 		if (Query != lastQueryParameter)
 		{
-			query = Query;
 			lastQueryParameter = Query;
+			if (Query != query.Trim())
+			{
+				query = Query;
+			}
 		}
 
 		if (!ReferenceEquals(Posts, lastPosts))
@@ -187,8 +201,7 @@
 			return;
 		}
 
-		debounce?.Cancel();
-		debounce?.Dispose();
+		await CancelPendingSearchAsync();
 		debounce = new CancellationTokenSource();
 		var token = debounce.Token;
 		try
@@ -200,8 +213,18 @@
 			return;
 		}
 
-		lastQueryParameter = query.Trim();
 		await QueryChanged.InvokeAsync(query.Trim());
+	}
+
+	private async Task CancelPendingSearchAsync()
+	{
+		if (debounce is null)
+		{
+			return;
+		}
+
+		await debounce.CancelAsync();
+		debounce.Dispose();
 	}
 
 	public void Dispose()
