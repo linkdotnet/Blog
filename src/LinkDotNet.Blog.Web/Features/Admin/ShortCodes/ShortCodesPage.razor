@@ -1,121 +1,396 @@
 @page "/short-codes"
-@using System.ComponentModel.DataAnnotations
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 
 @inject IRepository<ShortCode> ShortCodeRepository
+@inject IRepository<BlogPost> BlogPostRepository
 @inject IToastService ToastService
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Shortcodes</PageTitle>
 
-<div class="container">
-	<h3 class="fw-bold">Shortcodes</h3>
-	<div class="alert theme-info flex-column" role="alert">
-		<h4 class="alert-heading">What are Shortcodes?</h4>
-		<p>Shortcodes are markdown content that can be shown inside blog posts (like templates that can be referenced).
-			The idea is to reuse certain shortcodes across various blog posts.
-			If you update the shortcode, it will be updated across all those blog posts as well.</p>
-		<p>For example to promote products or courses and update them in a central place.</p>
-		<p>Shortcodes are used like this: [[SHORTCODE_NAME]] inside the markdown editor (content, not for short description) for blog posts.</p>
-		<p>Currently, shortcodes are only shown in preview mode of the markdown editor.</p>
-		<p>Also, shortcodes are not part of the Table of Contents and reading time.</p>
-	</div>
-	<div class="accordion mt-5" id="shortCodesAccordion">
-		@foreach (var shortCode in shortCodes)
-		{
-		<details class="accordion-item" name="shortCodes">
-			<summary class="accordion-header" id="heading-@shortCode.Id">
-				@shortCode.Name
-				<AccordionIcon />
-			</summary>
-			<div class="accordion-body">
-				@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
-				<hr/>
-				<p>Usage: [[@shortCode.Name]]</p>
-				<div class="d-flex justify-content-start gap-3">
-					<a id="edit-shortcode" type="button" class="btn btn-solid theme-primary d-flex align-items-center gap-3" @onclick="() => EditShortCode(shortCode)" aria-label="edit">
-						<i class="pencil"></i>
-						<div class="vr"></div><span>Edit</span>
-					</a>
-					<button id="delete-shortcode" type="button" class="btn btn-solid theme-danger d-flex align-items-center gap-3" @onclick="() => DeleteShortCode(shortCode.Id)" aria-label="delete">
-						<i class="bin2"></i>
-						<div class="vr"></div><span>Delete</span>
-					</button>
-				</div>
+<div class="container shortcodes-page">
+	<header class="page-header">
+		<div>
+			<h1 class="large-title">Shortcodes</h1>
+			<p class="subtitle">Reusable blocks for shoutouts, ads and everything you repeat. Edit once, update everywhere.</p>
+		</div>
+		<button type="button" class="btn btn-solid theme-primary rounded-pill new-button" @onclick="StartNewShortCode">
+			<i class="bi bi-plus-lg" aria-hidden="true"></i> New Shortcode
+		</button>
+	</header>
+
+	<ol class="how-it-works" aria-label="How shortcodes work">
+		<li>
+			<span class="step-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></span>
+			<div>
+				<h2 class="step-title">Write it once</h2>
+				<p class="step-text">Compose a block in Markdown, like an ad, a shoutout or a disclaimer.</p>
 			</div>
-		</details>
+		</li>
+		<li>
+			<span class="step-icon"><i class="bi bi-braces" aria-hidden="true"></i></span>
+			<div>
+				<h2 class="step-title">Drop it into a post</h2>
+				<p class="step-text">Type <code>[[name]]</code> in a post or use <em>Insert Shortcode</em> in the editor.</p>
+			</div>
+		</li>
+		<li>
+			<span class="step-icon"><i class="bi bi-arrow-repeat" aria-hidden="true"></i></span>
+			<div>
+				<h2 class="step-title">Change it everywhere</h2>
+				<p class="step-text">Update the block and every post using it changes with it.</p>
+			</div>
+		</li>
+	</ol>
+
+	@if (shortCodes.Count == 0)
+	{
+		<section class="empty-state" aria-labelledby="empty-title">
+			<h2 id="empty-title" class="empty-title">Start with a template</h2>
+			<p class="empty-text">Pick a starting point and make it yours. You can always edit it later.</p>
+			<ul class="template-grid">
+				@foreach (var template in ShortCodeTemplate.All)
+				{
+					<li>
+						<button type="button" class="template-tile" @onclick="() => StartFromTemplate(template)">
+							<i class="bi @template.Icon" aria-hidden="true"></i>
+							<span class="template-title">@template.Title</span>
+							<span class="template-description">@template.Description</span>
+						</button>
+					</li>
+				}
+			</ul>
+		</section>
+	}
+	else
+	{
+		<div class="toolbar">
+			<label class="search-field">
+				<i class="bi bi-search" aria-hidden="true"></i>
+				<input type="search" placeholder="Search shortcodes" aria-label="Search shortcodes" autocomplete="off"
+				       @bind="SearchTerm" @bind:event="oninput" />
+			</label>
+			<div class="segmented-control" role="group" aria-label="Sort shortcodes">
+				@foreach (var option in Enum.GetValues<SortOrder>())
+				{
+					<button type="button" class="segment" aria-pressed="@(sortOrder == option ? "true" : "false")" @onclick="() => sortOrder = option">@SortLabel(option)</button>
+				}
+			</div>
+		</div>
+
+		var visibleShortCodes = GetVisibleShortCodes();
+		@if (visibleShortCodes.Count == 0)
+		{
+			<p class="no-results">No results for “@SearchTerm”.</p>
 		}
-	</div>
-    <br>
-    <EditForm Model="@model" OnValidSubmit="SaveShortCode">
-        <div class="mb-5">
-            <div class="form-floating">
-                <label for="short-code-name">Name</label>
-                <InputText Id="short-code-name" class="form-control" spellcheck="true" @bind-Value="@model.Name" />
-            </div>
-        </div>
-        <div class="mb-5">
-            <label for="short-code-content" class="form-label">Shortcode Content</label>
-            <MarkdownTextArea Class="form-control" Rows="8" Id="short-code-content" @bind-Value="@model.MarkdownContent"></MarkdownTextArea>
-        </div>
-        <button type="submit" class="btn btn-solid theme-primary">Save</button>
-    </EditForm>
+		else
+		{
+			<ul class="shortcode-grid">
+				@foreach (var shortCode in visibleShortCodes)
+				{
+					<li class="shortcode-card" @key="shortCode.Id">
+						<div class="card-preview blogpost-content" aria-label="Preview of @shortCode.Name">
+							@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
+						</div>
+						<div class="card-body">
+							<div class="card-title-row">
+								<h2 class="card-title">@shortCode.Name</h2>
+								<span class="usage-badge @(UsageOf(shortCode) == 0 ? "unused" : null)">@UsageLabel(shortCode)</span>
+							</div>
+							<button type="button" class="token-chip" aria-label="Copy @Token(shortCode) to clipboard" @onclick="() => CopyToken(shortCode)">
+								<code>@Token(shortCode)</code>
+								<i class="bi @(copiedId == shortCode.Id ? "bi-check2" : "bi-copy")" aria-hidden="true"></i>
+							</button>
+						</div>
+						<div class="card-actions">
+							<button type="button" class="card-action" @onclick="() => EditShortCode(shortCode)">
+								<i class="bi bi-pencil" aria-hidden="true"></i> Edit
+							</button>
+							<button type="button" class="card-action destructive" @onclick="() => shortCodePendingDeletion = shortCode">
+								<i class="bi bi-trash" aria-hidden="true"></i> Delete
+							</button>
+						</div>
+					</li>
+				}
+			</ul>
+		}
+	}
 </div>
 
+<NativeDialog Class="dialog-fullscreen sheet-dialog" IsOpen="isEditorOpen" OnClose="CloseEditor" aria-labelledby="shortcode-sheet-title">
+	@if (isEditorOpen)
+	{
+		<div class="sheet-container">
+			<EditForm Model="model" OnSubmit="SaveShortCode" style="display: contents">
+				<div class="sheet">
+				<header class="sheet-header">
+					<button type="button" class="sheet-action" @onclick="CloseEditor">Cancel</button>
+					<h2 id="shortcode-sheet-title" class="sheet-title">@(isNew ? "New Shortcode" : "Edit Shortcode")</h2>
+					<button type="submit" class="sheet-action strong" disabled="@(!CanSave)">Save</button>
+				</header>
+
+				<div class="sheet-scroll">
+					@if (isNew)
+					{
+						<h3 class="group-header">Start from</h3>
+						<div class="template-chips" role="group" aria-label="Templates">
+							@foreach (var template in ShortCodeTemplate.All)
+							{
+								<button type="button" class="template-chip" @onclick="() => ApplyTemplate(template)">
+									<i class="bi @template.Icon" aria-hidden="true"></i> @template.Title
+								</button>
+							}
+						</div>
+					}
+
+					<h3 class="group-header">Name</h3>
+					<div class="field-group">
+						<input id="short-code-name" class="field-input" placeholder="e.g. newsletter" maxlength="512" spellcheck="false" autocomplete="off"
+						       aria-label="Shortcode name" aria-describedby="name-hint" @bind="model.Name" @bind:event="oninput" />
+					</div>
+					<p id="name-hint" class="field-footnote @(NameProblem is null ? null : "error")">
+						@if (NameProblem is not null)
+						{
+							@NameProblem
+						}
+						else
+						{
+							<text>Use it in a post as <code>[[@(model.Name.Trim().Length == 0 ? "name" : model.Name.Trim())]]</code></text>
+						}
+					</p>
+					@if (!isNew && !string.Equals(model.Name.Trim(), originalName, StringComparison.Ordinal))
+					{
+						<p class="field-footnote warning"><i class="bi bi-exclamation-triangle" aria-hidden="true"></i> Posts that already use <code>[[@originalName]]</code> will not be renamed automatically.</p>
+					}
+
+					<h3 class="group-header">Content</h3>
+					<MarkdownTextArea Class="sheet-editor" Rows="8" Id="short-code-content" Placeholder="Write Markdown here…" @bind-Value="model.MarkdownContent"></MarkdownTextArea>
+
+					<h3 class="group-header">Preview</h3>
+					<div class="live-preview blogpost-content">
+						@if (string.IsNullOrWhiteSpace(model.MarkdownContent))
+						{
+							<p class="preview-placeholder">Your content appears here as you type.</p>
+						}
+						else
+						{
+							@MarkdownConverter.ToMarkupString(model.MarkdownContent)
+						}
+					</div>
+				</div>
+				</div>
+			</EditForm>
+		</div>
+	}
+</NativeDialog>
+
+<NativeDialog Class="dialog-fullscreen sheet-dialog" IsOpen="shortCodePendingDeletion is not null" OnClose="CancelDeletion" aria-labelledby="delete-title">
+	@if (shortCodePendingDeletion is not null)
+	{
+		<div class="sheet-container">
+			<div class="alert-sheet" role="alertdialog">
+				<h2 id="delete-title" class="alert-title">Delete “@shortCodePendingDeletion.Name”?</h2>
+				<p class="alert-message">
+					@if (UsageOf(shortCodePendingDeletion) == 0)
+					{
+						<text>This shortcode is not used in any post.</text>
+					}
+					else
+					{
+						<text>It is used in @UsageLabel(shortCodePendingDeletion, withPrefix: false). Those posts will show the plain text <code>@Token(shortCodePendingDeletion)</code> instead.</text>
+					}
+				</p>
+				<div class="alert-buttons">
+					<button type="button" class="alert-button" @onclick="CancelDeletion">Cancel</button>
+					<button type="button" class="alert-button destructive" @onclick="DeleteShortCode">Delete</button>
+				</div>
+			</div>
+		</div>
+	}
+</NativeDialog>
+
 @code {
-    private Model model = new();
-    private List<ShortCode> shortCodes = [];
-    protected override async Task OnInitializedAsync()
-    {
-        shortCodes = (await ShortCodeRepository.GetAllAsync()).ToList();
-    }
+	private enum SortOrder
+	{
+		Name,
+		MostUsed,
+	}
 
-    private async Task SaveShortCode()
-    {
-        var shortCode = shortCodes.FirstOrDefault(sc => sc.Id == model.Id);
-        if (shortCode is not null)
-        {
-            shortCode.Update(model.Name, model.MarkdownContent);
-            await ShortCodeRepository.StoreAsync(shortCode);
-        }
-        else
-        {
-            var newShortCode = ShortCode.Create(model.Name, model.MarkdownContent);
-            await ShortCodeRepository.StoreAsync(newShortCode);
-            shortCodes.Add(newShortCode);
-        }
+	private static readonly TimeSpan CopiedFeedbackDuration = TimeSpan.FromSeconds(1.5);
 
-        ToastService.ShowSuccess("Shortcode saved");
-        model = new Model();
-    }
+	private List<ShortCode> shortCodes = [];
+	private Dictionary<string, int> usageByName = [];
+	private Model model = new();
+	private ShortCode? shortCodePendingDeletion;
+	private SortOrder sortOrder = SortOrder.Name;
+	private string? copiedId;
+	private string originalName = string.Empty;
+	private bool isEditorOpen;
+	private bool isNew = true;
 
-    private async Task DeleteShortCode(string id)
-    {
-        var shortCode = shortCodes.FirstOrDefault(sc => sc.Id == id);
-        if (shortCode is not null)
-        {
-            await ShortCodeRepository.DeleteAsync(shortCode.Id);
-            shortCodes.Remove(shortCode);
-            ToastService.ShowSuccess("Shortcode deleted");
-        }
-    }
+	private string SearchTerm { get; set; } = string.Empty;
 
-    private void EditShortCode(ShortCode shortCode)
-    {
-        model.Id = shortCode.Id;
-        model.Name = shortCode.Name;
-        model.MarkdownContent = shortCode.MarkdownContent;
-    }
+	private bool CanSave => NameProblem is null && model.Name.Trim().Length > 0 && !string.IsNullOrWhiteSpace(model.MarkdownContent);
 
-    private sealed class Model
-    {
-        public string Id { get; set; } = string.Empty;
+	private string? NameProblem
+	{
+		get
+		{
+			var name = model.Name.Trim();
+			if (name.Contains('[', StringComparison.Ordinal) || name.Contains(']', StringComparison.Ordinal))
+			{
+				return "Names can't contain square brackets.";
+			}
 
-        [Required]
-        public string MarkdownContent { get; set; } = string.Empty;
+			var isTaken = shortCodes.Any(sc => sc.Id != model.Id && string.Equals(sc.Name, name, StringComparison.OrdinalIgnoreCase));
+			return isTaken ? "A shortcode with this name already exists." : null;
+		}
+	}
 
-        [Required]
-        [MaxLength(512)]
-        public string Name { get; set; } = string.Empty;
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		shortCodes = (await ShortCodeRepository.GetAllAsync()).ToList();
+		await LoadUsage();
+	}
+
+	private async Task LoadUsage()
+	{
+		var contents = await BlogPostRepository.GetAllByProjectionAsync(post => post.Content);
+		usageByName = [];
+		foreach (var shortCode in shortCodes)
+		{
+			usageByName[shortCode.Name] = contents.Count(content => content.Contains(Token(shortCode), StringComparison.Ordinal));
+		}
+	}
+
+	private List<ShortCode> GetVisibleShortCodes()
+	{
+		var matches = shortCodes.Where(sc =>
+			SearchTerm.Length == 0
+			|| sc.Name.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)
+			|| sc.MarkdownContent.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase));
+
+		return sortOrder == SortOrder.MostUsed
+			? matches.OrderByDescending(UsageOf).ThenBy(sc => sc.Name, StringComparer.CurrentCultureIgnoreCase).ToList()
+			: matches.OrderBy(sc => sc.Name, StringComparer.CurrentCultureIgnoreCase).ToList();
+	}
+
+	private int UsageOf(ShortCode shortCode) => usageByName.GetValueOrDefault(shortCode.Name);
+
+	private string UsageLabel(ShortCode shortCode, bool withPrefix = true)
+	{
+		var count = UsageOf(shortCode);
+		if (count == 0)
+		{
+			return "Not used yet";
+		}
+
+		var noun = count == 1 ? "1 post" : $"{count} posts";
+		return withPrefix ? $"Used in {noun}" : noun;
+	}
+
+	private static string Token(ShortCode shortCode) => $"[[{shortCode.Name}]]";
+
+	private static string SortLabel(SortOrder order) => order == SortOrder.MostUsed ? "Most used" : "Name";
+
+	private void StartNewShortCode()
+	{
+		OpenEditor(new Model(), true);
+	}
+
+	private void StartFromTemplate(ShortCodeTemplate template)
+	{
+		OpenEditor(new Model { Name = template.SuggestedName, MarkdownContent = template.MarkdownContent }, true);
+	}
+
+	private void ApplyTemplate(ShortCodeTemplate template)
+	{
+		model.Name = template.SuggestedName;
+		model.MarkdownContent = template.MarkdownContent;
+	}
+
+	private void EditShortCode(ShortCode shortCode)
+	{
+		OpenEditor(new Model { Id = shortCode.Id, Name = shortCode.Name, MarkdownContent = shortCode.MarkdownContent }, false);
+	}
+
+	private void OpenEditor(Model editorModel, bool creating)
+	{
+		model = editorModel;
+		originalName = editorModel.Name;
+		isNew = creating;
+		isEditorOpen = true;
+	}
+
+	private void CloseEditor()
+	{
+		isEditorOpen = false;
+	}
+
+	private async Task SaveShortCode()
+	{
+		if (!CanSave)
+		{
+			return;
+		}
+
+		var name = model.Name.Trim();
+		var shortCode = shortCodes.FirstOrDefault(sc => sc.Id == model.Id);
+		if (shortCode is not null)
+		{
+			shortCode.Update(name, model.MarkdownContent);
+			await ShortCodeRepository.StoreAsync(shortCode);
+		}
+		else
+		{
+			var newShortCode = ShortCode.Create(name, model.MarkdownContent);
+			await ShortCodeRepository.StoreAsync(newShortCode);
+			shortCodes.Add(newShortCode);
+		}
+
+		await LoadUsage();
+		ToastService.ShowSuccess("Shortcode saved");
+		CloseEditor();
+	}
+
+	private async Task DeleteShortCode()
+	{
+		var shortCode = shortCodePendingDeletion;
+		shortCodePendingDeletion = null;
+		if (shortCode is null)
+		{
+			return;
+		}
+
+		await ShortCodeRepository.DeleteAsync(shortCode.Id);
+		shortCodes.Remove(shortCode);
+		ToastService.ShowSuccess("Shortcode deleted");
+	}
+
+	private void CancelDeletion()
+	{
+		shortCodePendingDeletion = null;
+	}
+
+	private async Task CopyToken(ShortCode shortCode)
+	{
+		await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", Token(shortCode));
+		copiedId = shortCode.Id;
+		StateHasChanged();
+		await Task.Delay(CopiedFeedbackDuration);
+		if (copiedId == shortCode.Id)
+		{
+			copiedId = null;
+		}
+	}
+
+	private sealed class Model
+	{
+		public string Id { get; set; } = string.Empty;
+
+		public string MarkdownContent { get; set; } = string.Empty;
+
+		public string Name { get; set; } = string.Empty;
+	}
 }

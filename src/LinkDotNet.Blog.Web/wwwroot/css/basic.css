@@ -292,7 +292,8 @@ section {
 
 /*region TagDiscoveryPanel.razor */
 /* The sheet draws its own surface inside a fullscreen dialog, so the dialog itself stays transparent */
-.tag-sheet-dialog {
+.tag-sheet-dialog,
+.sheet-dialog {
 	--bs-dialog-bg: transparent;
 	--bs-dialog-box-shadow: none;
 }
