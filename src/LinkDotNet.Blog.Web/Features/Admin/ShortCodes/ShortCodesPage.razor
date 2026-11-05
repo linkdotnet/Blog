@@ -90,7 +90,7 @@
 				@foreach (var shortCode in visibleShortCodes)
 				{
 					<li class="shortcode-card" @key="shortCode.Id">
-						<div class="card-preview blogpost-content" aria-label="Preview of @shortCode.Name">
+						<div class="card-preview blogpost-content" inert>
 							@MarkdownConverter.ToMarkupString(shortCode.MarkdownContent)
 						</div>
 						<div class="card-body">
