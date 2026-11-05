@@ -87,7 +87,7 @@
 
     private const string NonLetterSection = "#";
 
-    private record TagGroup(string? Header, IReadOnlyList<TagCount> Tags);
+    private sealed record TagGroup(string? Header, IReadOnlyList<TagCount> Tags);
 
     [Parameter] public bool IsOpen { get; set; }
     [Parameter] public EventCallback OnClose { get; set; }
