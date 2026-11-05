@@ -1,0 +1,212 @@
+@using System.Threading
+@using LinkDotNet.Blog.Domain
+@using LinkDotNet.Blog.Web.Features.Services.Tags
+@implements IDisposable
+
+<div class="container results-view">
+	<header class="results-header">
+		@if (!string.IsNullOrEmpty(Eyebrow))
+		{
+			<p class="eyebrow">@Eyebrow</p>
+		}
+		<h1 class="results-title">@Title</h1>
+	</header>
+
+	<div class="query-field" role="search">
+		<i class="search" aria-hidden="true"></i>
+		<input type="search"
+		       class="form-control rounded-pill"
+		       placeholder="@QueryPlaceholder"
+		       aria-label="@QueryPlaceholder"
+		       autocomplete="off"
+		       spellcheck="true"
+		       value="@query"
+		       @oninput="OnQueryInput" />
+	</div>
+
+	@if (availableTags.Count > 0)
+	{
+		<div class="chip-scroller" role="group" aria-label="Filter by topic">
+			@foreach (var tag in availableTags)
+			{
+				<button type="button" class="chip" aria-pressed="@IsSelected(tag.Name)" @onclick="() => ToggleTag(tag.Name)">
+					@tag.Name<span class="chip-count" aria-hidden="true">@tag.Count</span>
+				</button>
+			}
+		</div>
+	}
+
+	@if (Posts.Count > 0)
+	{
+		<div class="toolbar">
+			<p class="result-count" role="status">
+				@visiblePosts.Count @(visiblePosts.Count == 1 ? "article" : "articles")
+			</p>
+			@if (HasActiveRefinement)
+			{
+				<button type="button" class="clear-filters" @onclick="ClearRefinement">Clear filters</button>
+			}
+			<div class="segmented" role="group" aria-label="Sort articles">
+				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.Newest)" @onclick="() => SortBy(PostSortOrder.Newest)">Newest</button>
+				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.Oldest)" @onclick="() => SortBy(PostSortOrder.Oldest)">Oldest</button>
+				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.ShortestRead)" @onclick="() => SortBy(PostSortOrder.ShortestRead)">Quick reads</button>
+			</div>
+		</div>
+	}
+
+	@if (visiblePosts.Count > 0)
+	{
+		@for (var i = 0; i < visiblePosts.Count; i++)
+		{
+			<ShortBlogPost @key="visiblePosts[i].Id" BlogPost="visiblePosts[i]" LazyLoadPreviewImage="i > 2"></ShortBlogPost>
+		}
+	}
+	else
+	{
+		<div class="empty-state">
+			<h2 class="empty-title">@EmptyTitle</h2>
+			@if (HasActiveRefinement && Posts.Count > 0)
+			{
+				<p class="empty-hint">Try removing a filter to see more articles.</p>
+				<button type="button" class="primary-action" @onclick="ClearRefinement">Clear filters</button>
+			}
+			else
+			{
+				<p class="empty-hint">@EmptyHint</p>
+				<TopicSuggestions />
+			}
+		</div>
+	}
+</div>
+
+@code {
+	private CancellationTokenSource? debounce;
+	private string query = string.Empty;
+	private string lastQueryParameter = string.Empty;
+	private IReadOnlyList<BlogPost> lastPosts = [];
+	private PostSortOrder sortOrder = PostSortOrder.Newest;
+	private readonly HashSet<string> selectedTags = new(StringComparer.Ordinal);
+	private IReadOnlyList<TagCount> availableTags = [];
+	private IReadOnlyList<BlogPost> visiblePosts = [];
+
+	[Parameter, EditorRequired]
+	public required string Title { get; set; }
+
+	[Parameter]
+	public string? Eyebrow { get; set; }
+
+	[Parameter, EditorRequired]
+	public required IReadOnlyList<BlogPost> Posts { get; set; }
+
+	[Parameter]
+	public string Query { get; set; } = string.Empty;
+
+	[Parameter]
+	public EventCallback<string> QueryChanged { get; set; }
+
+	[Parameter]
+	public string QueryPlaceholder { get; set; } = "Search articles";
+
+	[Parameter]
+	public bool FilterTextLocally { get; set; }
+
+	[Parameter]
+	public string? ScopedTag { get; set; }
+
+	[Parameter]
+	public string EmptyTitle { get; set; } = "No articles found";
+
+	[Parameter]
+	public string EmptyHint { get; set; } = "Check the spelling or pick one of the topics below.";
+
+	private bool HasActiveRefinement => selectedTags.Count > 0 || (FilterTextLocally && query.Trim().Length > 0);
+
+	protected override void OnParametersSet()
+	{
+		if (Query != lastQueryParameter)
+		{
+			query = Query;
+			lastQueryParameter = Query;
+		}
+
+		if (!ReferenceEquals(Posts, lastPosts))
+		{
+			lastPosts = Posts;
+			selectedTags.Clear();
+			availableTags = PostRefinement.CountTags(Posts, ScopedTag);
+		}
+
+		Refine();
+	}
+
+	private void Refine()
+	{
+		var localText = FilterTextLocally ? query : string.Empty;
+		visiblePosts = PostRefinement.Apply(Posts, selectedTags, localText, sortOrder);
+	}
+
+	private string IsSelected(string tag) => ToAriaBoolean(selectedTags.Contains(tag));
+
+	private string IsSortedBy(PostSortOrder order) => ToAriaBoolean(sortOrder == order);
+
+	private static string ToAriaBoolean(bool value) => value ? "true" : "false";
+
+	private void SortBy(PostSortOrder order)
+	{
+		sortOrder = order;
+		Refine();
+	}
+
+	private void ToggleTag(string tag)
+	{
+		if (!selectedTags.Remove(tag))
+		{
+			selectedTags.Add(tag);
+		}
+
+		Refine();
+	}
+
+	private void ClearRefinement()
+	{
+		selectedTags.Clear();
+		if (FilterTextLocally)
+		{
+			query = string.Empty;
+		}
+
+		Refine();
+	}
+
+	private async Task OnQueryInput(ChangeEventArgs e)
+	{
+		query = e.Value?.ToString() ?? string.Empty;
+		if (FilterTextLocally)
+		{
+			Refine();
+			return;
+		}
+
+		debounce?.Cancel();
+		debounce?.Dispose();
+		debounce = new CancellationTokenSource();
+		var token = debounce.Token;
+		try
+		{
+			await Task.Delay(TimeSpan.FromMilliseconds(300), token);
+		}
+		catch (TaskCanceledException)
+		{
+			return;
+		}
+
+		lastQueryParameter = query.Trim();
+		await QueryChanged.InvokeAsync(query.Trim());
+	}
+
+	public void Dispose()
+	{
+		debounce?.Cancel();
+		debounce?.Dispose();
+	}
+}

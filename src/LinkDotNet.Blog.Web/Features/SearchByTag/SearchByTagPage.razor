@@ -2,7 +2,7 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
-@using LinkDotNet.Blog.Web.Features.Components
+@using LinkDotNet.Blog.Web.Features.Search
 @inject IRepository<BlogPost> BlogPostRepository
 
 <PageTitle>Search for tag: @Tag</PageTitle>
@@ -12,14 +12,14 @@
         Description="@($"All blog posts tagged with {Tag}.")"
         Robots="noindex, follow" />
 
-<div class="container">
-    <h3 class="fs-3xl fw-bold pb-6 mb-0">All posts with Tag <em>@Tag</em></h3>
-
-    @for (var i = 0; i < blogPosts.Count; i++)
-    {
-        <ShortBlogPost BlogPost="blogPosts[i]"></ShortBlogPost>
-    }
-</div>
+<SearchResultsView Eyebrow="Topic"
+                   Title="@Tag"
+                   Posts="blogPosts"
+                   ScopedTag="@Tag"
+                   FilterTextLocally="true"
+                   QueryPlaceholder="@($"Filter articles in {Tag}")"
+                   EmptyTitle="No articles for this topic"
+                   EmptyHint="Pick another topic to keep exploring." />
 @code {
     [Parameter, EditorRequired]
     public required string Tag { get; set; }

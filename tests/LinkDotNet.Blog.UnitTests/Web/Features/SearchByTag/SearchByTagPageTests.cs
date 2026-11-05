@@ -3,6 +3,7 @@ using LinkDotNet.Blog.Infrastructure;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Components;
 using LinkDotNet.Blog.Web.Features.SearchByTag;
+using LinkDotNet.Blog.Web.Features.Services.Tags;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.SearchByTag;
@@ -17,6 +18,7 @@ public class SearchByTagPageTests : BunitContext
         var repositoryMock = Substitute.For<IRepository<BlogPost>>();
         repositoryMock.GetAllAsync().ReturnsForAnyArgs(PagedList<BlogPost>.Empty);
         Services.AddScoped(_ => repositoryMock);
+        Services.AddScoped(_ => Substitute.For<ITagQueryService>());
 
         var cut = Render<SearchByTagPage>(p => p.Add(s => s.Tag, "C%23"));
 
