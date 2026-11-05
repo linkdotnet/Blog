@@ -1,0 +1,42 @@
+.not-found {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 32rem;
+	margin-inline: auto;
+	padding: 5rem 1rem 4rem;
+	text-align: center;
+}
+
+.not-found-icon {
+	margin-bottom: 1.25rem;
+	color: var(--bs-fg-3, #6e6e73);
+	opacity: 0.6;
+}
+
+.not-found-title {
+	margin: 0 0 0.5rem;
+	font-size: 1.75rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.not-found-text {
+	max-width: 24rem;
+	margin: 0 0 1.75rem;
+	font-size: 1.0625rem;
+	color: var(--bs-fg-3, #6e6e73);
+}
+
+.not-found-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.75rem;
+}
+
+.not-found-actions .btn {
+	min-height: 2.75rem;
+	display: inline-flex;
+	align-items: center;
+}

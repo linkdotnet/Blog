@@ -21,7 +21,7 @@
 {
     <Loading></Loading>
 }
-else if (!isLoading && BlogPost is null)
+else if (BlogPost is null)
 {
 	<ObjectNotFound></ObjectNotFound>
 }
@@ -127,7 +127,7 @@ else if (BlogPost is not null)
     [Parameter]
     public string? Slug { get; set; }
 
-    private bool isLoading;
+    private bool isLoading = true;
 
 	private string OgDataImage => BlogPost!.PreviewImageUrlFallback ?? BlogPost.PreviewImageUrl;
 	private string BlogPostCanoncialUrl => string.IsNullOrEmpty(BlogPost?.Slug)
