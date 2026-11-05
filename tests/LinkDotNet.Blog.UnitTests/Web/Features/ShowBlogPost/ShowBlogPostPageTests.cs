@@ -59,6 +59,7 @@ public class ShowBlogPostPageTests : BunitContext
             p => p.Add(s => s.BlogPostId, blogPostId));
 
         cut.FindComponents<Loading>().Count.ShouldBe(1);
+        cut.HasComponent<ObjectNotFound>().ShouldBeFalse();
     }
 
     [Fact]
