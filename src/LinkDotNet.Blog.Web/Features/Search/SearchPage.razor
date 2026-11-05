@@ -1,34 +1,46 @@
-﻿@page "/search/{searchTerm}"
+@page "/search"
+@page "/search/{searchTerm}"
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<BlogPost> BlogPostRepository
+@inject NavigationManager NavigationManager
 
-<div class="container">
-    <h3 class="fs-3xl fw-bold pb-6 mb-0">Results for: @SearchTerm</h3>
-    @if (blogPosts.Count > 0)
-    {
-	    for (var i = 0; i < blogPosts.Count; i++)
-	    {
-		    <ShortBlogPost BlogPost="blogPosts[i]"></ShortBlogPost>
-	    }
-    }
-    else
-    {
-	    <p>No results found.</p>
-    }
-</div>
+<PageTitle>@(HasTerm ? $"Results for: {term}" : "Search")</PageTitle>
+
+<SearchResultsView Title="@(HasTerm ? $"Results for “{term}”" : "Search")"
+                   Posts="blogPosts"
+                   Query="@term"
+                   QueryChanged="Search"
+                   EmptyTitle="@(HasTerm ? "No results found" : "Search the blog")"
+                   EmptyHint="@(HasTerm ? "Check the spelling or pick one of the topics below." : "Look up articles by title or topic, or start with one of these.")" />
+
 @code {
-    [Parameter, EditorRequired]
-    public required string SearchTerm { get; set; }
+    [Parameter]
+    public string? SearchTerm { get; set; }
 
     private IReadOnlyList<BlogPost> blogPosts = PagedList<BlogPost>.Empty;
+    private string term = string.Empty;
+
+    private bool HasTerm => term.Length > 0;
 
     protected override async Task OnParametersSetAsync()
     {
-        var term = Uri.UnescapeDataString(SearchTerm);
+        term = Uri.UnescapeDataString(SearchTerm ?? string.Empty);
+        if (!HasTerm)
+        {
+            blogPosts = PagedList<BlogPost>.Empty;
+            return;
+        }
+
         blogPosts = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(term)
                                                                                 || t.Tags.Any(tag => tag == term)),
             b => b.UpdatedDate);
+    }
+
+    private void Search(string newTerm)
+    {
+        var target = newTerm.Length == 0 ? "search" : $"search/{Uri.EscapeDataString(newTerm)}";
+        NavigationManager.NavigateTo(target, replace: true);
     }
 }

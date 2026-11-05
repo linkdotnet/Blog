@@ -1,0 +1,24 @@
+@using LinkDotNet.Blog.Web.Features.Services.Tags
+@inject ITagQueryService TagQueryService
+
+@if (topics.Count > 0)
+{
+	<nav class="topic-suggestions" aria-label="Popular topics">
+		@foreach (var topic in topics)
+		{
+			<a class="chip" href="/searchByTag/@Uri.EscapeDataString(topic.Name)">@topic.Name<span class="chip-count" aria-hidden="true">@topic.Count</span></a>
+		}
+	</nav>
+}
+
+@code {
+	private const int MaxSuggestions = 10;
+
+	private IReadOnlyList<TagCount> topics = [];
+
+	protected override async Task OnInitializedAsync()
+	{
+		var allTags = await TagQueryService.GetAllOrderedByUsageAsync();
+		topics = allTags.Take(MaxSuggestions).ToList();
+	}
+}
