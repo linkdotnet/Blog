@@ -1,13 +1,16 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JSRuntime
 
-<dialog @ref="element" class="dialog @Class" tabindex="-1">
+<dialog @ref="element" class="dialog @Class" tabindex="-1" @attributes="AdditionalAttributes">
     @ChildContent
 </dialog>
 
 @code {
     [Parameter, EditorRequired]
     public required RenderFragment ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     [Parameter]
     public string Class { get; set; } = string.Empty;

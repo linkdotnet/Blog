@@ -1,23 +1,12 @@
-.sheet-scrim {
-	position: fixed;
-	inset: 0;
-	z-index: 1040;
-	background: rgb(0 0 0 / 0.4);
-	animation: scrim-in 0.25s ease-out;
-}
-
 .sheet-container {
-	position: fixed;
-	inset: 0;
-	z-index: 1050;
+	flex: 1 1 auto;
+	min-height: 0;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	pointer-events: none;
 }
 
 .sheet {
-	pointer-events: auto;
 	display: flex;
 	flex-direction: column;
 	width: min(100% - 2rem, 28rem);
@@ -26,7 +15,6 @@
 	border-radius: 1.25rem;
 	box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 0.3);
 	overflow: hidden;
-	outline: none;
 	animation: sheet-in 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -194,10 +182,6 @@ section:first-child .group:first-child {
 		border-end-end-radius: 0;
 		animation-name: sheet-up;
 	}
-}
-
-@keyframes scrim-in {
-	from { opacity: 0; }
 }
 
 @keyframes sheet-in {

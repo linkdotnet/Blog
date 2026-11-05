@@ -1,81 +1,74 @@
-@using Microsoft.AspNetCore.Components.Web;
 @inject ITagQueryService TagQueryService
 @inject IOptions<ApplicationConfiguration> AppConfiguration
 @inject NavigationManager Navigation
 
 @if (AppConfiguration.Value.EnableTagDiscoveryPanel && IsOpen)
 {
-    <div class="sheet-scrim" @onclick="Close"></div>
+    <NativeDialog Class="dialog-fullscreen tag-sheet-dialog" IsOpen="true" OnClose="Close" aria-labelledby="tag-sheet-title">
+        <div class="sheet-container" @onclick="Close">
+            <div class="sheet" @onclick:stopPropagation="true">
 
-    <div class="sheet-container">
-        <div @ref="_panelRef"
-             class="sheet"
-             role="dialog"
-             aria-modal="true"
-             aria-labelledby="tag-sheet-title"
-             tabindex="-1"
-             @onkeydown="HandleKeyDown">
+                <header class="sheet-header">
+                    <h2 id="tag-sheet-title" class="sheet-title">Discover topics</h2>
+                    <button type="button" class="sheet-done" @onclick="Close">Done</button>
+                </header>
 
-            <header class="sheet-header">
-                <h2 id="tag-sheet-title" class="sheet-title">Discover topics</h2>
-                <button type="button" class="sheet-done" @onclick="Close">Done</button>
-            </header>
+                @if (_tags.Count == 0)
+                {
+                    <p class="sheet-empty">No topics available yet.</p>
+                }
+                else
+                {
+                    <div class="sheet-controls">
+                        <input type="search"
+                               class="form-control rounded-pill"
+                               placeholder="Search topics"
+                               aria-label="Search topics"
+                               autocomplete="off"
+                               @bind="_searchTerm"
+                               @bind:event="oninput" />
 
-            @if (_tags.Count == 0)
-            {
-                <p class="sheet-empty">No topics available yet.</p>
-            }
-            else
-            {
-                <div class="sheet-controls">
-                    <input type="search"
-                           class="form-control rounded-pill"
-                           placeholder="Search topics"
-                           aria-label="Search topics"
-                           autocomplete="off"
-                           @bind="SearchTerm"
-                           @bind:event="oninput" />
-
-                    <div class="segmented" role="group" aria-label="Sort topics">
-                        <button type="button" aria-pressed="@IsSorted(TagSortOrder.Popular)"
-                                @onclick="() => _sortOrder = TagSortOrder.Popular">Popular</button>
-                        <button type="button" aria-pressed="@IsSorted(TagSortOrder.Alphabetical)"
-                                @onclick="() => _sortOrder = TagSortOrder.Alphabetical">A–Z</button>
+                        <div class="segmented" role="group" aria-label="Sort topics">
+                            <button type="button" aria-pressed="@IsSorted(TagSortOrder.Popular)"
+                                    @onclick="() => _sortOrder = TagSortOrder.Popular">Popular</button>
+                            <button type="button" aria-pressed="@IsSorted(TagSortOrder.Alphabetical)"
+                                    @onclick="() => _sortOrder = TagSortOrder.Alphabetical">A–Z</button>
+                        </div>
                     </div>
-                </div>
 
-                <div class="sheet-scroll">
-                    @foreach (var group in GetGroups())
-                    {
-                        <section>
-                            @if (group.Header is not null)
-                            {
-                                <h3 class="group-header">@group.Header</h3>
-                            }
-                            <ul class="group">
-                                @foreach (var tag in group.Tags)
+                    <div class="sheet-scroll">
+                        @foreach (var group in GetGroups())
+                        {
+                            <section>
+                                @if (group.Header is not null)
                                 {
-                                    <li>
-                                        <button type="button" class="tag-row"
-                                                aria-label="@tag.Name, @tag.Count @(tag.Count == 1 ? "post" : "posts")"
-                                                @onclick="() => Navigate(tag.Name)">
-                                            <span class="tag-name">@tag.Name</span>
-                                            <span class="tag-count" aria-hidden="true">@tag.Count</span>
-                                        </button>
-                                    </li>
+                                    <h3 class="group-header">@group.Header</h3>
                                 }
-                            </ul>
-                        </section>
-                    }
+                                <ul class="group">
+                                    @foreach (var tag in group.Tags)
+                                    {
+                                        <li>
+                                            <button type="button" class="tag-row"
+                                                    aria-label="@tag.Name, @tag.Count @(tag.Count == 1 ? "post" : "posts")"
+                                                    @onclick="() => Navigate(tag.Name)">
+                                                <span class="tag-name">@tag.Name</span>
+                                                <span class="tag-count" aria-hidden="true">@tag.Count</span>
+                                            </button>
+                                        </li>
+                                    }
+                                </ul>
+                            </section>
+                        }
 
-                    @if (!_hasMatches)
-                    {
-                        <p class="sheet-empty">No topics match “@_searchTerm”.</p>
-                    }
-                </div>
-            }
+                        @if (!_hasMatches)
+                        {
+                            <p class="sheet-empty">No topics match “@TrimmedSearchTerm”.</p>
+                        }
+                    </div>
+                }
+            </div>
         </div>
-    </div>
+    </NativeDialog>
 }
 
 @code {
@@ -93,18 +86,12 @@
     [Parameter] public EventCallback OnClose { get; set; }
 
     private IReadOnlyList<TagCount> _tags = [];
-    private ElementReference _panelRef;
     private TagSortOrder _sortOrder = TagSortOrder.Popular;
     private string _searchTerm = string.Empty;
     private bool _hasMatches = true;
     private bool _wasOpen;
-    private bool _focusPanel;
 
-    private string SearchTerm
-    {
-        get => _searchTerm;
-        set => _searchTerm = value.Trim();
-    }
+    private string TrimmedSearchTerm => _searchTerm.Trim();
 
     protected override async Task OnParametersSetAsync()
     {
@@ -112,7 +99,6 @@
         {
             _searchTerm = string.Empty;
             _sortOrder = TagSortOrder.Popular;
-            _focusPanel = true;
         }
 
         _wasOpen = IsOpen;
@@ -123,21 +109,12 @@
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (_focusPanel)
-        {
-            _focusPanel = false;
-            await _panelRef.FocusAsync();
-        }
-    }
-
     private string IsSorted(TagSortOrder sortOrder) => (_sortOrder == sortOrder).ToString().ToLowerInvariant();
 
     private IReadOnlyList<TagGroup> GetGroups()
     {
         var matches = _tags
-            .Where(t => t.Name.Contains(_searchTerm, StringComparison.CurrentCultureIgnoreCase))
+            .Where(t => t.Name.Contains(TrimmedSearchTerm, StringComparison.CurrentCultureIgnoreCase))
             .ToList();
         _hasMatches = matches.Count > 0;
 
@@ -167,13 +144,5 @@
         var encoded = Uri.EscapeDataString(tag);
         Navigation.NavigateTo($"/searchByTag/{encoded}");
         await Close();
-    }
-
-    private async Task HandleKeyDown(KeyboardEventArgs e)
-    {
-        if (e.Key == "Escape")
-        {
-            await Close();
-        }
     }
 }
