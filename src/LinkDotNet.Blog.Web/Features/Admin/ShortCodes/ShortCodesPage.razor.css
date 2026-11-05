@@ -147,7 +147,7 @@
 /* Card grid */
 .shortcode-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
 	gap: 1rem;
 	margin: 0;
 	padding: 0;
@@ -300,7 +300,7 @@
 
 .template-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
 	gap: 0.75rem;
 	width: 100%;
 	margin: 0;
