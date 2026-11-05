@@ -1,0 +1,35 @@
+@using LinkDotNet.Blog.Domain
+
+<li class="bookmark-row">
+	<a class="row-link" href="/blogPost/@BlogPost.Id/@BlogPost.Slug">
+		<span class="thumbnail">
+			<PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl"
+			              PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
+			              LazyLoadImage="true" />
+		</span>
+		<span class="row-text">
+			<span class="row-title">@BlogPost.Title</span>
+			<span class="row-meta">@BlogPost.UpdatedDate.ToShortDateString() · @BlogPost.ReadingTimeInMinutes min read</span>
+			<span class="row-description">@Description</span>
+		</span>
+	</a>
+	<button type="button"
+	        class="remove-button"
+	        title="Remove bookmark"
+	        aria-label="Remove bookmark: @BlogPost.Title"
+	        @onclick="() => OnRemove.InvokeAsync(BlogPost)">
+		<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+			<path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+		</svg>
+	</button>
+</li>
+
+@code {
+	[Parameter, EditorRequired]
+	public required BlogPost BlogPost { get; set; }
+
+	[Parameter]
+	public EventCallback<BlogPost> OnRemove { get; set; }
+
+	private string Description => Markdig.Markdown.ToPlainText(BlogPost.ShortDescription).Trim();
+}

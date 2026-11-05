@@ -1,46 +1,199 @@
 @page "/bookmarks"
+@using System.Threading
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Bookmarks.Components
 @inject IBookmarkService BookmarkService
-@inject IRepository<BlogPost> BlogPostRepository;
+@inject IRepository<BlogPost> BlogPostRepository
+@implements IDisposable
 
-<div class="container">
-	<h3 class="fs-3xl fw-bold pb-6 mb-0">Bookmarks</h3>
-	@if (bookmarkedPosts.Count <= 0)
+<div class="container bookmarks-page">
+	<header class="page-header">
+		<h1 class="large-title">Bookmarks</h1>
+		@if (!isLoading && bookmarkedPosts.Count > 0)
+		{
+			<p class="subtitle">@(bookmarkedPosts.Count) saved @(bookmarkedPosts.Count == 1 ? "article" : "articles")</p>
+		}
+	</header>
+
+	@if (isLoading)
 	{
-		<div class="alert theme-info flex-column" role="alert">
-			<h4 class="alert-heading">No bookmarks yet!</h4>
-			<p>You can bookmark posts while browsing by clicking the bookmark icon <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi fg-secondary" viewBox="0 0 16 16">
-				<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-			</svg> that appears on each post.</p>
-			<hr>
-			<p class="mb-0">Bookmarks are stored in your browser's local storage and are not synchronized across devices or browsers.</p>
-		</div>
+		<ul class="list-group-inset skeleton" aria-hidden="true">
+			@for (var i = 0; i < 3; i++)
+			{
+				<li class="skeleton-row"><span class="skeleton-thumbnail"></span><span class="skeleton-text"></span></li>
+			}
+		</ul>
+	}
+	else if (bookmarkedPosts.Count == 0)
+	{
+		<section class="empty-state" aria-labelledby="empty-title">
+			<svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+				<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+			</svg>
+			<h2 id="empty-title" class="empty-title">No Bookmarks Yet</h2>
+			<p class="empty-text">Tap the bookmark icon on any article to save it here for later.</p>
+			<a class="btn btn-solid theme-primary rounded-pill px-6" href="/">Browse Articles</a>
+			<p class="empty-footnote">Bookmarks are stored in this browser and are not synced across devices.</p>
+		</section>
 	}
 	else
 	{
-		@foreach (var post in bookmarkedPosts)
+		<div class="toolbar">
+			<label class="search-field">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+				</svg>
+				<input type="search" placeholder="Search bookmarks" aria-label="Search bookmarks" autocomplete="off"
+				       @bind="SearchTerm" @bind:event="oninput" />
+			</label>
+			<div class="segmented-control" role="group" aria-label="Sort bookmarks">
+				@foreach (var option in Enum.GetValues<SortOrder>())
+				{
+					<button type="button" class="segment" aria-pressed="@(sortOrder == option ? "true" : "false")" @onclick="() => sortOrder = option">@SortLabel(option)</button>
+				}
+			</div>
+		</div>
+
+		var visiblePosts = GetVisiblePosts();
+		@if (visiblePosts.Count == 0)
 		{
-			<ShortBlogPost BlogPost="post" />
+			<p class="no-results">No results for “@searchTerm”.</p>
 		}
+		else
+		{
+			<ul class="list-group-inset">
+				@foreach (var post in visiblePosts)
+				{
+					<BookmarkRow @key="post.Id" BlogPost="post" OnRemove="RemoveBookmark" />
+				}
+			</ul>
+		}
+	}
+
+	@if (recentlyRemoved is not null)
+	{
+		<div class="undo-bar" role="status">
+			<span class="undo-message">Removed “@recentlyRemoved.Title”</span>
+			<button type="button" class="undo-button" @onclick="UndoRemoval">Undo</button>
+		</div>
 	}
 </div>
 
 @code {
-	private IReadOnlyList<BlogPost> bookmarkedPosts = [];
+	private enum SortOrder
+	{
+		Newest,
+		Title,
+		ReadingTime,
+	}
+
+	private static readonly TimeSpan UndoDuration = TimeSpan.FromSeconds(6);
+
+	private List<BlogPost> bookmarkedPosts = [];
+	private BlogPost? recentlyRemoved;
+	private CancellationTokenSource? undoTimeout;
+	private SortOrder sortOrder = SortOrder.Newest;
+	private string searchTerm = string.Empty;
+	private bool isLoading = true;
+
+	private string SearchTerm
+	{
+		get => searchTerm;
+		set => searchTerm = value.Trim();
+	}
+
+	private List<BlogPost> GetVisiblePosts() => Sort(bookmarkedPosts.Where(MatchesSearch)).ToList();
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		if (firstRender)
+		if (!firstRender)
 		{
-			var ids = await BookmarkService.GetBookmarkedPostIds();
+			return;
+		}
 
-			if (ids.Any())
-			{
-				bookmarkedPosts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
-				StateHasChanged();
-			}
+		var ids = await BookmarkService.GetBookmarkedPostIds();
+
+		if (ids.Any())
+		{
+			var posts = await BlogPostRepository.GetAllByProjectionAsync(post => post, post => ids.Contains(post.Id));
+			bookmarkedPosts = posts.ToList();
+		}
+
+		isLoading = false;
+		StateHasChanged();
+	}
+
+	private async Task RemoveBookmark(BlogPost post)
+	{
+		await BookmarkService.SetBookmark(post.Id, false);
+		bookmarkedPosts.Remove(post);
+		recentlyRemoved = post;
+		ScheduleUndoExpiry();
+	}
+
+	private async Task UndoRemoval()
+	{
+		if (recentlyRemoved is null)
+		{
+			return;
+		}
+
+		await BookmarkService.SetBookmark(recentlyRemoved.Id, true);
+		bookmarkedPosts.Add(recentlyRemoved);
+		DismissUndo();
+	}
+
+	private void ScheduleUndoExpiry()
+	{
+		undoTimeout?.Cancel();
+		undoTimeout?.Dispose();
+		undoTimeout = new CancellationTokenSource();
+		_ = ExpireUndoAfterDelay(undoTimeout.Token);
+	}
+
+	private async Task ExpireUndoAfterDelay(CancellationToken cancellationToken)
+	{
+		try
+		{
+			await Task.Delay(UndoDuration, cancellationToken);
+			await InvokeAsync(DismissUndo);
+		}
+		catch (OperationCanceledException)
+		{
+			// A newer removal or undo replaced this timer.
 		}
 	}
 
+	private void DismissUndo()
+	{
+		recentlyRemoved = null;
+		StateHasChanged();
+	}
+
+	private bool MatchesSearch(BlogPost post) =>
+		searchTerm.Length == 0
+		|| post.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+		|| post.ShortDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
+		|| post.Tags.Any(tag => tag.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+	private IEnumerable<BlogPost> Sort(IEnumerable<BlogPost> posts) => sortOrder switch
+	{
+		SortOrder.Title => posts.OrderBy(p => p.Title, StringComparer.CurrentCultureIgnoreCase),
+		SortOrder.ReadingTime => posts.OrderBy(p => p.ReadingTimeInMinutes).ThenBy(p => p.Title),
+		_ => posts.OrderByDescending(p => p.UpdatedDate),
+	};
+
+	private static string SortLabel(SortOrder order) => order switch
+	{
+		SortOrder.Title => "Title",
+		SortOrder.ReadingTime => "Reading time",
+		_ => "Newest",
+	};
+
+	public void Dispose()
+	{
+		undoTimeout?.Cancel();
+		undoTimeout?.Dispose();
+	}
 }
