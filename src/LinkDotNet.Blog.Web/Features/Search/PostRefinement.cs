@@ -26,6 +26,7 @@ public static class PostRefinement
         string text,
         PostSortOrder sortOrder)
     {
+        ArgumentNullException.ThrowIfNull(text);
         var trimmedText = text.Trim();
 
         var matches = posts

@@ -7,5 +7,7 @@ public interface ITagQueryService
 {
     Task<IReadOnlyList<TagCount>> GetAllOrderedByUsageAsync();
 
+    Task<IReadOnlyList<TagCount>> GetPublishedOrderedByUsageAsync();
+
     Task ClearTagCacheAsync();
 }

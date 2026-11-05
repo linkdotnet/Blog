@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -126,12 +128,32 @@ public class SearchPageTests : SqlDatabaseTestBase<BlogPost>
         cut.WaitForAssertion(() => navigation.Uri.ShouldEndWith("search/C%23%20basics"));
     }
 
+    [Fact]
+    public async Task ShouldIgnoreStaleResultsWhenNewerSearchWasStarted()
+    {
+        var slowFirstQuery = new TaskCompletionSource<IPagedList<BlogPost>>();
+        var repository = Substitute.For<IRepository<BlogPost>>();
+        repository.GetAllAsync(default, default).ReturnsForAnyArgs(
+            _ => new ValueTask<IPagedList<BlogPost>>(slowFirstQuery.Task),
+            _ => new ValueTask<IPagedList<BlogPost>>(new PagedList<BlogPost>([new BlogPostBuilder().WithTitle("Fresh").Build()], 1, 1, 1)));
+        using var ctx = new BunitContext();
+        RegisterServices(ctx);
+        ctx.Services.AddScoped(_ => repository);
+        var cut = ctx.Render<SearchPage>(p => p.Add(s => s.SearchTerm, "old"));
+
+        cut.Render(p => p.Add(s => s.SearchTerm, "new"));
+        slowFirstQuery.SetResult(new PagedList<BlogPost>([new BlogPostBuilder().WithTitle("Stale").Build()], 1, 1, 1));
+        await Task.Delay(50, Xunit.TestContext.Current.CancellationToken);
+
+        cut.WaitForAssertion(() => cut.FindComponents<ShortBlogPost>().ShouldHaveSingleItem().Instance.BlogPost.Title.ShouldBe("Fresh"));
+    }
+
     private void RegisterServices(BunitContext ctx, params TagCount[] popularTags)
     {
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
         var tagQueryService = Substitute.For<ITagQueryService>();
-        tagQueryService.GetAllOrderedByUsageAsync().Returns(Task.FromResult<IReadOnlyList<TagCount>>(popularTags));
+        tagQueryService.GetPublishedOrderedByUsageAsync().Returns(Task.FromResult<IReadOnlyList<TagCount>>(popularTags));
         ctx.Services.AddScoped(_ => tagQueryService);
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ZiggyCreatures.Caching.Fusion;
 
@@ -15,12 +16,25 @@ public sealed class TagQueryService(
     IOptions<ApplicationConfiguration> appConfiguration) : ITagQueryService
 {
     private const string TagCacheKey = "TagUsageList";
+    private const string PublishedTagCacheKey = "PublishedTagUsageList";
 
-    public async Task<IReadOnlyList<TagCount>> GetAllOrderedByUsageAsync()
+    public async Task<IReadOnlyList<TagCount>> GetAllOrderedByUsageAsync() =>
+        await GetCachedAsync(TagCacheKey, onlyPublished: false);
+
+    public async Task<IReadOnlyList<TagCount>> GetPublishedOrderedByUsageAsync() =>
+        await GetCachedAsync(PublishedTagCacheKey, onlyPublished: true);
+
+    public async Task ClearTagCacheAsync()
+    {
+        await fusionCache.RemoveAsync(TagCacheKey);
+        await fusionCache.RemoveAsync(PublishedTagCacheKey);
+    }
+
+    private async Task<IReadOnlyList<TagCount>> GetCachedAsync(string cacheKey, bool onlyPublished)
     {
         return await fusionCache.GetOrSetAsync(
-        TagCacheKey,
-        async _ => await LoadTagsAsync(),
+        cacheKey,
+        async _ => await LoadTagsAsync(onlyPublished),
         options =>
         {
             options.SetDuration(TimeSpan.FromMinutes(
@@ -28,15 +42,10 @@ public sealed class TagQueryService(
         });
     }
 
-    public async Task ClearTagCacheAsync()
+    private async Task<IReadOnlyList<TagCount>> LoadTagsAsync(bool onlyPublished)
     {
-        await fusionCache.RemoveAsync(TagCacheKey);
-    }
-
-    private async Task<IReadOnlyList<TagCount>> LoadTagsAsync()
-    {
-        var tagLists = await blogPostRepository.GetAllByProjectionAsync(
-            p => p.Tags);
+        Expression<Func<BlogPost, bool>>? filter = onlyPublished ? p => p.IsPublished : null;
+        var tagLists = await blogPostRepository.GetAllByProjectionAsync(p => p.Tags, filter);
 
         var tagCounts = tagLists
             .SelectMany(tags => tags ?? Enumerable.Empty<string>())

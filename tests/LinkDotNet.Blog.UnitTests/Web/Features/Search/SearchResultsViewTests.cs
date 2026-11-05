@@ -26,7 +26,7 @@ public class SearchResultsViewTests : BunitContext
             DatabaseName = "Test",
         }));
         var tagQueryService = Substitute.For<ITagQueryService>();
-        tagQueryService.GetAllOrderedByUsageAsync().Returns(Task.FromResult<IReadOnlyList<TagCount>>([]));
+        tagQueryService.GetPublishedOrderedByUsageAsync().Returns(Task.FromResult<IReadOnlyList<TagCount>>([]));
         Services.AddScoped(_ => tagQueryService);
     }
 
@@ -94,6 +94,38 @@ public class SearchResultsViewTests : BunitContext
         cut.Find("input[type=search]").Input("  term ");
 
         cut.WaitForAssertion(() => reported.ShouldBe("term"));
+    }
+
+    [Fact]
+    public void ShouldKeepTypedTextWhileParentStillPassesPreviousQuery()
+    {
+        var cut = RenderView([], p => p.Add(s => s.Query, "old").Add(s => s.QueryChanged, _ => { }));
+
+        cut.Find("input[type=search]").Input("typed text");
+        cut.WaitForAssertion(() => cut.Render());
+
+        cut.Find("input[type=search]").GetAttribute("value").ShouldBe("typed text");
+    }
+
+    [Fact]
+    public void ShouldKeepTrailingWhitespaceWhenParentEchoesTrimmedQuery()
+    {
+        var cut = RenderView([], p => p.Add(s => s.Query, "foo"));
+        cut.Find("input[type=search]").Input("foo ");
+
+        cut.Render(p => p.Add(s => s.Title, "Title").Add(s => s.Posts, []).Add(s => s.Query, "foo bar"));
+
+        cut.Find("input[type=search]").GetAttribute("value").ShouldBe("foo bar");
+    }
+
+    [Fact]
+    public void ShouldKeepResultStatusMountedAndAnnounceNoResults()
+    {
+        var cut = RenderView([new BlogPostBuilder().WithTitle("Blazor").Build()], p => p.Add(s => s.FilterTextLocally, true));
+
+        cut.Find("input[type=search]").Input("nothing");
+
+        cut.Find("[role=status]").TextContent.Trim().ShouldBe("No articles found");
     }
 
     [Fact]
