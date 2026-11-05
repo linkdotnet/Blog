@@ -63,6 +63,24 @@ public class ShowBlogPostPageTests : BunitContext
     }
 
     [Fact]
+    public void ShouldNotShowNotFoundWhileShortCodesAreStillLoading()
+    {
+        var pendingShortCodes = new TaskCompletionSource<IPagedList<ShortCode>>();
+        var shortCodeRepository = Substitute.For<IRepository<ShortCode>>();
+        shortCodeRepository.GetAllAsync().Returns(new ValueTask<IPagedList<ShortCode>>(pendingShortCodes.Task));
+        Services.AddScoped(_ => shortCodeRepository);
+        var repositoryMock = Substitute.For<IRepository<BlogPost>>();
+        repositoryMock.GetByIdAsync("1").Returns(new BlogPostBuilder().Build());
+        Services.AddScoped(_ => repositoryMock);
+
+        var cut = Render<ShowBlogPostPage>(
+            p => p.Add(s => s.BlogPostId, "1"));
+
+        cut.HasComponent<ObjectNotFound>().ShouldBeFalse();
+        cut.FindComponents<Loading>().Count.ShouldBe(1);
+    }
+
+    [Fact]
     public void ShouldTrackVisitOnlyOncePerPageView()
     {
         var userRecordService = Substitute.For<IUserRecordService>();
