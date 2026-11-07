@@ -1,4 +1,4 @@
-## Host the blog in Docker containers
+# Host the blog in Docker containers
 
 ### Server configuration
 

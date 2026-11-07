@@ -1,4 +1,4 @@
-## Donations
+# Donations
 
 The blog software allows you to integrate via different micro-transaction services. The following chapter will show you how to set up donations.
 

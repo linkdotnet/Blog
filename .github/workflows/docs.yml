@@ -1,0 +1,61 @@
+name: docs
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - "docs/**"
+      - "assets/**"
+      - "MIGRATION.md"
+      - "docfx.json"
+      - "dotnet-tools.json"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    branches: [ master ]
+    paths:
+      - "docs/**"
+      - "assets/**"
+      - "MIGRATION.md"
+      - "docfx.json"
+      - "dotnet-tools.json"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v6
+      with:
+        dotnet-version: |
+          10.0.x
+    - name: Restore tools
+      run: dotnet tool restore
+    - name: Build documentation
+      run: dotnet docfx docfx.json --warningsAsErrors
+    - name: Upload site
+      if: github.event_name != 'pull_request'
+      uses: actions/upload-pages-artifact@v5
+      with:
+        path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v5

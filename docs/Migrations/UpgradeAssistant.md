@@ -360,7 +360,7 @@ fi
 
 - [MIGRATION.md](../../MIGRATION.md) - Complete migration guide with manual steps
 - [Configuration Documentation](../Setup/Configuration.md) - All configuration options
-- [Tool README](../../tools/LinkDotNet.Blog.UpgradeAssistant/README.md) - Developer documentation
+- [Tool README](https://github.com/linkdotnet/Blog/blob/master/tools/LinkDotNet.Blog.UpgradeAssistant/README.md) - Developer documentation
 
 ## Getting Help
 

@@ -1,4 +1,4 @@
-## Setup
+# Setup
 
 There are two main ways of using this blog:
 * Latest development build: Just clone this repository and you are good to go (aka you are using the `master` branch).

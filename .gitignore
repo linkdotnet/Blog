@@ -38,3 +38,7 @@ backups/
 
 # Local image storage provider uploads
 src/LinkDotNet.Blog.Web/wwwroot/uploads/
+
+# DocFX output
+/_site/
+/obj/

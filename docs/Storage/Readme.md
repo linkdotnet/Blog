@@ -1,4 +1,4 @@
-## Storage Provider
+# Storage Provider
 
 The blog currently supports six storage providers:
 

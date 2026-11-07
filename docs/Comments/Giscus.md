@@ -1,4 +1,4 @@
-### Giscus
+# Giscus
 
 To provide the necessary values head over to https://giscus.app/ and go to the configuration section.
 There you can enter all the information. You will find a detailed guide on the site.

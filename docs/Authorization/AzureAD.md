@@ -1,4 +1,4 @@
-### Azure Active Directory
+# Azure Active Directory
 
 Microsoft Entra ID (old Azure AD) is Microsoft's cloud-based identity and access management service. It supports various identity protocols, including OpenID Connect (OIDC), a standard protocol built on top of OAuth 2.0 for authentication and identity verification.
 

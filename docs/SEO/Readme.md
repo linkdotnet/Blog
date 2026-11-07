@@ -1,4 +1,4 @@
-## Search Engine Optimization (SEO)
+# Search Engine Optimization (SEO)
 
 The blog includes some of the most important tags to get indexed by a crawler. Furthermore, some aspects of the Open Graph specification are implemented.
 

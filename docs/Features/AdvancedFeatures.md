@@ -1,4 +1,4 @@
-## Advanced Features
+# Advanced Features
 
 - [Advanced Features](#advanced-features)
 - [Shortcodes](#shortcodes)

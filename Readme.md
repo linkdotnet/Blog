@@ -38,6 +38,8 @@ This also includes source code snippets. Highlighting is done via [highlight.js]
 
 ## Documentation
 
+The documentation is published at **[linkdotnet.github.io/Blog](https://linkdotnet.github.io/Blog/)**. The sources live in [`docs`](./docs) and are rendered with [DocFX](https://dotnet.github.io/docfx/). To preview changes locally run `dotnet tool restore` once, followed by `dotnet docfx docfx.json --serve`.
+
 -   [Authorization](./docs/Authorization/Readme.md)
 -   [Comments](./docs/Comments/Readme.md)
 -   [Storage Provider](./docs/Storage/Readme.md)

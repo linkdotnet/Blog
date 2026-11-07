@@ -1,4 +1,4 @@
-### Auth0
+# Auth0
 
 Auth0 is a prominent provider of OpenID Connect (OIDC) services, which is an authentication protocol built on top of OAuth 2.0. OpenID Connect is specifically designed for identity layer applications and provides a standardized way for users to authenticate and authorize themselves on websites or applications while allowing third-party applications to access limited user information in a secure manner.
 

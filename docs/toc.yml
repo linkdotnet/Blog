@@ -1,0 +1,48 @@
+- name: Home
+  href: index.md
+- name: Setup
+  href: Setup/Readme.md
+  items:
+    - name: Configuration
+      href: Setup/Configuration.md
+    - name: Docker
+      href: Setup/Docker.md
+- name: Features
+  items:
+    - name: Advanced Features
+      href: Features/AdvancedFeatures.md
+    - name: Styling
+      href: Features/Styling.md
+    - name: Media Upload
+      href: Media/Readme.md
+    - name: SEO
+      href: SEO/Readme.md
+    - name: Donations
+      href: Donations/Readme.md
+- name: Integrations
+  items:
+    - name: Storage Provider
+      href: Storage/Readme.md
+    - name: Authorization
+      href: Authorization/Readme.md
+      items:
+        - name: Auth0
+          href: Authorization/Auth0.md
+        - name: Microsoft Entra ID
+          href: Authorization/AzureAD.md
+    - name: Comments
+      href: Comments/Readme.md
+      items:
+        - name: Giscus
+          href: Comments/Giscus.md
+        - name: Disqus
+          href: Comments/Disqus.md
+- name: Upgrading
+  href: Migrations/Readme.md
+  items:
+    - name: Upgrade Assistant
+      href: Migrations/UpgradeAssistant.md
+    - name: Migration Guide
+      href: ../MIGRATION.md
+- name: GitHub
+  href: https://github.com/linkdotnet/Blog

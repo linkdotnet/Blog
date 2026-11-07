@@ -1,4 +1,4 @@
-### Disqus
+# Disqus
 
 For disqus you only need the short name (site-name) which you can find for example under your [home-tab](https://disqus.com/home/).
 

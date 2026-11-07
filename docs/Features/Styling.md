@@ -1,4 +1,4 @@
-## Styling
+# Styling
 
 - [Styling](#styling)
 - [Colors \& Fonts](#colors--fonts)
