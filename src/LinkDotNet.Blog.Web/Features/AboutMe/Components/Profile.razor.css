@@ -1,0 +1,19 @@
+.profile-avatar {
+	aspect-ratio: 1;
+}
+
+.profile-keypoints:not(:has(li)) {
+	display: none;
+}
+
+.item-draggable {
+	cursor: grab;
+}
+
+.profile-entry-content {
+	overflow-wrap: anywhere;
+}
+
+.profile-entry-content ::deep p {
+	margin: 0;
+}

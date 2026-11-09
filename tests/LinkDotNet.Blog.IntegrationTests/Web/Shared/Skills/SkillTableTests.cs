@@ -27,7 +27,7 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
 
         var items = await Repository.GetAllAsync();
         items.ShouldBeEmpty();
-        cut.FindAll("td").Any(s => s.TextContent == "C#").ShouldBeFalse();
+        cut.FindAll(".skill-tag").Any(s => s.TextContent.Contains("C#")).ShouldBeFalse();
     }
 
     [Fact]
@@ -85,8 +85,8 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForElement(".skill-tag");
 
-        await cut.FindAll(".skill-tag")[0].DragAsync();
-        await cut.FindAll(".proficiency-level")[1].DropAsync();
+        await cut.Find(".skill-pills li").DragAsync();
+        await cut.Find(".proficiency-level[data-level=Proficient]").DropAsync();
 
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
         skillFromDb.ShouldNotBeNull();
@@ -106,8 +106,8 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
             p.Add(s => s.ShowAdminActions, true));
         cut.WaitForElement(".skill-tag");
 
-        await cut.FindAll(".skill-tag")[0].DragAsync();
-        await cut.FindAll(".proficiency-level")[0].DropAsync();
+        await cut.Find(".skill-pills li").DragAsync();
+        await cut.Find(".proficiency-level[data-level=Familiar]").DropAsync();
 
         var skillFromDb = await Repository.GetByIdAsync(skill.Id);
         skillFromDb.ShouldNotBeNull();

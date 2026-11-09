@@ -28,6 +28,47 @@ internal sealed class DummyDataSeeder : IHostedService
 
         var blogPosts = GenerateDummyBlogPosts(options.NumberOfBlogPosts);
         await repository.StoreBulkAsync(blogPosts);
+
+        await scope.ServiceProvider.GetRequiredService<IRepository<ProfileInformationEntry>>().StoreBulkAsync(GenerateDummyProfileEntries());
+        await scope.ServiceProvider.GetRequiredService<IRepository<Skill>>().StoreBulkAsync(GenerateDummySkills());
+        await scope.ServiceProvider.GetRequiredService<IRepository<Talk>>().StoreBulkAsync(GenerateDummyTalks());
+    }
+
+    private static List<ProfileInformationEntry> GenerateDummyProfileEntries() =>
+    [
+        ProfileInformationEntry.Create("Passionate software engineer with broad experience and deep .NET knowledge.", 1000),
+        ProfileInformationEntry.Create("Birthday: 17.05.1991", 2000),
+        ProfileInformationEntry.Create("Speaks German and English", 3000),
+        ProfileInformationEntry.Create("[Microsoft MVP](https://mvp.microsoft.com)", 4000),
+        ProfileInformationEntry.Create("Hobbies: Playing piano and sports (calisthenics)", 5000),
+    ];
+
+    private static List<Skill> GenerateDummySkills() =>
+    [
+        Skill.Create("C#", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg", "Backend", "Expert"),
+        Skill.Create("EF Core", null, "Backend", "Expert"),
+        Skill.Create("gRPC", null, "Backend", "Proficient"),
+        Skill.Create("Python", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg", "Backend", "Familiar"),
+        Skill.Create("Blazor", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/blazor/blazor-original.svg", "Frontend", "Expert"),
+        Skill.Create("TypeScript", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg", "Frontend", "Proficient"),
+        Skill.Create("React", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg", "Frontend", "Familiar"),
+        Skill.Create("SQL Server", null, "Database", "Expert"),
+        Skill.Create("RavenDB", null, "Database", "Proficient"),
+        Skill.Create("GitHub Actions", "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg", "DevOps", "Expert"),
+        Skill.Create("Domain-Driven Design", null, "Practices", "Expert"),
+        Skill.Create("Scrum", null, "Project Management", "Proficient"),
+    ];
+
+    private static List<Talk> GenerateDummyTalks()
+    {
+        var today = DateTime.Today;
+        return
+        [
+            Talk.Create("Async State Machines, Lowered", "NDC London", "Following a single await down to the generated state machine.", today.AddDays(30)),
+            Talk.Create("SIMD in .NET", ".NET Switzerland", "[Slides](https://example.com/slides.pdf)", today.AddMonths(-3)),
+            Talk.Create("Speedrun into Massive Data in C#", "NDC Oslo", "Parsing a billion rows on a laptop. [Slides](https://example.com/slides.pdf) · [Recording](https://example.com/video)", today.AddYears(-1)),
+            Talk.Create("Clean Architecture with Blazor", ".NET User Group Zurich", "Structuring a Blazor app so the UI stays a detail.", today.AddYears(-3)),
+        ];
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;

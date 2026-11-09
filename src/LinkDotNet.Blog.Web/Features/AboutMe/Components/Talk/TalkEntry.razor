@@ -1,30 +1,36 @@
+@using System.Globalization
 @using LinkDotNet.Blog.Domain
 
-<li class="pb-1">
-	<div class="row">
-		<div class="col-10" id="talk-display-content">
-			<p class="fg-3 mb-0 small">@Talk.PublishedDate.ToShortDateString()</p>
-			<strong class="fs-lg">@Talk.PresentationTitle</strong>
-			<p id="talk-place" class="fg-3">@Talk.Place</p>
-			<div id="talk-description">
-				@MarkdownConverter.ToMarkupString(Talk.Description)
-			</div>
-		</div>
-		<div class="col-2">
-			@if (ShowAdminActions)
-			{
-				<button id="talk-delete" type="button" class="btn btn-outline theme-secondary" aria-label="Delete Talk" @onclick="() => TalkDeleted.InvokeAsync()">
-					<i class="bin2" aria-hidden="true"></i>
-				</button>
-			}
+<li class="talk-row">
+	<time class="talk-date d-flex flex-column align-items-center lh-sm" datetime="@Talk.PublishedDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)">
+		<span class="fs-xs fw-semibold text-uppercase fg-3">@Talk.PublishedDate.ToString("MMM", CultureInfo.InvariantCulture)</span>
+		<span class="fs-xl fw-bold lh-1">@Talk.PublishedDate.Day</span>
+	</time>
+	<div class="d-flex flex-column gap-1 min-w-0" id="talk-display-content">
+		@if (IsUpcoming)
+		{
+			<span class="talk-badge badge badge-subtle theme-success align-self-start mb-1"><i class="bi bi-clock" aria-hidden="true"></i> Upcoming</span>
+		}
+		<h4 class="talk-title m-0 fs-md fw-semibold text-balance">@Talk.PresentationTitle</h4>
+		<p class="d-flex align-items-center gap-2 m-0 fs-sm fg-3"><i class="bi bi-geo-alt" aria-hidden="true"></i><span id="talk-place">@Talk.Place</span></p>
+		<div id="talk-description" class="talk-description mt-2 fs-sm">
+			@MarkdownConverter.ToMarkupString(Talk.Description)
 		</div>
 	</div>
+	@if (ShowAdminActions)
+	{
+		<button id="talk-delete" type="button" class="btn btn-icon btn-text theme-danger align-self-start" aria-label="Delete Talk @Talk.PresentationTitle" @onclick="() => TalkDeleted.InvokeAsync()">
+			<i class="bi bi-trash3" aria-hidden="true"></i>
+		</button>
+	}
 </li>
-<hr class="m-0" />
 
 @code {
     [Parameter]
     public bool ShowAdminActions { get; set; }
+
+    [Parameter]
+    public bool IsUpcoming { get; set; }
 
     [Parameter]
     public EventCallback TalkDeleted { get; set; }
@@ -43,6 +49,9 @@
 					break;
 				case nameof(ShowAdminActions):
 					ShowAdminActions = (bool)parameter.Value;
+					break;
+				case nameof(IsUpcoming):
+					IsUpcoming = (bool)parameter.Value;
 					break;
 				case nameof(TalkDeleted):
 					TalkDeleted = (EventCallback)parameter.Value;

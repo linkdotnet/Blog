@@ -1,0 +1,27 @@
+.talk-row {
+	display: grid;
+	grid-template-columns: 3rem minmax(0, 1fr) auto;
+	gap: 1rem;
+	padding: 1rem 1.25rem;
+}
+
+.talk-row + .talk-row {
+	border-top: 0.5px solid var(--separator);
+}
+
+.talk-date {
+	font-variant-numeric: tabular-nums;
+}
+
+.talk-description {
+	max-width: 40rem;
+	overflow-wrap: anywhere;
+}
+
+.talk-description ::deep p {
+	margin: 0;
+}
+
+.talk-description ::deep p + p {
+	margin-top: 0.5rem;
+}

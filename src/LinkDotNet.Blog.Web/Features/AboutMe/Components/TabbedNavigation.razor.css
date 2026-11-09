@@ -1,0 +1,11 @@
+.segmented-control {
+	--bs-nav-pills-bg: var(--tag-background);
+	--bs-nav-pills-padding: 0.125rem;
+	--bs-nav-pills-link-active-bg: var(--surface);
+	--bs-nav-pills-link-active-color: var(--bs-fg-body);
+	width: min(100%, 20rem);
+}
+
+.segmented-control .active {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
