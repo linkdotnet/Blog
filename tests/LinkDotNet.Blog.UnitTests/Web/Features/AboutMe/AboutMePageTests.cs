@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
@@ -92,5 +93,6 @@ public class AboutMePageTests : BunitContext
         Services.RegisterRepositoryWithEmptyReturn<Skill>();
         Services.RegisterRepositoryWithEmptyReturn<Talk>();
         Services.AddScoped(_ => Substitute.For<IToastService>());
+        Services.AddSingleton(TimeProvider.System);
     }
 }

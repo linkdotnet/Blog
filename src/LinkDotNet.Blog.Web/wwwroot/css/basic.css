@@ -175,31 +175,6 @@ section {
     top: 0.5rem;
 }
 
-/*region Skilltable.razor */
-.skill-table {
-	margin-top: 20px;
-	width: 100%;
-}
-
-.skill-table td:first-of-type {
-	width:10%;
-}
-
-.skill-table td {
-	width: 30%;
-	border-top: 1px var(--bs-bg-1) solid;
-	vertical-align: top;
-	min-width: 100px;
-}
-
-.skill-table td div {
-	display: inline-block;
-	margin-right: 8px;
-	margin-top: 12px;
-	margin-bottom: 12px;
-}
-/*endregion */
-
 /*#region IntroductionCard.razor */
 .introduction-background {
 	background-repeat: no-repeat;
@@ -298,21 +273,6 @@ section {
 	--bs-dialog-box-shadow: none;
 }
 /*endregion */
-
-/*region Profile.razor */
-.profile-keypoints li {
-	display: flex;
-	padding-bottom: 0.6em;
-}
-
-.profile-keypoints:not(:has(li)) {
-	display: none;
-}
-
-.item-draggable {
-	cursor: grab;
-}
-/*#endregion */
 
 /*#region ShortBlogPost.razor */
 .blog-card {

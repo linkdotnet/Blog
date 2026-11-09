@@ -1,0 +1,19 @@
+.about-me {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+	padding-block: 1.5rem 3rem;
+}
+
+@media (min-width: 768px) {
+	.about-me {
+		grid-template-columns: 19rem minmax(0, 1fr);
+		align-items: start;
+		gap: 2rem;
+	}
+
+	.about-me-profile {
+		position: sticky;
+		top: 5rem;
+	}
+}

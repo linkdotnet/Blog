@@ -1,60 +1,67 @@
 ﻿@using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<Skill> Repository
-<div>
-        @if (ShowAdminActions)
-        {
-            <button type="button" class="btn btn-solid theme-primary" @onclick="() => AddSkillDialog.Open()">
-                <i class="plus"></i> Add skill</button>
-            <AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
-        }
-    </div>
-<div class="table-responsive">
-    <table class="skill-table" id="skill-table">
-        <tbody>
-        <tr>
-            <th>Capability</th>
-            <th>Familiar with</th>
-            <th>Proficient</th>
-            <th>Expert</th>
-        </tr>
-        @foreach (var skillCapabilityGroup in skills.GroupBy(s => s.Capability))
-        {
-            <tr ondragover="event.preventDefault();">
-                <td>@skillCapabilityGroup.Key</td>
-                @foreach (var skillLevel in ProficiencyLevel.All)
-                {
-                    <td @ondrop="@(() => HandleDrop(skillLevel))" class="proficiency-level">
-                        @foreach (var skill in skillCapabilityGroup.Where(s => s.ProficiencyLevel == skillLevel))
-                        {
-                            @if (ShowAdminActions)
-                            {
-                                <div draggable="true" @ondrag="@(() => currentDragItem = skill)"
-                                 class="skill-tag cursor-grab">
-                                    <SkillTag Skill="@skill"
-                                              ShowAdminActions="@true"
-                                              DeleteSkill="@(() => DeleteSkill(skill))"/>
-                                </div>
-                            }
-                            else
-                            {
-                                <div>
-                                    <SkillTag Skill="@skill"/>
-                                </div>
-                            }
-                        }
-                    </td>
-                }
-            </tr>
-        }
-        </tbody>
-    </table>
-    @if (ShowAdminActions)
-    {
-        <small for="skill-table">You can drag and drop your skills from one proficiency to another</small>
-    }
+@if (ShowAdminActions)
+{
+	<div class="d-flex flex-wrap align-items-center gap-4 mb-5">
+		<button type="button" class="btn btn-subtle theme-primary" @onclick="() => AddSkillDialog.Open()">
+			<i class="bi bi-plus-lg" aria-hidden="true"></i> Add skill
+		</button>
+		<span class="fs-xs fg-3">Drag a skill onto another level to change it.</span>
+	</div>
+	<AddSkillDialog @ref="AddSkillDialog" SkillAdded="@AddSkill"></AddSkillDialog>
+}
+@if (skills.Count == 0 && !ShowAdminActions)
+{
+	<p class="fs-sm fg-3">No skills yet.</p>
+}
+<div class="skill-grid" id="skill-table">
+	@foreach (var capability in skills.GroupBy(s => s.Capability).OrderByDescending(g => g.Count()).ThenBy(g => g.Key))
+	{
+		<section class="skill-card d-flex flex-column gap-5 mb-5 p-6 rounded-9 bg-body" aria-label="@capability.Key">
+			<header class="d-flex justify-content-between align-items-baseline gap-3">
+				<h3 class="m-0 fs-md fw-semibold">@capability.Key</h3>
+				<span class="fs-xs fg-3">@capability.Count()</span>
+			</header>
+			@for (var i = 0; i < LevelsDescending.Length; i++)
+			{
+				var level = LevelsDescending[i];
+				var rank = LevelsDescending.Length - i;
+				var skillsInLevel = capability.Where(s => s.ProficiencyLevel == level).OrderBy(s => s.Name).ToList();
+				if (skillsInLevel.Count > 0 || ShowAdminActions)
+				{
+					<div class="proficiency-level d-flex flex-column gap-3" data-level="@level.Key"
+					     ondragover="event.preventDefault();" @ondrop="@(() => HandleDrop(level))">
+						<h4 class="d-flex align-items-center gap-3 m-0 fs-xs fw-semibold text-uppercase fg-3">
+							<span class="level-meter" aria-hidden="true">
+								@for (var dot = 1; dot <= LevelsDescending.Length; dot++)
+								{
+									<i class="@(dot <= rank ? "filled" : null)"></i>
+								}
+							</span>
+							@level.Key
+						</h4>
+						<ul class="skill-pills list-unstyled d-flex flex-wrap gap-2 m-0">
+							@foreach (var skill in skillsInLevel)
+							{
+								<li draggable="@(ShowAdminActions ? "true" : null)"
+								    class="@(ShowAdminActions ? "skill-draggable" : null)"
+								    @ondrag="@(() => currentDragItem = skill)">
+									<SkillTag Skill="@skill"
+									          ShowAdminActions="@ShowAdminActions"
+									          DeleteSkill="@(() => DeleteSkill(skill))"/>
+								</li>
+							}
+						</ul>
+					</div>
+				}
+			}
+		</section>
+	}
 </div>
 @code {
+    private static readonly ProficiencyLevel[] LevelsDescending = [ProficiencyLevel.Expert, ProficiencyLevel.Proficient, ProficiencyLevel.Familiar];
+
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
@@ -83,7 +90,7 @@
 
     private async Task HandleDrop(ProficiencyLevel proficiencyLevel)
     {
-        if (currentDragItem is null || currentDragItem.ProficiencyLevel == proficiencyLevel)
+        if (!ShowAdminActions || currentDragItem is null || currentDragItem.ProficiencyLevel == proficiencyLevel)
         {
             return;
         }
@@ -92,5 +99,4 @@
         await Repository.StoreAsync(currentDragItem);
         currentDragItem = null;
     }
-
 }

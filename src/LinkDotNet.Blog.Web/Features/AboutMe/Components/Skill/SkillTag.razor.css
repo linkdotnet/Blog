@@ -1,14 +1,24 @@
 ﻿.skill-tag {
-	padding: 8px;
-	border-radius: 5px;
-	background-color: var(--tag-background);
-	display: inline-block;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	max-width: 100%;
+	min-height: 2rem;
+	padding: 0.1875rem 0.75rem 0.1875rem 0.3125rem;
+	background: var(--tag-background);
+	font-size: 0.9375rem;
+	overflow-wrap: anywhere;
+}
+
+.skill-tag.no-icon {
+	padding-inline-start: 0.75rem;
 }
 
 .skill-tag img {
-	padding-right: 12px;
-	width: 36px;
+	flex: none;
+	width: 1.5rem;
+	height: 1.5rem;
+	object-fit: contain;
+}
+
+.skill-delete {
+	margin-block: -0.25rem;
+	margin-inline-end: -0.5rem;
 }

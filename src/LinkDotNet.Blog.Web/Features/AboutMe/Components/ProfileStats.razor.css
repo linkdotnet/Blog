@@ -1,0 +1,7 @@
+.stat + .stat {
+	border-inline-start: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.stat-value {
+	font-variant-numeric: tabular-nums;
+}

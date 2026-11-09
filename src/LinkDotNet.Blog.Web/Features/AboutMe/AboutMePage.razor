@@ -15,14 +15,14 @@
             Keywords="@ProfileInformation.Value.Name"
             AbsolutePreviewImageUrl="@ImageUrl" />
 
-    <div class="container">
-	    <div class="row gy-7">
-		    <div class="lg:col-3 md:col-4">
-			    <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="ProfileInformation.Value" />
-		    </div>
-		    <div class="lg:col-9 md:col-8">
-			    <TabbedNavigation IsAuthenticated="isAuthenticated" />
-		    </div>
+    <div class="container about-me">
+	    <aside class="about-me-profile" aria-label="Profile">
+		    <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="ProfileInformation.Value">
+			    <Stats><ProfileStats /></Stats>
+		    </Profile>
+	    </aside>
+	    <div class="about-me-content">
+		    <TabbedNavigation IsAuthenticated="isAuthenticated" />
 	    </div>
     </div>
 }

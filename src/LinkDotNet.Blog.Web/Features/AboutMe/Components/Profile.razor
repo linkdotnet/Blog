@@ -4,37 +4,35 @@
 
 @inject IRepository<ProfileInformationEntry> Repository
 @inject ISortOrderCalculator SortOrderCalculator
-<div class="card rounded-9 overflow-hidden">
-	<div class="p-6 fs-lg fw-semibold">
-		<span>@ProfileInformation.Name</span>
-		<br/>
-		<span>@ProfileInformation.Heading</span>
+<div class="d-flex flex-column gap-6 p-6 rounded-9 bg-body">
+	<div class="d-flex flex-column">
+		<img class="w-5 rounded-circle object-fit-cover mb-4 profile-avatar" src="@ProfileInformation.ProfilePictureUrl" alt="Profile picture of @ProfileInformation.Name" />
+		<h1 class="m-0 fs-xl fw-bold lh-sm text-balance">@ProfileInformation.Name</h1>
+		<p class="m-0 fs-sm fg-3">@ProfileInformation.Heading</p>
 	</div>
-	<div class="px-8 pb-8">
-		<img class="w-12 rounded-circle d-block mx-auto" src="@ProfileInformation.ProfilePictureUrl" alt="Profile Picture" />
-	</div>
-	<ul class="profile-keypoints list-unstyled border-top pt-5 px-8 mb-0"
-	    ondragover="event.preventDefault();">
+	@Stats
+	<ul class="profile-keypoints list-unstyled d-flex flex-column gap-5 m-0 fs-sm" ondragover="event.preventDefault();">
 		@foreach (var entry in profileInformationEntries)
 		{
-			@if (ShowAdminActions)
-			{
-				<li
-					class="item-draggable"
-					draggable="true"
-					@ondrag="@(() => currentDragItem = entry)"
-					@ondrop="@(() => HandleDrop(entry))">
-
-					<button type="button" class="btn btn-icon" aria-label="Delete Item" @onclick="() => ShowDeleteDialog(entry.Content)">
-						<i class="bin2" aria-hidden="true"></i>
+			var content = ProfileEntryContent.Parse(entry.Content);
+			<li class="d-flex align-items-center gap-3 @(ShowAdminActions ? "item-draggable" : null)"
+			    draggable="@(ShowAdminActions ? "true" : null)"
+			    @ondrag="@(() => currentDragItem = entry)"
+			    @ondrop="@(() => HandleDrop(entry))">
+				<div class="profile-entry-content flex-grow-1 min-w-0 d-flex flex-column lh-sm">
+					@if (content.Label is not null)
+					{
+						<span class="fs-xs fg-3">@content.Label</span>
+					}
+					@MarkdownConverter.ToMarkupString(content.Body)
+				</div>
+				@if (ShowAdminActions)
+				{
+					<button type="button" class="btn btn-icon btn-text theme-danger" aria-label="Delete entry" @onclick="() => ShowDeleteDialog(entry.Content)">
+						<i class="bi bi-trash3" aria-hidden="true"></i>
 					</button>
-					@MarkdownConverter.ToMarkupString(entry.Content)
-				</li>
-			}
-			else
-			{
-				<li>@MarkdownConverter.ToMarkupString(entry.Content)</li>
-			}
+				}
+			</li>
 		}
 		@if (ShowAdminActions)
 		{
@@ -52,6 +50,9 @@
 
 	[Parameter, EditorRequired]
 	public required ProfileInformation ProfileInformation { get; set; }
+
+	[Parameter]
+	public RenderFragment? Stats { get; set; }
 
     private List<ProfileInformationEntry> profileInformationEntries = [];
     private ConfirmDialog Dialog { get; set; } = default!;
@@ -97,7 +98,7 @@
 
     private async Task HandleDrop(ProfileInformationEntry dropTarget)
     {
-        if (currentDragItem is null || dropTarget == currentDragItem)
+        if (!ShowAdminActions || currentDragItem is null || dropTarget == currentDragItem)
         {
             return;
         }

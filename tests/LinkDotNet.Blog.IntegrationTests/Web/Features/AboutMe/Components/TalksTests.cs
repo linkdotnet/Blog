@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.TestUtilities;
@@ -14,10 +15,14 @@ namespace LinkDotNet.Blog.IntegrationTests.Web.Features.AboutMe.Components;
 public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
 {
     private readonly BunitContext ctx = new();
+    private readonly TimeProvider timeProvider = Substitute.For<TimeProvider>();
 
     public TalksTests()
     {
         ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddSingleton(timeProvider);
+        timeProvider.GetUtcNow().Returns(new DateTimeOffset(2026, 11, 9, 12, 0, 0, TimeSpan.Zero));
+        timeProvider.LocalTimeZone.Returns(TimeZoneInfo.Utc);
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         ctx.JSInterop.SetupNativeDialog();
     }
@@ -36,7 +41,7 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         cut.Find("form").Submit();
 
         var entry = cut.WaitForComponent<TalkEntry>();
-        entry.Find("#talk-display-content strong").TextContent.ShouldBe("title");
+        entry.Find("#talk-display-content .talk-title").TextContent.ShouldBe("title");
         entry.Find("#talk-place").TextContent.ShouldBe("Zurich");
         entry.Find("#talk-description p").TextContent.ShouldBe("text");
     }
@@ -79,6 +84,22 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
         talks.Count.ShouldBe(2);
         talks[0].Instance.Talk.PublishedDate.ShouldBe(new DateTime(2022, 1, 1));
         talks[1].Instance.Talk.PublishedDate.ShouldBe(new DateTime(2021, 1, 1));
+    }
+
+    [Fact]
+    public async Task UpcomingTalksAreShownFirstWithBadge()
+    {
+        await Repository.StoreAsync(new TalkBuilder().WithTitle("Past").WithPublishedDate(new DateTime(2025, 5, 22)).Build());
+        await Repository.StoreAsync(new TalkBuilder().WithTitle("Later").WithPublishedDate(new DateTime(2027, 3, 1)).Build());
+        await Repository.StoreAsync(new TalkBuilder().WithTitle("Soon").WithPublishedDate(new DateTime(2027, 1, 28)).Build());
+
+        var cut = ctx.Render<Talks>();
+
+        var talks = cut.WaitForComponents<TalkEntry>();
+        talks.Select(t => t.Instance.Talk.PresentationTitle).ShouldBe(["Soon", "Later", "Past"]);
+        talks.Select(t => t.Instance.IsUpcoming).ShouldBe([true, true, false]);
+        cut.FindAll(".talk-group-title span:first-child").Select(e => e.TextContent).ShouldBe(["Upcoming", "2025"]);
+        cut.FindAll(".talk-badge").Count.ShouldBe(2);
     }
 
     public void Dispose()

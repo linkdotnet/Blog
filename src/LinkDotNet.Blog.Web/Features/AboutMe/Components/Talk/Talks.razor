@@ -1,22 +1,38 @@
+@using System.Globalization
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @inject IRepository<Talk> Repository
+@inject TimeProvider TimeProvider
 
-@if (talks.Any() || ShowAdminActions)
+@if (ShowAdminActions)
 {
-    @if (ShowAdminActions)
-    {
-        <button id="add-talk" type="button" class="btn btn-solid theme-primary" @onclick="() => AddTalkEntryDialog.Open()">
-            <i class="plus"></i> Add talk</button>
-        <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
-    }
-    <ul class="list-unstyled">
-        @foreach (var talk in talks)
-        {
-            <TalkEntry Talk="talk" ShowAdminActions="ShowAdminActions" TalkDeleted="@(() => DeleteTalk(talk))"></TalkEntry>
-        }
-    </ul>
+    <div class="mb-5">
+        <button id="add-talk" type="button" class="btn btn-subtle theme-primary" @onclick="() => AddTalkEntryDialog.Open()">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i> Add talk
+        </button>
+    </div>
+    <AddTalkEntryDialog @ref="AddTalkEntryDialog" TalkCreated="StoreTalk"></AddTalkEntryDialog>
 }
+@if (talks.Count == 0)
+{
+    <p class="fs-sm fg-3">No talks yet.</p>
+}
+else
+{
+    var today = TimeProvider.GetLocalNow().Date;
+    var upcoming = talks.Where(t => t.PublishedDate.Date >= today).OrderBy(t => t.PublishedDate).ToList();
+    <div class="d-flex flex-column gap-7">
+        @if (upcoming.Count > 0)
+        {
+            @TalkGroup(("Upcoming", upcoming, true))
+        }
+        @foreach (var year in talks.Where(t => t.PublishedDate.Date < today).GroupBy(t => t.PublishedDate.Year))
+        {
+            @TalkGroup((year.Key.ToString(CultureInfo.InvariantCulture), year.ToList(), false))
+        }
+    </div>
+}
+
 @code {
     [Parameter]
     public bool ShowAdminActions { get; set; }
@@ -24,6 +40,17 @@
     private List<Talk> talks = [];
 
     private AddTalkEntryDialog AddTalkEntryDialog { get; set; } = default!;
+
+    private RenderFragment<(string Title, List<Talk> Talks, bool IsUpcoming)> TalkGroup => group =>
+        @<section class="p-0" aria-label="@group.Title">
+            <h3 class="talk-group-title d-flex justify-content-between m-0 px-1 pb-3 fs-xs fw-semibold text-uppercase fg-3"><span>@group.Title</span><span>@group.Talks.Count</span></h3>
+            <ol class="list-unstyled m-0 overflow-hidden rounded-9 bg-body">
+                @foreach (var talk in group.Talks)
+                {
+                    <TalkEntry @key="talk" Talk="talk" IsUpcoming="group.IsUpcoming" ShowAdminActions="ShowAdminActions" TalkDeleted="@(() => DeleteTalk(talk))"></TalkEntry>
+                }
+            </ol>
+        </section>;
 
     protected override async Task OnInitializedAsync()
     {
@@ -39,6 +66,7 @@
     private async Task StoreTalk(Talk talk)
     {
         talks.Add(talk);
+        talks.Sort((a, b) => b.PublishedDate.CompareTo(a.PublishedDate));
         await Repository.StoreAsync(talk);
     }
 }

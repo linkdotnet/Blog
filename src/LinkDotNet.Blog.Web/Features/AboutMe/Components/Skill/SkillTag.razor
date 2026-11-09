@@ -1,15 +1,15 @@
 ﻿@using LinkDotNet.Blog.Domain
-<span class="skill-tag">
+<span class="skill-tag d-inline-flex align-items-center gap-2 rounded-pill fw-medium @(string.IsNullOrEmpty(Skill.IconUrl) ? "no-icon" : null)">
 	@if (!string.IsNullOrEmpty(Skill.IconUrl))
 	{
-		<img src="@Skill.IconUrl" alt="icon" max-width="48px"/>
+		<img src="@Skill.IconUrl" alt="" width="24" height="24" loading="lazy"/>
 	}
 	@Skill.Name
 
 	@if (ShowAdminActions)
 	{
-		<button type="button" class="btn btn-icon" aria-label="Delete Skill" @onclick="() => DeleteSkill.InvokeAsync()">
-			<i class="bin2" aria-hidden="true"></i>
+		<button type="button" class="btn btn-icon btn-text btn-xs skill-delete" aria-label="Delete Skill @Skill.Name" @onclick="() => DeleteSkill.InvokeAsync()">
+			<i class="bi bi-x-lg" aria-hidden="true"></i>
 		</button>
 	}
 </span>
