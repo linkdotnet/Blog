@@ -31,6 +31,23 @@ public class SkillTableTests : SqlDatabaseTestBase<Skill>
     }
 
     [Fact]
+    public async Task ShouldNotifyChangeAfterDelete()
+    {
+        await Repository.StoreAsync(new SkillBuilder().Build());
+        using var ctx = new BunitContext();
+        ctx.Services.AddScoped(_ => Repository);
+        ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
+        var changed = false;
+        var cut = ctx.Render<SkillTable>(p => p
+            .Add(s => s.ShowAdminActions, true)
+            .Add(s => s.Changed, () => changed = true));
+
+        await cut.WaitForComponent<SkillTag>().Find("button").ClickAsync();
+
+        changed.ShouldBeTrue();
+    }
+
+    [Fact]
     public async Task ShouldAddSkill()
     {
         using var ctx = new BunitContext();

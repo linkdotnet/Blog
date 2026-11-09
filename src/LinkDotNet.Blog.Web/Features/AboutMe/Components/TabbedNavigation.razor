@@ -18,11 +18,11 @@
 	<div class="tab-content" id="myTabContent">
 		<div class="tab-pane active" id="pills-home"
 		     role="tabpanel" aria-labelledby="pills-skills-tab" tabindex="0">
-			<SkillTable ShowAdminActions="@IsAuthenticated"></SkillTable>
+			<SkillTable ShowAdminActions="@IsAuthenticated" Changed="Changed"></SkillTable>
 		</div>
 		<div class="tab-pane" id="pills-profile"
 		     role="tabpanel" aria-labelledby="pills-talks-tab" tabindex="0">
-			<Talks ShowAdminActions="@IsAuthenticated"></Talks>
+			<Talks ShowAdminActions="@IsAuthenticated" Changed="Changed"></Talks>
 		</div>
 	</div>
 </div>
@@ -30,4 +30,7 @@
 @code {
     [Parameter]
     public bool IsAuthenticated { get; set; }
+
+    [Parameter]
+    public EventCallback Changed { get; set; }
 }

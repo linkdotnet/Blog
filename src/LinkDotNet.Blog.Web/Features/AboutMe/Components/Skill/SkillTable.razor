@@ -65,6 +65,9 @@
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
+    [Parameter]
+    public EventCallback Changed { get; set; }
+
     private AddSkillDialog AddSkillDialog { get; set; } = default!;
 
     private List<Skill> skills = [];
@@ -80,12 +83,14 @@
     {
         skills.Add(skillToAdd);
         await Repository.StoreAsync(skillToAdd);
+        await Changed.InvokeAsync();
     }
 
     private async Task DeleteSkill(Skill skill)
     {
         skills.Remove(skill);
         await Repository.DeleteAsync(skill.Id);
+        await Changed.InvokeAsync();
     }
 
     private async Task HandleDrop(ProficiencyLevel proficiencyLevel)
