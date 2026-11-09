@@ -56,7 +56,15 @@
 		var days => $"in {days} days",
 	};
 
-	protected override async Task OnInitializedAsync()
+	protected override Task OnInitializedAsync() => LoadAsync();
+
+	public async Task RefreshAsync()
+	{
+		await LoadAsync();
+		StateHasChanged();
+	}
+
+	private async Task LoadAsync()
 	{
 		today = TimeProvider.GetLocalNow().Date;
 		var talks = await TalkRepository.GetAllAsync(orderBy: t => t.PublishedDate, descending: false);

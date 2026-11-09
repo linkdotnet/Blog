@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Blazored.Toast.Services;
 using LinkDotNet.Blog.Domain;
+using LinkDotNet.Blog.Infrastructure;
+using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
@@ -82,6 +86,28 @@ public class AboutMePageTests : BunitContext
         ogData.Title.ShouldContain("About Me - My Name");
         ogData.Description.ShouldNotBeNull();
         ogData.Description.ShouldContain("About Me,My Name");
+    }
+
+    [Fact]
+    public async Task ShouldRefreshStatsWhenTalksOrSkillsChange()
+    {
+        AddAuthorization().SetAuthorized("test");
+        SetupMocks(new ProfileInformationBuilder().Build(), new ApplicationConfigurationBuilder().WithIsAboutMeEnabled(true).Build());
+        var skillRepository = Substitute.For<IRepository<Skill>>();
+        skillRepository.GetAllAsync(
+                Arg.Any<Expression<Func<Skill, bool>>>(),
+                Arg.Any<Expression<Func<Skill, object>>>(),
+                Arg.Any<bool>(),
+                Arg.Any<int>(),
+                Arg.Any<int>())
+            .Returns(PagedList<Skill>.Empty, new PagedList<Skill>([new SkillBuilder().Build()], 1, 1, 100));
+        Services.AddScoped(_ => skillRepository);
+        var cut = Render<AboutMePage>();
+        cut.FindAll(".stat").ShouldBeEmpty();
+
+        await cut.InvokeAsync(() => cut.FindComponent<TabbedNavigation>().Instance.Changed.InvokeAsync());
+
+        cut.Find(".stat-value").TextContent.ShouldBe("1");
     }
 
     private void SetupMocks(ProfileInformation config, ApplicationConfiguration applicationConfiguration)

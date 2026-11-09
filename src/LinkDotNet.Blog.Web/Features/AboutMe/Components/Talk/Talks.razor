@@ -37,6 +37,9 @@ else
     [Parameter]
     public bool ShowAdminActions { get; set; }
 
+    [Parameter]
+    public EventCallback Changed { get; set; }
+
     private List<Talk> talks = [];
 
     private AddTalkEntryDialog AddTalkEntryDialog { get; set; } = default!;
@@ -61,6 +64,7 @@ else
     {
         talks.Remove(talk);
         await Repository.DeleteAsync(talk.Id);
+        await Changed.InvokeAsync();
     }
 
     private async Task StoreTalk(Talk talk)
@@ -68,5 +72,6 @@ else
         talks.Add(talk);
         talks.Sort((a, b) => b.PublishedDate.CompareTo(a.PublishedDate));
         await Repository.StoreAsync(talk);
+        await Changed.InvokeAsync();
     }
 }

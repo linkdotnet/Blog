@@ -18,19 +18,22 @@
     <div class="container about-me">
 	    <aside class="about-me-profile" aria-label="Profile">
 		    <Profile ShowAdminActions="@isAuthenticated" ProfileInformation="ProfileInformation.Value">
-			    <Stats><ProfileStats /></Stats>
+			    <Stats><ProfileStats @ref="profileStats" /></Stats>
 		    </Profile>
 	    </aside>
 	    <div class="about-me-content">
-		    <TabbedNavigation IsAuthenticated="isAuthenticated" />
+		    <TabbedNavigation IsAuthenticated="isAuthenticated" Changed="RefreshStatsAsync" />
 	    </div>
     </div>
 }
 
 @code {
     private bool isAuthenticated;
+    private ProfileStats? profileStats;
 
     private string ImageUrl => ProfileInformation.Value.ProfilePictureUrl.ToAbsoluteUrl(NavigationManager.BaseUri);
+
+    private Task RefreshStatsAsync() => profileStats?.RefreshAsync() ?? Task.CompletedTask;
 
     protected override async Task OnInitializedAsync()
     {

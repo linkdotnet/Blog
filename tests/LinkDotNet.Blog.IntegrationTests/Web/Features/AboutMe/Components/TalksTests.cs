@@ -87,6 +87,20 @@ public sealed class TalksTests : SqlDatabaseTestBase<Talk>, IDisposable
     }
 
     [Fact]
+    public async Task ShouldNotifyChangeAfterDelete()
+    {
+        await Repository.StoreAsync(new TalkBuilder().Build());
+        var changed = false;
+        var cut = ctx.Render<Talks>(p => p
+            .Add(s => s.ShowAdminActions, true)
+            .Add(s => s.Changed, () => changed = true));
+
+        await cut.WaitForComponent<TalkEntry>().Find("#talk-delete").ClickAsync();
+
+        changed.ShouldBeTrue();
+    }
+
+    [Fact]
     public async Task UpcomingTalksAreShownFirstWithBadge()
     {
         await Repository.StoreAsync(new TalkBuilder().WithTitle("Past").WithPublishedDate(new DateTime(2025, 5, 22)).Build());

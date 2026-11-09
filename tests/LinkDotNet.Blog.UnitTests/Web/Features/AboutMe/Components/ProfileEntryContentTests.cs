@@ -24,6 +24,11 @@ public class ProfileEntryContentTests
     [InlineData("<a href=\"x\" style=\"color: red\">Get in touch</a>")]
     [InlineData("A label that is way too long to be a label: value")]
     [InlineData("Trailing colon:")]
+    [InlineData("# Interests: .NET")]
+    [InlineData("- Hobbies: coding")]
+    [InlineData("~~Old role~~: developer")]
+    [InlineData("1. Hobbies: coding")]
+    [InlineData("> Quote: something")]
     public void ShouldKeepContentAsBody(string content)
     {
         var result = ProfileEntryContent.Parse(content);
