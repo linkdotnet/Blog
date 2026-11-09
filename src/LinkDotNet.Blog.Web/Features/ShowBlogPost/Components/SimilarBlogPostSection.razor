@@ -1,8 +1,11 @@
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
 @using LinkDotNet.Blog.Web.Features
+@using ZiggyCreatures.Caching.Fusion
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IRepository<SimilarBlogPost> SimilarBlogPostJobRepository
+@inject IFusionCache FusionCache
+@inject IOptions<ApplicationConfiguration> AppConfiguration
 
 @if (similarBlogPosts.Count > 0)
 {
@@ -73,14 +76,27 @@
     public required BlogPost BlogPost { get; set; }
 
     private IReadOnlyCollection<BlogPost> similarBlogPosts = [];
+    private string? loadedBlogPostId;
 
     protected override async Task OnParametersSetAsync()
     {
-        var similarBlogPostIds = await SimilarBlogPostJobRepository.GetByIdAsync(BlogPost.Id);
-        if (similarBlogPostIds is not null)
+        if (BlogPost.Id == loadedBlogPostId)
         {
-            similarBlogPosts = await BlogPostRepository.GetAllAsync(
-                b => similarBlogPostIds.SimilarBlogPostIds.Contains(b.Id));
+            return;
         }
+
+        loadedBlogPostId = BlogPost.Id;
+        similarBlogPosts = await FusionCache.GetOrSetAsync<IReadOnlyCollection<BlogPost>>(
+            $"similar/{BlogPost.Id}",
+            async _ => await LoadSimilarBlogPostsAsync(BlogPost.Id),
+            options => options.SetDuration(TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes)));
+    }
+
+    private async Task<IReadOnlyCollection<BlogPost>> LoadSimilarBlogPostsAsync(string blogPostId)
+    {
+        var similarBlogPostIds = await SimilarBlogPostJobRepository.GetByIdAsync(blogPostId);
+        return similarBlogPostIds is null
+            ? []
+            : await BlogPostRepository.GetAllAsync(b => similarBlogPostIds.SimilarBlogPostIds.Contains(b.Id));
     }
 }

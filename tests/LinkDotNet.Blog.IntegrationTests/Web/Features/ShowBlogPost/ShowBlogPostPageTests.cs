@@ -16,6 +16,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost;
@@ -222,5 +224,6 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         ctx.Services.AddScoped(_ => shortCodeRepository);
         ctx.Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        ctx.Services.AddScoped<IFusionCache>(_ => new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
     }
 }

@@ -1,11 +1,13 @@
 @page "/short-codes"
 @using LinkDotNet.Blog.Domain
 @using LinkDotNet.Blog.Infrastructure.Persistence
+@using LinkDotNet.Blog.Web.Features.Services
 
 @inject IRepository<ShortCode> ShortCodeRepository
 @inject IRepository<BlogPost> BlogPostRepository
 @inject IToastService ToastService
 @inject IJSRuntime JSRuntime
+@inject ZiggyCreatures.Caching.Fusion.IFusionCache FusionCache
 
 <PageTitle>Shortcodes</PageTitle>
 
@@ -344,6 +346,8 @@
 			shortCodes.Add(newShortCode);
 		}
 
+		await ShortCodeCache.RemoveAsync(FusionCache);
+
 		await LoadUsage();
 		ToastService.ShowSuccess("Shortcode saved");
 		CloseEditor();
@@ -359,6 +363,7 @@
 		}
 
 		await ShortCodeRepository.DeleteAsync(shortCode.Id);
+		await ShortCodeCache.RemoveAsync(FusionCache);
 		shortCodes.Remove(shortCode);
 		ToastService.ShowSuccess("Shortcode deleted");
 	}

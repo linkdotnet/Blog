@@ -52,7 +52,7 @@
 	protected override async Task OnInitializedAsync()
 	{
 		BlogPosts ??= (await Repository.GetAllByProjectionAsync(
-			p => new BlogPostPerYear(p.Id, p.Slug, p.Title, p.UpdatedDate),
+			p => new BlogPostPerYear(p.Id, p.Title, p.UpdatedDate),
 			p => p.IsPublished)).ToList();
 
 		blogPostCount = BlogPosts.Count;
@@ -64,5 +64,8 @@
 
 	private static string HeadingKey(int year) => $"heading{year}";
 
-	public sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
+	public sealed record BlogPostPerYear(string Id, string Title, DateTime UpdatedDate)
+	{
+		public string Slug => BlogPost.CreateSlug(Title);
+	}
 }

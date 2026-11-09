@@ -7,10 +7,12 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Infrastructure.Persistence.Sql;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using ZiggyCreatures.Caching.Fusion;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests;
@@ -311,6 +313,7 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
         await context.BlogPosts.AddAsync(blogPost, TestContext.Current.CancellationToken);
         await context.ShortCodes.AddRangeAsync(shortCodes, TestContext.Current.CancellationToken);
         await context.SaveChangesAsync(TestContext.Current.CancellationToken);
+        await ShortCodeCache.RemoveAsync(scope.ServiceProvider.GetRequiredService<IFusionCache>());
         return blogPost;
     }
 

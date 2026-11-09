@@ -26,6 +26,7 @@
     public EventCallback<bool> OnBlogPostLiked { get; set; }
 
     private bool shouldBeUpdated;
+    private string? loadedBlogPostId;
 
     private bool HasLiked { get; set; }
 
@@ -36,7 +37,11 @@
     protected override void OnParametersSet()
     {
 	    base.OnParametersSet();
-	    shouldBeUpdated = true;
+	    if (BlogPost.Id != loadedBlogPostId)
+	    {
+		    loadedBlogPostId = BlogPost.Id;
+		    shouldBeUpdated = true;
+	    }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

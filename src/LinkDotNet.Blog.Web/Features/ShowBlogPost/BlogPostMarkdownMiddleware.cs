@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
+using LinkDotNet.Blog.Web.Features.Services;
 using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace LinkDotNet.Blog.Web.Features.ShowBlogPost;
 
@@ -28,7 +30,8 @@ public sealed class BlogPostMarkdownMiddleware
         HttpContext context,
         IOptions<ApplicationConfiguration> appConfiguration,
         IRepository<BlogPost> blogPostRepository,
-        IRepository<ShortCode> shortCodeRepository)
+        IRepository<ShortCode> shortCodeRepository,
+        IFusionCache fusionCache)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(appConfiguration);
@@ -60,7 +63,7 @@ public sealed class BlogPostMarkdownMiddleware
             return;
         }
 
-        var shortCodes = await shortCodeRepository.GetAllAsync();
+        var shortCodes = await ShortCodeCache.GetAsync(fusionCache, shortCodeRepository);
         var markdown = BlogPostMarkdownRenderer.Render(blogPost, shortCodes, GetCanonicalUrl(context.Request, blogPost), appConfiguration.Value.UseMultiAuthorMode);
         await context.Response.WriteAsync(markdown, context.RequestAborted);
     }

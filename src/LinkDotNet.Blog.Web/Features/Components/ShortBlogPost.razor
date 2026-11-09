@@ -92,7 +92,10 @@
 		if (firstRender)
 		{
 			isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
-			StateHasChanged();
+			if (isBookmarked)
+			{
+				StateHasChanged();
+			}
 		}
 	}
 }

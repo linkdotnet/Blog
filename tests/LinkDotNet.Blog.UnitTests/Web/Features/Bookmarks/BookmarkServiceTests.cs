@@ -21,12 +21,12 @@ public class BookmarkServiceTests
     public async Task ShouldReturnIds()
     {
         localStorageService
-            .GetItemAsync<IReadOnlyList<string>>("bookmarks")
+            .GetItemAsync<HashSet<string>>("bookmarks")
             .Returns(x => ["1", "2", "3"]);
 
         var ids = await bookmarkService.GetBookmarkedPostIds();
         
-        ids.ShouldBe(["1", "2", "3"]);
+        ids.ShouldBe(["1", "2", "3"], ignoreOrder: true);
         ids.ShouldBeUnique();
     }
 
@@ -34,8 +34,8 @@ public class BookmarkServiceTests
     public async Task ShouldReturnEmptyListWhenNoBookmarks()
     {
         localStorageService
-            .GetItemAsync<IReadOnlyList<string>>("bookmarks")
-            .Returns(x => []);
+            .GetItemAsync<HashSet<string>>("bookmarks")
+            .Returns<HashSet<string>>(_ => throw new KeyNotFoundException());
         
         var ids = await bookmarkService.GetBookmarkedPostIds();
         
@@ -64,6 +64,34 @@ public class BookmarkServiceTests
         var isBookmarked = await bookmarkService.IsBookmarked("4");
         
         isBookmarked.ShouldBeFalse();
+    }
+
+    [Fact]
+    public async Task ShouldReadStorageOnceForSeveralChecks()
+    {
+        localStorageService
+            .GetItemAsync<HashSet<string>>("bookmarks")
+            .Returns(x => ["1"]);
+
+        await bookmarkService.IsBookmarked("1");
+        await bookmarkService.IsBookmarked("2");
+        await bookmarkService.GetBookmarkedPostIds();
+
+        await localStorageService.Received(1).GetItemAsync<HashSet<string>>("bookmarks");
+    }
+
+    [Fact]
+    public async Task ShouldKeepBookmarksFromOtherTabsWhenSetting()
+    {
+        localStorageService
+            .GetItemAsync<HashSet<string>>("bookmarks")
+            .Returns(_ => ["1"], _ => ["1", "2"]);
+        await bookmarkService.IsBookmarked("1");
+
+        await bookmarkService.SetBookmark("3", true);
+
+        await localStorageService.Received(1).SetItemAsync("bookmarks", Arg.Is<HashSet<string>>(s => s.SetEquals(new[] { "1", "2", "3" })));
+        (await bookmarkService.IsBookmarked("2")).ShouldBeTrue();
     }
 
     [Fact]

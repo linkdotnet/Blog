@@ -98,7 +98,7 @@ public class MarkdownConverterTests
     {
         var html = MarkdownConverter.ToMarkupString("![alt](https://localhost/image.png)").Value;
 
-        html.ShouldBe("""<p><img src="https://localhost/image.png" class="img-fluid" alt="alt" /></p>""" + "\n");
+        html.ShouldBe("""<p><img src="https://localhost/image.png" class="img-fluid" decoding="async" fetchpriority="high" alt="alt" /></p>""" + "\n");
     }
 
     [Fact]
@@ -106,8 +106,8 @@ public class MarkdownConverterTests
     {
         var html = MarkdownConverter.ToMarkupString("![first](https://localhost/1.png)\n\n![second](https://localhost/2.png)").Value;
 
-        html.ShouldContain("""<img src="https://localhost/1.png" class="img-fluid" alt="first" />""");
-        html.ShouldContain("""<img src="https://localhost/2.png" class="img-fluid" loading="lazy" alt="second" />""");
+        html.ShouldContain("""<img src="https://localhost/1.png" class="img-fluid" decoding="async" fetchpriority="high" alt="first" />""");
+        html.ShouldContain("""<img src="https://localhost/2.png" class="img-fluid" decoding="async" loading="lazy" alt="second" />""");
     }
 
     [Fact]

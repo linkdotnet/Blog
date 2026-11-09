@@ -11,20 +11,26 @@ internal sealed class LazyLoadImageExtension : IMarkdownExtension
 {
     public void Setup(MarkdownPipelineBuilder pipeline)
     {
-        pipeline.DocumentProcessed -= AddLazyLoading;
-        pipeline.DocumentProcessed += AddLazyLoading;
+        pipeline.DocumentProcessed -= AddLoadingHints;
+        pipeline.DocumentProcessed += AddLoadingHints;
     }
 
     public void Setup(MarkdownPipeline pipeline, IMarkdownRenderer renderer)
     {
     }
 
-    private static void AddLazyLoading(MarkdownDocument document)
+    private static void AddLoadingHints(MarkdownDocument document)
     {
-        var allImagesBesidesFirst = document.Descendants<LinkInline>().Where(link => link.IsImage).Skip(1);
-        foreach (var image in allImagesBesidesFirst)
+        var images = document.Descendants<LinkInline>().Where(link => link.IsImage).Select(link => link.GetAttributes()).ToList();
+        foreach (var attributes in images)
         {
-            image.GetAttributes().AddPropertyIfNotExist("loading", "lazy");
+            attributes.AddPropertyIfNotExist("decoding", "async");
+        }
+
+        images.FirstOrDefault()?.AddPropertyIfNotExist("fetchpriority", "high");
+        foreach (var attributes in images.Skip(1))
+        {
+            attributes.AddPropertyIfNotExist("loading", "lazy");
         }
     }
 }

@@ -1,5 +1,7 @@
 let progressTimeout;
 let rafId;
+let contentSelector;
+let progressContainer;
 
 function getContentHeight(className) {
     const content = document.querySelector(className);
@@ -10,43 +12,51 @@ function getContentHeight(className) {
     return contentRect.height;
 }
 
-function showProgressIndicator(progressContainer) {
-    progressContainer.classList.add("visible");
-    progressContainer.style.animation = 'none';
+function showProgressIndicator(container) {
+    container.classList.add("visible");
+    container.style.animation = 'none';
 }
 
-function hideProgressIndicator(progressContainer) {
-    progressContainer.style.animation = 'fadeOut 0.5s forwards';
+function hideProgressIndicator(container) {
+    container.style.animation = 'fadeOut 0.5s forwards';
     setTimeout(() => {
-        progressContainer.classList.remove('visible');
+        container.classList.remove('visible');
     }, 500);
 }
 
-window.initCircularReadingProgress = (parentContainer, progressContainer) => {
-		if (window.circularProgressScrollListenerAdded) {
-			return;
-		}
+function updateProgress() {
+    rafId = null;
+    if (!progressContainer?.isConnected) {
+        return;
+    }
 
-    const progressBar = document.getElementById('progressBar');
+    clearTimeout(progressTimeout);
 
-    const onScroll = () => {
-        clearTimeout(progressTimeout);
+    const contentHeight = getContentHeight(contentSelector);
+    const windowHeight = document.documentElement.clientHeight;
+    const scrollAmount = document.documentElement.scrollTop;
+    const maxScrollAmount = contentHeight - windowHeight;
+    const progress = Math.max(0, Math.min(100, (scrollAmount / maxScrollAmount) * 100));
+    progressContainer.querySelector('.progress-bar').style.strokeDashoffset = 100 - progress;
 
-        const contentHeight = getContentHeight(parentContainer);
-        const windowHeight = document.documentElement.clientHeight;
-        const scrollAmount = document.documentElement.scrollTop;
-        const maxScrollAmount = contentHeight - windowHeight;
-        const progress = Math.max(0, Math.min(100, (scrollAmount / maxScrollAmount) * 100));
-        progressBar.style.strokeDashoffset = 100 - progress;
+    showProgressIndicator(progressContainer);
 
-        showProgressIndicator(progressContainer);
+    const container = progressContainer;
+    progressTimeout = setTimeout(() => {
+        hideProgressIndicator(container);
+    }, 2000);
+}
 
-        progressTimeout = setTimeout(() => {
-            hideProgressIndicator(progressContainer);
-        }, 2000);
+function onScroll() {
+    rafId ??= requestAnimationFrame(updateProgress);
+}
 
-        rafId = null;
-    };
-
-    window.addEventListener('scroll', onScroll);
+window.initCircularReadingProgress = (parentContainer, container) => {
+    // Blazor navigation keeps the module alive, so a later post only swaps the tracked elements
+    contentSelector = parentContainer;
+    progressContainer = container;
+    if (!window.circularProgressScrollListenerAdded) {
+        window.circularProgressScrollListenerAdded = true;
+        window.addEventListener('scroll', onScroll, { passive: true });
+    }
 };

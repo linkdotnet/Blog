@@ -10,6 +10,8 @@ using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web.Features.Admin.ShortCodes;
 using LinkDotNet.Blog.Web.Features.Components;
 using Microsoft.Extensions.DependencyInjection;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.Admin.ShortCodes;
 
@@ -23,6 +25,7 @@ public sealed class ShortCodesPageTests : SqlDatabaseTestBase<ShortCode>, IDispo
         ctx.Services.AddScoped(_ => Repository);
         ctx.Services.AddScoped(_ => blogPostRepository);
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
+        ctx.Services.AddScoped<IFusionCache>(_ => new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
         ctx.ComponentFactories.Add<MarkdownTextArea, MarkdownFake>();
         ctx.JSInterop.SetupNativeDialog();
         ctx.JSInterop.Mode = JSRuntimeMode.Loose;

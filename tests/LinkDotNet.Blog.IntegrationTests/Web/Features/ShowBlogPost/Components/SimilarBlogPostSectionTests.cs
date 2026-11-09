@@ -6,6 +6,9 @@ using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.IntegrationTests.Web.Features.ShowBlogPost.Components;
@@ -28,16 +31,40 @@ public class SimilarBlogPostSectionTests : SqlDatabaseTestBase<BlogPost>
         };
         await DbContext.SimilarBlogPosts.AddAsync(similarBlogPost1, TestContext.Current.CancellationToken);
         await DbContext.SaveChangesAsync(TestContext.Current.CancellationToken);
-        await using var context = new BunitContext();
-        context.Services.AddScoped<IRepository<SimilarBlogPost>>(_ =>
-            new Repository<SimilarBlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<SimilarBlogPost>>>()));
-        context.Services.AddScoped(_ => Repository);
-        
+        await using var context = CreateContext();
+
         var cut = context.Render<SimilarBlogPostSection>(p => p.Add(s => s.BlogPost, blogPost1));
 
         var elements = cut.WaitForElements("h6");
         elements.Count.ShouldBe(2);
         elements.ShouldContain(p => p.TextContent == "Title 2");
         elements.ShouldContain(p => p.TextContent == "Title 3");
+    }
+
+    [Fact]
+    public async Task ShouldNotQueryAgainWhenRenderedWithSamePost()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+        await Repository.StoreAsync(blogPost);
+        var similarRepository = Substitute.For<IRepository<SimilarBlogPost>>();
+        similarRepository.GetByIdAsync(blogPost.Id).Returns((SimilarBlogPost?)null);
+        await using var context = CreateContext(similarRepository);
+        var cut = context.Render<SimilarBlogPostSection>(p => p.Add(s => s.BlogPost, blogPost));
+
+        cut.Render(p => p.Add(s => s.BlogPost, blogPost));
+        context.Render<SimilarBlogPostSection>(p => p.Add(s => s.BlogPost, blogPost));
+
+        await similarRepository.Received(1).GetByIdAsync(blogPost.Id);
+    }
+
+    private BunitContext CreateContext(IRepository<SimilarBlogPost>? similarRepository = null)
+    {
+        var context = new BunitContext();
+        context.Services.AddScoped(_ => similarRepository
+            ?? new Repository<SimilarBlogPost>(DbContextFactory, Substitute.For<ILogger<Repository<SimilarBlogPost>>>()));
+        context.Services.AddScoped(_ => Repository);
+        context.Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
+        context.Services.AddSingleton<IFusionCache>(_ => new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
+        return context;
     }
 }

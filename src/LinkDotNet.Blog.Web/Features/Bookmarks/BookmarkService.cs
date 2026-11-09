@@ -7,7 +7,9 @@ namespace LinkDotNet.Blog.Web.Features.Bookmarks;
 
 public class BookmarkService : IBookmarkService
 {
+    private const string Key = "bookmarks";
     private readonly ILocalStorageService localStorageService;
+    private Task<HashSet<string>>? bookmarks;
 
     public BookmarkService(ILocalStorageService localStorageService)
     {
@@ -17,43 +19,41 @@ public class BookmarkService : IBookmarkService
     public async Task<bool> IsBookmarked(string postId)
     {
         ArgumentException.ThrowIfNullOrEmpty(postId);
-        await InitializeIfNotExists();
-        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-
-        return bookmarks.Contains(postId);
+        return (await GetBookmarksAsync()).Contains(postId);
     }
 
-    public async Task<IReadOnlyList<string>> GetBookmarkedPostIds()
-    {
-        await InitializeIfNotExists();
-        return await localStorageService.GetItemAsync<IReadOnlyList<string>>("bookmarks");
-    }
+    public async Task<IReadOnlyList<string>> GetBookmarkedPostIds() => [.. await GetBookmarksAsync()];
 
     public async Task SetBookmark(string postId, bool isBookmarked)
     {
         ArgumentException.ThrowIfNullOrEmpty(postId);
-        await InitializeIfNotExists();
 
-        var bookmarks = await localStorageService.GetItemAsync<HashSet<string>>("bookmarks");
-
-        if (!isBookmarked)
+        // Re-read so a bookmark added in another tab since this circuit loaded is not overwritten
+        var current = await ReadBookmarksAsync();
+        if (isBookmarked)
         {
-            bookmarks.Remove(postId);
+            current.Add(postId);
         }
         else
         {
-            bookmarks.Add(postId);
+            current.Remove(postId);
         }
 
-        await localStorageService.SetItemAsync("bookmarks", bookmarks);
-
+        bookmarks = Task.FromResult(current);
+        await localStorageService.SetItemAsync(Key, current);
     }
 
-    private async Task InitializeIfNotExists()
+    private Task<HashSet<string>> GetBookmarksAsync() => bookmarks ??= ReadBookmarksAsync();
+
+    private async Task<HashSet<string>> ReadBookmarksAsync()
     {
-        if (!await localStorageService.ContainsKeyAsync("bookmarks"))
+        try
         {
-            await localStorageService.SetItemAsync("bookmarks", new List<string>());
+            return await localStorageService.GetItemAsync<HashSet<string>>(Key);
+        }
+        catch (KeyNotFoundException)
+        {
+            return [];
         }
     }
 }

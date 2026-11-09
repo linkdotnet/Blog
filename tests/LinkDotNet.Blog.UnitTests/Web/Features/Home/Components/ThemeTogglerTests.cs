@@ -1,56 +1,29 @@
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Web.Features.Home.Components;
-using LinkDotNet.Blog.Web.Features.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.Home.Components;
 
 public class ThemeTogglerTests : BunitContext
 {
     [Fact]
-    public void ShouldSetSystemDefault()
+    public void ShouldRenderBothIconsSoCssCanPickOneBeforeInteractivity()
     {
-        Services.AddScoped(_ => Substitute.For<ILocalStorageService>());
-        JSInterop.SetupModule("./Features/Home/Components/ThemeToggler.razor.js");
-        JSInterop.Setup<string>("getCurrentSystemPreference").SetResult("dark");
-        var setTheme = JSInterop.SetupVoid("setTheme", "dark", false);
+        var cut = Render<ThemeToggler>();
 
-        Render<ThemeToggler>();
-
-        setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
+        cut.FindAll(".theme-icon-light").Count.ShouldBe(1);
+        cut.FindAll(".theme-icon-dark").Count.ShouldBe(1);
+        JSInterop.Invocations.ShouldBeEmpty();
     }
 
     [Fact]
-    public void ShouldSetFromLocalStorage()
+    public async Task ShouldToggleThemeOnClick()
     {
-        var localStorage = Substitute.For<ILocalStorageService>();
-        localStorage.ContainsKeyAsync("preferred-theme").Returns(true);
-        localStorage.GetItemAsync<string>("preferred-theme").Returns("dark");
-        Services.AddScoped(_ => localStorage);
         JSInterop.SetupModule("./Features/Home/Components/ThemeToggler.razor.js");
-        JSInterop.Setup<string>("getCurrentSystemPreference").SetResult("light");
-        var setTheme = JSInterop.SetupVoid("setTheme", "dark", true);
-
-        Render<ThemeToggler>();
-
-        setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
-    }
-
-    [Fact]
-    public async Task ShouldSetValueAndSafeInStorage()
-    {
-        var localStorage = Substitute.For<ILocalStorageService>();
-        Services.AddScoped(_ => localStorage);
-        JSInterop.SetupModule("./Features/Home/Components/ThemeToggler.razor.js");
-        JSInterop.Setup<string>("getCurrentSystemPreference").SetResult("light");
-        JSInterop.SetupVoid("setTheme", "light", false);
-        var setTheme = JSInterop.SetupVoid("setTheme", "dark", true)
-            .SetVoidResult();
+        var toggleTheme = JSInterop.SetupVoid("toggleTheme").SetVoidResult();
         var cut = Render<ThemeToggler>();
 
         await cut.Find("div").ClickAsync();
 
-        setTheme.Invocations.ShouldNotBeNull().ShouldNotBeEmpty();
-        await localStorage.Received(1).SetItemAsync("preferred-theme", "dark");
+        toggleTheme.Invocations.Count.ShouldBe(1);
     }
 }

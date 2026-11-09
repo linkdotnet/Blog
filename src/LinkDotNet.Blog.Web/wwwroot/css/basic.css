@@ -132,6 +132,15 @@ section {
 	background-color: #22272e;
 }
 
+/* Same box as the async highlight.js theme gives it, so the block does not grow once that loads */
+.blogpost-content pre code {
+	display: block;
+	overflow-x: auto;
+	padding: 1em;
+	color: #adbac7;
+	background: #22272e;
+}
+
 .code-block-header {
 	padding: 0.25rem 0.5rem;
 	background-color: #2d333b;
@@ -277,7 +286,7 @@ section {
 /*#region ShortBlogPost.razor */
 .blog-card {
 	content-visibility: auto;
-	contain-intrinsic-size: 300px;
+	contain-intrinsic-size: auto 300px;
 	--bs-hover-lift-transform: translateY(-2px);
 	--bs-hover-lift-box-shadow: var(--bs-box-shadow-sm);
 }
@@ -481,7 +490,7 @@ section {
 
 .blogpost-content img {
 	width: 100%;
-	height: 100%;
+	height: auto;
 	object-fit: cover;
 	border-radius: 0.75rem;
 }
@@ -574,5 +583,12 @@ section {
 	.segmented > button {
 		transition: none;
 	}
+}
+/*endregion */
+
+/*#region ThemeToggler.razor */
+:root[data-bs-theme="dark"] .theme-icon-light,
+:root:not([data-bs-theme="dark"]) .theme-icon-dark {
+	display: none;
 }
 /*endregion */

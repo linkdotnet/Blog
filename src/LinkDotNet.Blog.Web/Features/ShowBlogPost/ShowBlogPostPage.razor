@@ -16,6 +16,7 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject IBookmarkService BookmarkService
+@inject ZiggyCreatures.Caching.Fusion.IFusionCache FusionCache
 
 @if (isLoading)
 {
@@ -144,7 +145,7 @@ else if (BlogPost is not null)
 
 	protected override async Task OnInitializedAsync()
 	{
-		ShortCodes ??= await ShortCodeRepository.GetAllAsync();
+		ShortCodes ??= await ShortCodeCache.GetAsync(FusionCache, ShortCodeRepository);
 	}
 
 	protected override async Task OnParametersSetAsync()
@@ -175,13 +176,13 @@ else if (BlogPost is not null)
 	        return;
         }
 
-        await UserRecordService.StoreUserRecordAsync();
-
         if (BlogPost is not null)
         {
 	        isBookmarked = await BookmarkService.IsBookmarked(BlogPost.Id);
 	        StateHasChanged();
         }
+
+        await UserRecordService.StoreUserRecordAsync();
     }
 
     private MarkupString EnrichWithShortCodes(string content)

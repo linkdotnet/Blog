@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using NCronJob;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Locking.AsyncKeyed;
 using TestContext = Xunit.TestContext;
 
 namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost;
@@ -35,6 +37,7 @@ public class ShowBlogPostPageTests : BunitContext
         Services.AddScoped(_ => Substitute.For<ITagQueryService>());
         Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().Build()));
         Services.AddScoped(_ => Substitute.For<IBookmarkService>());
+        Services.AddScoped<IFusionCache>(_ => new FusionCache(new FusionCacheOptions(), memoryLocker: new AsyncKeyedMemoryLocker()));
         AddAuthorization();
         ComponentFactories.Add<PageTitle, PageTitleStub>();
         ComponentFactories.Add<Like, LikeStub>();
