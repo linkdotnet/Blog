@@ -28,12 +28,8 @@
                                @bind="_searchTerm"
                                @bind:event="oninput" />
 
-                        <div class="segmented" role="group" aria-label="Sort topics">
-                            <button type="button" aria-pressed="@IsSorted(TagSortOrder.Popular)"
-                                    @onclick="() => _sortOrder = TagSortOrder.Popular">Popular</button>
-                            <button type="button" aria-pressed="@IsSorted(TagSortOrder.Alphabetical)"
-                                    @onclick="() => _sortOrder = TagSortOrder.Alphabetical">A–Z</button>
-                        </div>
+                        <SegmentedControl Options="@(Enum.GetValues<TagSortOrder>())" @bind-Value="_sortOrder"
+                                          Label="@(o => o == TagSortOrder.Popular ? "Popular" : "A–Z")" AriaLabel="Sort topics" />
                     </div>
 
                     <div class="sheet-scroll">
@@ -108,8 +104,6 @@
             _tags = await TagQueryService.GetAllOrderedByUsageAsync();
         }
     }
-
-    private string IsSorted(TagSortOrder sortOrder) => (_sortOrder == sortOrder).ToString().ToLowerInvariant();
 
     private IReadOnlyList<TagGroup> GetGroups()
     {

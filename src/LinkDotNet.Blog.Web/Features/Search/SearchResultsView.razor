@@ -44,11 +44,8 @@
 			{
 				<button type="button" class="clear-filters" @onclick="ClearRefinement">Clear filters</button>
 			}
-			<div class="segmented" role="group" aria-label="Sort articles">
-				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.Newest)" @onclick="() => SortBy(PostSortOrder.Newest)">Newest</button>
-				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.Oldest)" @onclick="() => SortBy(PostSortOrder.Oldest)">Oldest</button>
-				<button type="button" aria-pressed="@IsSortedBy(PostSortOrder.ShortestRead)" @onclick="() => SortBy(PostSortOrder.ShortestRead)">Quick reads</button>
-			</div>
+			<SegmentedControl Options="@(Enum.GetValues<PostSortOrder>())" Value="sortOrder" ValueChanged="@((PostSortOrder o) => SortBy(o))"
+			                  Label="SortLabel" AriaLabel="Sort articles" />
 		}
 	</div>
 
@@ -161,7 +158,12 @@
 
 	private string IsSelected(string tag) => ToAriaBoolean(selectedTags.Contains(tag));
 
-	private string IsSortedBy(PostSortOrder order) => ToAriaBoolean(sortOrder == order);
+	private static string SortLabel(PostSortOrder order) => order switch
+	{
+		PostSortOrder.Oldest => "Oldest",
+		PostSortOrder.ShortestRead => "Quick reads",
+		_ => "Newest",
+	};
 
 	private static string ToAriaBoolean(bool value) => value ? "true" : "false";
 

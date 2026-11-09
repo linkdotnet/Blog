@@ -110,34 +110,6 @@
 	font-size: 1rem;
 }
 
-.segmented-control {
-	display: flex;
-	padding: 0.125rem;
-	border-radius: 0.75rem;
-	background: var(--tag-background);
-}
-
-.segment {
-	flex: 1 1 auto;
-	min-height: 2.5rem;
-	padding-inline: 0.875rem;
-	border: 0;
-	border-radius: 0.625rem;
-	background: transparent;
-	color: inherit;
-	font-size: 0.9375rem;
-	font-weight: 500;
-	white-space: nowrap;
-	cursor: pointer;
-	transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.segment[aria-pressed="true"] {
-	background: var(--surface);
-	font-weight: 600;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
-}
-
 .no-results {
 	padding: 3rem 1rem;
 	text-align: center;
@@ -547,7 +519,6 @@
 }
 
 .sheet-action:focus-visible,
-.segment:focus-visible,
 .token-chip:focus-visible,
 .card-action:focus-visible,
 .template-chip:focus-visible,
@@ -566,7 +537,7 @@
 		grid-template-columns: 1fr;
 	}
 
-	.segmented-control {
+	.toolbar ::deep .segmented {
 		flex: 1 1 100%;
 	}
 

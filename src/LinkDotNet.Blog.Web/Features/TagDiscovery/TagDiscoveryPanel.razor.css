@@ -54,31 +54,6 @@
 	padding: 0.5rem 1rem 0.75rem;
 }
 
-.segmented {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	padding: 2px;
-	border-radius: 0.625rem;
-	background: var(--tag-background);
-}
-
-.segmented button {
-	min-height: 2rem;
-	border: 0;
-	border-radius: 0.5rem;
-	background: transparent;
-	color: inherit;
-	font-size: 0.8125rem;
-	font-weight: 500;
-	transition: background-color 0.15s, box-shadow 0.15s;
-}
-
-.segmented button[aria-pressed="true"] {
-	background: light-dark(#fff, #636366);
-	font-weight: 600;
-	box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
-}
-
 .sheet-scroll {
 	flex: 1 1 auto;
 	min-height: 0;
@@ -164,7 +139,6 @@ section:first-child .group:first-child {
 }
 
 .sheet-done:focus-visible,
-.segmented button:focus-visible,
 .tag-row:focus-visible {
 	outline: 2px solid var(--bs-primary-base, #0a84ff);
 	outline-offset: -2px;

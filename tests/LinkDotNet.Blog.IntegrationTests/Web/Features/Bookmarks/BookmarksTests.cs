@@ -186,7 +186,7 @@ public class BookmarksTests : SqlDatabaseTestBase<BlogPost>
         cut.FindAll(".row-title").Select(e => e.TextContent).ShouldBe(["Zebra", "Apple"]);
 
         // Act
-        await cut.FindAll(".segment").Single(s => s.TextContent == "Title").ClickAsync();
+        await cut.FindAll(".segmented button").Single(s => s.TextContent == "Title").ClickAsync();
 
         // Assert
         cut.FindAll(".row-title").Select(e => e.TextContent).ShouldBe(["Apple", "Zebra"]);
