@@ -67,17 +67,30 @@ public class BookmarkServiceTests
     }
 
     [Fact]
-    public async Task ShouldReadStorageOnceForSeveralChecks()
+    public async Task ShouldShareOnePendingReadBetweenConcurrentChecks()
+    {
+        var pendingRead = new TaskCompletionSource<HashSet<string>>();
+        localStorageService
+            .GetItemAsync<HashSet<string>>("bookmarks")
+            .Returns(_ => new ValueTask<HashSet<string>>(pendingRead.Task));
+
+        var checks = new[] { bookmarkService.IsBookmarked("1"), bookmarkService.IsBookmarked("2"), bookmarkService.IsBookmarked("3") };
+        pendingRead.SetResult(["2"]);
+
+        (await Task.WhenAll(checks)).ShouldBe([false, true, false]);
+        await localStorageService.Received(1).GetItemAsync<HashSet<string>>("bookmarks");
+    }
+
+    [Fact]
+    public async Task ShouldReadAgainSoChangesFromOtherTabsShowUp()
     {
         localStorageService
             .GetItemAsync<HashSet<string>>("bookmarks")
-            .Returns(x => ["1"]);
+            .Returns(_ => [], _ => ["1"]);
 
-        await bookmarkService.IsBookmarked("1");
-        await bookmarkService.IsBookmarked("2");
-        await bookmarkService.GetBookmarkedPostIds();
+        (await bookmarkService.IsBookmarked("1")).ShouldBeFalse();
 
-        await localStorageService.Received(1).GetItemAsync<HashSet<string>>("bookmarks");
+        (await bookmarkService.IsBookmarked("1")).ShouldBeTrue();
     }
 
     [Fact]
@@ -85,13 +98,11 @@ public class BookmarkServiceTests
     {
         localStorageService
             .GetItemAsync<HashSet<string>>("bookmarks")
-            .Returns(_ => ["1"], _ => ["1", "2"]);
-        await bookmarkService.IsBookmarked("1");
+            .Returns(_ => ["1", "2"]);
 
         await bookmarkService.SetBookmark("3", true);
 
         await localStorageService.Received(1).SetItemAsync("bookmarks", Arg.Is<HashSet<string>>(s => s.SetEquals(new[] { "1", "2", "3" })));
-        (await bookmarkService.IsBookmarked("2")).ShouldBeTrue();
     }
 
     [Fact]

@@ -9,7 +9,7 @@ public class BookmarkService : IBookmarkService
 {
     private const string Key = "bookmarks";
     private readonly ILocalStorageService localStorageService;
-    private Task<HashSet<string>>? bookmarks;
+    private Task<HashSet<string>>? inFlightRead;
 
     public BookmarkService(ILocalStorageService localStorageService)
     {
@@ -28,7 +28,6 @@ public class BookmarkService : IBookmarkService
     {
         ArgumentException.ThrowIfNullOrEmpty(postId);
 
-        // Re-read so a bookmark added in another tab since this circuit loaded is not overwritten
         var current = await ReadBookmarksAsync();
         if (isBookmarked)
         {
@@ -39,11 +38,25 @@ public class BookmarkService : IBookmarkService
             current.Remove(postId);
         }
 
-        bookmarks = Task.FromResult(current);
         await localStorageService.SetItemAsync(Key, current);
     }
 
-    private Task<HashSet<string>> GetBookmarksAsync() => bookmarks ??= ReadBookmarksAsync();
+    // Cards on one page ask at the same time; sharing only the pending read keeps later pages in sync with other tabs
+    private async Task<HashSet<string>> GetBookmarksAsync()
+    {
+        var read = inFlightRead ??= ReadBookmarksAsync();
+        try
+        {
+            return await read;
+        }
+        finally
+        {
+            if (inFlightRead == read)
+            {
+                inFlightRead = null;
+            }
+        }
+    }
 
     private async Task<HashSet<string>> ReadBookmarksAsync()
     {

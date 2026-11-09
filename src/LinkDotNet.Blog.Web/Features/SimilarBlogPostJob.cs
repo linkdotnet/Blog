@@ -7,20 +7,26 @@ using NCronJob;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.Web.Features.Services.Similiarity;
+using ZiggyCreatures.Caching.Fusion;
 
 namespace LinkDotNet.Blog.Web.Features;
 
 public class SimilarBlogPostJob : IJob
 {
+    public const string CacheTag = "similar-blog-posts";
+
     private readonly IRepository<BlogPost> blogPostRepository;
     private readonly IRepository<SimilarBlogPost> similarBlogPostRepository;
+    private readonly IFusionCache fusionCache;
 
     public SimilarBlogPostJob(
         IRepository<BlogPost> blogPostRepository,
-        IRepository<SimilarBlogPost> similarBlogPostRepository)
+        IRepository<SimilarBlogPost> similarBlogPostRepository,
+        IFusionCache fusionCache)
     {
         this.blogPostRepository = blogPostRepository;
         this.similarBlogPostRepository = similarBlogPostRepository;
+        this.fusionCache = fusionCache;
     }
 
     public async Task RunAsync(IJobExecutionContext context, CancellationToken token)
@@ -43,7 +49,7 @@ public class SimilarBlogPostJob : IJob
         var ids = await similarBlogPostRepository.GetAllByProjectionAsync(s => s.Id);
         await similarBlogPostRepository.DeleteBulkAsync(ids);
         await similarBlogPostRepository.StoreBulkAsync(similarities);
-
+        await fusionCache.RemoveByTagAsync(CacheTag, token: token);
     }
 
     private static SimilarBlogPost GetSimilarityForBlogPost(

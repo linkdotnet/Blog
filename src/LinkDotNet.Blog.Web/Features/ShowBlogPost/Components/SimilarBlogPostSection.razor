@@ -89,7 +89,8 @@
         similarBlogPosts = await FusionCache.GetOrSetAsync<IReadOnlyCollection<BlogPost>>(
             $"similar/{BlogPost.Id}",
             async _ => await LoadSimilarBlogPostsAsync(BlogPost.Id),
-            options => options.SetDuration(TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes)));
+            options => options.SetDuration(TimeSpan.FromMinutes(AppConfiguration.Value.FirstPageCacheDurationInMinutes)),
+            tags: [SimilarBlogPostJob.CacheTag]);
     }
 
     private async Task<IReadOnlyCollection<BlogPost>> LoadSimilarBlogPostsAsync(string blogPostId)
