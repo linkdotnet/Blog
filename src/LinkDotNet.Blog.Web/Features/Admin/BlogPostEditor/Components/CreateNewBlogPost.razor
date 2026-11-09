@@ -433,6 +433,7 @@
 
         var tagsChanged = BlogPost is not null && !HaveSameTagSet(BlogPost.Tags, version.Tags);
         await OnVersionRestored.InvokeAsync(version);
+        _ = InstantJobRegistry.RunInstantJob<SimilarBlogPostJob>(parameter: true);
         if (tagsChanged)
         {
             await TagQueryService.ClearTagCacheAsync();

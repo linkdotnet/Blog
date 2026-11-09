@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AngleSharp.Html.Dom;
 using Blazored.Toast.Services;
@@ -9,6 +10,7 @@ using LinkDotNet.Blog.Infrastructure.Persistence;
 using LinkDotNet.Blog.TestUtilities;
 using LinkDotNet.Blog.TestUtilities.Fakes;
 using LinkDotNet.Blog.Web;
+using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Components;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Components;
@@ -447,6 +449,24 @@ public class CreateNewBlogPostTests : BunitContext
         tagQueryService.Received(1).ClearTagCacheAsync();
         cacheInvalidator.DidNotReceive().ClearCacheAsync();
         tagQueryService.Received(2).GetAllOrderedByUsageAsync();
+    }
+
+    [Fact]
+    public void GivenVersionRestore_SimilarBlogPostsAreRecalculated()
+    {
+        var blogPost = new BlogPostBuilder().Build();
+        blogPost.Id = "post-1";
+        var version = BlogPostVersion.CreateSnapshot(blogPost, 1);
+        Services.GetRequiredService<IBlogPostVersionService>().GetVersionHistoryAsync(blogPost.Id).Returns([version]);
+        JSInterop.Setup<bool>("confirm", $"Restore version {version.VersionNumber} (\"{version.Title}\")? The current state will be saved as a new version first.")
+            .SetResult(true);
+        var cut = Render<CreateNewBlogPost>(
+            p => p.Add(c => c.BlogPost, blogPost)
+                .Add(c => c.BlogPostId, blogPost.Id));
+
+        cut.FindAll("button").Single(button => button.TextContent == "Restore").Click();
+
+        Services.GetRequiredService<IInstantJobRegistry>().Received(1).RunInstantJob<SimilarBlogPostJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
