@@ -24,6 +24,12 @@ public sealed class PagedList<T> : IPagedList<T>
 
     public int PageNumber { get; }
 
+    internal static int? TotalCountFromPage(int itemCount, int page, int pageSize)
+        => itemCount < pageSize && (itemCount > 0 || page == 1) ? ((page - 1) * pageSize) + itemCount : null;
+
+    internal static IPagedList<T> Create(IReadOnlyList<T> items, int totalCount, int page, int pageSize)
+        => totalCount == 0 ? Empty : new PagedList<T>(items, totalCount, page, pageSize);
+
     public bool IsFirstPage => PageNumber == 1;
 
     public bool IsLastPage => PageNumber == totalPages;

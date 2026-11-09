@@ -55,13 +55,16 @@
 	public RenderFragment? Stats { get; set; }
 
     private List<ProfileInformationEntry> profileInformationEntries = [];
+
+    [PersistentState]
+    public List<ProfileInformationEntry>? PersistedEntries { get; set; }
     private ConfirmDialog Dialog { get; set; } = default!;
     private string? currentDeleteKey;
     private ProfileInformationEntry? currentDragItem;
 
     protected override async Task OnInitializedAsync()
     {
-        profileInformationEntries = (await Repository.GetAllAsync(orderBy: d => d.SortOrder, descending: false)).ToList();
+        profileInformationEntries = PersistedEntries ??= (await Repository.GetAllAsync(orderBy: d => d.SortOrder, descending: false)).ToList();
     }
 
     private void ShowDeleteDialog(string key)

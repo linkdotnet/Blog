@@ -46,14 +46,17 @@
 	private IReadOnlyCollection<IGrouping<int, BlogPostPerYear>>? blogPostsPerYear;
 	private int blogPostCount;
 
+	[PersistentState]
+	public List<BlogPostPerYear>? BlogPosts { get; set; }
+
 	protected override async Task OnInitializedAsync()
 	{
-		var blogPosts = await Repository.GetAllByProjectionAsync(
+		BlogPosts ??= (await Repository.GetAllByProjectionAsync(
 			p => new BlogPostPerYear(p.Id, p.Slug, p.Title, p.UpdatedDate),
-			p => p.IsPublished);
+			p => p.IsPublished)).ToList();
 
-		blogPostCount = blogPosts.Count;
-		blogPostsPerYear = blogPosts
+		blogPostCount = BlogPosts.Count;
+		blogPostsPerYear = BlogPosts
 			.GroupBy(r => r.UpdatedDate.Year)
 			.OrderByDescending(r => r.Key)
 			.ToImmutableArray();
@@ -61,5 +64,5 @@
 
 	private static string HeadingKey(int year) => $"heading{year}";
 
-	private sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
+	public sealed record BlogPostPerYear(string Id, string Slug, string Title, DateTime UpdatedDate);
 }

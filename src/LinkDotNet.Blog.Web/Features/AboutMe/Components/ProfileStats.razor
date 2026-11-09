@@ -48,6 +48,12 @@
 	private bool isUpcoming;
 	private DateTime today;
 
+	[PersistentState]
+	public List<Domain.Talk>? PersistedTalks { get; set; }
+
+	[PersistentState]
+	public List<Domain.Skill>? PersistedSkills { get; set; }
+
 	private string SpotlightDetail => (spotlightTalk!.PublishedDate.Date - today).Days switch
 	{
 		_ when !isUpcoming => spotlightTalk.PublishedDate.Year.ToString(CultureInfo.InvariantCulture),
@@ -60,6 +66,8 @@
 
 	public async Task RefreshAsync()
 	{
+		PersistedTalks = null;
+		PersistedSkills = null;
 		await LoadAsync();
 		StateHasChanged();
 	}
@@ -67,8 +75,8 @@
 	private async Task LoadAsync()
 	{
 		today = TimeProvider.GetLocalNow().Date;
-		var talks = await TalkRepository.GetAllAsync(orderBy: t => t.PublishedDate, descending: false);
-		var skills = await SkillRepository.GetAllAsync();
+		var talks = PersistedTalks ??= (await TalkRepository.GetAllAsync(orderBy: t => t.PublishedDate, descending: false)).ToList();
+		var skills = PersistedSkills ??= (await SkillRepository.GetAllAsync()).ToList();
 
 		talkCount = talks.Count;
 		firstTalkYear = talks.FirstOrDefault()?.PublishedDate.Year ?? 0;

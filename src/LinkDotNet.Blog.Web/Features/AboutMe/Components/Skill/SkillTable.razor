@@ -72,11 +72,14 @@
 
     private List<Skill> skills = [];
 
+    [PersistentState]
+    public List<Skill>? PersistedSkills { get; set; }
+
     private Skill? currentDragItem;
 
     protected override async Task OnInitializedAsync()
     {
-        skills = (await Repository.GetAllAsync()).ToList();
+        skills = PersistedSkills ??= (await Repository.GetAllAsync()).ToList();
     }
 
     private async Task AddSkill(Skill skillToAdd)
