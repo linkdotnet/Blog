@@ -188,4 +188,31 @@ public sealed class BlogPostRepositoryTests : SqlDatabaseTestBase<BlogPost>
         bpFromDb.ShouldNotBeNull();
         bpFromDb.Tags.Single().ShouldBe("tag 2");
     }
+
+    [Theory]
+    [InlineData(1, 2, false)]
+    [InlineData(2, 2, false)]
+    [InlineData(3, 1, true)]
+    [InlineData(4, 0, false)]
+    public async Task ShouldPageWithCorrectLastPage(int page, int expectedCount, bool expectedLastPage)
+    {
+        for (var i = 0; i < 5; i++)
+        {
+            await Repository.StoreAsync(new BlogPostBuilder().Build());
+        }
+
+        var result = await Repository.GetAllAsync(page: page, pageSize: 2);
+
+        result.Count.ShouldBe(expectedCount);
+        result.IsLastPage.ShouldBe(expectedLastPage);
+    }
+
+    [Fact]
+    public async Task ShouldReturnEmptyPageWhenNothingStored()
+    {
+        var result = await Repository.GetAllAsync(page: 1, pageSize: 2);
+
+        result.Count.ShouldBe(0);
+        result.IsLastPage.ShouldBeTrue();
+    }
 }

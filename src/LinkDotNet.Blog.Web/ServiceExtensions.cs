@@ -1,5 +1,6 @@
 using System;
 using System.Threading.RateLimiting;
+using LinkDotNet.Blog.Web.Features;
 using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
@@ -8,6 +9,7 @@ using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +36,7 @@ public static class ServiceExtensions
             client.DefaultRequestHeaders.UserAgent.ParseAdd("LinkDotNet.Blog-LinkChecker");
         }).RemoveAllLoggers();
 
+        services.AddSingleton(typeof(PersistentComponentStateSerializer<>), typeof(PersistedStateSerializer<>));
         services.AddSingleton<CacheService>();
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
 

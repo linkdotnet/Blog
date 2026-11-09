@@ -133,22 +133,28 @@ else if (BlogPost is not null)
 	private string BlogPostCanoncialUrl => string.IsNullOrEmpty(BlogPost?.Slug)
 		? $"blogPost/{BlogPost?.Id}"
 		: $"blogPost/{BlogPost.Id}/{BlogPost.Slug}";
-	private IReadOnlyCollection<ShortCode> shortCodes = [];
 	private bool isBookmarked;
 	private string? spiedBlogPostId;
 	private MarkupString renderedContent;
 
 	private BlogPost? BlogPost { get; set; }
 
+	[PersistentState]
+	public IReadOnlyCollection<ShortCode>? ShortCodes { get; set; }
+
 	protected override async Task OnInitializedAsync()
 	{
-		shortCodes = await ShortCodeRepository.GetAllAsync();
+		ShortCodes ??= await ShortCodeRepository.GetAllAsync();
 	}
 
 	protected override async Task OnParametersSetAsync()
     {
-	    isLoading = true;
-	    BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
+	    if (BlogPost?.Id != BlogPostId)
+	    {
+		    isLoading = true;
+		    BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId);
+	    }
+
 	    renderedContent = BlogPost is null ? default : EnrichWithShortCodes(BlogPost.Content);
 	    isLoading = false;
     }
@@ -180,7 +186,7 @@ else if (BlogPost is not null)
 
     private MarkupString EnrichWithShortCodes(string content)
 	{
-		var expandedContent = MarkdownConverter.ExpandShortCodes(content, shortCodes);
+		var expandedContent = MarkdownConverter.ExpandShortCodes(content, ShortCodes ?? []);
 		return MarkdownConverter.ToMarkupStringWithHeadingAnchors(expandedContent, NavigationManager.Uri, AppConfiguration.Value.ShowCodeBlockLanguage);
 	}
 

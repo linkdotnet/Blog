@@ -42,6 +42,9 @@ else
 
     private List<Talk> talks = [];
 
+    [PersistentState]
+    public List<Talk>? PersistedTalks { get; set; }
+
     private AddTalkEntryDialog AddTalkEntryDialog { get; set; } = default!;
 
     private RenderFragment<(string Title, List<Talk> Talks, bool IsUpcoming)> TalkGroup => group =>
@@ -57,7 +60,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        talks = (await Repository.GetAllAsync(orderBy: t => t.PublishedDate, descending: true)).ToList();
+        talks = PersistedTalks ??= (await Repository.GetAllAsync(orderBy: t => t.PublishedDate, descending: true)).ToList();
     }
 
     private async Task DeleteTalk(Talk talk)
