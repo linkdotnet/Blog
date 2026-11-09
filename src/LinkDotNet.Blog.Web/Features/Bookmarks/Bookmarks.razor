@@ -47,12 +47,7 @@
 				<input type="search" placeholder="Search bookmarks" aria-label="Search bookmarks" autocomplete="off"
 				       @bind="SearchTerm" @bind:event="oninput" />
 			</label>
-			<div class="segmented-control" role="group" aria-label="Sort bookmarks">
-				@foreach (var option in Enum.GetValues<SortOrder>())
-				{
-					<button type="button" class="segment" aria-pressed="@(sortOrder == option ? "true" : "false")" @onclick="() => sortOrder = option">@SortLabel(option)</button>
-				}
-			</div>
+			<SegmentedControl Options="@(Enum.GetValues<SortOrder>())" @bind-Value="sortOrder" Label="SortLabel" AriaLabel="Sort bookmarks" />
 		</div>
 
 		var visiblePosts = GetVisiblePosts();

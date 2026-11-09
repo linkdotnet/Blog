@@ -100,7 +100,6 @@
 }
 
 .results-view ::deep .chip:focus-visible,
-.segmented button:focus-visible,
 .clear-filters:focus-visible {
 	outline: 2px solid var(--bs-primary-base, #0a84ff);
 	outline-offset: 2px;
@@ -142,31 +141,8 @@
 	font-weight: 600;
 }
 
-.segmented {
-	display: inline-grid;
-	grid-auto-flow: column;
+.toolbar ::deep .segmented {
 	margin-inline-start: auto;
-	padding: 2px;
-	border-radius: 0.625rem;
-	background: var(--tag-background);
-}
-
-.segmented button {
-	min-height: 2rem;
-	padding: 0 0.875rem;
-	border: 0;
-	border-radius: 0.5rem;
-	background: transparent;
-	color: inherit;
-	font-size: 0.8125rem;
-	font-weight: 500;
-	transition: background-color 0.15s, box-shadow 0.15s;
-}
-
-.segmented button[aria-pressed="true"] {
-	background: light-dark(#fff, #636366);
-	font-weight: 600;
-	box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
 }
 
 .empty-state {
@@ -186,9 +162,8 @@
 }
 
 @media (width < 576px) {
-	.segmented {
+	.toolbar ::deep .segmented {
 		width: 100%;
-		grid-auto-columns: 1fr;
 		margin-inline-start: 0;
 	}
 }

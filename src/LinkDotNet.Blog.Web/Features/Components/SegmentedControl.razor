@@ -1,0 +1,27 @@
+@typeparam TValue
+
+<div class="segmented" role="group" aria-label="@AriaLabel">
+	@foreach (var option in Options)
+	{
+		<button type="button"
+		        aria-pressed="@(EqualityComparer<TValue>.Default.Equals(option, Value) ? "true" : "false")"
+		        @onclick="() => ValueChanged.InvokeAsync(option)">@Label(option)</button>
+	}
+</div>
+
+@code {
+	[Parameter, EditorRequired]
+	public required IReadOnlyList<TValue> Options { get; set; }
+
+	[Parameter]
+	public TValue? Value { get; set; }
+
+	[Parameter]
+	public EventCallback<TValue> ValueChanged { get; set; }
+
+	[Parameter, EditorRequired]
+	public required Func<TValue, string> Label { get; set; }
+
+	[Parameter, EditorRequired]
+	public required string AriaLabel { get; set; }
+}
