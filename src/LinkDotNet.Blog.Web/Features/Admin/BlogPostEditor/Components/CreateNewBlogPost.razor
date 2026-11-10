@@ -470,7 +470,6 @@
     private void OpenShortCodeDialog()
     {
         ShortCodeDialog.Open();
-        StateHasChanged();
     }
 
     private async Task OpenTemplateDialog()
@@ -495,7 +494,6 @@
         }
 
         blogPostTemplates = await TemplateRepository.GetAllAsync();
-        StateHasChanged();
     }
 
     private void LoadTemplate(BlogPostTemplate template)

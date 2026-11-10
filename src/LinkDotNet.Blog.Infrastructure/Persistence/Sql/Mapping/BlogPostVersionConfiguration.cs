@@ -20,7 +20,7 @@ internal sealed class BlogPostVersionConfiguration : IEntityTypeConfiguration<Bl
         builder.Property(x => x.PreviewImageUrlFallback).HasMaxLength(1024);
         builder.Property(x => x.Content).IsRequired();
         builder.Property(x => x.ShortDescription).IsRequired();
-        builder.Property(x => x.Tags).HasMaxLength(2048);
+        builder.PrimitiveCollection(x => x.Tags).HasMaxLength(2048);
         builder.Property(x => x.IsPublished).IsRequired();
         builder.Property(x => x.ReadingTimeInMinutes).IsRequired();
         builder.Property(x => x.AuthorName).HasMaxLength(256).IsRequired(false);

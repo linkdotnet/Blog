@@ -207,7 +207,6 @@ else if (BlogPost is not null)
 
 	    isBookmarked = !isBookmarked;
 	    await BookmarkService.SetBookmark(BlogPost.Id, isBookmarked);
-	    StateHasChanged();
     }
 
 }
