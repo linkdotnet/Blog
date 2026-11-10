@@ -37,7 +37,7 @@ public class SettingsPageTests : BunitContext
 
         cut.Find("#run-broken-link-checker").Click();
 
-        instantJobRegistry.Received(1).RunInstantJob<BrokenLinkCheckerJob>(Arg.Any<object>(), Arg.Any<CancellationToken>());
+        instantJobRegistry.Received(1).RunInstantJob<BrokenLinkCheckerJob>(Arg.Any<CancellationToken>());
     }
 
     [Fact]

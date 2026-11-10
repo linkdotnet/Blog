@@ -30,7 +30,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost3);
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository);
-        var context = Substitute.For<IJobExecutionContext>();
+        var context = Substitute.For<IJobExecutionContext<bool?>>();
         context.Parameter.Returns(true);
         await job.RunAsync(context, CancellationToken.None);
         
@@ -49,7 +49,7 @@ public class SimilarBlogPostJobTests : SqlDatabaseTestBase<BlogPost>
         await Repository.StoreAsync(blogPost3);
         
         var job = new SimilarBlogPostJob(Repository, similarBlogPostRepository);
-        await job.RunAsync(Substitute.For<IJobExecutionContext>(), CancellationToken.None);
+        await job.RunAsync(Substitute.For<IJobExecutionContext<bool?>>(), CancellationToken.None);
         
         var similarBlogPosts = await similarBlogPostRepository.GetAllAsync();
         similarBlogPosts.ShouldBeEmpty();

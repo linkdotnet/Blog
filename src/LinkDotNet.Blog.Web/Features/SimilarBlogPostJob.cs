@@ -10,7 +10,7 @@ using LinkDotNet.Blog.Web.Features.Services.Similiarity;
 
 namespace LinkDotNet.Blog.Web.Features;
 
-public class SimilarBlogPostJob : IJob
+public class SimilarBlogPostJob : IJob<bool?>
 {
     private readonly IRepository<BlogPost> blogPostRepository;
     private readonly IRepository<SimilarBlogPost> similarBlogPostRepository;
@@ -23,7 +23,7 @@ public class SimilarBlogPostJob : IJob
         this.similarBlogPostRepository = similarBlogPostRepository;
     }
 
-    public async Task RunAsync(IJobExecutionContext context, CancellationToken token)
+    public async Task RunAsync(IJobExecutionContext<bool?> context, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(context);
 

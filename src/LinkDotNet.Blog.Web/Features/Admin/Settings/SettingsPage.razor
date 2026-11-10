@@ -60,13 +60,13 @@
 
 	private void RunVisitTransformer()
 	{
-		InstantJobRegistry.RunInstantJob<TransformBlogPostRecordsJob>(parameter: null);
+		InstantJobRegistry.RunInstantJob<TransformBlogPostRecordsJob>();
 		ToastService.ShowInfo("Transformer was started.");
 	}
 
 	private void RunBrokenLinkChecker()
 	{
-		InstantJobRegistry.RunInstantJob<BrokenLinkCheckerJob>(parameter: null);
+		InstantJobRegistry.RunInstantJob<BrokenLinkCheckerJob>();
 		ToastService.ShowInfo("Broken link checker was started.");
 	}
 }
