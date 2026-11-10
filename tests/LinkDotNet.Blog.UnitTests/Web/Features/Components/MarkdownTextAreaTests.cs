@@ -597,4 +597,60 @@ public class MarkdownTextAreaTests : BunitContext
             Arg.Any<Stream>(),
             Arg.Any<UploadOptions>());
     }
+
+    [Fact]
+    public async Task ShouldUploadAllSelectedFilesAfterASingleDialog()
+    {
+        SetupServices();
+        var blobUploadService = Substitute.For<IBlobUploadService>();
+        blobUploadService.UploadFileAsync(Arg.Any<string>(), Arg.Any<Stream>(), Arg.Any<UploadOptions>())
+            .Returns(call => $"https://cdn.example.com/{call.ArgAt<string>(0)}");
+        Services.AddScoped(_ => blobUploadService);
+        var capturedValue = string.Empty;
+        var cut = Render<MarkdownTextArea>(p => p
+            .Add(c => c.Rows, 10)
+            .Add(c => c.ValueChanged, v => capturedValue = v));
+        var files = new[] { CreateFile("a.png"), CreateFile("b.png") };
+
+        var task = cut.InvokeAsync(() => cut.FindComponent<InputFile>().Instance.OnChange.InvokeAsync(
+            new InputFileChangeEventArgs(files)));
+        cut.Find("#upload-folder").Input("20261110_Something");
+        await cut.Find("form").SubmitAsync();
+        await task;
+
+        capturedValue.ShouldContain("![a.png](https://cdn.example.com/20261110_Something/a.png)");
+        capturedValue.ShouldContain("![b.png](https://cdn.example.com/20261110_Something/b.png)");
+    }
+
+    private static IBrowserFile CreateFile(string name)
+    {
+        var file = Substitute.For<IBrowserFile>();
+        file.Name.Returns(name);
+        file.Size.Returns(3);
+        file.OpenReadStream(Arg.Any<long>(), Arg.Any<System.Threading.CancellationToken>()).Returns(_ => new MemoryStream([1, 2, 3]));
+        return file;
+    }
+
+    [Fact]
+    public async Task ShouldCloseDialogBeforeUploadingSoTheEditorIsNotInert()
+    {
+        SetupServices();
+        var dialogModule = JSInterop.SetupNativeDialog();
+        var closeCallsAtUpload = -1;
+        var blobUploadService = Substitute.For<IBlobUploadService>();
+        blobUploadService.UploadFileAsync(Arg.Any<string>(), Arg.Any<Stream>(), Arg.Any<UploadOptions>())
+            .Returns(_ =>
+            {
+                closeCallsAtUpload = dialogModule.Invocations["close"].Count;
+                return "https://cdn.example.com/image.png";
+            });
+        Services.AddScoped(_ => blobUploadService);
+        var cut = Render<MarkdownTextArea>(p => p.Add(c => c.Rows, 10));
+
+        var task = cut.InvokeAsync(() => cut.Instance.HandlePastedImage(Convert.ToBase64String([1]), "image/png"));
+        await cut.Find("form").SubmitAsync();
+        await task;
+
+        closeCallsAtUpload.ShouldBe(1);
+    }
 }

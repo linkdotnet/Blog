@@ -1,57 +1,80 @@
-<NativeDialog Class="dialog-lg" IsOpen="isOpen" OnClose="Abort">
-    <div class="dialog-header">
-        <h5 class="dialog-title">Configuration</h5>
-        <button type="button" class="btn-close" aria-label="Close" @onclick="Abort"></button>
-    </div>
-    <div class="dialog-body overflow-auto">
-        <EditForm Model="@model" OnValidSubmit="Ok">
-            <DataAnnotationsValidator />
-            <div class="form-floating mb-5">
-	                    <label for="name">The filename of the media file. On services like Azure, this can include the directory path.</label>
-	                    <InputText type="text" class="form-control" id="name" placeholder="Filename"
-	                               @bind-Value="model.Name"/>
-	                    <ValidationMessage For="() => model.Name"></ValidationMessage>
-            </div>
-            <div class="form-field mb-5">
-                <div class="switch">
-                    <InputCheckbox id="cache" role="switch" @bind-Value="model.CacheMedia" />
+<NativeDialog @ref="dialog" Class="dialog-fullscreen sheet-dialog" IsOpen="isOpen" OnClose="Abort" aria-labelledby="upload-sheet-title">
+    <div class="sheet-container">
+        <EditForm Model="@model" OnSubmit="Ok" style="display: contents">
+            <div class="sheet">
+                <header class="sheet-header">
+                    <button id="abort" type="button" class="sheet-action" @onclick="Abort">Cancel</button>
+                    <h2 id="upload-sheet-title" class="sheet-title">@(model.Names.Count == 1 ? "Upload Image" : $"Upload {model.Names.Count} Images")</h2>
+                    <button type="submit" class="sheet-action strong" disabled="@(!model.IsValid)">Upload</button>
+                </header>
+
+                <div class="sheet-scroll">
+                    <h3 class="group-header">Folder</h3>
+                    <div class="field-group">
+                        <input id="upload-folder" class="field-input" autofocus spellcheck="false" autocomplete="off" placeholder="Optional, e.g. 20261110_Something"
+                               aria-label="Folder" aria-describedby="upload-folder-hint" @bind="model.Folder" @bind:event="oninput" />
+                    </div>
+                    <p id="upload-folder-hint" class="field-footnote">Applies to every file. Needs a service that keeps paths, like Azure.</p>
+
+                    <h3 class="group-header">@(model.Names.Count == 1 ? "File name" : "File names")</h3>
+                    <div class="field-group">
+                        @for (var i = 0; i < model.Names.Count; i++)
+                        {
+                            var index = i;
+                            <input class="field-input file-name" spellcheck="false" autocomplete="off" aria-label="File name @(index + 1)"
+                                   aria-describedby="upload-name-hint" @bind="model.Names[index]" @bind:event="oninput" />
+                        }
+                    </div>
+                    <p id="upload-name-hint" class="field-footnote @(model.IsValid ? null : "error")">
+                        @if (!model.IsValid)
+                        {
+                            <text>Every file needs a name.</text>
+                        }
+                        else
+                        {
+                            <text>Uploads as <code>@model.GetPaths()[0]</code>@(model.Names.Count > 1 ? $" and {model.Names.Count - 1} more" : null).</text>
+                        }
+                    </p>
+
+                    <h3 class="group-header">Options</h3>
+                    <div class="field-group">
+                        <label class="toggle-row" for="cache">
+                            <span>Cache for one week</span>
+                            <span class="switch">
+                                <InputCheckbox id="cache" role="switch" aria-describedby="upload-cache-hint" @bind-Value="model.CacheMedia" />
+                            </span>
+                        </label>
+                    </div>
+                    <p id="upload-cache-hint" class="field-footnote">Sets the Cache-Control header. When off, no header is sent.</p>
                 </div>
-                <label for="cache">Enable Media Caching</label>
-                <small class="form-text fg-3">If enabled, the "Cache-Control" header will be set automatically.<br/>The value is set to one week. If disabled, no header will be set.</small>
             </div>
         </EditForm>
     </div>
-    <div class="dialog-footer">
-        <button id="abort" type="button" class="btn btn-solid theme-secondary" @onclick="Abort">Abort</button>
-        <button type="button" class="btn btn-solid theme-primary" @onclick="Ok">OK</button>
-            </div>
 </NativeDialog>
 
 @code {
     private TaskCompletionSource<UploadFileModalDialogObject?> result = null!;
+    private NativeDialog dialog = default!;
     private bool isOpen;
     private readonly UploadFileModalDialogObject model = new();
 
-    public async Task<UploadFileModalDialogObject?> ShowAsync(string fileName)
+    public async Task<UploadFileModalDialogObject?> ShowAsync(IReadOnlyList<string> fileNames)
     {
         isOpen = true;
-        model.Name = fileName;
+        model.Names = [.. fileNames];
         result = new TaskCompletionSource<UploadFileModalDialogObject?>();
         StateHasChanged();
         return await result.Task;
     }
 
-    private void Abort()
-    {
-        isOpen = false;
-        result.SetResult(null);
-        StateHasChanged();
-    }
+    private Task Abort() => CloseAsync(null);
 
-    private void Ok()
+    private Task Ok() => model.IsValid ? CloseAsync(model) : Task.CompletedTask;
+
+    private async Task CloseAsync(UploadFileModalDialogObject? value)
     {
+        await dialog.CloseAsync();
         isOpen = false;
-        result.SetResult(model);
-        StateHasChanged();
+        result.TrySetResult(value);
     }
 }

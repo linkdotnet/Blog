@@ -48,6 +48,18 @@
         }
     }
 
+    // Content behind a modal dialog is inert, so callers that touch the page afterwards must await the close
+    public async Task CloseAsync()
+    {
+        if (!isShown || module is null)
+        {
+            return;
+        }
+
+        isShown = false;
+        await module.InvokeVoidAsync("close", element);
+    }
+
     [JSInvokable]
     public async Task OnClosedAsync()
     {

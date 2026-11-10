@@ -391,9 +391,10 @@
 
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        foreach (var file in e.GetMultipleFiles())
+        var images = new List<(string Name, Stream Content)>();
+        try
         {
-            try
+            foreach (var file in e.GetMultipleFiles())
             {
                 if (file.Size > MaxFileSizeBytes)
                 {
@@ -401,15 +402,27 @@
                     continue;
                 }
 
-                using var memoryStream = new MemoryStream();
-                await file.OpenReadStream(maxAllowedSize: MaxFileSizeBytes).CopyToAsync(memoryStream);
-                memoryStream.Position = 0;
-
-                await UploadAndInsertImageAsync(memoryStream, file.Name);
+                var memoryStream = new MemoryStream();
+                try
+                {
+                    await file.OpenReadStream(maxAllowedSize: MaxFileSizeBytes).CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+                    images.Add((file.Name, memoryStream));
+                }
+                catch (Exception ex)
+                {
+                    await memoryStream.DisposeAsync();
+                    ToastService.ShowError($"Error while reading file '{file.Name}': {ex.Message}");
+                }
             }
-            catch (Exception ex)
+
+            await UploadAndInsertImagesAsync(images);
+        }
+        finally
+        {
+            foreach (var image in images)
             {
-                ToastService.ShowError($"Error while uploading file: {ex.Message}");
+                await image.Content.DisposeAsync();
             }
         }
     }
@@ -437,7 +450,7 @@
             var fileName = $"pasted-image-{DateTime.UtcNow:yyyyMMddHHmmssfff}.{extension}";
 
             using var memoryStream = new MemoryStream(bytes);
-            await UploadAndInsertImageAsync(memoryStream, fileName);
+            await UploadAndInsertImagesAsync([(fileName, memoryStream)]);
         }
         catch (Exception ex)
         {
@@ -445,20 +458,43 @@
         }
     }
 
-    private async Task UploadAndInsertImageAsync(Stream content, string fileName)
+    private async Task UploadAndInsertImagesAsync(IReadOnlyList<(string Name, Stream Content)> images)
     {
-        var options = await UploadDialog.ShowAsync(fileName);
+        if (images.Count == 0)
+        {
+            return;
+        }
+
+        var options = await UploadDialog.ShowAsync(images.Select(image => image.Name).ToList());
         if (options is null)
         {
             return;
         }
 
-        var url = await BlobUploadService.UploadFileAsync(options.Name, content, new UploadOptions
+        var paths = options.GetPaths();
+        var markdown = new List<string>();
+        for (var i = 0; i < images.Count; i++)
         {
-            SetCacheControlHeader = options.CacheMedia,
-        });
+            try
+            {
+                var url = await BlobUploadService.UploadFileAsync(paths[i], images[i].Content, new UploadOptions
+                {
+                    SetCacheControlHeader = options.CacheMedia,
+                });
+                markdown.Add($"![{images[i].Name}]({url})");
+            }
+            catch (Exception ex)
+            {
+                ToastService.ShowError($"Error while uploading '{images[i].Name}': {ex.Message}");
+            }
+        }
 
-        await InsertMarkdown($"![{fileName}]({url})", "");
-        ToastService.ShowSuccess($"Successfully uploaded {fileName}");
+        if (markdown.Count == 0)
+        {
+            return;
+        }
+
+        await InsertMarkdown(string.Join("\n\n", markdown), "");
+        ToastService.ShowSuccess(markdown.Count == 1 ? "Successfully uploaded 1 image" : $"Successfully uploaded {markdown.Count} images");
     }
 }

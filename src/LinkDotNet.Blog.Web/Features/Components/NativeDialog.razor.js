@@ -10,7 +10,9 @@ export async function show(dialog, dotNetHelper) {
     // Closing mid fade cancels the animations, which rejects their finished promises.
     await Promise.allSettled(dialog.getAnimations().map(animation => animation.finished));
     if (dialog.open) {
-        dialog.focus();
+        // Skip [autofocus] fields that belong to dialogs nested inside this one
+        const autofocus = [...dialog.querySelectorAll('[autofocus]')].find(element => element.closest('dialog') === dialog);
+        (autofocus ?? dialog).focus();
     }
 }
 
