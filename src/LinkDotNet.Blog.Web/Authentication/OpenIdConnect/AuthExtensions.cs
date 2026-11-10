@@ -65,7 +65,7 @@ public static class AuthExtensions
         var postLogoutUri = context.Properties.RedirectUri;
         if (!string.IsNullOrEmpty(postLogoutUri))
         {
-            if (postLogoutUri.StartsWith('/'))
+            if (postLogoutUri.StartsWith('/', StringComparison.Ordinal))
             {
                 var request = context.Request;
                 postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;

@@ -66,7 +66,6 @@
 	{
 		isBookmarked = !isBookmarked;
 		await BookmarkService.SetBookmark(BlogPost.Id, isBookmarked);
-		StateHasChanged();
 	}
 
 	public override Task SetParametersAsync(ParameterView parameters)

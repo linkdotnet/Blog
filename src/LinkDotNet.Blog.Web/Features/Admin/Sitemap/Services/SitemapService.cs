@@ -24,7 +24,7 @@ public sealed class SitemapService : ISitemapService
 
         var urlSet = new SitemapUrlSet();
 
-        if (!baseUri.EndsWith('/'))
+        if (!baseUri.EndsWith('/', StringComparison.Ordinal))
         {
             baseUri += "/";
         }

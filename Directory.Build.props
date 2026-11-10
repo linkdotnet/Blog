@@ -1,12 +1,15 @@
 <Project>
 
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
+		<Features>$(Features);runtime-async=on</Features>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<!-- Npgsql 11.0.0-rc.3 pins EF Core to exactly 11.0.0-rc.3; drop once a stable Npgsql 11 ships -->
+		<WarningsNotAsErrors>$(WarningsNotAsErrors);NU1608</WarningsNotAsErrors>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -14,6 +17,9 @@
 		     severities configured there never reach diagnostics reported against .razor files,
 		     so the Razor generated code needs the suppression here as well. -->
 		<NoWarn>$(NoWarn);S8969;S8970</NoWarn>
+		<!-- New with the .NET 11 SDK: Blazor BL0013/BL0016 are opinionated style rules, and Sonar now
+		     sees Razor-generated component classes and flags their plain Dispose() with S3881. -->
+		<NoWarn>$(NoWarn);BL0013;BL0016;S3881</NoWarn>
 	</PropertyGroup>
 
 </Project>

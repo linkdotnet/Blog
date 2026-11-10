@@ -53,6 +53,5 @@ else
         await BlogPostVersionService.RestoreVersionAsync(blogPostFromDb, version);
         ToastService.ShowSuccess($"Restored version {version.VersionNumber}");
         blogPostFromDb = await BlogPostRepository.GetByIdAsync(BlogPostId);
-        StateHasChanged();
     }
 }
