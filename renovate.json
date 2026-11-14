@@ -1,3 +1,8 @@
 {
-	"$schema": "https://docs.renovatebot.com/renovate-schema.json"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    { "matchManagers": ["nuget"], "groupName": "NuGet packages" },
+    { "matchManagers": ["github-actions"], "groupName": "GitHub Actions" }
+  ]
 }
