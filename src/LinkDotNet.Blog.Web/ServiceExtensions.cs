@@ -7,6 +7,7 @@ using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
+using LinkDotNet.Blog.Web.Features.ShowBlogPost;
 using LinkDotNet.Blog.Web.RegistrationExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -23,6 +24,7 @@ public static class ServiceExtensions
         services.AddScoped<ILocalStorageService, LocalStorageService>();
         services.AddScoped<ISortOrderCalculator, SortOrderCalculator>();
         services.AddScoped<IUserRecordService, UserRecordService>();
+        services.AddScoped<LikeLedger>();
         services.AddScoped<IBookmarkService, BookmarkService>();
         services.AddScoped<ISitemapService, SitemapService>();
         services.AddScoped<IXmlWriter, XmlWriter>();
@@ -56,6 +58,14 @@ public static class ServiceExtensions
                     httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty,
                     _ => new FixedWindowRateLimiterOptions { PermitLimit = 15, Window = TimeSpan.FromMinutes(1) })
             );
+
+            // Every circuit can write likes and visit records, so bound how fast one IP can open circuits (~4 requests each)
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                httpContext.Request.Path.StartsWithSegments("/_blazor", StringComparison.OrdinalIgnoreCase)
+                    ? RateLimitPartition.GetFixedWindowLimiter(
+                        httpContext.Connection.RemoteIpAddress?.ToString() ?? string.Empty,
+                        _ => new FixedWindowRateLimiterOptions { PermitLimit = 60, Window = TimeSpan.FromMinutes(1) })
+                    : RateLimitPartition.GetNoLimiter("unlimited"));
         });
 
         return services;

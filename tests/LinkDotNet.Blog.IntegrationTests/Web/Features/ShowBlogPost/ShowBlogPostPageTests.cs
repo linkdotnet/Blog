@@ -215,6 +215,7 @@ public class ShowBlogPostPageTests : SqlDatabaseTestBase<BlogPost>
         ctx.Services.AddScoped(_ => localStorageService ?? Substitute.For<ILocalStorageService>());
         ctx.Services.AddScoped(_ => Substitute.For<IToastService>());
         ctx.Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        ctx.Services.AddScoped<LikeLedger>();
         ctx.Services.AddScoped(_ => Options.Create(new ApplicationConfigurationBuilder().WithUseMultiAuthorMode(useMultiAuthorMode).Build()));
         ctx.Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         ctx.Services.AddScoped(_ => Substitute.For<ITagQueryService>());

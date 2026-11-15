@@ -93,7 +93,7 @@ class Slideshow extends HTMLElement {
 
             const numberText = document.createElement("div")
             numberText.classList.add('numbertext')
-            numberText.innerHTML = `${i + 1} / ${elements.length}`
+            numberText.textContent = `${i + 1} / ${elements.length}`
             container.appendChild(numberText)
 
             const image = document.createElement("img")
@@ -103,7 +103,7 @@ class Slideshow extends HTMLElement {
 
             const text = document.createElement("div")
             text.classList.add("text")
-            text.innerHTML = elements[i].title
+            text.textContent = elements[i].title
             text.style.color = elements[i].color ?? 'black'
             container.appendChild(text)
 

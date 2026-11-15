@@ -44,6 +44,17 @@ public class UserRecordServiceTests : BunitContext
     }
 
     [Fact]
+    public async Task ShouldStoreSameUrlOnlyOncePerCircuit()
+    {
+        fakeNavigationManager.NavigateTo("http://localhost/subpart");
+
+        await sut.StoreUserRecordAsync();
+        await sut.StoreUserRecordAsync();
+
+        await repositoryMock.Received(1).StoreAsync(Arg.Any<UserRecord>());
+    }
+
+    [Fact]
     public async Task ShouldNotStoreForAdmin()
     {
         fakeAuthenticationStateProvider.TriggerAuthenticationStateChanged("Steven");

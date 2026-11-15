@@ -43,6 +43,18 @@ public sealed class SmokeTests : IClassFixture<WebApplicationFactory<Program>>, 
     }
 
     [Fact]
+    public async Task ShouldRateLimitCircuitRequests()
+    {
+        HttpResponseMessage? result = null;
+        for (var i = 0; i < 61; i++)
+        {
+            result = await client.GetAsync("/_blazor/negotiate", cancellationToken: TestContext.Current.CancellationToken);
+        }
+
+        result!.StatusCode.ShouldBe(System.Net.HttpStatusCode.TooManyRequests);
+    }
+
+    [Fact]
     public async Task ShouldAllowDotsForTagSearch()
     {
         var result = await client.GetAsync("/searchByTag/.NET5", cancellationToken: TestContext.Current.CancellationToken);

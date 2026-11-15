@@ -16,6 +16,7 @@
 @inject IOptions<ProfileInformation> ProfileInformation
 @inject IOptions<SupportMeConfiguration> SupportConfiguration
 @inject IBookmarkService BookmarkService
+@inject LikeLedger LikeLedger
 
 @if (isLoading)
 {
@@ -192,9 +193,14 @@ else if (BlogPost is not null)
 
     private async Task UpdateLikes(bool hasLiked)
     {
+        if (!LikeLedger.TryRecord(BlogPostId, hasLiked))
+        {
+            return;
+        }
+
         BlogPost = await BlogPostRepository.GetByIdAsync(BlogPostId)
                    ?? throw new InvalidOperationException("Blog post not found");
-        BlogPost.Likes = hasLiked ? BlogPost.Likes + 1 : BlogPost.Likes - 1;
+        BlogPost.Likes = Math.Max(0, hasLiked ? BlogPost.Likes + 1 : BlogPost.Likes - 1);
         await BlogPostRepository.StoreAsync(BlogPost);
     }
 

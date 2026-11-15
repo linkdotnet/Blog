@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -15,6 +16,7 @@ public sealed partial class UserRecordService : IUserRecordService
     private readonly AuthenticationStateProvider authenticationStateProvider;
     private readonly TimeProvider timeProvider;
     private readonly ILogger<UserRecordService> logger;
+    private readonly HashSet<string> recordedUrls = [];
 
     public UserRecordService(
         IRepository<UserRecord> userRecordRepository,
@@ -51,6 +53,10 @@ public sealed partial class UserRecordService : IUserRecordService
         }
 
         var url = GetClickedUrl();
+        if (!recordedUrls.Add(url))
+        {
+            return;
+        }
 
         var record = new UserRecord
         {

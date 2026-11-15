@@ -9,9 +9,9 @@ namespace LinkDotNet.Blog.UnitTests.Web.Features.ShowBlogPost.Components;
 public class ShareBlogPostTests : BunitContext
 {
     [Fact]
-    public void ShouldCopyLinkToClipboard()
+    public void ShouldCopyLinkToClipboardWithoutEmbeddingUrlInScript()
     {
-        Services.GetRequiredService<BunitNavigationManager>().NavigateTo("blogPost/1");
+        Services.GetRequiredService<BunitNavigationManager>().NavigateTo("blogPost/1/x');alert(1);('");
         var cut = Render<ShareBlogPost>();
 
         var element = cut.Find("#share-clipboard") as IHtmlAnchorElement;
@@ -19,7 +19,7 @@ public class ShareBlogPostTests : BunitContext
         element.ShouldNotBeNull();
         var onclick = element!.Attributes.FirstOrDefault(a => a.Name.Equals("onclick", StringComparison.InvariantCultureIgnoreCase));
         onclick.ShouldNotBeNull();
-        onclick!.Value.ShouldContain("blogPost/1");
+        onclick!.Value.ShouldBe("navigator.clipboard.writeText(location.href)");
     }
 
     [Fact]

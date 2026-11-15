@@ -30,6 +30,7 @@ public class ShowBlogPostPageTests : BunitContext
         shortCodeRepository.GetAllAsync().Returns(PagedList<ShortCode>.Empty);
         Services.AddScoped(_ => shortCodeRepository);
         Services.AddScoped(_ => Substitute.For<IUserRecordService>());
+        Services.AddScoped<LikeLedger>();
         Services.AddScoped(_ => Substitute.For<IToastService>());
         Services.AddScoped(_ => Substitute.For<IInstantJobRegistry>());
         Services.AddScoped(_ => Substitute.For<ITagQueryService>());
