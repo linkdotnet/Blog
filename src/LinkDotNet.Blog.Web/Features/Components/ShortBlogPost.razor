@@ -10,7 +10,8 @@
 			<div class="photo">
 				<PreviewImage PreviewImageUrl="@BlogPost.PreviewImageUrl"
 				              PreviewImageUrlFallback="@BlogPost.PreviewImageUrlFallback"
-				              LazyLoadImage="@LazyLoadPreviewImage"></PreviewImage>
+				              LazyLoadImage="@LazyLoadPreviewImage"
+				              HighPriority="@PrioritizePreviewImage"></PreviewImage>
 			</div>
 		</div>
 		<div class="description d-flex flex-column px-7 py-6">
@@ -62,6 +63,9 @@
 	[Parameter]
 	public bool LazyLoadPreviewImage { get; set; }
 
+	[Parameter]
+	public bool PrioritizePreviewImage { get; set; }
+
 	private async Task ToggleBookmark()
 	{
 		isBookmarked = !isBookmarked;
@@ -79,6 +83,9 @@
 					break;
 				case nameof(LazyLoadPreviewImage):
 					LazyLoadPreviewImage = (bool)parameter.Value;
+					break;
+				case nameof(PrioritizePreviewImage):
+					PrioritizePreviewImage = (bool)parameter.Value;
 					break;
 			}
 		}

@@ -26,7 +26,7 @@
         <h1 id="posts-header" class="fs-3xl fw-bold pt-8 pb-6 mb-0">@(currentPage.IsFirstPage ? "Recent Posts" : "Older Posts")</h1>
     @for (var i = 0; i < currentPage.Count; i++)
     {
-        <ShortBlogPost BlogPost="currentPage[i]" LazyLoadPreviewImage="i > 2"></ShortBlogPost>
+        <ShortBlogPost BlogPost="currentPage[i]" LazyLoadPreviewImage="i > 2" PrioritizePreviewImage="i == 0"></ShortBlogPost>
     }
     </div>
     <BlogPostNavigation PageList="@currentPage"></BlogPostNavigation>

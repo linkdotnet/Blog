@@ -5,6 +5,7 @@
 	     alt="Preview image blogpost"
 	     loading="@LazyLoadTag"
 	     decoding="@DecodingTag"
+	     fetchpriority="@FetchPriorityTag"
 	     class="position-absolute top-0 start-0 w-100 h-100 object-fit-cover" />
 }
 else
@@ -15,6 +16,7 @@ else
 		     alt="Preview image blogpost"
 		     loading="@LazyLoadTag"
 		     decoding="@DecodingTag"
+		     fetchpriority="@FetchPriorityTag"
 		     class="w-100 h-100 object-fit-cover" />
 	</picture>
 }
@@ -29,8 +31,12 @@ else
     [Parameter]
     public bool LazyLoadImage { get; set; }
 
+    [Parameter]
+    public bool HighPriority { get; set; }
+
     private string LazyLoadTag => LazyLoadImage ? "lazy" : "eager";
     private string DecodingTag => LazyLoadImage ? "async" : "auto";
+    private string? FetchPriorityTag => HighPriority ? "high" : null;
 
     private static readonly FileExtensionContentTypeProvider Provider = new();
 

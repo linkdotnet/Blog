@@ -123,4 +123,16 @@ public class PreviewImageTests : BunitContext
         decodingAttribute.ShouldNotBeNull();
         decodingAttribute.Value.ShouldBe(expectedBehaviour);
     }
+
+    [Theory]
+    [InlineData(true, "high")]
+    [InlineData(false, null)]
+    public void ShouldSetFetchPriority(bool highPriority, string? expectedPriority)
+    {
+        var cut = Render<PreviewImage>(ps => ps
+            .Add(p => p.PreviewImageUrl, "http://image.png/")
+            .Add(p => p.HighPriority, highPriority));
+
+        cut.Find("img").GetAttribute("fetchpriority").ShouldBe(expectedPriority);
+    }
 }
