@@ -13,8 +13,8 @@ public sealed partial class LoginModel : PageModel
         this.loginManager = loginManager;
     }
 
-    public async Task OnGet(string redirectUri)
+    public async Task OnGet(string? redirectUri)
     {
-        await loginManager.SignInAsync(redirectUri);
+        await loginManager.SignInAsync(Url.IsLocalUrl(redirectUri) ? redirectUri : "/");
     }
 }

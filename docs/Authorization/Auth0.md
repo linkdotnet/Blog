@@ -10,7 +10,7 @@ For more information, go to: [https://auth0.com/docs/](https://auth0.com/docs/)
 -   Provide a Name for the app (for example, Blog Client AAD).
 -   In the settings menu are available the Domain, Client ID, and Client Secret values.
 -   Set the `Allowed Callback URLs` list to Web and provide the following redirect URI: `https://localhost:PORT/callback` (please change the port number). If you know the production redirect URI for Auth0 default host (for example, azurewebsites.net) or the custom domain host (for example, contoso.com), you can write both redirect URIs separated by a comma: `https://localhost:PORT/callback, https://contoso.com`. Be sure to include the port number for non-:443 ports in any production redirect URIs you add.
--   Set the `Allowed logout URLs` list to Web and provide the following redirect URI: `https://localhost:PORT/callback`, and if you know your production redirect URIs, write it too.
+-   Set the `Allowed logout URLs` list to Web and provide the URL users should land on after logout, for example `https://localhost:PORT/`, and your production URL too. Auth0 redirects to the first entry of this list.
 -   In the Login Experience menu. Select the Business Users button. So, only users who belong to an organization and exist in our AuthDB.
 -   In the Connections menu, disable social logins and keep `Username-Password-Authentication`.
 -   In the sidebar, select Organizations. Select the Create a new Organization button.

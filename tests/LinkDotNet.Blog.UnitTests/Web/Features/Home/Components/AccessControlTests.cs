@@ -1,5 +1,4 @@
 using System.Linq;
-using AngleSharp.Html.Dom;
 using LinkDotNet.Blog.Web;
 using LinkDotNet.Blog.Web.Features.Home.Components;
 using LinkDotNet.Blog.Web.Features.Services;
@@ -72,15 +71,13 @@ public class AccessControlTests : BunitContext
     }
 
     [Fact]
-    public void LogoutShouldHaveCurrentUriAsRedirectUri()
+    public void LogoutShouldNotForwardRedirectUri()
     {
-        const string currentUri = "http://localhost/test";
         AddAuthorization().SetAuthorized("steven");
 
-        var cut = Render<AccessControl>(
-            p => p.Add(s => s.CurrentUri, currentUri));
+        var cut = Render<AccessControl>();
 
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log out')")).Href.ShouldContain(currentUri);
+        cut.Find("a:contains('Log out')").GetAttribute("href").ShouldBe("/logout");
     }
 
     [Fact]

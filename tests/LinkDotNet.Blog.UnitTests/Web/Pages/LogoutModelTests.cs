@@ -11,10 +11,9 @@ public class LogoutModelTests
     {
         var loginManager = Substitute.For<ILoginManager>();
         var sut = new LogoutModel(loginManager);
-        const string redirectUrl = "newUrl";
 
-        await sut.OnGet(redirectUrl);
+        await sut.OnGet();
 
-        await loginManager.Received(1).SignOutAsync(redirectUrl);
+        await loginManager.Received(1).SignOutAsync();
     }
 }

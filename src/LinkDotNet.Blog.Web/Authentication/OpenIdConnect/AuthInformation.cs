@@ -15,6 +15,6 @@ public sealed record AuthInformation
     public string LogoutUri
     {
         get => !string.IsNullOrEmpty(field) ? field : $"https://{Domain}/v2/logout?client_id={ClientId}";
-        set;
+        init;
     } = string.Empty;
 }

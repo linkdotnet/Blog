@@ -62,18 +62,6 @@ public static class AuthExtensions
 
     private static Task HandleRedirect(AuthInformation auth, RedirectContext context)
     {
-        var postLogoutUri = context.Properties.RedirectUri;
-        if (!string.IsNullOrEmpty(postLogoutUri))
-        {
-            if (postLogoutUri.StartsWith('/', StringComparison.Ordinal))
-            {
-                var request = context.Request;
-                postLogoutUri = request.Scheme + "://" + request.Host + request.PathBase + postLogoutUri;
-            }
-
-            auth.LogoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
-        }
-
         context.Response.Redirect(auth.LogoutUri);
         context.HandleResponse();
 

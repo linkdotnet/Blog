@@ -13,8 +13,8 @@ public sealed partial class LogoutModel : PageModel
         this.loginManager = loginManager;
     }
 
-    public async Task OnGet(string redirectUri)
+    public async Task OnGet()
     {
-        await loginManager.SignOutAsync(redirectUri);
+        await loginManager.SignOutAsync();
     }
 }

@@ -29,9 +29,9 @@ public sealed class AuthLoginManager : ILoginManager
         });
     }
 
-    public async Task SignOutAsync(string redirectUri = "/")
+    public async Task SignOutAsync()
     {
-        await httpContext.SignOutAsync(authProvider, new AuthenticationProperties { RedirectUri = redirectUri });
+        await httpContext.SignOutAsync(authProvider);
         await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

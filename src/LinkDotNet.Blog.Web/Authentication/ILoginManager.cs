@@ -6,5 +6,5 @@ public interface ILoginManager
 {
     Task SignInAsync(string redirectUri);
 
-    Task SignOutAsync(string redirectUri = "/");
+    Task SignOutAsync();
 }

@@ -51,7 +51,7 @@
                     </li>
                 }
 
-                <AccessControl CurrentUri="@currentUri"></AccessControl>
+                <AccessControl></AccessControl>
                 <li class="nav-item d-flex align-items-center"><ThemeToggler Class="nav-link"></ThemeToggler></li>
 
                 @if (Configuration.Value.EnableTagDiscoveryPanel)
@@ -69,7 +69,7 @@
             <AuthorizeView>
                 <NotAuthorized>
                     <div class="xl:d-none mt-auto pt-3 border-top">
-                        <a class="drawer-login" href="/login?redirectUri=@Uri.EscapeDataString(currentUri)" rel="nofollow"><i class="lock"></i>Admin log in</a>
+                        <a class="drawer-login" href="/login?redirectUri=@Uri.EscapeDataString("/" + NavigationManager.ToBaseRelativePath(currentUri))" rel="nofollow"><i class="lock"></i>Admin log in</a>
                     </div>
                 </NotAuthorized>
             </AuthorizeView>

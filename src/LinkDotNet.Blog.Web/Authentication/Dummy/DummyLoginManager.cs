@@ -16,10 +16,10 @@ public sealed class DummyLoginManager : ILoginManager
         context = httpContextAccessor?.HttpContext ?? throw new NotSupportedException("I need HttpContext. Njom njom njom");
     }
 
-    public async Task SignOutAsync(string redirectUri = "/")
+    public async Task SignOutAsync()
     {
         await context.SignOutAsync();
-        context.Response.Redirect(redirectUri);
+        context.Response.Redirect("/");
     }
 
     public async Task SignInAsync(string redirectUri)

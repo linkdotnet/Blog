@@ -29,7 +29,7 @@
                 @if (authorName is null)
                 {
                     <hr class="menu-divider">
-                    <a class="menu-item" href="/logout?redirectUri=@CurrentUri">Log out</a>
+                    <a class="menu-item" href="/logout">Log out</a>
                 }
             </div>
         </li>
@@ -40,7 +40,7 @@
                     @authorName
                 </a>
                 <div class="menu" aria-labelledby="authorDropdown">
-                    <a class="menu-item" href="logout?redirectUri=@CurrentUri">Log out</a>
+                    <a class="menu-item" href="/logout">Log out</a>
                 </div>
             </li>
         }
@@ -48,9 +48,6 @@
 </AuthorizeView>
 
 @code {
-	[Parameter]
-    public string CurrentUri { get; set; } = string.Empty;
-
     private string? authorName;
 
     protected override async Task OnInitializedAsync()

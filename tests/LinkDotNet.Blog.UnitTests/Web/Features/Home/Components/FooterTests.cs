@@ -76,7 +76,7 @@ public class FooterTests : BunitContext
 
         var cut = Render<Footer>();
 
-        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.ShouldContain("http://localhost/test");
+        ((IHtmlAnchorElement)cut.Find("a:contains('Log in')")).Href.ShouldContain("redirectUri=%2Ftest");
     }
 
     [Fact]

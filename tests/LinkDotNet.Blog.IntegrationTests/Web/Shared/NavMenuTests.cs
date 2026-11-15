@@ -73,20 +73,6 @@ public class NavMenuTests : BunitContext
             .Count(a => a.Href.Contains("AboutMe")).ShouldBe(1);
     }
 
-    [Fact]
-    public void ShouldPassCorrectUriToComponent()
-    {
-        var config = Options.Create(new ProfileInformationBuilder().Build());
-        Services.AddScoped(_ => config);
-        Services.AddScoped(_ => Substitute.For<ICurrentUserService>());
-        AddAuthorization();
-        var cut = Render<NavMenu>();
-
-        Services.GetRequiredService<NavigationManager>().NavigateTo("test");
-
-        cut.FindComponent<AccessControl>().Instance.CurrentUri.ShouldContain("test");
-    }
-
     [Theory]
     [InlineData("post?utm_source=feed&utm_medium=rss#heading")]
     [InlineData("post/%2Fpath?return=%252F#section")]
@@ -96,7 +82,7 @@ public class NavMenuTests : BunitContext
         AddAuthorization();
         var navigationManager = Services.GetRequiredService<NavigationManager>();
         navigationManager.NavigateTo(uri);
-        var expectedUri = navigationManager.Uri;
+        var expectedUri = "/" + uri;
 
         var cut = Render<NavMenu>();
 
