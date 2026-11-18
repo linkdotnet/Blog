@@ -36,9 +36,7 @@
             return;
         }
 
-        var results = await BlogPostRepository.GetAllAsync(t => t.IsPublished && (t.Title.Contains(requestedTerm)
-                                                                                  || t.Tags.Any(tag => tag == requestedTerm)),
-            b => b.UpdatedDate);
+        var results = await BlogPostRepository.GetAllAsync(BlogPostSearch.ByTerm(requestedTerm), b => b.UpdatedDate);
 
         if (version == searchVersion)
         {

@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
@@ -100,6 +102,7 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
         response.Content.Headers.ContentType!.ToString().ShouldBe("text/plain; charset=utf-8");
         var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
         body.ShouldStartWith("# ");
+        body.ShouldContain("- [MCP server](http://localhost/mcp): ");
         body.ShouldContain($"- [Listed Post](http://localhost/blogPost/{published.Id}/listed-post.md): Short summary\n");
         body.ShouldNotContain("Hidden Draft");
     }
@@ -266,6 +269,36 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
         response.Headers.Vary.ShouldNotContain("Accept");
     }
 
+    [Fact]
+    public async Task ShouldRecordVisitForMarkdownRequest()
+    {
+        var blogPost = await SeedAsync(factory, new BlogPostBuilder().WithTitle("Counted Post").Build());
+
+        using var response = await GetAsync(client, $"/blogPost/{blogPost.Id}/counted-post.md", null);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        using var scope = factory.Services.CreateScope();
+        await using var context = await scope.ServiceProvider.GetRequiredService<IDbContextFactory<BlogDbContext>>()
+            .CreateDbContextAsync(TestContext.Current.CancellationToken);
+        var urls = await context.UserRecords.Select(r => r.UrlClicked).ToListAsync(TestContext.Current.CancellationToken);
+        urls.ShouldContain($"blogPost/{blogPost.Id}");
+    }
+
+    [Theory]
+    [InlineData("search_posts", "query")]
+    [InlineData("search_posts_by_tag", "tag")]
+    public async Task ShouldFindPublishedBlogPostsViaMcp(string tool, string argument)
+    {
+        var term = $"mcp{Guid.NewGuid():N}";
+        var published = await SeedAsync(factory, new BlogPostBuilder().WithTitle(term).WithTags(term).Build());
+        await SeedAsync(factory, new BlogPostBuilder().WithTitle($"{term} draft").WithTags(term).IsPublished(false).Build());
+
+        var body = await CallMcpToolAsync(client, tool, argument, term);
+
+        body.ShouldContain($"http://localhost/blogPost/{published.Id}/{term}.md");
+        body.ShouldNotContain("draft");
+    }
+
     [Theory]
     [InlineData("false")]
     [InlineData(null)]
@@ -289,6 +322,9 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
 
         using var llmsTxtResponse = await GetAsync(disabledClient, "/llms.txt", null);
         llmsTxtResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+
+        using var mcpResponse = await PostMcpToolCallAsync(disabledClient, "search_posts", "query", "Disabled");
+        mcpResponse.IsSuccessStatusCode.ShouldBeFalse();
     }
 
     public void Dispose() => client.Dispose();
@@ -322,6 +358,24 @@ public sealed class BlogPostMarkdownTests : IClassFixture<BlogPostMarkdownTests.
             request.Headers.TryAddWithoutValidation("Accept", accept);
         }
 
+        return await httpClient.SendAsync(request, TestContext.Current.CancellationToken);
+    }
+
+    private static async Task<string> CallMcpToolAsync(HttpClient httpClient, string tool, string argument, string value)
+    {
+        using var response = await PostMcpToolCallAsync(httpClient, tool, argument, value);
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        return await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+    }
+
+    private static async Task<HttpResponseMessage> PostMcpToolCallAsync(HttpClient httpClient, string tool, string argument, string value)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/mcp");
+        request.Headers.TryAddWithoutValidation("Accept", "application/json, text/event-stream");
+        request.Content = new StringContent(
+            $$$$"""{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"{{{{tool}}}}","arguments":{"{{{{argument}}}}":"{{{{value}}}}"}}}""",
+            Encoding.UTF8,
+            "application/json");
         return await httpClient.SendAsync(request, TestContext.Current.CancellationToken);
     }
 

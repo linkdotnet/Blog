@@ -31,4 +31,14 @@ public static class WebApplicationExtensions
             app.UseMiddleware<BlogPostMarkdownMiddleware>();
         }
     }
+
+    public static void MapBlogMcp(this WebApplication app)
+    {
+        ArgumentNullException.ThrowIfNull(app);
+
+        if (app.Services.GetRequiredService<IOptions<ApplicationConfiguration>>().Value.EnableMarkdownForLlms)
+        {
+            app.MapMcp("/mcp").RequireRateLimiting("ip");
+        }
+    }
 }

@@ -48,6 +48,7 @@ public class Program
             .AddHostingServices()
             .AddConfiguration()
             .AddRateLimiting()
+            .AddBlogMcpServer()
             .AddApplicationServices()
             .AddStorageProvider(builder.Configuration)
             .AddImageUploadProvider(builder.Configuration)
@@ -105,6 +106,7 @@ public class Program
         app.UseRateLimiter();
         app.UseBlogPostMarkdown();
         app.MapControllers();
+        app.MapBlogMcp();
         app.MapRazorPages();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();

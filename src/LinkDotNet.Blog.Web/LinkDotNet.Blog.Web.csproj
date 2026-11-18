@@ -17,6 +17,7 @@
 		<PackageReference Include="NCronJob" />
 		<PackageReference Include="Markdig" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" />
+		<PackageReference Include="ModelContextProtocol.AspNetCore" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>

@@ -5,6 +5,7 @@ using LinkDotNet.Blog.Web.Features.Admin.BlogPostEditor.Services;
 using LinkDotNet.Blog.Web.Features.Admin.BrokenLinks.Services;
 using LinkDotNet.Blog.Web.Features.Admin.Sitemap.Services;
 using LinkDotNet.Blog.Web.Features.Bookmarks;
+using LinkDotNet.Blog.Web.Features.Mcp;
 using LinkDotNet.Blog.Web.Features.Services;
 using LinkDotNet.Blog.Web.Features.Services.Tags;
 using LinkDotNet.Blog.Web.Features.ShowBlogPost;
@@ -43,6 +44,17 @@ public static class ServiceExtensions
         services.AddSingleton<ICacheInvalidator>(s => s.GetRequiredService<CacheService>());
 
         services.AddBackgroundServices();
+
+        return services;
+    }
+
+    public static IServiceCollection AddBlogMcpServer(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        // Stateless: no session handshake per client, so one tool call costs one request against the "ip" rate limit
+        services.AddMcpServer()
+            .WithHttpTransport(o => o.Stateless = true)
+            .WithTools<BlogSearchTools>();
 
         return services;
     }

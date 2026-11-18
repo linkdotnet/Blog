@@ -103,7 +103,7 @@ Browser spellchecking uses the `<html lang="en">` value in
 | EnableTagDiscoveryPanel                       | boolean        | The default value is `true`. Enables the Tag Discovery Panel, which helps users discover topics by browsing popular tags.                                                        |
 | EnableBrokenLinkChecker                       | boolean        | The default value is `true`. Checks all external links of published blog posts once a day and lists broken ones on the "Broken links" admin page.                               |
 | ShowCodeBlockLanguage                         | boolean        | The default value is `true`. Shows the language of a fenced code block (e.g. `csharp`) in the header of the code block.                                                        |
-| EnableMarkdownForLlms                         | boolean        | The default value is `false`. Serves published blog posts as markdown to clients (like LLMs) that ask for `text/markdown` or append `.md` to the url, and serves `/llms.txt`. See [Markdown for LLMs](#markdown-for-llms).        |
+| EnableMarkdownForLlms                         | boolean        | The default value is `false`. Serves published blog posts as markdown to clients (like LLMs) that ask for `text/markdown` or append `.md` to the url, and serves `/llms.txt` and the MCP server `/mcp`. See [Markdown for LLMs](#markdown-for-llms).        |
 
 ### Markdown for LLMs
 
@@ -135,5 +135,42 @@ The content...
 - Blog post responses carry `Vary: Accept` so caches and CDNs keep the HTML and markdown variants apart.
 - Appending `.md` to a blog post url (`/blogPost/{id}.md` or `/blogPost/{id}/{slug}.md`) returns markdown regardless of the `Accept` header, for agents that can't set headers.
 - HTML blog post pages advertise the markdown version via a `Link: </blogPost/{id}/{slug}.md>; rel="alternate"; type="text/markdown"` header and a `<link rel="alternate" type="text/markdown">` tag.
-- `/llms.txt` (see [llmstxt.org](https://llmstxt.org)) lists the blog name, introduction and all published blog posts with links to their markdown version.
-- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned, `/blogPost/{id}/{slug}.md` renders the HTML page (the slug is ignored) while `/blogPost/{id}.md` shows the not found page, no `Link` header or `<link>` tag is emitted and `/llms.txt` returns `404`.
+- `/llms.txt` (see [llmstxt.org](https://llmstxt.org)) lists the blog name, introduction, the MCP endpoint and all published blog posts with links to their markdown version.
+- `/mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server (Streamable HTTP, stateless) with two read-only tools: `search_posts` (title contains the query, or exact tag) and `search_posts_by_tag`. Both return up to 20 published blog posts with title, link to the markdown version, description, tags and update date.
+- `/llms.txt` and `/mcp` are rate limited to 15 requests per minute per IP address.
+- Markdown responses count as visits in the dashboard, like regular page views (except for logged-in users).
+- If the setting is `false` or missing, the `Accept` header is ignored and HTML is always returned, `/blogPost/{id}/{slug}.md` renders the HTML page (the slug is ignored) while `/blogPost/{id}.md` shows the not found page, no `Link` header or `<link>` tag is emitted, and `/llms.txt` and `/mcp` aren't served.
+
+#### Connecting an agent
+
+Agents and LLM tools find `/llms.txt` and the markdown versions on their own. MCP clients need the url added once, for example in Claude Code:
+
+```bash
+claude mcp add --transport http my-blog https://example.com/mcp
+```
+
+#### Listing the blog in the MCP Registry
+
+To make the MCP server discoverable without sharing the url, publish it to the [official MCP Registry](https://registry.modelcontextprotocol.io) (many MCP clients and registries read from it). The blog itself needs no change; you do this once from any machine with the [`mcp-publisher`](https://github.com/modelcontextprotocol/registry/releases) CLI:
+
+1. Create a `server.json` (`mcp-publisher init` creates a template) and point `remotes` at your blog:
+
+   ```json
+   {
+     "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+     "name": "io.github.<your-github-user>/blog",
+     "title": "My Blog",
+     "description": "Search the blog posts of My Blog",
+     "version": "1.0.0",
+     "remotes": [
+       { "type": "streamable-http", "url": "https://example.com/mcp" }
+     ]
+   }
+   ```
+
+2. Prove that you own the namespace in `name`:
+   - `io.github.<user>/...`: run `mcp-publisher login github`.
+   - Your own domain, e.g. `com.example/blog`: verify via a DNS TXT record (`mcp-publisher login dns --domain example.com`) or an HTTP file at `https://example.com/.well-known/mcp-registry-auth` (`mcp-publisher login http --domain example.com`). The blog does not serve that file, so DNS is the easier option. See [Registry authentication](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/authentication.mdx) for generating the key and the record.
+3. Run `mcp-publisher publish`. To change the entry later (e.g. a new url), increase `version` and publish again.
+
+The registry doesn't check the url, so `EnableMarkdownForLlms` must be `true` and `/mcp` publicly reachable before you publish.

@@ -46,6 +46,9 @@ public sealed partial class LlmsTxtController : ControllerBase
             sb.Append("> ").Append(EscapeMarkdown(description)).Append("\n\n");
         }
 
+        sb.Append("## MCP\n\n");
+        sb.Append("- [MCP server](").Append(baseUrl).Append("/mcp): Streamable HTTP endpoint with the tools `search_posts` and `search_posts_by_tag`\n\n");
+
         sb.Append("## Blog posts\n\n");
         var blogPosts = await blogPostRepository.GetAllByProjectionAsync(
             b => new LlmsTxtEntry { Id = b.Id, Title = b.Title, ShortDescription = b.ShortDescription },

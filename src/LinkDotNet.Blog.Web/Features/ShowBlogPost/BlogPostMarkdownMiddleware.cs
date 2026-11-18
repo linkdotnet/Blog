@@ -6,12 +6,13 @@ using LinkDotNet.Blog.Domain;
 using LinkDotNet.Blog.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Net.Http.Headers;
 
 namespace LinkDotNet.Blog.Web.Features.ShowBlogPost;
 
-public sealed class BlogPostMarkdownMiddleware
+public sealed partial class BlogPostMarkdownMiddleware
 {
     private const string MarkdownMediaType = "text/markdown";
     private const string MarkdownSuffix = ".md";
@@ -28,12 +29,17 @@ public sealed class BlogPostMarkdownMiddleware
         HttpContext context,
         IOptions<ApplicationConfiguration> appConfiguration,
         IRepository<BlogPost> blogPostRepository,
-        IRepository<ShortCode> shortCodeRepository)
+        IRepository<ShortCode> shortCodeRepository,
+        IRepository<UserRecord> userRecordRepository,
+        TimeProvider timeProvider,
+        ILogger<BlogPostMarkdownMiddleware> logger)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(appConfiguration);
         ArgumentNullException.ThrowIfNull(blogPostRepository);
         ArgumentNullException.ThrowIfNull(shortCodeRepository);
+        ArgumentNullException.ThrowIfNull(userRecordRepository);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         if (!HttpMethods.IsGet(context.Request.Method) || !IsBlogPostPage(context))
         {
@@ -63,6 +69,7 @@ public sealed class BlogPostMarkdownMiddleware
         var shortCodes = await shortCodeRepository.GetAllAsync();
         var markdown = BlogPostMarkdownRenderer.Render(blogPost, shortCodes, GetCanonicalUrl(context.Request, blogPost), appConfiguration.Value.UseMultiAuthorMode);
         await context.Response.WriteAsync(markdown, context.RequestAborted);
+        await RecordVisitAsync(context, blogPost, userRecordRepository, timeProvider, logger);
     }
 
     public static bool PrefersMarkdown(IList<MediaTypeHeaderValue> accept)
@@ -80,6 +87,36 @@ public sealed class BlogPostMarkdownMiddleware
             .Where(a => a.MediaType.Equals(mediaType, StringComparison.OrdinalIgnoreCase))
             .Select(a => (double?)(a.Quality ?? 1))
             .Max();
+
+    private static async Task RecordVisitAsync(
+        HttpContext context,
+        BlogPost blogPost,
+        IRepository<UserRecord> userRecordRepository,
+        TimeProvider timeProvider,
+        ILogger logger)
+    {
+        if (context.User.Identity is { IsAuthenticated: true })
+        {
+            return;
+        }
+
+        try
+        {
+            // Normalized to the HTML page's form so TransformBlogPostRecordsJob attributes it to the post
+            await userRecordRepository.StoreAsync(new UserRecord
+            {
+                DateClicked = DateOnly.FromDateTime(timeProvider.GetUtcNow().UtcDateTime),
+                UrlClicked = $"blogPost/{blogPost.Id}",
+            });
+        }
+        catch (Exception e)
+        {
+            LogUserRecordError(logger, e);
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Error while storing user record for markdown request.")]
+    private static partial void LogUserRecordError(ILogger logger, Exception exception);
 
     private static bool IsMarkdownUrl(HttpRequest request)
         => request.Path.Value?.EndsWith(MarkdownSuffix, StringComparison.OrdinalIgnoreCase) == true;
